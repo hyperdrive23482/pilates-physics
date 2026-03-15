@@ -1,17 +1,9 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
-
-const navLinks = [
-  { label: 'About', href: '/about' },
-  { label: 'Course', href: '/course' },
-]
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const location = useLocation()
-
-  const isActive = (href) => location.pathname === href
 
   return (
     <header
@@ -36,33 +28,32 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              style={{
-                color: isActive(link.href)
-                  ? 'var(--color-accent)'
-                  : 'var(--color-ink)',
-                fontWeight: isActive(link.href) ? '500' : '400',
-                textDecoration: 'none',
-                fontSize: '0.95rem',
-              }}
-            >
-              {link.label}
-            </Link>
-          ))}
+        <nav className="hidden md:flex items-center gap-4">
+          <Link
+            to="/login"
+            style={{
+              backgroundColor: 'transparent',
+              color: 'var(--color-accent)',
+              border: '1.5px solid var(--color-accent)',
+              padding: '0.5rem 1.25rem',
+              textDecoration: 'none',
+              fontSize: '0.9rem',
+              fontWeight: '500',
+              display: 'inline-block',
+            }}
+          >
+            Login
+          </Link>
           <Link
             to="/course"
             style={{
               backgroundColor: 'var(--color-accent)',
               color: '#fff',
+              border: '1.5px solid var(--color-accent)',
               padding: '0.5rem 1.25rem',
               textDecoration: 'none',
               fontSize: '0.9rem',
               fontWeight: '500',
-              borderRadius: 0,
               display: 'inline-block',
             }}
           >
@@ -90,29 +81,30 @@ export default function Navbar() {
           }}
         >
           <nav className="flex flex-col px-6 py-4 gap-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                onClick={() => setMobileOpen(false)}
-                style={{
-                  color: isActive(link.href)
-                    ? 'var(--color-accent)'
-                    : 'var(--color-ink)',
-                  fontWeight: isActive(link.href) ? '500' : '400',
-                  textDecoration: 'none',
-                  fontSize: '1rem',
-                }}
-              >
-                {link.label}
-              </Link>
-            ))}
+            <Link
+              to="/login"
+              onClick={() => setMobileOpen(false)}
+              style={{
+                backgroundColor: 'transparent',
+                color: 'var(--color-accent)',
+                border: '1.5px solid var(--color-accent)',
+                padding: '0.625rem 1.25rem',
+                textDecoration: 'none',
+                fontSize: '0.9rem',
+                fontWeight: '500',
+                textAlign: 'center',
+                display: 'block',
+              }}
+            >
+              Login
+            </Link>
             <Link
               to="/course"
               onClick={() => setMobileOpen(false)}
               style={{
                 backgroundColor: 'var(--color-accent)',
                 color: '#fff',
+                border: '1.5px solid var(--color-accent)',
                 padding: '0.625rem 1.25rem',
                 textDecoration: 'none',
                 fontSize: '0.9rem',
