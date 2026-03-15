@@ -387,7 +387,7 @@ export default function Landing() {
                 margin: 0,
               }}
             >
-              Start at Module 1. Each unlocks the next.
+              Start at Module 1. Each builds on the previous one.
             </p>
           </div>
 

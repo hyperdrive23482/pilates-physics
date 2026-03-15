@@ -27,7 +27,7 @@ export default function ModuleCard({ module }) {
         >
           Module {number}
         </span>
-        {alwaysOpen && (
+        {number !== 1 && (
           <span
             style={{
               fontSize: '0.65rem',
@@ -39,7 +39,7 @@ export default function ModuleCard({ module }) {
               padding: '0.2rem 0.5rem',
             }}
           >
-            Always Open
+            Coming Soon
           </span>
         )}
       </div>
