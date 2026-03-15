@@ -15,7 +15,7 @@ const baseStyles = {
 const variantStyles = {
   primary: {
     backgroundColor: 'var(--color-accent)',
-    color: '#fff',
+    color: '#1C1A17',
     border: 'none',
   },
   secondary: {

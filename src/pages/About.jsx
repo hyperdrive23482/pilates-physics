@@ -305,7 +305,7 @@ export default function About() {
               display: 'inline-block',
               padding: '0.875rem 2rem',
               background: 'var(--color-accent)',
-              color: '#fff',
+              color: '#1C1A17',
               fontSize: '0.9rem',
               fontWeight: '500',
               fontFamily: '"DM Sans", sans-serif',

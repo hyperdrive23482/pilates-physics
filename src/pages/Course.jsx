@@ -110,15 +110,32 @@ export default function Course() {
         {/* Brand */}
         <Link
           to="/"
-          style={{
-            fontFamily: '"DM Serif Display", serif',
-            fontSize: '1rem',
-            color: 'var(--color-ink)',
-            textDecoration: 'none',
-            flexShrink: 0,
-          }}
+          style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: '1px', flexShrink: 0 }}
         >
-          Pilates Physics
+          <span style={{
+            fontFamily: '"DM Sans", sans-serif',
+            fontWeight: '500',
+            fontSize: '0.75rem',
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+            color: 'var(--color-ink)',
+            borderBottom: '1px solid var(--color-accent)',
+            paddingBottom: '2px',
+            display: 'block',
+          }}>
+            Pilates
+          </span>
+          <span style={{
+            fontFamily: '"DM Sans", sans-serif',
+            fontWeight: '500',
+            fontSize: '0.75rem',
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+            color: 'var(--color-accent)',
+            display: 'block',
+          }}>
+            Physics
+          </span>
         </Link>
 
         {/* Divider */}

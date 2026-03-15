@@ -12,15 +12,32 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Column 1: Brand + tagline */}
           <div className="md:col-span-2">
-            <p
-              className="text-lg mb-2"
-              style={{
-                fontFamily: '"DM Serif Display", serif',
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', marginBottom: '0.5rem', alignItems: 'flex-start' }}>
+              <span style={{
+                fontFamily: '"DM Sans", sans-serif',
+                fontWeight: '500',
+                fontSize: '0.65rem',
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
                 color: 'var(--color-ink)',
-              }}
-            >
-              Pilates Physics
-            </p>
+                borderBottom: '1px solid var(--color-accent)',
+                paddingBottom: '2px',
+                display: 'block',
+              }}>
+                Pilates
+              </span>
+              <span style={{
+                fontFamily: '"DM Sans", sans-serif',
+                fontWeight: '500',
+                fontSize: '0.65rem',
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                color: 'var(--color-accent)',
+                display: 'block',
+              }}>
+                Physics
+              </span>
+            </div>
             <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
               Mechanics-grounded Pilates education.
             </p>

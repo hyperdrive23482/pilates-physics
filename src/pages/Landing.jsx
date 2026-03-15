@@ -17,25 +17,25 @@ function SpringDiagram() {
     >
       {/* Grid lines */}
       {[60, 100, 140, 180, 220].map((y) => (
-        <line key={y} x1="60" y1={y} x2="420" y2={y} stroke="#DDD8D0" strokeWidth="1" />
+        <line key={y} x1="60" y1={y} x2="420" y2={y} stroke="#2E2B26" strokeWidth="1" />
       ))}
       {[120, 180, 240, 300, 360].map((x) => (
-        <line key={x} x1={x} y1="40" x2={x} y2="240" stroke="#DDD8D0" strokeWidth="1" />
+        <line key={x} x1={x} y1="40" x2={x} y2="240" stroke="#2E2B26" strokeWidth="1" />
       ))}
 
       {/* Axes */}
-      <line x1="60" y1="240" x2="420" y2="240" stroke="#1A1814" strokeWidth="1.5" />
-      <line x1="60" y1="40" x2="60" y2="240" stroke="#1A1814" strokeWidth="1.5" />
+      <line x1="60" y1="240" x2="420" y2="240" stroke="#F1EFE8" strokeWidth="1.5" />
+      <line x1="60" y1="40" x2="60" y2="240" stroke="#F1EFE8" strokeWidth="1.5" />
 
       {/* Axis labels */}
-      <text x="240" y="270" textAnchor="middle" fill="#6B6560" fontSize="11" fontFamily="DM Sans, sans-serif">
+      <text x="240" y="270" textAnchor="middle" fill="#888780" fontSize="11" fontFamily="DM Sans, sans-serif">
         Spring extension
       </text>
       <text
         x="18"
         y="140"
         textAnchor="middle"
-        fill="#6B6560"
+        fill="#888780"
         fontSize="11"
         fontFamily="DM Sans, sans-serif"
         transform="rotate(-90, 18, 140)"
@@ -44,36 +44,36 @@ function SpringDiagram() {
       </text>
 
       {/* Constant weight reference line — horizontal */}
-      <line x1="60" y1="160" x2="420" y2="160" stroke="#6B6560" strokeWidth="1.5" strokeDasharray="6 4" />
-      <text x="424" y="164" fill="#6B6560" fontSize="10" fontFamily="DM Sans, sans-serif">
+      <line x1="60" y1="160" x2="420" y2="160" stroke="#888780" strokeWidth="1.5" strokeDasharray="6 4" />
+      <text x="424" y="164" fill="#888780" fontSize="10" fontFamily="DM Sans, sans-serif">
         Weight
       </text>
 
       {/* Spring force line — F = kx (diagonal) */}
-      <line x1="60" y1="240" x2="420" y2="55" stroke="#C84B2F" strokeWidth="2" />
+      <line x1="60" y1="240" x2="420" y2="55" stroke="#EF9F27" strokeWidth="2" />
 
       {/* Spring force label */}
-      <text x="340" y="88" fill="#C84B2F" fontSize="10" fontFamily="DM Sans, sans-serif" fontWeight="600">
+      <text x="340" y="88" fill="#EF9F27" fontSize="10" fontFamily="DM Sans, sans-serif" fontWeight="600">
         Spring (F = kx)
       </text>
 
       {/* Intersection dot */}
-      <circle cx="230" cy="160" r="3.5" fill="#C84B2F" />
+      <circle cx="230" cy="160" r="3.5" fill="#EF9F27" />
 
       {/* Annotation: crossover point */}
-      <line x1="230" y1="160" x2="230" y2="195" stroke="#C84B2F" strokeWidth="1" strokeDasharray="3 3" />
-      <text x="232" y="208" fill="#C84B2F" fontSize="9.5" fontFamily="DM Sans, sans-serif">
+      <line x1="230" y1="160" x2="230" y2="195" stroke="#EF9F27" strokeWidth="1" strokeDasharray="3 3" />
+      <text x="232" y="208" fill="#EF9F27" fontSize="9.5" fontFamily="DM Sans, sans-serif">
         Heavier than
       </text>
-      <text x="232" y="220" fill="#C84B2F" fontSize="9.5" fontFamily="DM Sans, sans-serif">
+      <text x="232" y="220" fill="#EF9F27" fontSize="9.5" fontFamily="DM Sans, sans-serif">
         bodyweight here
       </text>
 
       {/* Tick marks — x axis */}
       {[120, 180, 240, 300, 360].map((x, i) => (
         <g key={x}>
-          <line x1={x} y1="240" x2={x} y2="246" stroke="#1A1814" strokeWidth="1" />
-          <text x={x} y="258" textAnchor="middle" fill="#6B6560" fontSize="9" fontFamily="DM Sans, sans-serif">
+          <line x1={x} y1="240" x2={x} y2="246" stroke="#F1EFE8" strokeWidth="1" />
+          <text x={x} y="258" textAnchor="middle" fill="#888780" fontSize="9" fontFamily="DM Sans, sans-serif">
             {(i + 1) * 5}&quot;
           </text>
         </g>

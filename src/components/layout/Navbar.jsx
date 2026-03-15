@@ -17,14 +17,32 @@ export default function Navbar() {
         {/* Brand */}
         <Link
           to="/"
-          className="text-xl"
-          style={{
-            fontFamily: '"DM Serif Display", serif',
-            color: 'var(--color-ink)',
-            textDecoration: 'none',
-          }}
+          style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: '1px' }}
         >
-          Pilates Physics
+          <span style={{
+            fontFamily: '"DM Sans", sans-serif',
+            fontWeight: '500',
+            fontSize: '0.75rem',
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+            color: 'var(--color-ink)',
+            borderBottom: '1px solid var(--color-accent)',
+            paddingBottom: '2px',
+            display: 'block',
+          }}>
+            Pilates
+          </span>
+          <span style={{
+            fontFamily: '"DM Sans", sans-serif',
+            fontWeight: '500',
+            fontSize: '0.75rem',
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+            color: 'var(--color-accent)',
+            display: 'block',
+          }}>
+            Physics
+          </span>
         </Link>
 
         {/* Desktop nav */}
@@ -48,7 +66,7 @@ export default function Navbar() {
             to="/course"
             style={{
               backgroundColor: 'var(--color-accent)',
-              color: '#fff',
+              color: '#1C1A17',
               border: '1.5px solid var(--color-accent)',
               padding: '0.5rem 1.25rem',
               textDecoration: 'none',
@@ -103,7 +121,7 @@ export default function Navbar() {
               onClick={() => setMobileOpen(false)}
               style={{
                 backgroundColor: 'var(--color-accent)',
-                color: '#fff',
+                color: '#1C1A17',
                 border: '1.5px solid var(--color-accent)',
                 padding: '0.625rem 1.25rem',
                 textDecoration: 'none',

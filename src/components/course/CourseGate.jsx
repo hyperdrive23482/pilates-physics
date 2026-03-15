@@ -113,7 +113,7 @@ export default function CourseGate() {
                   fontWeight: '500',
                   fontFamily: '"DM Sans", sans-serif',
                   background: 'var(--color-accent)',
-                  color: '#fff',
+                  color: '#1C1A17',
                   border: 'none',
                   cursor: status === 'loading' ? 'wait' : 'pointer',
                   borderRadius: '0',
