@@ -1,18 +1,25 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { modules } from '../utils/courseData'
 
-const STORAGE_KEY = 'pp_progress'
+function storageKey(userId) {
+  return userId ? `pp_progress_${userId}` : 'pp_progress'
+}
 
-function loadProgress() {
+function loadProgress(userId) {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}
+    return JSON.parse(localStorage.getItem(storageKey(userId))) || {}
   } catch {
     return {}
   }
 }
 
-export function useCourseProgress() {
-  const [progress, setProgress] = useState(loadProgress)
+export function useCourseProgress(userId) {
+  const [progress, setProgress] = useState(() => loadProgress(userId))
+
+  // Reload progress when the user changes (e.g. after sign-in)
+  useEffect(() => {
+    setProgress(loadProgress(userId))
+  }, [userId])
 
   function markComplete(lessonId) {
     const mod = modules.find((m) => m.lessons.some((l) => l.id === lessonId))
@@ -22,7 +29,7 @@ export function useCourseProgress() {
       const completed = prev[mod.id] || []
       if (completed.includes(lessonId)) return prev
       const next = { ...prev, [mod.id]: [...completed, lessonId] }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+      localStorage.setItem(storageKey(userId), JSON.stringify(next))
       return next
     })
   }

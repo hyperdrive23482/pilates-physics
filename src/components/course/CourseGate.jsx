@@ -1,8 +1,8 @@
 import { useState } from 'react'
+import { useEnrollment } from '../../hooks/useEnrollment'
 
-// Full ConvertKit integration arrives in Phase 5.
-// For now: captures email, sets pp_enrolled, calls onEnroll.
-export default function CourseGate({ onEnroll }) {
+export default function CourseGate() {
+  const { sendMagicLink } = useEnrollment()
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState('idle') // idle | loading | success | error
 
@@ -12,10 +12,8 @@ export default function CourseGate({ onEnroll }) {
     setStatus('loading')
 
     try {
-      await new Promise((r) => setTimeout(r, 600))
-      localStorage.setItem('pp_enrolled', 'true')
+      await sendMagicLink(email)
       setStatus('success')
-      if (onEnroll) onEnroll()
     } catch {
       setStatus('error')
     }
@@ -80,7 +78,7 @@ export default function CourseGate({ onEnroll }) {
               color: 'var(--color-accent)',
             }}
           >
-            You're in. Loading your course…
+            Check your inbox — we sent you a magic link to sign in.
           </p>
         ) : (
           <form onSubmit={handleSubmit}>
@@ -122,7 +120,7 @@ export default function CourseGate({ onEnroll }) {
                   whiteSpace: 'nowrap',
                 }}
               >
-                {status === 'loading' ? 'Starting…' : 'Start the Free Course'}
+                {status === 'loading' ? 'Sending…' : 'Start the Free Course'}
               </button>
             </div>
             {status === 'error' && (

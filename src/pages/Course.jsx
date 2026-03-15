@@ -14,14 +14,14 @@ const DEFAULT_MODULE = modules[0].id
 const DEFAULT_LESSON = modules[0].lessons[0].id
 
 export default function Course() {
-  const { enrolled, enroll } = useEnrollment()
+  const { user, loading } = useEnrollment()
   const {
     markComplete,
     isLessonComplete,
     isModuleUnlocked,
     moduleCompletionCount,
     overallPercent,
-  } = useCourseProgress()
+  } = useCourseProgress(user?.id)
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -42,8 +42,27 @@ export default function Course() {
   // Find current module for the top bar label
   const currentModule = modules.find((m) => m.id === currentModuleId)
 
-  if (!enrolled) {
-    return <CourseGate onEnroll={enroll} />
+  if (loading) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          background: 'var(--color-bg)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: '"DM Sans", sans-serif',
+          color: 'var(--color-ink-muted)',
+          fontSize: '0.9rem',
+        }}
+      >
+        Loading…
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <CourseGate />
   }
 
   return (

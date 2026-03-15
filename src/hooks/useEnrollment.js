@@ -1,19 +1,39 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
 
 export function useEnrollment() {
-  const [enrolled, setEnrolled] = useState(() => {
-    return localStorage.getItem('pp_enrolled') === 'true'
-  })
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  function enroll() {
-    localStorage.setItem('pp_enrolled', 'true')
-    setEnrolled(true)
+  useEffect(() => {
+    // Hydrate from current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
+
+    // Keep in sync with auth state changes (magic link callback, sign out, etc.)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  async function sendMagicLink(email) {
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
+    if (error) throw error
   }
 
-  function unenroll() {
-    localStorage.removeItem('pp_enrolled')
-    setEnrolled(false)
+  async function signOut() {
+    await supabase.auth.signOut()
   }
 
-  return { enrolled, enroll, unenroll }
+  return { user, loading, sendMagicLink, signOut }
 }
