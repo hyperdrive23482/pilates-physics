@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #F8F6F1;
+  --color-surface: #FFFFFF;
+  --color-ink: #1A1814;
+  --color-ink-muted: #6B6560;
+  --color-accent: #C84B2F;
+  --color-accent-light: #F0E8E4;
+  --color-rule: #DDD8D0;
+  --color-module-1: #2B4C6F;
+  --color-module-2: #4A7C59;
+  --color-module-3: #8B5E3C;
+  --color-module-4: #C84B2F;
+
+  --font-serif: "DM Serif Display", serif;
+  --font-sans: "DM Sans", sans-serif;
+}
+
+:root {
+  --color-bg: #F8F6F1;
+  --color-surface: #FFFFFF;
+  --color-ink: #1A1814;
+  --color-ink-muted: #6B6560;
+  --color-accent: #C84B2F;
+  --color-accent-light: #F0E8E4;
+  --color-rule: #DDD8D0;
+  --color-module-1: #2B4C6F;
+  --color-module-2: #4A7C59;
+  --color-module-3: #8B5E3C;
+  --color-module-4: #C84B2F;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'DM Serif Display', serif;
+}
