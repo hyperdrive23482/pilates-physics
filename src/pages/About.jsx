@@ -21,49 +21,11 @@ function Section({ children, style = {} }) {
   )
 }
 
-// Two-column prose layout reused across sections
-function ProseSection({ heading, children, accent = false }) {
-  return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 2fr',
-        gap: '4rem',
-        alignItems: 'start',
-      }}
-      className="two-col-grid"
-    >
-      <h2
-        style={{
-          fontFamily: '"DM Serif Display", serif',
-          fontSize: 'clamp(1.4rem, 2.5vw, 2rem)',
-          lineHeight: '1.2',
-          color: accent ? 'var(--color-accent)' : 'var(--color-ink)',
-          margin: 0,
-        }}
-      >
-        {heading}
-      </h2>
-      <div
-        style={{
-          fontSize: '1rem',
-          lineHeight: '1.8',
-          color: 'var(--color-ink-muted)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1.25rem',
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  )
-}
 
 export default function About() {
   return (
     <div>
-      {/* ── Page header ─────────────────────────────────────────────────── */}
+      {/* ── About Kaleen ─────────────────────────────────────────────────── */}
       <section
         style={{
           borderBottom: '1px solid var(--color-rule)',
@@ -77,199 +39,279 @@ export default function About() {
             padding: '7rem 2rem 5rem',
           }}
         >
-          <p
+          <div
+            className="about-hero-grid"
             style={{
-              fontSize: '0.7rem',
-              fontWeight: '600',
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              color: 'var(--color-accent)',
-              marginBottom: '1.5rem',
+              display: 'grid',
+              gridTemplateColumns: '1fr 1.5fr',
+              gap: '5rem',
+              alignItems: 'start',
             }}
           >
-            About
-          </p>
-          <h1
-            style={{
-              fontFamily: '"DM Serif Display", serif',
-              fontSize: 'clamp(2rem, 4.5vw, 3.25rem)',
-              lineHeight: '1.15',
-              color: 'var(--color-ink)',
-              margin: '0 0 2rem',
-              maxWidth: '800px',
-            }}
-          >
-            Why a Pilates instructor started doing physics homework
-          </h1>
-          <p
-            style={{
-              fontSize: '1.1rem',
-              lineHeight: '1.75',
-              color: 'var(--color-ink-muted)',
-              maxWidth: '660px',
-              margin: 0,
-            }}
-          >
-            I kept telling clients "that spring setting is too heavy for you" without being able to
-            explain why. The answer wasn't in any training manual I'd read. So I went looking for
-            it — in physics textbooks, biomechanics papers, and the original specifications of the
-            apparatus itself. What I found changed how I teach, and I think it'll change how you
-            teach too.
-          </p>
+            {/* Photo */}
+            <div style={{ position: 'relative' }}>
+              <img
+                src="/images/about/kaleen-sitting.jpg"
+                alt="Kaleen"
+                style={{
+                  width: '100%',
+                  display: 'block',
+                  objectFit: 'cover',
+                  aspectRatio: '2 / 3',
+                }}
+              />
+            </div>
+
+            {/* Bio */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <div>
+                <h1
+                  style={{
+                    fontFamily: '"DM Serif Display", serif',
+                    fontSize: 'clamp(2rem, 4vw, 3rem)',
+                    lineHeight: '1.1',
+                    color: 'var(--color-ink)',
+                    margin: '0 0 0.5rem',
+                  }}
+                >
+                  Kaleen Canevari
+                </h1>
+                <p
+                  style={{
+                    fontSize: '0.85rem',
+                    fontWeight: '500',
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: 'var(--color-accent)',
+                    margin: 0,
+                  }}
+                >
+                  Pilates instructor, mechanical engineer, &amp; software founder
+                </p>
+              </div>
+
+              <p
+                style={{
+                  fontSize: '1.05rem',
+                  lineHeight: '1.8',
+                  color: 'var(--color-ink-muted)',
+                  margin: 0,
+                }}
+              >
+                I studied mechanical engineering before I ever stepped on a reformer. In 2013 I
+                got a job as a design engineer at Balanced Body, and to learn more about what I
+                was building, I started taking Pilates classes. When I began teaching in 2014, I
+                kept noticing a gap between what I was trained to do and what my students actually
+                needed. As I trained with more experts and got better at personalizing my teaching,
+                I realized the best instructors inherently understood physics. They just couldn't
+                always explain it.
+              </p>
+
+              <p
+                style={{
+                  fontSize: '1.05rem',
+                  lineHeight: '1.8',
+                  color: 'var(--color-ink-muted)',
+                  margin: 0,
+                }}
+              >
+                I've always looked at Pilates through a mechanical lens. Engineering equipment at
+                Balanced Body, running a Pilates equipment maintenance business, founding a
+                connected Pilates equipment company: I've seen this industry from the inside out.
+                I love it. For a long time I felt like a bit of an outsider. But when I started
+                sharing physics content publicly, something shifted. The community wanted more,
+                and no one else was doing it.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       <Rule />
 
-      {/* ── The Brand Thesis ─────────────────────────────────────────────── */}
-      <Section>
-        <ProseSection heading="Most Pilates conventions were pragmatic, not optimal">
-          <p style={{ margin: 0 }}>
-            Joe built his apparatus in the 1930s and 40s. The springs he used were hand-wound.
-            The straps were leather. The wheels ran on bushings. Every design decision he made
-            was a negotiation between what he wanted the body to do and what mid-century materials
-            would allow. The result was brilliant, practical, and inevitably shaped by constraint.
-          </p>
-          <p style={{ margin: 0 }}>
-            Those constraints are gone. Modern reformers run on sealed bearings. Ropes replaced
-            leather. Springs are engineered to tighter tolerances. But the conventions — the spring
-            settings, the strap lengths, the footbar positions — largely haven't changed. We've
-            inherited the outcomes of those original negotiations without inheriting the reasoning
-            behind them.
-          </p>
-          <p style={{ margin: 0 }}>
-            This isn't a criticism of Joe. It's an observation about how knowledge gets transmitted.
-            When we pass down what to do without teaching why it works, we create a field that
-            can execute but can't adapt. Pilates Physics is the attempt to supply the missing
-            layer — the mechanics — so that adaptation becomes principled, not guesswork.
-          </p>
-        </ProseSection>
-      </Section>
-
-      <Rule />
-
-      {/* ── What Pilates Physics Is Not ──────────────────────────────────── */}
-      <section style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-rule)' }}>
-        <Section style={{ paddingTop: '5rem', paddingBottom: '5rem' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+      {/* ── Why Pilates Physics ───────────────────────────────────────────── */}
+      <section>
+        <div
+          className="why-grid"
+          style={{
+            maxWidth: '1100px',
+            margin: '0 auto',
+            padding: '6rem 2rem',
+            display: 'grid',
+            gridTemplateColumns: '1.2fr 1fr',
+            gap: '6rem',
+            alignItems: 'center',
+          }}
+        >
+          {/* Text */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             <h2
               style={{
                 fontFamily: '"DM Serif Display", serif',
-                fontSize: 'clamp(1.4rem, 2.5vw, 2rem)',
+                fontSize: 'clamp(1.6rem, 3vw, 2.4rem)',
                 lineHeight: '1.2',
                 color: 'var(--color-ink)',
                 margin: 0,
               }}
             >
-              What this is not
+              Physics doesn't take sides
             </h2>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.25rem',
+                fontSize: '1rem',
+                lineHeight: '1.8',
+                color: 'var(--color-ink-muted)',
+              }}
+            >
+              <p style={{ margin: 0 }}>
+                Pilates instructors are more capable when they understand the mechanics behind
+                what they're teaching. That's not a controversial idea — it's just an
+                underleveraged one.
+              </p>
+              <p style={{ margin: 0 }}>
+                A spring behaves the same way whether you trained classically or contemporary.
+                Force vectors don't care about your certification or lineage. When you understand
+                what's actually happening mechanically, you can work with any body, on any
+                equipment, without needing a rule for every situation.
+              </p>
+            </div>
+          </div>
+
+          {/* Photo */}
+          <div>
+            <img
+              src="/images/about/kaleen-hug-chair.jpg"
+              alt="Kaleen at the Pilates chair"
+              style={{
+                width: '100%',
+                display: 'block',
+                objectFit: 'cover',
+                aspectRatio: '1 / 1',
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
+      <Rule />
+
+      {/* ── Tools I've Built for Instructors ─────────────────────────────── */}
+      <section style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-rule)' }}>
+        <Section style={{ paddingTop: '5rem', paddingBottom: '5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+            <div>
+              <p
+                style={{
+                  fontSize: '0.7rem',
+                  fontWeight: '600',
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase',
+                  color: 'var(--color-accent)',
+                  marginBottom: '0.75rem',
+                }}
+              >
+                Tools I've Built for Instructors
+              </p>
+              <p
+                style={{
+                  fontSize: '1rem',
+                  lineHeight: '1.7',
+                  color: 'var(--color-ink-muted)',
+                  maxWidth: '600px',
+                  margin: 0,
+                }}
+              >
+                Pilates Physics is the education side. These are the software products I've built
+                to solve problems I ran into as a working instructor.
+              </p>
+            </div>
 
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                borderTop: '1px solid var(--color-rule)',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '1.5rem',
               }}
-              className="not-grid"
+              className="tools-grid"
             >
               {[
                 {
-                  label: 'Not a critique',
-                  body: 'Classical Pilates works. The sequencing, the cueing, the progressions — they were arrived at through decades of empirical refinement. This course doesn\'t argue with any of that. It asks why it works.',
+                  name: 'Remo',
+                  tagline: 'AI Notetaker for private Pilates instructors.',
+                  body: 'Built for the way you actually teach. Capture audio of what you teach and get a session summary, exercise list, client feedback, progress maps, and more with the click of a button.',
+                  url: 'https://www.RemoPilates.com',
                 },
                 {
-                  label: 'Not a replacement',
-                  body: 'Teacher training programs give you a foundation in movement, anatomy, and client management that no physics course can replicate. This isn\'t a shortcut. It\'s a deeper layer on top of what you already know.',
+                  name: 'Motra',
+                  tagline: 'Create your online Pilates studio.',
+                  body: 'Built to enable hybrid and fully-online Pilates instruction, this platform enables instructors to sell subscriptions to their video library, assign homework, create programs, and extend their community beyond brick-and-mortar.',
+                  url: 'https://www.motrastudio.com',
                 },
-                {
-                  label: 'Not more to memorize',
-                  body: 'The goal is a transferable mental model — one that generates the right answers instead of storing them. After this course, you\'ll be able to reason about exercises you\'ve never seen before.',
-                },
-              ].map((item, i) => (
+              ].map((tool) => (
                 <div
-                  key={item.label}
+                  key={tool.name}
                   style={{
+                    background: 'var(--color-surface-raised)',
                     padding: '2rem',
-                    borderRight: i < 2 ? '1px solid var(--color-rule)' : 'none',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.75rem',
                   }}
-                  className="not-card"
                 >
-                  <span
+                  <h3
                     style={{
-                      fontSize: '0.7rem',
-                      fontWeight: '600',
-                      letterSpacing: '0.12em',
-                      textTransform: 'uppercase',
-                      color: 'var(--color-accent)',
+                      fontFamily: '"DM Serif Display", serif',
+                      fontSize: '1.3rem',
+                      color: 'var(--color-ink)',
+                      margin: 0,
                     }}
                   >
-                    {item.label}
-                  </span>
+                    {tool.name}
+                  </h3>
                   <p
                     style={{
-                      fontSize: '0.925rem',
-                      lineHeight: '1.75',
+                      fontSize: '0.875rem',
+                      fontWeight: '500',
+                      color: 'var(--color-ink)',
+                      margin: 0,
+                      lineHeight: '1.5',
+                    }}
+                  >
+                    {tool.tagline}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: '0.875rem',
+                      lineHeight: '1.7',
                       color: 'var(--color-ink-muted)',
                       margin: 0,
                     }}
                   >
-                    {item.body}
+                    {tool.body}
                   </p>
+                  <a
+                    href={tool.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: 'var(--color-accent)',
+                      fontSize: '0.85rem',
+                      fontWeight: '500',
+                      textDecoration: 'none',
+                      marginTop: '0.5rem',
+                    }}
+                  >
+                    Learn more →
+                  </a>
                 </div>
               ))}
             </div>
           </div>
         </Section>
       </section>
-
-      <Rule />
-
-      {/* ── The Products ─────────────────────────────────────────────────── */}
-      <Section>
-        <ProseSection heading="The tools we're building">
-          <p style={{ margin: 0 }}>
-            <strong style={{ color: 'var(--color-ink)', fontWeight: '600' }}>Remo</strong> is a
-            session notetaking app built for Pilates instructors. It captures spring settings,
-            client cues, and session notes in a format that's actually useful the next time you
-            see that client — without the friction of generic note apps that weren't designed
-            for movement work.{' '}
-            <a
-              href="#"
-              style={{
-                color: 'var(--color-accent)',
-                textDecoration: 'underline',
-                fontSize: 'inherit',
-              }}
-            >
-              Join the waitlist →
-            </a>
-          </p>
-          <p style={{ margin: 0 }}>
-            <strong style={{ color: 'var(--color-ink)', fontWeight: '600' }}>Motra</strong> is
-            an online video hosting platform for hybrid teaching. It's designed around the way
-            Pilates instructors actually work — organizing content by movement pattern, equipment,
-            and client level rather than by upload date. Built for instructors who teach in the
-            studio and want to extend that work online without stitching together five different
-            platforms.{' '}
-            <a
-              href="#"
-              style={{
-                color: 'var(--color-accent)',
-                textDecoration: 'underline',
-                fontSize: 'inherit',
-              }}
-            >
-              Join the waitlist →
-            </a>
-          </p>
-          <p style={{ margin: 0, color: 'var(--color-ink-muted)', fontStyle: 'italic', fontSize: '0.9rem' }}>
-            Both products are in development. The course comes first.
-          </p>
-        </ProseSection>
-      </Section>
 
       <Rule />
 
@@ -287,18 +329,32 @@ export default function About() {
             gap: '2rem',
           }}
         >
-          <p
-            style={{
-              fontFamily: '"DM Serif Display", serif',
-              fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
-              lineHeight: '1.3',
-              color: 'var(--color-ink)',
-              margin: 0,
-              maxWidth: '520px',
-            }}
-          >
-            The course is free. The understanding is permanent.
-          </p>
+          <div>
+            <p
+              style={{
+                fontSize: '0.7rem',
+                fontWeight: '600',
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                color: 'var(--color-accent)',
+                marginBottom: '0.75rem',
+              }}
+            >
+              Start here
+            </p>
+            <p
+              style={{
+                fontFamily: '"DM Serif Display", serif',
+                fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
+                lineHeight: '1.3',
+                color: 'var(--color-ink)',
+                margin: 0,
+                maxWidth: '520px',
+              }}
+            >
+              This free course is the best introduction to how I think about Pilates mechanics.
+            </p>
+          </div>
           <Link
             to="/course"
             style={{
@@ -313,26 +369,34 @@ export default function About() {
               whiteSpace: 'nowrap',
             }}
           >
-            Start the Free Course →
+            Take the free course →
           </Link>
         </div>
       </section>
 
       <style>{`
         @media (max-width: 860px) {
+          .about-hero-grid {
+            grid-template-columns: 1fr !important;
+            gap: 2.5rem !important;
+          }
+          .about-hero-grid img {
+            aspect-ratio: 3 / 4 !important;
+            max-height: 480px;
+          }
+          .why-grid {
+            grid-template-columns: 1fr !important;
+            gap: 2.5rem !important;
+          }
+          .why-grid > div:last-child {
+            order: -1;
+          }
+          .tools-grid {
+            grid-template-columns: 1fr !important;
+          }
           .two-col-grid {
             grid-template-columns: 1fr !important;
             gap: 2rem !important;
-          }
-          .not-grid {
-            grid-template-columns: 1fr !important;
-          }
-          .not-card {
-            border-right: none !important;
-            border-bottom: 1px solid var(--color-rule);
-          }
-          .not-card:last-child {
-            border-bottom: none;
           }
         }
       `}</style>
