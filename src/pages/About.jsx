@@ -315,6 +315,129 @@ export default function About() {
 
       <Rule />
 
+      {/* ── Connect with Kaleen ──────────────────────────────────────────── */}
+      <Section>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+          <div>
+            <p
+              style={{
+                fontSize: '0.7rem',
+                fontWeight: '600',
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                color: 'var(--color-accent)',
+                marginBottom: '0.75rem',
+              }}
+            >
+              Connect with Kaleen
+            </p>
+            <p
+              style={{
+                fontSize: '1rem',
+                lineHeight: '1.7',
+                color: 'var(--color-ink-muted)',
+                maxWidth: '520px',
+                margin: 0,
+              }}
+            >
+              Follow along on Substack for writing on Pilates mechanics, or on Instagram for
+              shorter-form content and behind-the-scenes.
+            </p>
+          </div>
+
+          <div
+            style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}
+            className="connect-links"
+          >
+            <a
+              href="https://kaleenc.substack.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '1rem 1.5rem',
+                background: 'var(--color-surface)',
+                border: '1px solid var(--color-rule)',
+                textDecoration: 'none',
+                flex: '1',
+                minWidth: '200px',
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    fontSize: '0.7rem',
+                    fontWeight: '600',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: 'var(--color-accent)',
+                    margin: '0 0 0.2rem',
+                  }}
+                >
+                  Substack
+                </p>
+                <p
+                  style={{
+                    fontSize: '0.95rem',
+                    color: 'var(--color-ink)',
+                    margin: 0,
+                    fontWeight: '500',
+                  }}
+                >
+                  kaleenc.substack.com →
+                </p>
+              </div>
+            </a>
+
+            <a
+              href="https://www.instagram.com/kaleenc_"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '1rem 1.5rem',
+                background: 'var(--color-surface)',
+                border: '1px solid var(--color-rule)',
+                textDecoration: 'none',
+                flex: '1',
+                minWidth: '200px',
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    fontSize: '0.7rem',
+                    fontWeight: '600',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: 'var(--color-accent)',
+                    margin: '0 0 0.2rem',
+                  }}
+                >
+                  Instagram
+                </p>
+                <p
+                  style={{
+                    fontSize: '0.95rem',
+                    color: 'var(--color-ink)',
+                    margin: 0,
+                    fontWeight: '500',
+                  }}
+                >
+                  @kaleenc_ →
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </Section>
+
+      <Rule />
+
       {/* ── CTA strip ────────────────────────────────────────────────────── */}
       <section style={{ background: 'var(--color-accent-light)' }}>
         <div
