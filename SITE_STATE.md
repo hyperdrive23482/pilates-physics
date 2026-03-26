@@ -1,6 +1,6 @@
 # SITE_STATE.md — Pilates Physics
 
-Last updated: 2026-03-26
+Last updated: 2026-03-26 (rev 2)
 
 ---
 
@@ -37,9 +37,33 @@ Last updated: 2026-03-26
 - **Lesson body text is placeholder** — contextually relevant to Pilates mechanics but not final copy
 - `AnimationSlot` component renders "Loading…" — no interactive diagrams yet
 
-### `/auth/callback` — OAuth Callback
+### `/login` — Login Page
 **Status: Complete**
-- Receives Supabase magic link redirect
+- Email + password sign-in form
+- Show/hide password toggle (eye icon)
+- "Forgot password?" link to `/forgot-password`
+- Link to `/signup` for new users
+
+### `/signup` — Signup Page
+**Status: Complete**
+- Registration form: first name, last name, email
+- On submit, creates Supabase user and shows "check your email" confirmation
+- Link back to `/login` for existing users
+
+### `/forgot-password` — Forgot Password Page
+**Status: Complete**
+- Email input to request password reset
+- Success state shows "check your inbox" message
+
+### `/set-password` — Set Password Page
+**Status: Complete**
+- Password + confirm password fields with show/hide toggles
+- Validation (match check)
+- Used after clicking email confirmation / reset link
+
+### `/auth/callback` — Auth Callback
+**Status: Complete**
+- Receives Supabase magic link / email confirmation redirect
 - Waits for session, then redirects to `/course`
 
 ---
@@ -50,7 +74,6 @@ These are linked in the Navbar or Footer but have **no route or component**:
 
 | Link        | Location   | Status     |
 |-------------|------------|------------|
-| `/login`    | Navbar, Footer | No component |
 | `/contact`  | Footer     | No component |
 | `/terms`    | Footer     | No component |
 | `/privacy`  | Footer     | No component |
@@ -63,15 +86,29 @@ These are linked in the Navbar or Footer but have **no route or component**:
 | Aspect | Detail |
 |--------|--------|
 | Provider | Supabase Auth |
-| Method | Magic link (passwordless OTP via email) |
+| Methods | Email + password (primary); Magic link (passwordless OTP via email) |
 | Client | `src/lib/supabase.js` — initialized with `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` |
-| Hook | `src/hooks/useEnrollment.js` — manages auth state, calls `signInWithOtp()` |
-| Gate | `src/components/course/CourseGate.jsx` — email form shown when `!user` |
-| Callback | `src/pages/AuthCallback.jsx` — handles redirect from magic link |
+| Hook | `src/hooks/useEnrollment.js` — manages auth state, sign in/up/out, password reset |
+| Pages | `/login`, `/signup`, `/forgot-password`, `/set-password` |
+| Gate | `src/components/course/CourseGate.jsx` — prompts signup/login when `!user` |
+| Callback | `src/pages/AuthCallback.jsx` — handles email confirmation / magic link redirect |
 | Redirect URI | `${window.location.origin}/auth/callback` |
 | Session | Supabase handles session persistence via cookies/localStorage |
 
-Flow: Enter email → magic link sent → click link → `/auth/callback` → session established → redirect to `/course`.
+### Auth Flows
+- **Sign up:** `/signup` → enter name + email → confirmation email sent → click link → `/auth/callback` → `/set-password` → `/course`
+- **Sign in:** `/login` → enter email + password → redirect to `/course`
+- **Forgot password:** `/forgot-password` → enter email → reset email sent → click link → `/set-password`
+- **Magic link:** Enter email → link sent → click → `/auth/callback` → session → `/course`
+
+### useEnrollment Hook API
+- `user` — Supabase user object or null
+- `loading` — boolean
+- `signUp(email, firstName, lastName)` — create account (triggers confirmation email)
+- `signIn(email, password)` — traditional login
+- `setPassword(password)` — set/update password (post-confirmation)
+- `resetPasswordRequest(email)` — initiate password reset
+- `signOut()` — log out
 
 ---
 
@@ -112,10 +149,10 @@ Environment variables `VITE_CONVERTKIT_FORM_ID` and `VITE_CONVERTKIT_API_KEY` ar
 | Phase 2 | Landing page (static) | ✅ Complete |
 | Phase 3 | About page | ✅ Complete |
 | Phase 4 | Course portal shell | ✅ Complete (placeholder lesson copy) |
-| Phase 5 | Course gate + ConvertKit | ⚠️ Gate works via Supabase magic link; ConvertKit not integrated |
+| Phase 5 | Course gate + ConvertKit | ⚠️ Gate works via Supabase auth (email+password & magic link); full login/signup/forgot-password/set-password flow built; ConvertKit not integrated |
 | Phase 6 | Polish (animations, mobile, micro) | ⚠️ Mobile responsive done; animations not started |
 
-**Key deviation:** Auth was implemented with Supabase magic link rather than a simple localStorage email gate. This is a stronger approach than originally scoped but means the site depends on a live Supabase project.
+**Key deviation:** Auth was implemented with full Supabase email+password and magic link flows (login, signup, forgot password, set password pages) rather than a simple localStorage email gate. This is significantly stronger than originally scoped but means the site depends on a live Supabase project.
 
 ---
 
