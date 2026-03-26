@@ -33,9 +33,51 @@ Last updated: 2026-03-26 (rev 2)
 - Lesson content area with mark-complete button + prev/next nav
 - Mobile sidebar via hamburger menu
 - URL state via search params (`?m=m1&l=m1-l1`)
-- 4 modules × 6 lessons = 24 lessons defined in `courseData.js`
+- 4 modules defined in `courseData.js` — current data defines 6 lessons per module (24 total) but Module 1 has been finalized as 4 lessons + 1 quiz (see Course Data Structure below)
 - **Lesson body text is placeholder** — contextually relevant to Pilates mechanics but not final copy
 - `AnimationSlot` component renders "Loading…" — no interactive diagrams yet
+
+---
+
+## Course Data Structure
+
+**File:** `src/utils/courseData.js`
+
+Lessons are keyed by module and lesson ID strings. The expected format for Module 1 based on the content brief is:
+```js
+{
+  id: 'm1-l1',
+  title: 'Springs 101',
+  moduleId: 'm1',
+  hasAnimation: true,
+}
+```
+
+**Known mismatch:** The current `courseData.js` defines 6 lessons per module (24 total). Module 1 is now 4 lessons + 1 quiz = 5 items. The data file needs to be updated to match the finalized lesson structure in `MODULE_1_CONTENT.md` before lesson content is populated. Do not add content to the old 6-lesson structure.
+
+**Correct Module 1 lesson IDs:**
+- `m1-l1` — Springs 101
+- `m1-l2` — Spring Design Basics
+- `m1-l3` — Spring Wear and Lifespan
+- `m1-l4` — Real World Spring Comparisons
+- `m1-quiz` — Assessment Quiz
+
+---
+
+## Lesson Content Format
+
+Lesson body text is currently stored as placeholder strings in `LessonContent.jsx` or equivalent. For Module 1, real content should be structured as prose HTML or JSX — not a flat string and not bullet lists (except the five definition-list items in Lesson 2).
+
+The intended rendering pattern per lesson:
+- Section headings as `<h3>` declarative statements
+- Body copy as `<p>` paragraphs
+- The five k/b factor items in Lesson 2 as `<dl>` / `<dt>` / `<dd>` or equivalent bold-term + em-dash pattern
+- Visual slots as `<img>` (static images) or `<AnimationSlot>` (interactive HTML files)
+- F = kx + b equation rendered with k, x, b in `<em>` or monospace — not plain text
+
+All finalized copy is in `MODULE_1_CONTENT.md` in the project root.
+
+---
 
 ### `/login` — Login Page
 **Status: Complete**
@@ -141,6 +183,47 @@ Environment variables `VITE_CONVERTKIT_FORM_ID` and `VITE_CONVERTKIT_API_KEY` ar
 
 ---
 
+## Animation Embedding
+
+Three standalone HTML animation files have been built for Module 1:
+
+| File | Lesson | Description |
+|------|--------|-------------|
+| `spring-animation.html` | m1-l1 | Spring load vs. constant weight |
+| `tall-short-animation.html` | m1-l1 | Tall vs. short client carriage comparison |
+| `elastic-plastic-animation.html` | m1-l3 | Elastic vs. plastic deformation |
+
+**Intended location in repo:** `/public/animations/`
+
+**Embedding approach:** `AnimationSlot.jsx` should render an `<iframe>` with `src` pointing to the animation file, `width="100%"`, `height` set per animation, no border, `scrolling="no"`. The component receives a `lessonId` prop and maps it to the correct file.
+
+Suggested height values:
+- `spring-animation.html` — 520px
+- `tall-short-animation.html` — 580px
+- `elastic-plastic-animation.html` — 480px
+
+Static image slots use a plain `<img>` tag — not `AnimationSlot`.
+
+---
+
+## Static Image Assets — Module 1
+
+Five image assets are required for Module 1 lesson content. These do not yet exist in the repo.
+
+**Intended location:** `/public/images/module1/`
+
+| Filename (suggested) | Used in | Description |
+|----------------------|---------|-------------|
+| `bb-spring-graph.png` | Lessons 1 and 2 | Balanced Body multi-spring load curve graph |
+| `spring-coil-factors.png` | Lesson 2 | Coil length, diameter, wire diameter, end geometry diagram |
+| `spring-engineering-drawing.png` | Lesson 2 | Example spring spec / engineering drawing |
+| `cross-brand-light-springs.png` | Lesson 4 | Light springs load curves across BB, STOTT, Peak, Align |
+| `cross-brand-heavy-springs.png` | Lesson 4 | Heavy springs load curves across BB, STOTT, Peak, Align |
+
+Until these assets are added, render a placeholder `<div>` with a light border and the filename as a label — do not leave empty space or throw an error.
+
+---
+
 ## Deviations from Build Phases
 
 | Phase | Planned | Actual |
@@ -184,3 +267,5 @@ Environment variables `VITE_CONVERTKIT_FORM_ID` and `VITE_CONVERTKIT_API_KEY` ar
 - Supabase JS client
 - Dark theme by default — bg `#1C1A17`, accent gold `#EF9F27`
 - Fonts: DM Serif Display (headings), DM Sans (body)
+
+**Tailwind version note:** This project uses Tailwind CSS v4. Theme configuration is defined via `@theme {}` blocks in CSS files — there is no `tailwind.config.js`. Do not attempt to create or reference a `tailwind.config.js`. All custom tokens (colors, fonts, spacing) live in the CSS theme block. When adding new styles, follow the existing `@theme {}` pattern.
