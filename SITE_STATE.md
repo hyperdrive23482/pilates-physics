@@ -37,6 +37,35 @@ Last updated: 2026-03-26 (rev 2)
 - **Lesson body text is placeholder** — contextually relevant to Pilates mechanics but not final copy
 - `AnimationSlot` component renders "Loading…" — no interactive diagrams yet
 
+### `/login` — Login Page
+**Status: Complete**
+- Email + password sign-in form
+- Show/hide password toggle (eye icon)
+- "Forgot password?" link to `/forgot-password`
+- Link to `/signup` for new users
+
+### `/signup` — Signup Page
+**Status: Complete**
+- Registration form: first name, last name, email
+- On submit, creates Supabase user and shows "check your email" confirmation
+- Link back to `/login` for existing users
+
+### `/forgot-password` — Forgot Password Page
+**Status: Complete**
+- Email input to request password reset
+- Success state shows "check your inbox" message
+
+### `/set-password` — Set Password Page
+**Status: Complete**
+- Password + confirm password fields with show/hide toggles
+- Validation (match check)
+- Used after clicking email confirmation / reset link
+
+### `/auth/callback` — Auth Callback
+**Status: Complete**
+- Receives Supabase magic link / email confirmation redirect
+- Waits for session, then redirects to `/course`
+
 ---
 
 ## Course Data Structure
@@ -76,37 +105,6 @@ The intended rendering pattern per lesson:
 - F = kx + b equation rendered with k, x, b in `<em>` or monospace — not plain text
 
 All finalized copy is in `MODULE_1_CONTENT.md` in the project root.
-
----
-
-### `/login` — Login Page
-**Status: Complete**
-- Email + password sign-in form
-- Show/hide password toggle (eye icon)
-- "Forgot password?" link to `/forgot-password`
-- Link to `/signup` for new users
-
-### `/signup` — Signup Page
-**Status: Complete**
-- Registration form: first name, last name, email
-- On submit, creates Supabase user and shows "check your email" confirmation
-- Link back to `/login` for existing users
-
-### `/forgot-password` — Forgot Password Page
-**Status: Complete**
-- Email input to request password reset
-- Success state shows "check your inbox" message
-
-### `/set-password` — Set Password Page
-**Status: Complete**
-- Password + confirm password fields with show/hide toggles
-- Validation (match check)
-- Used after clicking email confirmation / reset link
-
-### `/auth/callback` — Auth Callback
-**Status: Complete**
-- Receives Supabase magic link / email confirmation redirect
-- Waits for session, then redirects to `/course`
 
 ---
 
