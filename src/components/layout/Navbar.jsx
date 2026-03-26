@@ -1,9 +1,18 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
+import { useEnrollment } from '../../hooks/useEnrollment'
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { user, loading, signOut } = useEnrollment()
+  const navigate = useNavigate()
+
+  async function handleSignOut() {
+    await signOut()
+    setMobileOpen(false)
+    navigate('/')
+  }
 
   return (
     <header
@@ -47,36 +56,73 @@ export default function Navbar() {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-4">
-          <Link
-            to="/login"
-            style={{
-              backgroundColor: 'transparent',
-              color: 'var(--color-accent)',
-              border: '1.5px solid var(--color-accent)',
-              padding: '0.5rem 1.25rem',
-              textDecoration: 'none',
-              fontSize: '0.9rem',
-              fontWeight: '500',
-              display: 'inline-block',
-            }}
-          >
-            Login
-          </Link>
-          <Link
-            to="/course"
-            style={{
-              backgroundColor: 'var(--color-accent)',
-              color: '#1C1A17',
-              border: '1.5px solid var(--color-accent)',
-              padding: '0.5rem 1.25rem',
-              textDecoration: 'none',
-              fontSize: '0.9rem',
-              fontWeight: '500',
-              display: 'inline-block',
-            }}
-          >
-            Start Free Course
-          </Link>
+          {!loading && user ? (
+            <>
+              <Link
+                to="/course"
+                style={{
+                  backgroundColor: 'var(--color-accent)',
+                  color: '#1C1A17',
+                  border: '1.5px solid var(--color-accent)',
+                  padding: '0.5rem 1.25rem',
+                  textDecoration: 'none',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  display: 'inline-block',
+                }}
+              >
+                My Course
+              </Link>
+              <button
+                onClick={handleSignOut}
+                style={{
+                  backgroundColor: 'transparent',
+                  color: 'var(--color-ink-muted)',
+                  border: '1.5px solid var(--color-rule)',
+                  padding: '0.5rem 1.25rem',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  fontFamily: '"DM Sans", sans-serif',
+                }}
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                style={{
+                  backgroundColor: 'transparent',
+                  color: 'var(--color-accent)',
+                  border: '1.5px solid var(--color-accent)',
+                  padding: '0.5rem 1.25rem',
+                  textDecoration: 'none',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  display: 'inline-block',
+                }}
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                style={{
+                  backgroundColor: 'var(--color-accent)',
+                  color: '#1C1A17',
+                  border: '1.5px solid var(--color-accent)',
+                  padding: '0.5rem 1.25rem',
+                  textDecoration: 'none',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  display: 'inline-block',
+                }}
+              >
+                Start Free Course
+              </Link>
+            </>
+          )}
         </nav>
 
         {/* Mobile hamburger */}
@@ -99,40 +145,80 @@ export default function Navbar() {
           }}
         >
           <nav className="flex flex-col px-6 py-4 gap-4">
-            <Link
-              to="/login"
-              onClick={() => setMobileOpen(false)}
-              style={{
-                backgroundColor: 'transparent',
-                color: 'var(--color-accent)',
-                border: '1.5px solid var(--color-accent)',
-                padding: '0.625rem 1.25rem',
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-                fontWeight: '500',
-                textAlign: 'center',
-                display: 'block',
-              }}
-            >
-              Login
-            </Link>
-            <Link
-              to="/course"
-              onClick={() => setMobileOpen(false)}
-              style={{
-                backgroundColor: 'var(--color-accent)',
-                color: '#1C1A17',
-                border: '1.5px solid var(--color-accent)',
-                padding: '0.625rem 1.25rem',
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-                fontWeight: '500',
-                textAlign: 'center',
-                display: 'block',
-              }}
-            >
-              Start Free Course
-            </Link>
+            {!loading && user ? (
+              <>
+                <Link
+                  to="/course"
+                  onClick={() => setMobileOpen(false)}
+                  style={{
+                    backgroundColor: 'var(--color-accent)',
+                    color: '#1C1A17',
+                    border: '1.5px solid var(--color-accent)',
+                    padding: '0.625rem 1.25rem',
+                    textDecoration: 'none',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    textAlign: 'center',
+                    display: 'block',
+                  }}
+                >
+                  My Course
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: 'var(--color-ink-muted)',
+                    border: '1.5px solid var(--color-rule)',
+                    padding: '0.625rem 1.25rem',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    fontFamily: '"DM Sans", sans-serif',
+                  }}
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileOpen(false)}
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: 'var(--color-accent)',
+                    border: '1.5px solid var(--color-accent)',
+                    padding: '0.625rem 1.25rem',
+                    textDecoration: 'none',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    textAlign: 'center',
+                    display: 'block',
+                  }}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={() => setMobileOpen(false)}
+                  style={{
+                    backgroundColor: 'var(--color-accent)',
+                    color: '#1C1A17',
+                    border: '1.5px solid var(--color-accent)',
+                    padding: '0.625rem 1.25rem',
+                    textDecoration: 'none',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    textAlign: 'center',
+                    display: 'block',
+                  }}
+                >
+                  Start Free Course
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       )}

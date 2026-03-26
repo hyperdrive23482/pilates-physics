@@ -1,24 +1,6 @@
-import { useState } from 'react'
-import { useEnrollment } from '../../hooks/useEnrollment'
+import { Link } from 'react-router-dom'
 
 export default function CourseGate() {
-  const { sendMagicLink } = useEnrollment()
-  const [email, setEmail] = useState('')
-  const [status, setStatus] = useState('idle') // idle | loading | success | error
-
-  async function handleSubmit(e) {
-    e.preventDefault()
-    if (!email) return
-    setStatus('loading')
-
-    try {
-      await sendMagicLink(email)
-      setStatus('success')
-    } catch {
-      setStatus('error')
-    }
-  }
-
   return (
     <div
       style={{
@@ -70,75 +52,40 @@ export default function CourseGate() {
           start, no prerequisites required.
         </p>
 
-        {status === 'success' ? (
-          <p
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <Link
+            to="/signup"
             style={{
-              fontFamily: '"DM Serif Display", serif',
-              fontSize: '1.25rem',
-              color: 'var(--color-accent)',
+              padding: '0.75rem 1.5rem',
+              fontSize: '0.9rem',
+              fontWeight: '500',
+              fontFamily: '"DM Sans", sans-serif',
+              background: 'var(--color-accent)',
+              color: '#1C1A17',
+              border: 'none',
+              textDecoration: 'none',
+              display: 'inline-block',
             }}
           >
-            Check your inbox — we sent you a magic link to sign in.
-          </p>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <div style={{ display: 'flex', gap: '0', flexWrap: 'wrap' }}>
-              <input
-                type="email"
-                required
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={status === 'loading'}
-                style={{
-                  flex: '1',
-                  minWidth: '200px',
-                  padding: '0.75rem 1rem',
-                  fontSize: '0.9rem',
-                  fontFamily: '"DM Sans", sans-serif',
-                  border: '1px solid var(--color-rule)',
-                  borderRight: 'none',
-                  background: 'var(--color-surface)',
-                  color: 'var(--color-ink)',
-                  outline: 'none',
-                  borderRadius: '0',
-                }}
-              />
-              <button
-                type="submit"
-                disabled={status === 'loading'}
-                style={{
-                  padding: '0.75rem 1.5rem',
-                  fontSize: '0.9rem',
-                  fontWeight: '500',
-                  fontFamily: '"DM Sans", sans-serif',
-                  background: 'var(--color-accent)',
-                  color: '#1C1A17',
-                  border: 'none',
-                  cursor: status === 'loading' ? 'wait' : 'pointer',
-                  borderRadius: '0',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {status === 'loading' ? 'Sending…' : 'Start the Free Course'}
-              </button>
-            </div>
-            {status === 'error' && (
-              <p style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: 'var(--color-accent)' }}>
-                Something went wrong. Try again.
-              </p>
-            )}
-            <p
-              style={{
-                marginTop: '0.75rem',
-                fontSize: '0.78rem',
-                color: 'var(--color-ink-muted)',
-              }}
-            >
-              No spam. Unsubscribe anytime.
-            </p>
-          </form>
-        )}
+            Create Free Account
+          </Link>
+          <Link
+            to="/login"
+            style={{
+              padding: '0.75rem 1.5rem',
+              fontSize: '0.9rem',
+              fontWeight: '500',
+              fontFamily: '"DM Sans", sans-serif',
+              background: 'transparent',
+              color: 'var(--color-accent)',
+              border: '1.5px solid var(--color-accent)',
+              textDecoration: 'none',
+              display: 'inline-block',
+            }}
+          >
+            Log In
+          </Link>
+        </div>
       </div>
     </div>
   )

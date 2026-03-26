@@ -3,6 +3,8 @@ import PageWrapper from './components/layout/PageWrapper'
 import Landing from './pages/Landing'
 import About from './pages/About'
 import Course from './pages/Course'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
 import AuthCallback from './pages/AuthCallback'
 
 export default function App() {
@@ -28,6 +30,14 @@ export default function App() {
         <Route
           path="/course"
           element={<Course />}
+        />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+        <Route
+          path="/signup"
+          element={<Signup />}
         />
         <Route
           path="/auth/callback"
