@@ -5,6 +5,8 @@ import About from './pages/About'
 import Course from './pages/Course'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import ForgotPassword from './pages/ForgotPassword'
+import SetPassword from './pages/SetPassword'
 import AuthCallback from './pages/AuthCallback'
 
 export default function App() {
@@ -38,6 +40,14 @@ export default function App() {
         <Route
           path="/signup"
           element={<Signup />}
+        />
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+        <Route
+          path="/set-password"
+          element={<SetPassword />}
         />
         <Route
           path="/auth/callback"

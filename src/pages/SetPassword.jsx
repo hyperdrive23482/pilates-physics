@@ -1,31 +1,33 @@
-import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react'
 import { useEnrollment } from '../hooks/useEnrollment'
 
-export default function Login() {
-  const { user, signIn } = useEnrollment()
+export default function SetPassword() {
+  const { setPassword } = useEnrollment()
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [password, setPasswordValue] = useState('')
+  const [confirm, setConfirm] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
   const [status, setStatus] = useState('idle') // idle | loading | error
   const [errorMsg, setErrorMsg] = useState('')
 
-  useEffect(() => {
-    if (user) navigate('/course', { replace: true })
-  }, [user, navigate])
-
   async function handleSubmit(e) {
     e.preventDefault()
+    if (password !== confirm) {
+      setErrorMsg('Passwords do not match.')
+      setStatus('error')
+      return
+    }
     setStatus('loading')
     setErrorMsg('')
 
     try {
-      await signIn(email, password)
+      await setPassword(password)
       navigate('/course', { replace: true })
     } catch (err) {
-      setErrorMsg(err.message || 'Invalid email or password.')
+      setErrorMsg(err.message || 'Something went wrong. Try again.')
       setStatus('error')
     }
   }
@@ -52,7 +54,7 @@ export default function Login() {
             marginBottom: '1.25rem',
           }}
         >
-          Welcome Back
+          Almost There
         </p>
 
         <h1
@@ -61,11 +63,22 @@ export default function Login() {
             fontSize: 'clamp(1.75rem, 4vw, 2.75rem)',
             lineHeight: '1.15',
             color: 'var(--color-ink)',
+            margin: '0 0 1.25rem',
+          }}
+        >
+          Set your password
+        </h1>
+
+        <p
+          style={{
+            fontSize: '1rem',
+            lineHeight: '1.75',
+            color: 'var(--color-ink-muted)',
             margin: '0 0 2rem',
           }}
         >
-          Log in to your account
-        </h1>
+          Choose a password you'll use to log in. Must be at least 6 characters.
+        </p>
 
         <form onSubmit={handleSubmit}>
           <label
@@ -77,57 +90,15 @@ export default function Login() {
               marginBottom: '0.375rem',
             }}
           >
-            Email
+            Password
           </label>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={status === 'loading'}
-            style={{
-              width: '100%',
-              padding: '0.75rem 1rem',
-              fontSize: '0.9rem',
-              fontFamily: '"DM Sans", sans-serif',
-              border: '1px solid var(--color-rule)',
-              background: 'var(--color-surface)',
-              color: 'var(--color-ink)',
-              outline: 'none',
-              marginBottom: '1rem',
-              boxSizing: 'border-box',
-            }}
-          />
-
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-            <label
-              style={{
-                display: 'block',
-                fontSize: '0.78rem',
-                fontWeight: '500',
-                color: 'var(--color-ink-muted)',
-                marginBottom: '0.375rem',
-              }}
-            >
-              Password
-            </label>
-            <Link
-              to="/forgot-password"
-              style={{
-                fontSize: '0.75rem',
-                color: 'var(--color-accent)',
-                textDecoration: 'none',
-              }}
-            >
-              Forgot password?
-            </Link>
-          </div>
           <div style={{ position: 'relative' }}>
             <input
               type={showPassword ? 'text' : 'password'}
               required
+              minLength={6}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setPasswordValue(e.target.value)}
               disabled={status === 'loading'}
               style={{
                 width: '100%',
@@ -138,7 +109,7 @@ export default function Login() {
                 background: 'var(--color-surface)',
                 color: 'var(--color-ink)',
                 outline: 'none',
-                marginBottom: '1.5rem',
+                marginBottom: '1rem',
                 boxSizing: 'border-box',
               }}
             />
@@ -163,6 +134,59 @@ export default function Login() {
             </button>
           </div>
 
+          <label
+            style={{
+              display: 'block',
+              fontSize: '0.78rem',
+              fontWeight: '500',
+              color: 'var(--color-ink-muted)',
+              marginBottom: '0.375rem',
+            }}
+          >
+            Confirm Password
+          </label>
+          <div style={{ position: 'relative' }}>
+            <input
+              type={showConfirm ? 'text' : 'password'}
+              required
+              minLength={6}
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              disabled={status === 'loading'}
+              style={{
+                width: '100%',
+                padding: '0.75rem 2.75rem 0.75rem 1rem',
+                fontSize: '0.9rem',
+                fontFamily: '"DM Sans", sans-serif',
+                border: '1px solid var(--color-rule)',
+                background: 'var(--color-surface)',
+                color: 'var(--color-ink)',
+                outline: 'none',
+                marginBottom: '1.5rem',
+                boxSizing: 'border-box',
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirm((v) => !v)}
+              tabIndex={-1}
+              style={{
+                position: 'absolute',
+                right: '0.75rem',
+                top: '0.7rem',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: 'var(--color-ink-muted)',
+                padding: 0,
+                display: 'flex',
+              }}
+              aria-label={showConfirm ? 'Hide password' : 'Show password'}
+            >
+              {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+
           <button
             type="submit"
             disabled={status === 'loading'}
@@ -178,7 +202,7 @@ export default function Login() {
               cursor: status === 'loading' ? 'wait' : 'pointer',
             }}
           >
-            {status === 'loading' ? 'Signing in...' : 'Log In'}
+            {status === 'loading' ? 'Setting password...' : 'Set Password & Start Course'}
           </button>
 
           {status === 'error' && (
@@ -187,22 +211,6 @@ export default function Login() {
             </p>
           )}
         </form>
-
-        <p
-          style={{
-            marginTop: '1.5rem',
-            fontSize: '0.85rem',
-            color: 'var(--color-ink-muted)',
-          }}
-        >
-          Don't have an account?{' '}
-          <Link
-            to="/signup"
-            style={{ color: 'var(--color-accent)', textDecoration: 'underline' }}
-          >
-            Sign up
-          </Link>
-        </p>
       </div>
     </div>
   )

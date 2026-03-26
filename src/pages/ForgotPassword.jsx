@@ -1,19 +1,12 @@
-import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useEnrollment } from '../hooks/useEnrollment'
 
-export default function Signup() {
-  const { user, signUp } = useEnrollment()
-  const navigate = useNavigate()
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
+export default function ForgotPassword() {
+  const { resetPasswordRequest } = useEnrollment()
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState('idle') // idle | loading | success | error
   const [errorMsg, setErrorMsg] = useState('')
-
-  useEffect(() => {
-    if (user) navigate('/course', { replace: true })
-  }, [user, navigate])
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -21,33 +14,12 @@ export default function Signup() {
     setErrorMsg('')
 
     try {
-      await signUp(email, firstName, lastName)
+      await resetPasswordRequest(email)
       setStatus('success')
     } catch (err) {
       setErrorMsg(err.message || 'Something went wrong. Try again.')
       setStatus('error')
     }
-  }
-
-  const labelStyle = {
-    display: 'block',
-    fontSize: '0.78rem',
-    fontWeight: '500',
-    color: 'var(--color-ink-muted)',
-    marginBottom: '0.375rem',
-  }
-
-  const inputStyle = {
-    width: '100%',
-    padding: '0.75rem 1rem',
-    fontSize: '0.9rem',
-    fontFamily: '"DM Sans", sans-serif',
-    border: '1px solid var(--color-rule)',
-    background: 'var(--color-surface)',
-    color: 'var(--color-ink)',
-    outline: 'none',
-    marginBottom: '1rem',
-    boxSizing: 'border-box',
   }
 
   return (
@@ -72,7 +44,7 @@ export default function Signup() {
             marginBottom: '1.25rem',
           }}
         >
-          Free Course — Pilates Physics
+          Password Reset
         </p>
 
         <h1
@@ -84,7 +56,7 @@ export default function Signup() {
             margin: '0 0 1.25rem',
           }}
         >
-          Create your account
+          Reset your password
         </h1>
 
         <p
@@ -95,8 +67,7 @@ export default function Signup() {
             margin: '0 0 2rem',
           }}
         >
-          Sign up to access four modules on spring physics, force environments,
-          and a transferable framework for reasoning about any exercise.
+          Enter your email and we'll send you a link to set a new password.
         </p>
 
         {status === 'success' ? (
@@ -109,47 +80,43 @@ export default function Signup() {
                 marginBottom: '0.75rem',
               }}
             >
-              Check your inbox to confirm your email.
+              Check your inbox.
             </p>
             <p style={{ fontSize: '0.85rem', color: 'var(--color-ink-muted)' }}>
-              Once confirmed, you'll create your password and start the course.
+              We sent a password reset link to <strong style={{ color: 'var(--color-ink)' }}>{email}</strong>.
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <div style={{ flex: 1 }}>
-                <label style={labelStyle}>First Name</label>
-                <input
-                  type="text"
-                  required
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  disabled={status === 'loading'}
-                  style={inputStyle}
-                />
-              </div>
-              <div style={{ flex: 1 }}>
-                <label style={labelStyle}>Last Name</label>
-                <input
-                  type="text"
-                  required
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  disabled={status === 'loading'}
-                  style={inputStyle}
-                />
-              </div>
-            </div>
-
-            <label style={labelStyle}>Email</label>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '0.78rem',
+                fontWeight: '500',
+                color: 'var(--color-ink-muted)',
+                marginBottom: '0.375rem',
+              }}
+            >
+              Email
+            </label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={status === 'loading'}
-              style={{ ...inputStyle, marginBottom: '1.5rem' }}
+              style={{
+                width: '100%',
+                padding: '0.75rem 1rem',
+                fontSize: '0.9rem',
+                fontFamily: '"DM Sans", sans-serif',
+                border: '1px solid var(--color-rule)',
+                background: 'var(--color-surface)',
+                color: 'var(--color-ink)',
+                outline: 'none',
+                marginBottom: '1.5rem',
+                boxSizing: 'border-box',
+              }}
             />
 
             <button
@@ -167,7 +134,7 @@ export default function Signup() {
                 cursor: status === 'loading' ? 'wait' : 'pointer',
               }}
             >
-              {status === 'loading' ? 'Creating account...' : 'Create Account'}
+              {status === 'loading' ? 'Sending...' : 'Send Reset Link'}
             </button>
 
             {status === 'error' && (
@@ -185,7 +152,7 @@ export default function Signup() {
             color: 'var(--color-ink-muted)',
           }}
         >
-          Already have an account?{' '}
+          Remember your password?{' '}
           <Link
             to="/login"
             style={{ color: 'var(--color-accent)', textDecoration: 'underline' }}

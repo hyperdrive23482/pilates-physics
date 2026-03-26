@@ -6,17 +6,37 @@ export default function AuthCallback() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Supabase automatically exchanges the token in the URL hash.
-    // Wait for the session to be established, then redirect.
+    function handleRedirect(event, session) {
+      if (event === 'PASSWORD_RECOVERY') {
+        navigate('/set-password', { replace: true })
+      } else if (session) {
+        // New signup — user still needs to create a password
+        if (session.user?.user_metadata?.needs_password) {
+          navigate('/set-password', { replace: true })
+        } else {
+          navigate('/course', { replace: true })
+        }
+      }
+    }
+
+    // Try the current session first (token may already be exchanged)
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        navigate('/course', { replace: true })
+        // Check hash for recovery flow — Supabase puts type in the URL fragment
+        const hash = window.location.hash
+        if (hash.includes('type=recovery')) {
+          navigate('/set-password', { replace: true })
+        } else if (session.user?.user_metadata?.needs_password) {
+          navigate('/set-password', { replace: true })
+        } else {
+          navigate('/course', { replace: true })
+        }
       } else {
-        // Token exchange happens via onAuthStateChange; listen once.
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-          if (session) {
+        // Wait for the token exchange
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+          if (event === 'PASSWORD_RECOVERY' || session) {
             subscription.unsubscribe()
-            navigate('/course', { replace: true })
+            handleRedirect(event, session)
           }
         })
       }

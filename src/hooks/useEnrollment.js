@@ -21,8 +21,15 @@ export function useEnrollment() {
     return () => subscription.unsubscribe()
   }, [])
 
-  async function signUp(email, password) {
-    const { error } = await supabase.auth.signUp({ email, password })
+  async function signUp(email, firstName, lastName) {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password: crypto.randomUUID(),
+      options: {
+        data: { first_name: firstName, last_name: lastName, needs_password: true },
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
     if (error) throw error
   }
 
@@ -31,9 +38,24 @@ export function useEnrollment() {
     if (error) throw error
   }
 
+  async function setPassword(password) {
+    const { error } = await supabase.auth.updateUser({
+      password,
+      data: { needs_password: false },
+    })
+    if (error) throw error
+  }
+
+  async function resetPasswordRequest(email) {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    })
+    if (error) throw error
+  }
+
   async function signOut() {
     await supabase.auth.signOut()
   }
 
-  return { user, loading, signUp, signIn, signOut }
+  return { user, loading, signUp, signIn, setPassword, resetPasswordRequest, signOut }
 }
