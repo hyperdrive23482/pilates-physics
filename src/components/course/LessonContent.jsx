@@ -480,18 +480,16 @@ const m1Pages = {
       </div>
     ),
 
-    // Page 5: BB example graph
+    // Page 6: Why this matters
     () => (
       <div>
         <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
-        <SectionTitle>The numbers are meaningfully different</SectionTitle>
+        <SectionTitle>The numbers illustrate a concept — you don't need to do math while teaching</SectionTitle>
         <Prose>
-          <p>When you look at Balanced Body's published spring data this way, something becomes immediately obvious: a red spring at 6 inches of extension is not the same as a red spring at 18 inches of extension. The numbers are meaningfully different. And that difference is present in every class you teach, every time a taller client pushes further out or a fatigued client's range shortens.</p>
+          <p>Understanding how to read spring graphs is important because it will change how you adapt exercises for each person you teach.</p>
+          <p>It's not that you need to know exactly how much weight your student is controlling, or that you must make every student feel the same load.</p>
+          <p>It's that it will help you understand what your clients are experiencing, and combined with their feedback, help you make sure your teaching intent is achieved.</p>
         </Prose>
-        <LessonImage
-          filename="bb-spring-graph.png"
-          alt="Balanced Body multi-spring load curve graph with k, b, and extension labeled. Each spring color plots as a distinct line showing how resistance diverges at different extension distances."
-        />
       </div>
     ),
 
