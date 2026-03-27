@@ -1018,43 +1018,21 @@ function MeetInstructorPage() {
       <Eyebrow>Module 1 \u2014 Spring Basics</Eyebrow>
       <div
         style={{
+          position: 'relative',
           width: '100%',
           aspectRatio: '16/9',
-          background: 'var(--color-surface)',
-          border: '1px solid var(--color-rule)',
           borderRadius: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '14px',
+          overflow: 'hidden',
           marginBottom: '36px',
         }}
       >
-        <svg
-          width="48"
-          height="48"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="var(--color-accent)"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          style={{ opacity: 0.6 }}
-        >
-          <polygon points="5 3 19 12 5 21 5 3" />
-        </svg>
-        <span
-          style={{
-            fontFamily: '"DM Mono", monospace',
-            fontSize: '11px',
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            color: 'var(--color-ink-muted)',
-          }}
-        >
-          Video \u2014 not yet recorded
-        </span>
+        <iframe
+          src="https://www.youtube.com/embed/44L4UZvEX5E"
+          title="Meet Your Instructor"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
       </div>
       <div
         style={{
