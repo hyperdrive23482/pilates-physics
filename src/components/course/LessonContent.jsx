@@ -57,50 +57,19 @@ const placeholderContent = {
 }
 
 // ── Image placeholder component ──────────────────────────────────────────────
-function ImagePlaceholder({ filename, description }) {
+function LessonImage({ filename, alt }) {
   return (
-    <div
-      style={{
-        border: '1px solid var(--color-rule)',
-        borderRadius: '8px',
-        padding: '36px 48px',
-        textAlign: 'center',
-        background: 'var(--color-surface)',
-        margin: '2rem 0',
-      }}
-    >
-      <div
+    <div style={{ margin: '2rem 0' }}>
+      <img
+        src={`/images/module1/${filename}`}
+        alt={alt}
         style={{
-          fontFamily: '"DM Mono", monospace',
-          fontSize: '13px',
-          color: 'var(--color-accent)',
-          marginBottom: '8px',
+          width: '100%',
+          height: 'auto',
+          borderRadius: '8px',
+          display: 'block',
         }}
-      >
-        {filename}
-      </div>
-      <div
-        style={{
-          fontSize: '13px',
-          lineHeight: '1.55',
-          color: 'var(--color-ink-muted)',
-          marginBottom: '10px',
-        }}
-      >
-        {description}
-      </div>
-      <div
-        style={{
-          fontFamily: '"DM Mono", monospace',
-          fontSize: '10px',
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-          color: 'var(--color-ink-muted)',
-          opacity: 0.7,
-        }}
-      >
-        Static image
-      </div>
+      />
     </div>
   )
 }
@@ -475,9 +444,9 @@ const m1Pages = {
         <Prose>
           <p>When you look at Balanced Body's published spring data this way, something becomes immediately obvious: a red spring at 6 inches of extension is not the same as a red spring at 18 inches of extension. The numbers are meaningfully different. And that difference is present in every class you teach, every time a taller client pushes further out or a fatigued client's range shortens.</p>
         </Prose>
-        <ImagePlaceholder
+        <LessonImage
           filename="bb-spring-graph.png"
-          description="Balanced Body multi-spring load curve graph with k, b, and extension labeled. Each spring color plots as a distinct line showing how resistance diverges at different extension distances."
+          alt="Balanced Body multi-spring load curve graph with k, b, and extension labeled. Each spring color plots as a distinct line showing how resistance diverges at different extension distances."
         />
       </div>
     ),
@@ -601,9 +570,9 @@ const m1Pages = {
             </DefRow>
           </div>
         </div>
-        <ImagePlaceholder
+        <LessonImage
           filename="spring-coil-factors.png"
-          description="Spring anatomy diagram with coil length, coil diameter, wire diameter, material, and end geometry labeled on a representative extension spring."
+          alt="Spring anatomy diagram with coil length, coil diameter, wire diameter, material, and end geometry labeled on a representative extension spring."
         />
         <Prose>
           <p>None of these variables operate in isolation. Change the wire diameter and you change <V>k</V>. Change the coil diameter and you change both <V>k</V> and the spring's maximum safe extension. This is why two springs that look similar on a shelf can have meaningfully different load curves \u2014 and why matching springs across brands by color or by feel alone is unreliable.</p>
@@ -620,9 +589,9 @@ const m1Pages = {
           <p>When a Pilates equipment company designs a spring, they don't start with wire and start bending. They start with a target load curve \u2014 a desired <V>k</V>, a desired <V>b</V>, and a maximum safe extension \u2014 and work backwards to a physical specification.</p>
           <p>That specification gets handed to a manufacturer as an engineering drawing. It defines the free length, the coil geometry, the wire diameter, the material, and the end treatment. The manufacturer produces a sample. That sample gets tested against the target curve. If the load data matches within tolerance, the spec is approved. If not, the geometry gets adjusted and the cycle repeats.</p>
         </Prose>
-        <ImagePlaceholder
+        <LessonImage
           filename="spring-engineering-drawing.png"
-          description="A representative spring engineering drawing showing free length, wire diameter, outer diameter, coil count, initial tension, spring rate, and maximum safe deflection \u2014 with no color name present on the document."
+          alt="A representative spring engineering drawing showing free length, wire diameter, outer diameter, coil count, initial tension, spring rate, and maximum safe deflection."
         />
         <Prose>
           <p>The drawing above is representative of what a real spring spec looks like. The key numbers \u2014 wire diameter, outer diameter, free length, calculated rate of extension, initial tension, maximum safe deflection \u2014 are all there. Together they describe a spring completely. But notice what isn't there: a color name. The color gets assigned later, as a label for the finished product. It's a convenience, not a specification.</p>
@@ -638,9 +607,9 @@ const m1Pages = {
         <Prose>
           <p>Because every manufacturer runs this process independently, starting from their own target curve, using their own material sources and manufacturing tolerances, the springs that come out the other end are not interchangeable \u2014 even when they carry the same color name or are marketed as equivalents.</p>
         </Prose>
-        <ImagePlaceholder
+        <LessonImage
           filename="bb-spring-graph.png"
-          description="Balanced Body spring lineup plotted by load curve. Each color is a distinct line with different slope and starting point. The gap between springs is not constant \u2014 curves diverge as extension increases."
+          alt="Balanced Body spring lineup plotted by load curve. Each color is a distinct line with different slope and starting point. Curves diverge as extension increases."
         />
         <Prose>
           <p>This graph shows Balanced Body's spring lineup plotted by load curve. Each line has a different slope and a different starting point. The gap between a yellow spring and a green spring at 18 inches of extension is not the same as the gap between them at 6 inches. The curves diverge. That divergence is a direct consequence of different <V>k</V> and <V>b</V> values \u2014 different design choices producing different physical behavior across the range of motion.</p>
@@ -855,9 +824,9 @@ const m1Pages = {
           <p>When you plot the lightest spring from four major contemporary reformer manufacturers \u2014 Balanced Body, STOTT, Peak, and Align-Pilates \u2014 on the same graph, something reassuring happens. Across their full range of travel, they stay within about 5 pounds of each other. The load curves are similar in slope, similar in initial tension, similar in behavior. For practical teaching purposes, the light springs across these brands are close enough that switching between them doesn't require significant reprogramming.</p>
           <p>This makes intuitive sense. A light spring has a low <V>k</V> and a low <V>b</V>. There's less room for the curves to diverge when the values are small to begin with.</p>
         </Prose>
-        <ImagePlaceholder
+        <LessonImage
           filename="cross-brand-light-springs.png"
-          description="Lightest springs from Balanced Body, STOTT, Peak, and Align-Pilates plotted on the same axes. Lines remain within approximately 5 lbs of each other across the full range of carriage travel."
+          alt="Lightest springs from Balanced Body, STOTT, Peak, and Align-Pilates plotted on the same axes. Lines remain within approximately 5 lbs of each other across the full range of carriage travel."
         />
       </div>
     ),
@@ -873,9 +842,9 @@ const m1Pages = {
           <p>Second, Peak behaves differently from the start. Its heavy spring carries significantly more initial tension than the other three \u2014 it feels heavier from the moment the carriage begins to move. But its <V>k</V> is similar to Balanced Body's, which means the slope of its curve is comparable. The lines run roughly parallel, with Peak sitting higher. By about 20 inches of extension, Peak and STOTT cross \u2014 beyond that point, the Peak spring is actually lighter than the STOTT spring.</p>
           <p>Third, Align diverges most aggressively with extension. Its <V>k</V> is steeper than the others, meaning the resistance climbs faster per inch of carriage travel. A client working at the far end of their range on Align heavy springs is in meaningfully different territory than the same client on Balanced Body heavies.</p>
         </Prose>
-        <ImagePlaceholder
+        <LessonImage
           filename="cross-brand-heavy-springs.png"
-          description="Heaviest springs from Balanced Body, STOTT, Peak, and Align-Pilates on the same axes. Curves diverge significantly through the range. Peak starts high (high b), Align climbs steeply (high k). Peak and STOTT cross at approximately 20 inches of extension."
+          alt="Heaviest springs from Balanced Body, STOTT, Peak, and Align-Pilates on the same axes. Curves diverge significantly. Peak starts high, Align climbs steeply. Peak and STOTT cross at approximately 20 inches."
         />
       </div>
     ),
