@@ -749,7 +749,7 @@ const m1Pages = {
         </Prose>
         <AnimationSlot animationId="m1-l3" />
         <Prose>
-          <p>Most reformer springs, used correctly on well-maintained equipment, operate entirely within the elastic range. The carriage travel is designed to keep spring extension within safe limits.</p>
+          <p>Each color spring has a different safe extension limit, determined by the specs that give it its load profile. Most reformer springs, used correctly on well-maintained equipment, operate entirely within the elastic range. The carriage travel is designed to keep spring extension within safe limits.</p>
         </Prose>
       </div>
     ),
