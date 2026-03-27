@@ -49,23 +49,34 @@ export function useCourseProgress(userId) {
     if (!required) return true
 
     const completedInRequired = progress[required.id] || []
-    return required.lessons.every((l) => completedInRequired.includes(l.id))
+    const trackableLessons = required.lessons.filter((l) => !l.isIntro && !l.isSummary)
+    return trackableLessons.every((l) => completedInRequired.includes(l.id))
   }
 
   function moduleCompletionCount(moduleId) {
     const mod = modules.find((m) => m.id === moduleId)
     if (!mod) return { completed: 0, total: 0 }
+    const trackable = mod.lessons.filter((l) => !l.isIntro && !l.isSummary)
+    const completed = (progress[moduleId] || []).filter((id) =>
+      trackable.some((l) => l.id === id)
+    )
     return {
-      completed: (progress[moduleId] || []).length,
-      total: mod.lessons.length,
+      completed: completed.length,
+      total: trackable.length,
     }
   }
 
-  const totalLessons = modules.reduce((sum, m) => sum + m.lessons.length, 0)
-  const completedLessons = modules.reduce(
-    (sum, m) => sum + (progress[m.id] || []).length,
+  const totalLessons = modules.reduce(
+    (sum, m) => sum + m.lessons.filter((l) => !l.isIntro && !l.isSummary).length,
     0
   )
+  const completedLessons = modules.reduce((sum, m) => {
+    const trackable = m.lessons.filter((l) => !l.isIntro && !l.isSummary)
+    const completed = (progress[m.id] || []).filter((id) =>
+      trackable.some((l) => l.id === id)
+    )
+    return sum + completed.length
+  }, 0)
   const overallPercent =
     totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0
 

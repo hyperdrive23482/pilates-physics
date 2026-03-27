@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elastic vs Plastic Deformation</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    background: #1C1A17;
+    color: #E8E4DC;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px;
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(17px, 2.8vw, 24px);
+    font-weight: 400;
+    color: #EF9F27;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: #6B6560;
+    text-align: center;
+    margin-bottom: 28px;
+    max-width: 480px;
+    line-height: 1.5;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: 660px;
+    background: #252320;
+    border: 1px solid #2E2C28;
+    border-radius: 10px;
+    padding: 24px 20px 16px;
+    margin-bottom: 16px;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+  }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  button {
+    font-family: inherit;
+    font-size: 13px;
+    padding: 9px 24px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  button:hover { opacity: 0.85; }
+  button:disabled { opacity: 0.4; cursor: default; }
+
+  button.primary {
+    background: #EF9F27;
+    color: #1C1A17;
+    font-weight: 500;
+  }
+
+  button.secondary {
+    background: #2E2C28;
+    color: #8C8880;
+  }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #8C8880;
+  }
+
+  .legend-swatch {
+    width: 24px;
+    height: 3px;
+    border-radius: 2px;
+  }
+
+  .insight {
+    margin-top: 16px;
+    max-width: 660px;
+    width: 100%;
+    background: #252320;
+    border-left: 3px solid #EF9F27;
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: #6B6560;
+  }
+
+  .insight strong { color: #E8E4DC; }
+</style>
+</head>
+<body>
+
+<h1>Elastic vs. plastic deformation</h1>
+<p class="subtitle">The safe extension limit is the boundary between a spring that recovers and one that doesn't.</p>
+
+<div class="stage">
+  <canvas id="c" width="620" height="280"></canvas>
+  <div class="controls">
+    <button class="primary" id="btn-play">Play Animation</button>
+    <button class="secondary" id="btn-reset">Reset</button>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-swatch" style="background:#1D9E75"></div>
+    Safe range — elastic deformation
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background:#E24B4A"></div>
+    Past safe limit — plastic deformation
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background:#EF9F27; opacity:0.6; border-top: 2px dashed #EF9F27; height:0;"></div>
+    Safe extension limit
+  </div>
+</div>
+
+<div class="insight">
+  <strong>Elastic deformation</strong> means the spring returns to its original length every cycle — the metal deforms under load and fully recovers. <strong>Plastic deformation</strong> is permanent: the spring has been stretched past the point of recovery, and its new resting length is longer than it was designed to be.
+</div>
+
+<script>
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+
+  function dpr() { return window.devicePixelRatio || 1; }
+
+  function resize() {
+    const d = dpr();
+    const w = canvas.offsetWidth || 620;
+    const h = canvas.offsetHeight || 280;
+    canvas.width  = w * d;
+    canvas.height = h * d;
+    ctx.scale(d, d);
+    return { w, h };
+  }
+
+  const COLORS = {
+    wall:       '#3A3830',
+    elastic:    '#1D9E75',
+    plastic:    '#E24B4A',
+    limit:      '#EF9F27',
+    text:       '#8C8880',
+    textLt:     '#E8E4DC',
+    labelBg:    '#252320',
+    recovered:  '#4A4840',
+  };
+
+  const WALL_X       = 60;
+  const SPRING_REST  = 100;
+  const SAFE_EXT     = 300;
+  const PLASTIC_EXT  = 420;
+  const LIMIT_X      = 340;
+  const TOP_Y        = 95;
+  const BOT_Y        = 200;
+  const SPRING_H     = 18;
+  const ATTACH_R     = 5;
+
+  let animating = false;
+  let rafId = null;
+  let startTime = null;
+
+  let elastic = { tipX: WALL_X + SPRING_REST, restX: WALL_X + SPRING_REST, originalRestX: WALL_X + SPRING_REST, done: false, cycles: 0, phase: 'idle' };
+  let plastic  = { tipX: WALL_X + SPRING_REST, restX: WALL_X + SPRING_REST, originalRestX: WALL_X + SPRING_REST, done: false, phase: 'idle' };
+
+  const CYCLE_DUR    = 1200;
+  const ELASTIC_REPS = 3;
+  const PAUSE_BEFORE = 300;
+
+  function easeInOut(t) {
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  }
+
+  function drawSpring(fromX, toX, y, color, coils = 8) {
+    const len = toX - fromX;
+    if (len < 4) return;
+    const segments = coils * 2;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(fromX, y);
+    for (let i = 0; i <= segments; i++) {
+      const px = fromX + (len * i) / segments;
+      const py = y + (i % 2 === 0 ? -SPRING_H : SPRING_H);
+      ctx.lineTo(px, py);
+    }
+    ctx.lineTo(toX, y);
+    ctx.stroke();
+  }
+
+  function drawEndCap(x, y, color) {
+    ctx.beginPath();
+    ctx.arc(x, y, ATTACH_R, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+
+  function drawWall(h) {
+    ctx.fillStyle = COLORS.wall;
+    ctx.fillRect(WALL_X - 16, 40, 16, h - 80);
+    ctx.strokeStyle = '#2E2C28';
+    ctx.lineWidth = 1;
+    for (let y = 50; y < h - 40; y += 10) {
+      ctx.beginPath();
+      ctx.moveTo(WALL_X - 16, y);
+      ctx.lineTo(WALL_X - 6, y + 8);
+      ctx.stroke();
+    }
+    ctx.strokeStyle = '#4A4840';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(WALL_X, 40);
+    ctx.lineTo(WALL_X, h - 40);
+    ctx.stroke();
+  }
+
+  function drawLimitLine(h) {
+    ctx.setLineDash([6, 4]);
+    ctx.strokeStyle = COLORS.limit;
+    ctx.lineWidth = 1.5;
+    ctx.globalAlpha = 0.7;
+    ctx.beginPath();
+    ctx.moveTo(LIMIT_X, 36);
+    ctx.lineTo(LIMIT_X, h - 36);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+
+    ctx.font = '11px DM Sans, sans-serif';
+    ctx.fillStyle = COLORS.limit;
+    ctx.textAlign = 'center';
+    ctx.globalAlpha = 0.8;
+    ctx.fillText('safe limit', LIMIT_X, 26);
+    ctx.globalAlpha = 1;
+  }
+
+  function drawLabel(x, y, text, color) {
+    ctx.font = '500 12px DM Sans, sans-serif';
+    ctx.fillStyle = color;
+    ctx.textAlign = 'left';
+    ctx.fillText(text, x, y);
+  }
+
+  function drawRestMarker(restX, y, color, isOriginal) {
+    ctx.setLineDash([3, 3]);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 0.5;
+    ctx.globalAlpha = 0.35;
+    ctx.beginPath();
+    ctx.moveTo(restX, y - 22);
+    ctx.lineTo(restX, y + 22);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+  }
+
+  function draw() {
+    const { w, h } = resize();
+    ctx.clearRect(0, 0, w, h);
+
+    drawWall(h);
+    drawLimitLine(h);
+
+    drawRestMarker(elastic.originalRestX, TOP_Y, COLORS.elastic, true);
+
+    drawSpring(WALL_X, elastic.tipX, TOP_Y, COLORS.elastic);
+    drawEndCap(WALL_X, TOP_Y, COLORS.elastic);
+    drawEndCap(elastic.tipX, TOP_Y, COLORS.elastic);
+
+    drawLabel(WALL_X + 4, TOP_Y - 30, 'Safe range — elastic deformation', COLORS.elastic);
+
+    if (elastic.cycles > 0) {
+      ctx.font = '11px DM Sans, sans-serif';
+      ctx.fillStyle = COLORS.elastic;
+      ctx.textAlign = 'right';
+      ctx.globalAlpha = 0.7;
+      ctx.fillText('cycle ' + elastic.cycles + ' of ' + ELASTIC_REPS, w - 20, TOP_Y - 30);
+      ctx.globalAlpha = 1;
+    }
+
+    drawRestMarker(plastic.originalRestX, BOT_Y, COLORS.plastic, true);
+
+    if (plastic.done && plastic.restX > plastic.originalRestX) {
+      drawRestMarker(plastic.restX, BOT_Y, COLORS.plastic, false);
+      const bY = BOT_Y + 28;
+      ctx.strokeStyle = COLORS.plastic;
+      ctx.lineWidth = 1;
+      ctx.globalAlpha = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(plastic.originalRestX, bY - 4);
+      ctx.lineTo(plastic.originalRestX, bY + 4);
+      ctx.moveTo(plastic.originalRestX, bY);
+      ctx.lineTo(plastic.restX, bY);
+      ctx.moveTo(plastic.restX, bY - 4);
+      ctx.lineTo(plastic.restX, bY + 4);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+
+      ctx.font = '11px DM Sans, sans-serif';
+      ctx.fillStyle = COLORS.plastic;
+      ctx.textAlign = 'center';
+      ctx.globalAlpha = 0.8;
+      ctx.fillText('permanent stretch', (plastic.originalRestX + plastic.restX) / 2, bY + 14);
+      ctx.globalAlpha = 1;
+    }
+
+    drawSpring(WALL_X, plastic.tipX, BOT_Y, COLORS.plastic);
+    drawEndCap(WALL_X, BOT_Y, COLORS.plastic);
+    drawEndCap(plastic.tipX, BOT_Y, COLORS.plastic);
+
+    drawLabel(WALL_X + 4, BOT_Y - 30, 'Past safe limit — plastic deformation', COLORS.plastic);
+  }
+
+  function animate(ts) {
+    if (!startTime) startTime = ts;
+    const elapsed = ts - startTime;
+
+    if (!elastic.done) {
+      const totalDur = PAUSE_BEFORE + ELASTIC_REPS * CYCLE_DUR;
+      if (elapsed < PAUSE_BEFORE) {
+        elastic.tipX = elastic.originalRestX;
+        elastic.cycles = 0;
+      } else {
+        const t = elapsed - PAUSE_BEFORE;
+        const cycleIdx = Math.floor(t / CYCLE_DUR);
+        const cycleT   = (t % CYCLE_DUR) / CYCLE_DUR;
+
+        if (cycleIdx >= ELASTIC_REPS) {
+          elastic.tipX = elastic.originalRestX;
+          elastic.done = true;
+          elastic.cycles = ELASTIC_REPS;
+        } else {
+          elastic.cycles = cycleIdx + 1;
+          if (cycleT < 0.5) {
+            const outT = easeInOut(cycleT * 2);
+            elastic.tipX = elastic.originalRestX + outT * (SAFE_EXT - elastic.originalRestX);
+          } else {
+            const retT = easeInOut((cycleT - 0.5) * 2);
+            elastic.tipX = SAFE_EXT - retT * (SAFE_EXT - elastic.originalRestX);
+          }
+        }
+      }
+    }
+
+    if (!plastic.done) {
+      const stretchDur = CYCLE_DUR * 0.5;
+      const returnDur  = CYCLE_DUR * 0.5;
+      const totalDur   = PAUSE_BEFORE + stretchDur + returnDur;
+
+      if (elapsed < PAUSE_BEFORE) {
+        plastic.tipX = plastic.originalRestX;
+      } else {
+        const t = elapsed - PAUSE_BEFORE;
+        if (t < stretchDur) {
+          const outT = easeInOut(t / stretchDur);
+          plastic.tipX = plastic.originalRestX + outT * (PLASTIC_EXT - plastic.originalRestX);
+        } else if (t < stretchDur + returnDur) {
+          const retT = easeInOut((t - stretchDur) / returnDur);
+          const newRest = plastic.originalRestX + 55;
+          plastic.restX = newRest;
+          plastic.tipX = PLASTIC_EXT - retT * (PLASTIC_EXT - newRest);
+        } else {
+          const newRest = plastic.originalRestX + 55;
+          plastic.restX = newRest;
+          plastic.tipX  = newRest;
+          plastic.done  = true;
+        }
+      }
+    }
+
+    draw();
+
+    if (!elastic.done || !plastic.done) {
+      rafId = requestAnimationFrame(animate);
+    } else {
+      draw();
+      document.getElementById('btn-play').textContent = 'Play Again';
+      document.getElementById('btn-play').disabled = false;
+    }
+  }
+
+  function play() {
+    if (rafId) cancelAnimationFrame(rafId);
+    startTime = null;
+    elastic = { tipX: WALL_X + SPRING_REST, restX: WALL_X + SPRING_REST, originalRestX: WALL_X + SPRING_REST, done: false, cycles: 0 };
+    plastic  = { tipX: WALL_X + SPRING_REST, restX: WALL_X + SPRING_REST, originalRestX: WALL_X + SPRING_REST, done: false };
+    document.getElementById('btn-play').disabled = true;
+    document.getElementById('btn-play').textContent = 'Playing...';
+    draw();
+    rafId = requestAnimationFrame(animate);
+  }
+
+  function reset() {
+    if (rafId) cancelAnimationFrame(rafId);
+    startTime = null;
+    elastic = { tipX: WALL_X + SPRING_REST, restX: WALL_X + SPRING_REST, originalRestX: WALL_X + SPRING_REST, done: false, cycles: 0 };
+    plastic  = { tipX: WALL_X + SPRING_REST, restX: WALL_X + SPRING_REST, originalRestX: WALL_X + SPRING_REST, done: false };
+    document.getElementById('btn-play').textContent = 'Play Animation';
+    document.getElementById('btn-play').disabled = false;
+    draw();
+  }
+
+  document.getElementById('btn-play').addEventListener('click', play);
+  document.getElementById('btn-reset').addEventListener('click', reset);
+
+  window.addEventListener('resize', draw);
+
+  reset();
+</script>
+</body>
+</html>

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spring Extension — Tall vs. Short</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    background: #1C1A17;
+    color: #E8E4DC;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 400;
+    color: #EF9F27;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: #8C8880;
+    text-align: center;
+    margin-bottom: 28px;
+    max-width: 520px;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .panel {
+    background: #252320;
+    border: 1px solid #2E2C28;
+    padding: 16px 20px 12px;
+  }
+
+  .panel:first-child { border-radius: 10px 10px 0 0; }
+  .panel:last-child  { border-radius: 0 0 10px 10px; border-top: none; }
+
+  .panel-label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5C5A54;
+    margin-bottom: 10px;
+  }
+
+  canvas { display: block; width: 100%; }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    margin: 16px 0 20px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #8C8880;
+  }
+
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .legend-dot.rose    { background: #EF9F27; }
+  .legend-dot.andrea  { background: #4A9EBF; }
+
+  .stats-row {
+    display: flex;
+    gap: 12px;
+    margin: 0 0 20px;
+    width: 100%;
+    max-width: 700px;
+  }
+
+  .stat-card {
+    flex: 1;
+    background: #252320;
+    border: 1px solid #2E2C28;
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+
+  .stat-name {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 6px;
+  }
+
+  .stat-name.rose   { color: #EF9F27; }
+  .stat-name.andrea { color: #4A9EBF; }
+
+  .stat-value {
+    font-size: clamp(22px, 4vw, 30px);
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-weight: 400;
+    color: #E8E4DC;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .stat-sub {
+    font-size: 11px;
+    color: #5C5A54;
+  }
+
+  .diff-card {
+    flex: 0.7;
+    background: #1C1A17;
+    border: 1px solid #3A3830;
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .diff-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #5C5A54;
+    margin-bottom: 6px;
+  }
+
+  .diff-value {
+    font-size: clamp(22px, 4vw, 30px);
+    font-family: 'DM Serif Display', Georgia, serif;
+    color: #EF9F27;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .diff-sub {
+    font-size: 11px;
+    color: #5C5A54;
+  }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  button {
+    font-family: inherit;
+    font-size: 13px;
+    padding: 9px 22px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  button:hover { opacity: 0.85; }
+
+  button.primary {
+    background: #EF9F27;
+    color: #1C1A17;
+    font-weight: 500;
+  }
+
+  button.secondary {
+    background: #2E2C28;
+    color: #8C8880;
+  }
+
+  .insight {
+    margin-top: 20px;
+    max-width: 700px;
+    background: #252320;
+    border-left: 3px solid #EF9F27;
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: #8C8880;
+  }
+
+  .insight strong { color: #E8E4DC; }
+</style>
+</head>
+<body>
+
+<h1>Same springs. Same settings. Different bodies.</h1>
+<p class="subtitle">Rose (5′11″) and Andrea (5′1″) doing footwork with identical spring setup — red, red, green.</p>
+
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-name rose">Rose — 5′11″</div>
+    <div class="stat-value" id="val-rose">—</div>
+    <div class="stat-sub" id="sub-rose">at rest</div>
+  </div>
+  <div class="diff-card">
+    <div class="diff-label">difference</div>
+    <div class="diff-value" id="val-diff">—</div>
+    <div class="diff-sub" id="sub-diff">at full extension</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-name andrea">Andrea — 5′1″</div>
+    <div class="stat-value" id="val-andrea">—</div>
+    <div class="stat-sub" id="sub-andrea">at rest</div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="panel">
+    <div class="panel-label">Reformer — Footwork (Side View)</div>
+    <canvas id="reformer" width="660" height="180"></canvas>
+  </div>
+  <div class="panel">
+    <div class="panel-label">Spring Resistance vs. Carriage Extension</div>
+    <canvas id="graph" width="660" height="200"></canvas>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot rose"></div> Rose — 20″ max extension — 89 lbs</div>
+  <div class="legend-item"><div class="legend-dot andrea"></div> Andrea — 13.5″ max extension — 69 lbs</div>
+</div>
+
+<div class="controls">
+  <button class="primary" id="btn-play">Play Animation</button>
+  <button class="secondary" id="btn-reset">Reset</button>
+</div>
+
+<div class="insight">
+  <strong>Same springs. Different loads.</strong> Because Rose pushes the carriage further out, she's working higher on the spring curve at full extension — moving about 20 lbs more than Andrea at that moment. Neither setting is wrong. But the instructor needs to know this is happening.
+</div>
+
+<script>
+  const K = 3.167;
+  const B = 26;
+  const MAX_EXT_ROSE   = 20;
+  const MAX_EXT_ANDREA = 13.5;
+
+  function springF(x) { return K * x + B; }
+
+  const F_ROSE   = springF(MAX_EXT_ROSE);
+  const F_ANDREA = springF(MAX_EXT_ANDREA);
+  const DIFF     = F_ROSE - F_ANDREA;
+
+  const rCanvas = document.getElementById('reformer');
+  const gCanvas = document.getElementById('graph');
+  const rCtx = rCanvas.getContext('2d');
+  const gCtx = gCanvas.getContext('2d');
+
+  function dpr() { return window.devicePixelRatio || 1; }
+
+  function setupCanvas(canvas) {
+    const d = dpr();
+    const w = canvas.offsetWidth || parseInt(canvas.getAttribute('width'));
+    const h = canvas.offsetHeight || parseInt(canvas.getAttribute('height'));
+    canvas.width  = w * d;
+    canvas.height = h * d;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(d, d);
+    return { w, h };
+  }
+
+  const C = {
+    bg:      '#252320',
+    track:   '#3A3830',
+    rail:    '#4A4840',
+    frame:   '#5C5A54',
+    rose:    '#EF9F27',
+    andrea:  '#4A9EBF',
+    amber:   '#EF9F27',
+    grid:    '#2A2825',
+    axis:    '#4A4840',
+    text:    '#8C8880',
+    textLt:  '#E8E4DC',
+    spring:  '#6B6560',
+    foot:    '#3A3830',
+  };
+
+  let animating = false;
+  let rafId = null;
+  let t = 0;
+  let phase = 0;
+  let lastTime = null;
+  const SPEED = 0.35;
+
+  let rosePts   = [];
+  let andreaPts = [];
+
+  function drawReformer(tRose, tAndrea) {
+    const { w, h } = setupCanvas(rCanvas);
+    const ctx = rCtx;
+    ctx.clearRect(0, 0, w, h);
+
+    const PAD_L = 40, PAD_R = 40;
+    const trackW = w - PAD_L - PAD_R;
+    const railY1 = h * 0.38;
+    const railY2 = h * 0.62;
+    const midY   = (railY1 + railY2) / 2;
+    const footbarX = PAD_L + 22;
+
+    ctx.strokeStyle = C.frame;
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(footbarX, railY1 - 10);
+    ctx.lineTo(footbarX, railY2 + 10);
+    ctx.stroke();
+
+    ctx.strokeStyle = C.rail;
+    ctx.lineWidth = 3;
+    [railY1, railY2].forEach(y => {
+      ctx.beginPath();
+      ctx.moveTo(footbarX, y);
+      ctx.lineTo(PAD_L + trackW, y);
+      ctx.stroke();
+    });
+
+    ctx.strokeStyle = C.frame;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(PAD_L + trackW, railY1 - 8);
+    ctx.lineTo(PAD_L + trackW, railY2 + 8);
+    ctx.stroke();
+
+    const springAnchorX = footbarX + 2;
+
+    const maxTravelPx = trackW - 70;
+    const roseMaxPx   = maxTravelPx * (MAX_EXT_ROSE / 22);
+    const andreaMaxPx = maxTravelPx * (MAX_EXT_ANDREA / 22);
+
+    const roseX   = PAD_L + 50 + tRose   * roseMaxPx;
+    const andreaX = PAD_L + 50 + tAndrea * andreaMaxPx;
+
+    const carriageH = railY2 - railY1 - 2;
+    const carriageW = 48;
+
+    function drawSpring(fromX, toX, y, color, ext) {
+      const len = toX - fromX;
+      if (len < 2) return;
+      const coils = 10;
+      const amp = Math.max(3, Math.min(8, len / coils * 0.6));
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = 0.7;
+      ctx.beginPath();
+      ctx.moveTo(fromX, y);
+      for (let i = 0; i <= coils * 4; i++) {
+        const px = fromX + (len * i) / (coils * 4);
+        const py = y + Math.sin((i / (coils * 4)) * coils * Math.PI * 2) * amp;
+        ctx.lineTo(px, py);
+      }
+      ctx.lineTo(toX, y);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+
+    drawSpring(springAnchorX, roseX,   railY1 + 6,  C.rose,   tRose * MAX_EXT_ROSE);
+    drawSpring(springAnchorX, andreaX, railY2 - 6,  C.andrea, tAndrea * MAX_EXT_ANDREA);
+
+    ctx.fillStyle = C.rose + '22';
+    ctx.strokeStyle = C.rose;
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, roseX - 2, railY1 + 1, carriageW, carriageH * 0.45, 3);
+    ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle = C.andrea + '22';
+    ctx.strokeStyle = C.andrea;
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, andreaX - 2, railY1 + carriageH * 0.55, carriageW, carriageH * 0.45, 3);
+    ctx.fill(); ctx.stroke();
+
+    ctx.font = '11px DM Sans, sans-serif';
+    ctx.fillStyle = C.rose;
+    ctx.textAlign = 'center';
+    ctx.fillText('Rose', roseX + carriageW/2, railY1 - 4);
+
+    ctx.fillStyle = C.andrea;
+    ctx.fillText('Andrea', andreaX + carriageW/2, railY2 + 14);
+
+    const roseFullX   = PAD_L + 50 + roseMaxPx + carriageW/2;
+    const andreaFullX = PAD_L + 50 + andreaMaxPx + carriageW/2;
+
+    ctx.setLineDash([3, 3]);
+    ctx.strokeStyle = C.rose + '55';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(roseFullX, railY1 - 12);
+    ctx.lineTo(roseFullX, railY1 + 2);
+    ctx.stroke();
+
+    ctx.strokeStyle = C.andrea + '55';
+    ctx.beginPath();
+    ctx.moveTo(andreaFullX, railY2 - 2);
+    ctx.lineTo(andreaFullX, railY2 + 16);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.font = '10px DM Sans, sans-serif';
+    ctx.fillStyle = C.rose + '88';
+    ctx.textAlign = 'center';
+    ctx.fillText('20″', roseFullX, railY1 - 15);
+
+    ctx.fillStyle = C.andrea + '88';
+    ctx.fillText('13.5″', andreaFullX, railY2 + 26);
+
+    ctx.font = '10px DM Sans, sans-serif';
+    ctx.fillStyle = C.text;
+    ctx.textAlign = 'center';
+    ctx.fillText('footbar', footbarX, h - 4);
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  const G_PAD = { l: 52, r: 24, t: 16, b: 36 };
+  const MAX_X = 22;
+  const MAX_Y = 100;
+
+  function extToGx(ext, w) {
+    return G_PAD.l + (ext / MAX_X) * (w - G_PAD.l - G_PAD.r);
+  }
+
+  function forceToGy(f, h) {
+    return G_PAD.t + (1 - (f - 0) / MAX_Y) * (h - G_PAD.t - G_PAD.b);
+  }
+
+  function drawGraph(live) {
+    const { w, h } = setupCanvas(gCanvas);
+    const ctx = gCtx;
+    ctx.clearRect(0, 0, w, h);
+
+    const gW = w - G_PAD.l - G_PAD.r;
+    const gH = h - G_PAD.t - G_PAD.b;
+
+    ctx.strokeStyle = C.grid;
+    ctx.lineWidth = 1;
+    [0, 25, 50, 75, 100].forEach(lb => {
+      const y = forceToGy(lb, h);
+      ctx.beginPath(); ctx.moveTo(G_PAD.l, y); ctx.lineTo(w - G_PAD.r, y); ctx.stroke();
+      ctx.font = '10px DM Sans, sans-serif';
+      ctx.fillStyle = C.text;
+      ctx.textAlign = 'right';
+      ctx.fillText(lb + ' lb', G_PAD.l - 6, y + 4);
+    });
+
+    [0, 5, 10, 15, 20].forEach(x => {
+      const px = extToGx(x, w);
+      ctx.beginPath(); ctx.moveTo(px, G_PAD.t); ctx.lineTo(px, h - G_PAD.b); ctx.stroke();
+      ctx.font = '10px DM Sans, sans-serif';
+      ctx.fillStyle = C.text;
+      ctx.textAlign = 'center';
+      ctx.fillText(x + '″', px, h - G_PAD.b + 14);
+    });
+
+    ctx.fillStyle = C.text;
+    ctx.font = '10px DM Sans, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Spring Extension (inches)', G_PAD.l + gW / 2, h - 2);
+
+    ctx.save();
+    ctx.translate(12, G_PAD.t + gH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.fillText('Resistance (lbs)', 0, 0);
+    ctx.restore();
+
+    ctx.strokeStyle = C.spring;
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    for (let x = 0; x <= MAX_X; x += 0.5) {
+      const px = extToGx(x, w);
+      const py = forceToGy(springF(x), h);
+      x === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    function drawTrace(pts, color) {
+      if (pts.length < 2) return;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      pts.forEach(([px, py], i) => i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py));
+      ctx.stroke();
+    }
+
+    drawTrace(rosePts,   C.rose);
+    drawTrace(andreaPts, C.andrea);
+
+    function drawEndDot(maxExt, color, label, above) {
+      const px = extToGx(maxExt, w);
+      const py = forceToGy(springF(maxExt), h);
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(px, py, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = color;
+      ctx.font = '11px DM Sans, sans-serif';
+      ctx.textAlign = 'left';
+      const lbVal = Math.round(springF(maxExt));
+      ctx.fillText(label + ' — ' + lbVal + ' lbs', px + 8, above ? py - 6 : py + 14);
+    }
+
+    if (!live) {
+      drawEndDot(MAX_EXT_ROSE,   C.rose,   'Rose',   true);
+      drawEndDot(MAX_EXT_ANDREA, C.andrea, 'Andrea', false);
+    } else {
+      if (rosePts.length > 0) {
+        const [px, py] = rosePts[rosePts.length - 1];
+        ctx.fillStyle = C.rose;
+        ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fill();
+      }
+      if (andreaPts.length > 0) {
+        const [px, py] = andreaPts[andreaPts.length - 1];
+        ctx.fillStyle = C.andrea;
+        ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+  }
+
+  function updateStats(tRose, tAndrea, done) {
+    const rExt   = tRose   * MAX_EXT_ROSE;
+    const aExt   = tAndrea * MAX_EXT_ANDREA;
+    const rForce = springF(rExt);
+    const aForce = springF(aExt);
+    const diff   = rForce - aForce;
+
+    document.getElementById('val-rose').textContent   = Math.round(rForce) + ' lbs';
+    document.getElementById('val-andrea').textContent = Math.round(aForce) + ' lbs';
+    document.getElementById('sub-rose').textContent   = rExt.toFixed(1) + '″ extension';
+    document.getElementById('sub-andrea').textContent = aExt.toFixed(1) + '″ extension';
+    document.getElementById('val-diff').textContent   = '+' + Math.round(diff) + ' lbs';
+    document.getElementById('sub-diff').textContent   = done ? 'Rose vs. Andrea at max' : 'at current position';
+  }
+
+  function animate(ts) {
+    if (!lastTime) lastTime = ts;
+    const dt = (ts - lastTime) / 1000;
+    lastTime = ts;
+
+    if (phase === 0) {
+      t = Math.min(1, t + dt * SPEED);
+      if (t >= 1) { t = 1; phase = 1; }
+    } else {
+      t = Math.max(0, t - dt * SPEED);
+      if (t <= 0) {
+        t = 0;
+        animating = false;
+        updateStats(1, 1, true);
+        drawReformer(1, 1);
+        drawGraph(false);
+        document.getElementById('btn-play').textContent = 'Play Again';
+        return;
+      }
+    }
+
+    const tRose   = t;
+    const tAndrea = t;
+
+    rosePts.push([
+      extToGx(tRose * MAX_EXT_ROSE, gCanvas.offsetWidth || 660),
+      forceToGy(springF(tRose * MAX_EXT_ROSE), gCanvas.offsetHeight || 200)
+    ]);
+    andreaPts.push([
+      extToGx(tAndrea * MAX_EXT_ANDREA, gCanvas.offsetWidth || 660),
+      forceToGy(springF(tAndrea * MAX_EXT_ANDREA), gCanvas.offsetHeight || 200)
+    ]);
+
+    updateStats(tRose, tAndrea, false);
+    drawReformer(tRose, tAndrea);
+    drawGraph(true);
+
+    rafId = requestAnimationFrame(animate);
+  }
+
+  function startAnimation() {
+    if (rafId) cancelAnimationFrame(rafId);
+    t = 0; phase = 0; lastTime = null;
+    animating = true;
+    rosePts = []; andreaPts = [];
+    document.getElementById('btn-play').textContent = 'Playing...';
+    updateStats(0, 0, false);
+    drawReformer(0, 0);
+    drawGraph(true);
+    rafId = requestAnimationFrame(animate);
+  }
+
+  function reset() {
+    if (rafId) cancelAnimationFrame(rafId);
+    t = 0; phase = 0; lastTime = null;
+    animating = false;
+    rosePts = []; andreaPts = [];
+    document.getElementById('btn-play').textContent = 'Play Animation';
+    updateStats(0, 0, false);
+    document.getElementById('val-rose').textContent   = '26 lbs';
+    document.getElementById('val-andrea').textContent = '26 lbs';
+    document.getElementById('sub-rose').textContent   = 'at rest';
+    document.getElementById('sub-andrea').textContent = 'at rest';
+    document.getElementById('val-diff').textContent   = '—';
+    document.getElementById('sub-diff').textContent   = 'at full extension';
+    drawReformer(0, 0);
+    drawGraph(false);
+  }
+
+  document.getElementById('btn-play').addEventListener('click', startAnimation);
+  document.getElementById('btn-reset').addEventListener('click', reset);
+
+  reset();
+
+  window.addEventListener('resize', () => {
+    rosePts = []; andreaPts = [];
+    drawReformer(animating ? t : 0, animating ? t : 0);
+    drawGraph(false);
+  });
+</script>
+</body>
+</html>
