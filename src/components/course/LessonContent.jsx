@@ -779,7 +779,29 @@ const m1Pages = {
       </div>
     ),
 
-    // Page 5: What you're actually managing
+    // Page 6: Springs that need immediate replacement
+    () => (
+      <div>
+        <Eyebrow>Lesson 3 — Spring Wear and Lifespan</Eyebrow>
+        <SectionTitle>Know when to replace immediately</SectionTitle>
+        <Prose>
+          <p>Some signs of wear are subtle and gradual. These are not. The photos below show springs that present a safety hazard and should be taken out of service immediately. They also indicate the load profile has been permanently altered.</p>
+        </Prose>
+        <LessonImage
+          filename="bad-springs-1.jpg"
+          alt="Four examples of damaged springs: separated coils, bent hooks, gaps in the coil body, and visibly deformed end geometry."
+        />
+        <LessonImage
+          filename="bad-springs-2.jpg"
+          alt="More examples of springs needing replacement: coils bunching unevenly, a detached hook, and visible signs of plastic deformation across multiple springs on a reformer."
+        />
+        <Prose>
+          <p>Look for gaps between coils, hooks that have opened or bent, coils that bunch unevenly, or any visible deformation in the spring body. If you see any of these, remove the spring from use right away.</p>
+        </Prose>
+      </div>
+    ),
+
+    // Page 7: What you're actually managing
     () => (
       <div>
         <Eyebrow>Lesson 3 — Spring Wear and Lifespan</Eyebrow>
