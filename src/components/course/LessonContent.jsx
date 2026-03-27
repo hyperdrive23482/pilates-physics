@@ -591,7 +591,7 @@ const m1Pages = {
           What determines <V>k</V> and <V>b</V>
         </SectionTitle>
         <Prose>
-          <p>Every extension spring has a set of physical characteristics that, together, produce its load curve. The five that matter most:</p>
+          <p>Every extension spring has a set of physical characteristics that, together, produce its load profile. The five that matter most:</p>
         </Prose>
         <div style={{ marginTop: '28px' }}>
           <div style={{ borderTop: '1px solid var(--color-rule)' }}>
@@ -605,10 +605,13 @@ const m1Pages = {
               The thickness of the wire the spring is wound from. Thicker wire wound more tightly produces a steeper <V>k</V>. Thinner wire wound more loosely produces something lighter and more compliant.
             </DefRow>
             <DefRow term="Material">
-              Most Pilates reformer springs are made from galvanized music wire, a high-carbon steel chosen for its consistency and fatigue resistance. Coating affects surface feel and corrosion protection but doesn't change the load curve.
+              Most Pilates reformer springs are made from galvanized music wire, a high-carbon steel chosen for its consistency and fatigue resistance. Coating affects surface feel and corrosion protection but doesn't change the load profile.
             </DefRow>
             <DefRow term="End geometry">
-              The shape of the hooks or loops at each end. This determines how the spring connects to the equipment and influences the initial tension <V>b</V>.
+              The shape of the end of the spring coil at each end. Some are flat and square, and some are tapered (also referred to as coned). This determines how the spring connects to the equipment and can influence the initial tension <V>b</V>.
+            </DefRow>
+            <DefRow term="Internal torsional stress">
+              The initial tension of a spring can be manipulated during manufacturing by coiling the wire with a pitch smaller than its diameter, causing the coils to twist and press against each other.
             </DefRow>
           </div>
         </div>
@@ -617,7 +620,7 @@ const m1Pages = {
           alt="Spring anatomy diagram with coil length, coil diameter, wire diameter, material, and end geometry labeled on a representative extension spring."
         />
         <Prose>
-          <p>None of these variables operate in isolation. Change the wire diameter and you change <V>k</V>. Change the coil diameter and you change both <V>k</V> and the spring's maximum safe extension. This is why two springs that look similar on a shelf can have meaningfully different load curves — and why matching springs across brands by color or by feel alone is unreliable.</p>
+          <p>None of these variables operate in isolation. Change the wire diameter and you change <V>k</V>. Change the coil diameter and you change both <V>k</V> and the spring's maximum safe extension. This is why two springs that look similar on a shelf can have meaningfully different load profiles — and why matching springs across brands by color or by feel alone is unreliable.</p>
         </Prose>
       </div>
     ),
