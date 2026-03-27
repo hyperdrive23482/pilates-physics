@@ -420,14 +420,54 @@ const m1Pages = {
       </div>
     ),
 
-    // Page 4: What this looks like — spring animation
+    // Page 4: What this looks like — reading the graph
     () => (
       <div>
         <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
         <SectionTitle>What this looks like</SectionTitle>
         <Prose>
-          <p>The clearest way to see this is on a graph. Extension on the horizontal axis, resistance on the vertical. Every spring plots as a straight line — starting at <V>b</V> and climbing at a rate set by <V>k</V>. The steeper the line, the stiffer the spring. The higher the line starts, the more initial tension it carries.</p>
+          <p>The clearest way to see this is on a graph. Extension on the horizontal axis, resistance on the vertical. The green line represents the spring resistance.</p>
         </Prose>
+        <LessonImage
+          filename="example-spring-1.png"
+          alt="Example spring graph — a single spring plotted as a straight line, with extension on the horizontal axis and resistance on the vertical."
+        />
+        <Prose>
+          <p>The spring resistance (the green line) — starts at <V>b</V> and climbs at a rate set by <V>k</V>.</p>
+        </Prose>
+        <LessonImage
+          filename="example-spring-2.png"
+          alt="The same graph with initial tension (b) circled at the y-intercept and the spring constant (k) labeled as the slope of the line."
+        />
+        <Prose>
+          <p>The initial tension of this example spring is 13 lbs because that's where the green line is at 0" of stretch.</p>
+        </Prose>
+        <LessonImage
+          filename="example-spring-3.png"
+          alt="Spring weight at 0 inches of stretch — 13 lbs. The initial tension is the resistance before the spring has been stretched at all."
+        />
+        <Prose>
+          <p>The graph shows us the spring weight at 6" of stretch is 20 lbs. First find the 6" on the horizontal axis. Travel straight up until the green line. Then draw a line straight left until it crosses the vertical axis. Where that line crosses the vertical axis is the resistance of the spring at 6" of stretch.</p>
+        </Prose>
+        <LessonImage
+          filename="example-spring-4.png"
+          alt="Spring weight at 6 inches of stretch — 20 lbs. Follow the extension up to the line, then across to the resistance axis."
+        />
+        <Prose>
+          <p>Using the same technique, the graph tells us that the spring resistance is 27 lbs at 12" stretch.</p>
+        </Prose>
+        <LessonImage
+          filename="example-spring-5.png"
+          alt="Spring weight at 12 inches of stretch — 27 lbs. The further the spring is stretched, the higher the resistance."
+        />
+      </div>
+    ),
+
+    // Page 5: Spring vs. constant weight animation
+    () => (
+      <div>
+        <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
+        <SectionTitle>A spring gives you a curve</SectionTitle>
         <AnimationSlot animationId="m1-l1-spring" />
         <Prose>
           <p>The animation above shows two scenarios side by side: a reformer carriage moving through a full range of footwork with a spring load, and the same movement with an equivalent constant weight via pulley. Watch the resistance number as the carriage travels. With constant weight, it doesn't move. With the spring, it climbs the entire way out — and drops back down on the return.</p>
