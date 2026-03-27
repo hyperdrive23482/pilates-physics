@@ -467,10 +467,14 @@ const m1Pages = {
     () => (
       <div>
         <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
-        <SectionTitle>A spring gives you a curve</SectionTitle>
+        <SectionTitle>A spring is different than a gym weight</SectionTitle>
+        <Prose>
+          <p>Let's compare what load a student experiences in footwork between springs and a typical gym weight.  Assume resistance similar to a green and two red Balanced Body springs.  At 18" extension they provide 83lbs of resistance.  Compare that with a weight stack of 83 lbs.</p>
+        </Prose>
         <AnimationSlot animationId="m1-l1-spring" />
         <Prose>
-          <p>The animation above shows two scenarios side by side: a reformer carriage moving through a full range of footwork with a spring load, and the same movement with an equivalent constant weight via pulley. Watch the resistance number as the carriage travels. With constant weight, it doesn't move. With the spring, it climbs the entire way out — and drops back down on the return.</p>
+          <p>The animation above graphs two scenarios side by side: a reformer carriage moving through a full range of footwork with a spring load, and the same movement with an equivalent constant weight. The work (area under the curve) for one rep is significantly lower using springs instead of a constant weight.</p>
+          <p>Put another way, when your hips and knees are flexed when the carriage is in, the weight is much less to start moving the carriage: 26 lbs instead of 83 lbs. Only at full carriage extension do the weights match.</p>
           <p>This is the fundamental difference between springs and weight stacks. A weight stack gives you one number for the whole movement. A spring gives you a curve.</p>
         </Prose>
       </div>
