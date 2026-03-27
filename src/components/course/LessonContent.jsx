@@ -632,45 +632,32 @@ const m1Pages = {
         <SectionTitle>What a spec sheet looks like</SectionTitle>
         <Prose>
           <p>When a Pilates equipment company designs a spring, they don't start with wire and start bending. They start with a target load curve — a desired <V>k</V>, a desired <V>b</V>, and a maximum safe extension — and work backwards to a physical specification.</p>
-          <p>That specification gets handed to a manufacturer as an engineering drawing. It defines the free length, the coil geometry, the wire diameter, the material, and the end treatment. The manufacturer produces a sample. That sample gets tested against the target curve. If the load data matches within tolerance, the spec is approved. If not, the geometry gets adjusted and the cycle repeats.</p>
+          <p>That specification gets handed to a spring manufacturer as an engineering drawing. It defines the free length, the coil geometry, the wire diameter, the material, and the end treatment. The spring manufacturer uses their expertise to advise on the real performance limits of the design, plus cost and material availability. The Pilates equipment manufacturer and the spring manufacturer may go back and forth tweaking parameters to find something that balances manufacturability with performance intent.</p>
         </Prose>
         <LessonImage
           filename="spring-engineering-drawing.png"
           alt="A representative spring engineering drawing showing free length, wire diameter, outer diameter, coil count, initial tension, spring rate, and maximum safe deflection."
         />
         <Prose>
-          <p>The drawing above is representative of what a real spring spec looks like. The key numbers — wire diameter, outer diameter, free length, calculated rate of extension, initial tension, maximum safe deflection — are all there. Together they describe a spring completely. But notice what isn't there: a color name. The color gets assigned later, as a label for the finished product. It's a convenience, not a specification.</p>
+          <p>The drawing above is representative of what a real spring spec looks like. The key numbers — wire diameter, outer diameter, free length, calculated rate of extension, initial tension, maximum safe deflection — are all there. Together they describe a spring completely.</p>
         </Prose>
       </div>
     ),
 
-    // Page 5: Why this matters across brands
+    // Page 5: Why springs feel different
     () => (
       <div>
         <Eyebrow>Lesson 2 — Spring Design Basics</Eyebrow>
-        <SectionTitle>Why this matters across brands</SectionTitle>
+        <SectionTitle>Why springs feel different</SectionTitle>
         <Prose>
-          <p>Because every manufacturer runs this process independently, starting from their own target curve, using their own material sources and manufacturing tolerances, the springs that come out the other end are not interchangeable — even when they carry the same color name or are marketed as equivalents.</p>
+          <p>This graph shows Balanced Body's spring lineup plotted by load profile. Each line has a different slope and a different starting point — because each spring has different values for the factors we just covered: wire diameter, coil diameter, coil length, material, end geometry, and internal torsional stress.</p>
         </Prose>
         <LessonImage
           filename="bb-spring-graph.png"
-          alt="Balanced Body spring lineup plotted by load curve. Each color is a distinct line with different slope and starting point. Curves diverge as extension increases."
+          alt="Balanced Body spring lineup plotted by load profile. Each color is a distinct line with different slope and starting point. Curves diverge as extension increases."
         />
         <Prose>
-          <p>This graph shows Balanced Body's spring lineup plotted by load curve. Each line has a different slope and a different starting point. The gap between a yellow spring and a green spring at 18 inches of extension is not the same as the gap between them at 6 inches. The curves diverge. That divergence is a direct consequence of different <V>k</V> and <V>b</V> values — different design choices producing different physical behavior across the range of motion.</p>
-          <p>When you look at the same graph for two different manufacturers, the divergence compounds. The springs may start close together at low extension and separate significantly by the time a tall client pushes to full range. That's not a quality difference. It's a design difference. And it's invisible if you're navigating by color names alone.</p>
-        </Prose>
-      </div>
-    ),
-
-    // Page 6: The design is the starting point
-    () => (
-      <div>
-        <Eyebrow>Lesson 2 — Spring Design Basics</Eyebrow>
-        <SectionTitle>The design is the starting point, not the destination</SectionTitle>
-        <Prose>
-          <p>Even with a complete specification, most spring development involves iteration with the manufacturer — testing samples, adjusting tolerances, balancing the target load curve against cost and material availability. The final spring is a negotiation between what the physics requires and what manufacturing can reliably produce.</p>
-          <p>This matters for instructors because it means the spring in your hand is the product of a set of deliberate choices — choices that produced a specific <V>k</V> and <V>b</V>, a specific load curve, a specific experience for the body moving through it. Understanding that the design is intentional, and that different manufacturers made different intentional choices, is the foundation for understanding why the same exercise can feel so different on different equipment.</p>
+          <p>A red spring feels heavier than a yellow spring because it has a steeper <V>k</V> and a higher <V>b</V> because the physical design produces a different load profile. The same is true across manufacturers: different design choices produce different behavior, even when the color label is the same.</p>
         </Prose>
       </div>
     ),
@@ -904,6 +891,38 @@ const m1Pages = {
           <p>The heavy springs do not give you that continuity. A client who has been training on Balanced Body heavies and walks into a studio with Peak equipment is going to feel a difference — particularly at the start of the movement, where Peak's higher initial tension is most noticeable. A client on Align heavies who is used to STOTT equipment will feel the resistance climb faster than expected as they move into range.</p>
           <p>None of this is a problem if you understand it. It becomes a problem when you reach for a conversion chart — a document that assigns equivalencies between brands based on a single number — and trust it to translate your programming accurately. A single number cannot represent a load curve. It can only describe one point on that curve, at one extension value, which may or may not correspond to where your client is actually working.</p>
         </Prose>
+        <div
+          style={{
+            marginTop: '2rem',
+            background: 'var(--color-surface)',
+            border: '1px solid var(--color-rule)',
+            borderLeft: '3px solid var(--color-accent)',
+            borderRadius: '0 8px 8px 0',
+            padding: '24px 28px',
+          }}
+        >
+          <h4
+            style={{
+              fontFamily: '"DM Serif Display", serif',
+              fontSize: '17px',
+              fontWeight: 400,
+              color: 'var(--color-accent)',
+              marginBottom: '12px',
+            }}
+          >
+            Why aren't springs standard across brands?
+          </h4>
+          <p
+            style={{
+              fontSize: '15px',
+              lineHeight: 1.72,
+              color: 'var(--color-ink-muted)',
+              margin: 0,
+            }}
+          >
+            Liability and revenue. When a Pilates brand states that their equipment can only use their own springs, they are limiting their liability in case of an accident. And, as one of the few consumable parts of the equipment, ensuring that their springs don't fit on other equipment creates a moat by preventing cross-brand use and forcing customers to get replacements from the original equipment manufacturer.
+          </p>
+        </div>
       </div>
     ),
 
