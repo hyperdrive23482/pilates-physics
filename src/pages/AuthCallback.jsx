@@ -6,41 +6,57 @@ export default function AuthCallback() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    function handleRedirect(event, session) {
+    function routeUser(event, session) {
       if (event === 'PASSWORD_RECOVERY') {
         navigate('/set-password', { replace: true })
+      } else if (session?.user?.user_metadata?.needs_password) {
+        navigate('/set-password', { replace: true })
       } else if (session) {
-        // New signup — user still needs to create a password
-        if (session.user?.user_metadata?.needs_password) {
-          navigate('/set-password', { replace: true })
-        } else {
-          navigate('/course', { replace: true })
-        }
+        navigate('/course', { replace: true })
       }
     }
 
-    // Try the current session first (token may already be exchanged)
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        // Check hash for recovery flow — Supabase puts type in the URL fragment
-        const hash = window.location.hash
-        if (hash.includes('type=recovery')) {
-          navigate('/set-password', { replace: true })
-        } else if (session.user?.user_metadata?.needs_password) {
-          navigate('/set-password', { replace: true })
-        } else {
-          navigate('/course', { replace: true })
-        }
-      } else {
-        // Wait for the token exchange
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-          if (event === 'PASSWORD_RECOVERY' || session) {
-            subscription.unsubscribe()
-            handleRedirect(event, session)
-          }
+    async function handleCallback() {
+      // Check for token_hash in query params (email confirmation via updated template)
+      const params = new URLSearchParams(window.location.search)
+      const tokenHash = params.get('token_hash')
+      const type = params.get('type')
+
+      if (tokenHash && type) {
+        const { data, error } = await supabase.auth.verifyOtp({
+          token_hash: tokenHash,
+          type,
         })
+        if (!error && data?.session) {
+          routeUser(type === 'recovery' ? 'PASSWORD_RECOVERY' : 'SIGNED_IN', data.session)
+          return
+        }
       }
-    })
+
+      // Check hash fragment for recovery flow
+      const hash = window.location.hash
+      if (hash.includes('type=recovery')) {
+        navigate('/set-password', { replace: true })
+        return
+      }
+
+      // Try the current session (token may already be exchanged)
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) {
+        routeUser('SIGNED_IN', session)
+        return
+      }
+
+      // Wait for the token exchange
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'PASSWORD_RECOVERY' || session) {
+          subscription.unsubscribe()
+          routeUser(event, session)
+        }
+      })
+    }
+
+    handleCallback()
   }, [navigate])
 
   return (
