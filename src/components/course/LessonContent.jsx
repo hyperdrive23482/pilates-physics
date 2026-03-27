@@ -119,10 +119,10 @@ function EquationBlock() {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {[
-          ['F', 'spring resistance in pounds'],
-          ['k', 'spring constant — how fast resistance climbs per inch (lbs/inch)'],
-          ['x', 'extension distance in inches'],
-          ['b', 'initial tension — resistance before stretching begins'],
+          ['F', 'spring resistance (weight)'],
+          ['k', 'spring constant — how fast resistance climbs per unit of extension (weight/distance)'],
+          ['x', 'extension distance (distance)'],
+          ['b', 'initial tension — resistance before stretching begins (weight)'],
         ].map(([v, def]) => (
           <div
             key={v}
@@ -373,7 +373,7 @@ const m1Pages = {
               marginBottom: '24px',
             }}
           >
-            Springs get heavier as they stretch — not the same as a weight stack
+            Springs get heavier as they stretch — not the same as gym weights
           </p>
           <div
             style={{
@@ -384,7 +384,7 @@ const m1Pages = {
               paddingLeft: '18px',
             }}
           >
-            This lesson builds the core mental model. Before you can reason about spring settings, spring weights, or how to adapt for different bodies, you need to understand what a spring actually does mechanically — and why that's different from every other form of resistance you might use.
+            This lesson builds the core mental model. Before you can reason about spring settings, spring weights, or how to adapt for different bodies, you need to understand what a spring actually does mechanically — and why that's different from other forms of resistance you might use.
           </div>
         </div>
       </div>
@@ -396,10 +396,10 @@ const m1Pages = {
         <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
         <SectionTitle>A Pilates spring doesn't work that way</SectionTitle>
         <Prose>
-          <p>Pick up a one-pound weight and hold it at your side. That pound doesn't change whether your arm is straight or bent, whether you've been holding it for ten seconds or ten minutes. The weight is the weight.</p>
+          <p>Pick up a ten-pound weight and hold it at your side. That weight doesn't change whether your arm is straight or bent, or whether it's overhead or close to the floor. The weight is the weight.</p>
           <p>A Pilates spring doesn't work that way.</p>
           <p>The resistance a spring delivers is not a fixed number. It's a relationship between the spring's physical properties and how far you've stretched it. Stretch it further, and it gets heavier. Every time, without exception. That's not a quirk of cheap equipment or a sign of wear — it's the physics. It's how springs work.</p>
-          <p>This distinction matters more than most instructors realize, because the settings you choose don't determine a weight. They determine a range of weights, delivered across a range of motion, to a specific body on a specific piece of equipment. Two clients doing footwork on identical spring settings are not necessarily doing the same exercise.</p>
+          <p>This distinction matters more than most instructors realize, because the settings you choose don't determine a weight. They determine a range of weights, delivered across a range of motion, to a specific body on a specific piece of equipment. Two clients doing footwork on identical spring settings are not necessarily moving the same load.</p>
         </Prose>
       </div>
     ),
@@ -512,7 +512,7 @@ const m1Pages = {
               marginBottom: '24px',
             }}
           >
-            Spring weights vary based on design, and that varies by manufacturer
+            Spring weights vary based on design
           </p>
           <div
             style={{
@@ -676,7 +676,7 @@ const m1Pages = {
               marginBottom: '24px',
             }}
           >
-            Springs degrade in predictable ways
+            Springs degrade over time
           </p>
           <div
             style={{
@@ -796,7 +796,7 @@ const m1Pages = {
               marginBottom: '24px',
             }}
           >
-            Memorizing settings isn't enough — you need intent and principles to teach across equipment
+            Memorizing spring conversions isn't enough
           </p>
           <div
             style={{
@@ -1088,11 +1088,11 @@ function MeetInstructorPage() {
 // ── Module Overview page ─────────────────────────────────────────────────────
 function ModuleOverviewPage() {
   const lessons = [
-    { id: 'L1', title: 'Springs 101', claim: 'Springs get heavier as they stretch — not the same as a weight stack' },
-    { id: 'L2', title: 'Spring Design Basics', claim: 'Spring weights vary based on design, and that varies by manufacturer' },
-    { id: 'L3', title: 'Spring Wear and Lifespan', claim: 'Springs degrade in predictable ways' },
-    { id: 'L4', title: 'Real World Spring Comparisons', claim: "Memorizing settings isn't enough — you need intent and principles to teach across equipment" },
-    { id: 'Quiz', title: 'Assessment Quiz', claim: '5 questions — pass to unlock Module 2' },
+    { id: 'L1', title: 'Springs 101', claim: 'Springs get heavier as they stretch — not the same as gym weights' },
+    { id: 'L2', title: 'Spring Design Basics', claim: 'Spring weights vary based on design' },
+    { id: 'L3', title: 'Spring Wear and Lifespan', claim: 'Springs degrade over time' },
+    { id: 'L4', title: 'Real World Spring Comparisons', claim: "Memorizing spring conversions isn't enough" },
+    { id: 'Quiz', title: 'Assessment Quiz', claim: '5 questions to measure your understanding' },
   ]
 
   return (
@@ -1183,7 +1183,7 @@ function ModuleOverviewPage() {
           lineHeight: 1.65,
         }}
       >
-        By the end of this module, you'll understand that Pilates springs are not interchangeable, that their load behavior is predictable and describable, and that this changes how you should be making decisions for clients.
+        By the end of this module, you'll understand the basics of spring science and why they vary across the Pilates industry.
       </p>
     </div>
   )
