@@ -499,7 +499,7 @@ const m1Pages = {
         <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
         <SectionTitle>What it means for your teaching</SectionTitle>
         <Prose>
-          <p>Here's a practical example. A tall client doing footwork pushes the carriage further out than a short client on the same spring settings. That means they're working in a higher range on the load curve — heavier at the end of the movement than their shorter colleague on the same springs.</p>
+          <p>Here's a practical example. A tall client doing footwork pushes the carriage further out than a short client on the same spring settings. That means they're working in a higher range on the load profile — heavier at the end of the movement than their shorter colleague on the same springs.</p>
         </Prose>
         <AnimationSlot animationId="m1-l1-tall-short" />
         <Prose>
@@ -631,7 +631,7 @@ const m1Pages = {
         <Eyebrow>Lesson 2 — Spring Design Basics</Eyebrow>
         <SectionTitle>What a spec sheet looks like</SectionTitle>
         <Prose>
-          <p>When a Pilates equipment company designs a spring, they don't start with wire and start bending. They start with a target load curve — a desired <V>k</V>, a desired <V>b</V>, and a maximum safe extension — and work backwards to a physical specification.</p>
+          <p>When a Pilates equipment company designs a spring, they don't start with wire and start bending. They start with a target load profile — a desired <V>k</V>, a desired <V>b</V>, and a maximum safe extension — and work backwards to a physical specification.</p>
           <p>That specification gets handed to a spring manufacturer as an engineering drawing. It defines the free length, the coil geometry, the wire diameter, the material, and the end treatment. The spring manufacturer uses their expertise to advise on the real performance limits of the design, plus cost and material availability. The Pilates equipment manufacturer and the spring manufacturer may go back and forth tweaking parameters to find something that balances manufacturability with performance intent.</p>
         </Prose>
         <LessonImage
@@ -731,7 +731,7 @@ const m1Pages = {
         <Eyebrow>Lesson 3 — Spring Wear and Lifespan</Eyebrow>
         <SectionTitle>Your springs aren't what they used to be</SectionTitle>
         <Prose>
-          <p>A spring that's been in service for three years in a busy studio is not the same spring it was when it was new. The load curve has shifted. The resistance at any given extension is lower than the spec intended. The experience your client feels is no longer the experience you think you're delivering — and neither of you would know it.</p>
+          <p>A spring that's been in service for three years in a busy studio is not the same spring it was when it was new. The load profile has shifted. The resistance at any given extension is lower than the spec intended. The experience your client feels is no longer the experience you think you're delivering — and neither of you would know it.</p>
           <p>Spring wear is invisible in real time. It doesn't announce itself. It accumulates gradually, across thousands of cycles, until the gap between what the spring was designed to do and what it's actually doing becomes meaningful.</p>
         </Prose>
       </div>
@@ -773,7 +773,7 @@ const m1Pages = {
         <SectionTitle>What accelerates wear</SectionTitle>
         <Prose>
           <p>Not all springs in a studio wear at the same rate. Usage patterns matter. Springs that get hooked up for every client — the middle springs, the standard footwork setup, whatever the studio default is — accumulate cycles faster than springs that rarely come off the bar. A spring that sees six sessions a day will reach its service limit faster than one that sees two.</p>
-          <p>Beyond usage frequency, several environmental factors accelerate degradation. Humidity and temperature cycling cause the metal to expand and contract, stressing the coils even between sessions. Oils and lotions transferred from hands to spring coils during handling can degrade the surface of the wire over time. And coil slamming — allowing the carriage to return hard enough that the spring coils crash together at the end of the movement — introduces impact stress that the spring was not designed to absorb.</p>
+          <p>Beyond usage frequency, several environmental factors can accelerate degradation. Humidity and temperature cycling cause the metal to expand and contract, stressing the coils even between sessions. Oils and lotions transferred from hands to spring coils during handling can degrade the surface of the wire over time. And coil slamming — allowing the carriage to return hard enough that the spring coils crash together at the end of the movement — introduces impact stress that the spring was not designed to absorb.</p>
           <p>None of these factors cause immediate failure. They shorten the service life incrementally, in ways that compound.</p>
         </Prose>
       </div>
@@ -786,8 +786,8 @@ const m1Pages = {
         <SectionTitle>What you're actually managing</SectionTitle>
         <Prose>
           <p>Spring replacement addresses two distinct risks, and it's worth being clear about both.</p>
-          <p>The first is breakage. A spring that has exceeded its service life is more likely to fail under load — and a spring failure during a session is a safety event. The risk is low on well-maintained equipment, but it's real, and it's the reason manufacturer replacement recommendations exist as guidelines rather than suggestions.</p>
-          <p>The second risk arrives earlier, and more quietly. Long before a spring breaks, its load curve drifts. The resistance at any given extension decreases. The experience your client feels is no longer the experience the equipment was designed to deliver. If you've been adjusting programming based on how exercises feel and how clients are progressing, some of that signal has been noise — the equipment changing underneath the training, invisibly, in a direction you weren't accounting for.</p>
+          <p>The first is breakage. A spring that has exceeded its service life is more likely to fail under load — and a spring failure during a session is a safety event. The risk is low on well-maintained equipment, but it's real, and it's the reason manufacturer replacement recommendations exist.</p>
+          <p>The second risk arrives earlier, and more quietly. Long before a spring breaks, its load profile drifts. The resistance at any given extension decreases. The experience your client feels is no longer the experience the equipment was designed to deliver. If you've been adjusting programming based on how exercises feel and how clients are progressing, some of that signal has been noise — the equipment changing underneath the training, invisibly, in a direction you weren't accounting for.</p>
           <p>Regular replacement manages both. It keeps the equipment within its safe operating range, and it keeps the baseline consistent enough that the feedback you're getting from your clients actually reflects their bodies — not the slow deterioration of a spring that passed its service life six months ago.</p>
         </Prose>
       </div>
@@ -862,9 +862,9 @@ const m1Pages = {
         <Eyebrow>Lesson 4 — Real World Spring Comparisons</Eyebrow>
         <SectionTitle>The light springs are nearly interchangeable</SectionTitle>
         <Prose>
-          <p>By now you know that springs aren't a single weight, that their design determines their load curve, and that their load curve drifts over time. This lesson is about what happens when you take that knowledge into a real studio — one where you might teach on three different brands in a week, or pick up a guest teaching slot on equipment you've never used before.</p>
+          <p>By now you know that springs aren't a single weight, that their design determines their load profile, and that their load profile drifts over time. This lesson is about what happens when you take that knowledge into a real studio — one where you might teach on three different brands in a week, or pick up a guest teaching slot on equipment you've never used before.</p>
           <p>The short answer is that a spring conversion chart won't save you. The longer answer is worth understanding.</p>
-          <p>When you plot the lightest spring from four major contemporary reformer manufacturers — Balanced Body, STOTT, Peak, and Align-Pilates — on the same graph, something reassuring happens. Across their full range of travel, they stay within about 5 pounds of each other. The load curves are similar in slope, similar in initial tension, similar in behavior. For practical teaching purposes, the light springs across these brands are close enough that switching between them doesn't require significant reprogramming.</p>
+          <p>When you plot the lightest spring from four major contemporary reformer manufacturers — Balanced Body, STOTT, Peak, and Align-Pilates — on the same graph, something reassuring happens. Across their full range of travel, they stay within about 5 pounds of each other. The load profiles are similar in slope, similar in initial tension, similar in behavior. For practical teaching purposes, the light springs across these brands are close enough that switching between them doesn't require significant reprogramming.</p>
           <p>This makes intuitive sense. A light spring has a low <V>k</V> and a low <V>b</V>. There's less room for the curves to diverge when the values are small to begin with.</p>
         </Prose>
         <LessonImage
@@ -900,7 +900,7 @@ const m1Pages = {
         <Prose>
           <p>If you teach on multiple brands, the light springs give you reasonable continuity. You can translate your programming with minor adjustments and your clients' experience will be close to what you intended.</p>
           <p>The heavy springs do not give you that continuity. A client who has been training on Balanced Body heavies and walks into a studio with Peak equipment is going to feel a difference — particularly at the start of the movement, where Peak's higher initial tension is most noticeable. A client on Align heavies who is used to STOTT equipment will feel the resistance climb faster than expected as they move into range.</p>
-          <p>None of this is a problem if you understand it. It becomes a problem when you reach for a conversion chart — a document that assigns equivalencies between brands based on a single number — and trust it to translate your programming accurately. A single number cannot represent a load curve. It can only describe one point on that curve, at one extension value, which may or may not correspond to where your client is actually working.</p>
+          <p>None of this is a problem if you understand it. It becomes a problem when you reach for a conversion chart — a document that assigns equivalencies between brands based on a single number — and trust it to translate your programming accurately. A single number cannot represent a load profile. It can only describe one point on that curve, at one extension value, which may or may not correspond to where your client is actually working.</p>
         </Prose>
         <div
           style={{
@@ -943,7 +943,7 @@ const m1Pages = {
         <Eyebrow>Lesson 4 — Real World Spring Comparisons</Eyebrow>
         <SectionTitle>The three things you actually need</SectionTitle>
         <Prose>
-          <p>The cross-brand comparison data makes one argument clearly: memorizing this chart is not the goal. You don't need to carry Balanced Body vs. Peak load curves in your head. What you need is a framework that travels with you — one that works on any equipment, in any studio, with any client.</p>
+          <p>The cross-brand comparison data makes one argument clearly: memorizing this chart is not the goal. You don't need to carry Balanced Body vs. Peak load profiles in your head. What you need is a framework that travels with you — one that works on any equipment, in any studio, with any client.</p>
           <p>When you're planning to teach on unfamiliar equipment, or switching between brands in the same week, three questions do the work that no chart can.</p>
           <p>What is the intention of the exercise? Not the name of the movement — the intention. What should the spring load be doing at each point in the range of motion, and for this particular client at this point in their training?</p>
           <p>How does this specific equipment deliver load? Is this a brand with steep <V>k</V> values that climbs fast through range, or one with high initial tension that feels heavier from the first inch of travel? Knowing roughly where a brand sits on the spectrum tells you whether to expect the load to front-load or back-load the movement.</p>
@@ -968,7 +968,7 @@ const m1Pages = {
           'It depends on the reformer model',
         ]}
         correctIndex={2}
-        feedback="Spring resistance increases with extension — F = kx + b. The further the spring is stretched, the higher the resistance delivered. The setting doesn't change; the client's range of motion determines which part of the load curve they're working in."
+        feedback="Spring resistance increases with extension — F = kx + b. The further the spring is stretched, the higher the resistance delivered. The setting doesn't change; the client's range of motion determines which part of the load profile they're working in."
       />
     ),
     () => (
@@ -983,7 +983,7 @@ const m1Pages = {
           'The total force at full extension',
         ]}
         correctIndex={2}
-        feedback="b is the y-intercept of the load curve: the resistance the spring exerts before the carriage has moved at all. k is the spring constant — how fast resistance climbs per inch of extension."
+        feedback="b is the y-intercept of the load profile: the resistance the spring exerts before the carriage has moved at all. k is the spring constant — how fast resistance climbs per inch of extension."
       />
     ),
     () => (
