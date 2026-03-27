@@ -38,7 +38,7 @@ const placeholderContent = {
     'The effective load changes with pulley height even when the spring setting does not change.',
   ],
   'm3-l4': [
-    'In plank and pike on the reformer, the client\u2019s center of mass is elevated relative to a horizontal footwork position, and the movement is no longer a simple horizontal push.',
+    "In plank and pike on the reformer, the client's center of mass is elevated relative to a horizontal footwork position, and the movement is no longer a simple horizontal push.",
     'This lesson analyzes the plank and pike setup as a force problem.',
   ],
   'm3-quiz': [
@@ -120,9 +120,9 @@ function EquationBlock() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {[
           ['F', 'spring resistance in pounds'],
-          ['k', 'spring constant \u2014 how fast resistance climbs per inch (lbs/inch)'],
+          ['k', 'spring constant — how fast resistance climbs per inch (lbs/inch)'],
           ['x', 'extension distance in inches'],
-          ['b', 'initial tension \u2014 resistance before stretching begins'],
+          ['b', 'initial tension — resistance before stretching begins'],
         ].map(([v, def]) => (
           <div
             key={v}
@@ -214,7 +214,7 @@ function QuizQuestion({ number, total, question, choices, correctIndex, feedback
           marginBottom: '20px',
         }}
       >
-        Assessment \u2014 Question {number} of {total}
+        Assessment — Question {number} of {total}
       </p>
       <p
         style={{
@@ -373,7 +373,7 @@ const m1Pages = {
               marginBottom: '24px',
             }}
           >
-            Springs get heavier as they stretch \u2014 not the same as a weight stack
+            Springs get heavier as they stretch — not the same as a weight stack
           </p>
           <div
             style={{
@@ -384,7 +384,7 @@ const m1Pages = {
               paddingLeft: '18px',
             }}
           >
-            This lesson builds the core mental model. Before you can reason about spring settings, spring weights, or how to adapt for different bodies, you need to understand what a spring actually does mechanically \u2014 and why that's different from every other form of resistance you might use.
+            This lesson builds the core mental model. Before you can reason about spring settings, spring weights, or how to adapt for different bodies, you need to understand what a spring actually does mechanically — and why that's different from every other form of resistance you might use.
           </div>
         </div>
       </div>
@@ -393,12 +393,12 @@ const m1Pages = {
     // Page 2: Opening — A Pilates spring doesn't work that way
     () => (
       <div>
-        <Eyebrow>Lesson 1 \u2014 Springs 101</Eyebrow>
+        <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
         <SectionTitle>A Pilates spring doesn't work that way</SectionTitle>
         <Prose>
           <p>Pick up a one-pound weight and hold it at your side. That pound doesn't change whether your arm is straight or bent, whether you've been holding it for ten seconds or ten minutes. The weight is the weight.</p>
           <p>A Pilates spring doesn't work that way.</p>
-          <p>The resistance a spring delivers is not a fixed number. It's a relationship between the spring's physical properties and how far you've stretched it. Stretch it further, and it gets heavier. Every time, without exception. That's not a quirk of cheap equipment or a sign of wear \u2014 it's the physics. It's how springs work.</p>
+          <p>The resistance a spring delivers is not a fixed number. It's a relationship between the spring's physical properties and how far you've stretched it. Stretch it further, and it gets heavier. Every time, without exception. That's not a quirk of cheap equipment or a sign of wear — it's the physics. It's how springs work.</p>
           <p>This distinction matters more than most instructors realize, because the settings you choose don't determine a weight. They determine a range of weights, delivered across a range of motion, to a specific body on a specific piece of equipment. Two clients doing footwork on identical spring settings are not necessarily doing the same exercise.</p>
         </Prose>
       </div>
@@ -407,15 +407,15 @@ const m1Pages = {
     // Page 3: The equation
     () => (
       <div>
-        <Eyebrow>Lesson 1 \u2014 Springs 101</Eyebrow>
+        <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
         <SectionTitle>The equation</SectionTitle>
         <Prose>
           <p>The relationship between spring extension and resistance is described by Hooke's Law:</p>
         </Prose>
         <EquationBlock />
         <Prose>
-          <p>You don't need to do this math in the studio. But you do need to understand what it means. The <V>k</V> tells you how quickly the spring gets heavier as you stretch it \u2014 the steeper the slope, the faster the resistance climbs. The <V>b</V> tells you what the spring feels like at the very start of the movement, before the carriage has moved an inch.</p>
-          <p>Together, <V>k</V> and <V>b</V> give every spring a unique load profile \u2014 a signature that describes how it behaves across its full range of motion.</p>
+          <p>You don't need to do this math in the studio. But you do need to understand what it means. The <V>k</V> tells you how quickly the spring gets heavier as you stretch it — the steeper the slope, the faster the resistance climbs. The <V>b</V> tells you what the spring feels like at the very start of the movement, before the carriage has moved an inch.</p>
+          <p>Together, <V>k</V> and <V>b</V> give every spring a unique load profile — a signature that describes how it behaves across its full range of motion.</p>
         </Prose>
       </div>
     ),
@@ -423,14 +423,14 @@ const m1Pages = {
     // Page 4: What this looks like — spring animation
     () => (
       <div>
-        <Eyebrow>Lesson 1 \u2014 Springs 101</Eyebrow>
+        <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
         <SectionTitle>What this looks like</SectionTitle>
         <Prose>
-          <p>The clearest way to see this is on a graph. Extension on the horizontal axis, resistance on the vertical. Every spring plots as a straight line \u2014 starting at <V>b</V> and climbing at a rate set by <V>k</V>. The steeper the line, the stiffer the spring. The higher the line starts, the more initial tension it carries.</p>
+          <p>The clearest way to see this is on a graph. Extension on the horizontal axis, resistance on the vertical. Every spring plots as a straight line — starting at <V>b</V> and climbing at a rate set by <V>k</V>. The steeper the line, the stiffer the spring. The higher the line starts, the more initial tension it carries.</p>
         </Prose>
         <AnimationSlot animationId="m1-l1-spring" />
         <Prose>
-          <p>The animation above shows two scenarios side by side: a reformer carriage moving through a full range of footwork with a spring load, and the same movement with an equivalent constant weight via pulley. Watch the resistance number as the carriage travels. With constant weight, it doesn't move. With the spring, it climbs the entire way out \u2014 and drops back down on the return.</p>
+          <p>The animation above shows two scenarios side by side: a reformer carriage moving through a full range of footwork with a spring load, and the same movement with an equivalent constant weight via pulley. Watch the resistance number as the carriage travels. With constant weight, it doesn't move. With the spring, it climbs the entire way out — and drops back down on the return.</p>
           <p>This is the fundamental difference between springs and weight stacks. A weight stack gives you one number for the whole movement. A spring gives you a curve.</p>
         </Prose>
       </div>
@@ -439,7 +439,7 @@ const m1Pages = {
     // Page 5: BB example graph
     () => (
       <div>
-        <Eyebrow>Lesson 1 \u2014 Springs 101</Eyebrow>
+        <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
         <SectionTitle>The numbers are meaningfully different</SectionTitle>
         <Prose>
           <p>When you look at Balanced Body's published spring data this way, something becomes immediately obvious: a red spring at 6 inches of extension is not the same as a red spring at 18 inches of extension. The numbers are meaningfully different. And that difference is present in every class you teach, every time a taller client pushes further out or a fatigued client's range shortens.</p>
@@ -454,14 +454,14 @@ const m1Pages = {
     // Page 6: What it means for your teaching — tall/short animation
     () => (
       <div>
-        <Eyebrow>Lesson 1 \u2014 Springs 101</Eyebrow>
+        <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
         <SectionTitle>What it means for your teaching</SectionTitle>
         <Prose>
-          <p>A tall client doing footwork pushes the carriage further out than a short client on the same setup. That means they're working in a higher range on the load curve \u2014 heavier at the end of the movement than their shorter colleague on the same springs. They may not be working harder in every sense, but they are moving more resistance at full extension. That's worth knowing when you're assessing fatigue, planning progressions, or trying to understand why the same setting feels very different to two people in the same class.</p>
+          <p>A tall client doing footwork pushes the carriage further out than a short client on the same setup. That means they're working in a higher range on the load curve — heavier at the end of the movement than their shorter colleague on the same springs. They may not be working harder in every sense, but they are moving more resistance at full extension. That's worth knowing when you're assessing fatigue, planning progressions, or trying to understand why the same setting feels very different to two people in the same class.</p>
         </Prose>
         <AnimationSlot animationId="m1-l1-tall-short" />
         <Prose>
-          <p>The spring's resistance isn't a setting you choose. It's a consequence of everything \u2014 the spring's design, the carriage position, the client's body. Understanding that consequence is what makes the difference between matching a setting to a body and understanding why you're making that choice.</p>
+          <p>The spring's resistance isn't a setting you choose. It's a consequence of everything — the spring's design, the carriage position, the client's body. Understanding that consequence is what makes the difference between matching a setting to a body and understanding why you're making that choice.</p>
         </Prose>
       </div>
     ),
@@ -532,10 +532,10 @@ const m1Pages = {
     // Page 2: Opening
     () => (
       <div>
-        <Eyebrow>Lesson 2 \u2014 Spring Design Basics</Eyebrow>
+        <Eyebrow>Lesson 2 — Spring Design Basics</Eyebrow>
         <SectionTitle>A red spring from one manufacturer is not the same as a red spring from another</SectionTitle>
         <Prose>
-          <p>Two springs can follow the same law and still feel completely different. Hooke's Law governs all of them \u2014 the resistance always climbs as you stretch \u2014 but how steep that climb is, and where it starts, depends entirely on how the spring was made.</p>
+          <p>Two springs can follow the same law and still feel completely different. Hooke's Law governs all of them — the resistance always climbs as you stretch — but how steep that climb is, and where it starts, depends entirely on how the spring was made.</p>
           <p>This is why a red spring from one manufacturer is not the same as a red spring from another. The color is a label. The physics is determined by the design.</p>
         </Prose>
       </div>
@@ -544,7 +544,7 @@ const m1Pages = {
     // Page 3: What determines k and b — definition list
     () => (
       <div>
-        <Eyebrow>Lesson 2 \u2014 Spring Design Basics</Eyebrow>
+        <Eyebrow>Lesson 2 — Spring Design Basics</Eyebrow>
         <SectionTitle>
           What determines <V>k</V> and <V>b</V>
         </SectionTitle>
@@ -575,7 +575,7 @@ const m1Pages = {
           alt="Spring anatomy diagram with coil length, coil diameter, wire diameter, material, and end geometry labeled on a representative extension spring."
         />
         <Prose>
-          <p>None of these variables operate in isolation. Change the wire diameter and you change <V>k</V>. Change the coil diameter and you change both <V>k</V> and the spring's maximum safe extension. This is why two springs that look similar on a shelf can have meaningfully different load curves \u2014 and why matching springs across brands by color or by feel alone is unreliable.</p>
+          <p>None of these variables operate in isolation. Change the wire diameter and you change <V>k</V>. Change the coil diameter and you change both <V>k</V> and the spring's maximum safe extension. This is why two springs that look similar on a shelf can have meaningfully different load curves — and why matching springs across brands by color or by feel alone is unreliable.</p>
         </Prose>
       </div>
     ),
@@ -583,10 +583,10 @@ const m1Pages = {
     // Page 4: What a spec sheet looks like
     () => (
       <div>
-        <Eyebrow>Lesson 2 \u2014 Spring Design Basics</Eyebrow>
+        <Eyebrow>Lesson 2 — Spring Design Basics</Eyebrow>
         <SectionTitle>What a spec sheet looks like</SectionTitle>
         <Prose>
-          <p>When a Pilates equipment company designs a spring, they don't start with wire and start bending. They start with a target load curve \u2014 a desired <V>k</V>, a desired <V>b</V>, and a maximum safe extension \u2014 and work backwards to a physical specification.</p>
+          <p>When a Pilates equipment company designs a spring, they don't start with wire and start bending. They start with a target load curve — a desired <V>k</V>, a desired <V>b</V>, and a maximum safe extension — and work backwards to a physical specification.</p>
           <p>That specification gets handed to a manufacturer as an engineering drawing. It defines the free length, the coil geometry, the wire diameter, the material, and the end treatment. The manufacturer produces a sample. That sample gets tested against the target curve. If the load data matches within tolerance, the spec is approved. If not, the geometry gets adjusted and the cycle repeats.</p>
         </Prose>
         <LessonImage
@@ -594,7 +594,7 @@ const m1Pages = {
           alt="A representative spring engineering drawing showing free length, wire diameter, outer diameter, coil count, initial tension, spring rate, and maximum safe deflection."
         />
         <Prose>
-          <p>The drawing above is representative of what a real spring spec looks like. The key numbers \u2014 wire diameter, outer diameter, free length, calculated rate of extension, initial tension, maximum safe deflection \u2014 are all there. Together they describe a spring completely. But notice what isn't there: a color name. The color gets assigned later, as a label for the finished product. It's a convenience, not a specification.</p>
+          <p>The drawing above is representative of what a real spring spec looks like. The key numbers — wire diameter, outer diameter, free length, calculated rate of extension, initial tension, maximum safe deflection — are all there. Together they describe a spring completely. But notice what isn't there: a color name. The color gets assigned later, as a label for the finished product. It's a convenience, not a specification.</p>
         </Prose>
       </div>
     ),
@@ -602,17 +602,17 @@ const m1Pages = {
     // Page 5: Why this matters across brands
     () => (
       <div>
-        <Eyebrow>Lesson 2 \u2014 Spring Design Basics</Eyebrow>
+        <Eyebrow>Lesson 2 — Spring Design Basics</Eyebrow>
         <SectionTitle>Why this matters across brands</SectionTitle>
         <Prose>
-          <p>Because every manufacturer runs this process independently, starting from their own target curve, using their own material sources and manufacturing tolerances, the springs that come out the other end are not interchangeable \u2014 even when they carry the same color name or are marketed as equivalents.</p>
+          <p>Because every manufacturer runs this process independently, starting from their own target curve, using their own material sources and manufacturing tolerances, the springs that come out the other end are not interchangeable — even when they carry the same color name or are marketed as equivalents.</p>
         </Prose>
         <LessonImage
           filename="bb-spring-graph.png"
           alt="Balanced Body spring lineup plotted by load curve. Each color is a distinct line with different slope and starting point. Curves diverge as extension increases."
         />
         <Prose>
-          <p>This graph shows Balanced Body's spring lineup plotted by load curve. Each line has a different slope and a different starting point. The gap between a yellow spring and a green spring at 18 inches of extension is not the same as the gap between them at 6 inches. The curves diverge. That divergence is a direct consequence of different <V>k</V> and <V>b</V> values \u2014 different design choices producing different physical behavior across the range of motion.</p>
+          <p>This graph shows Balanced Body's spring lineup plotted by load curve. Each line has a different slope and a different starting point. The gap between a yellow spring and a green spring at 18 inches of extension is not the same as the gap between them at 6 inches. The curves diverge. That divergence is a direct consequence of different <V>k</V> and <V>b</V> values — different design choices producing different physical behavior across the range of motion.</p>
           <p>When you look at the same graph for two different manufacturers, the divergence compounds. The springs may start close together at low extension and separate significantly by the time a tall client pushes to full range. That's not a quality difference. It's a design difference. And it's invisible if you're navigating by color names alone.</p>
         </Prose>
       </div>
@@ -621,11 +621,11 @@ const m1Pages = {
     // Page 6: The design is the starting point
     () => (
       <div>
-        <Eyebrow>Lesson 2 \u2014 Spring Design Basics</Eyebrow>
+        <Eyebrow>Lesson 2 — Spring Design Basics</Eyebrow>
         <SectionTitle>The design is the starting point, not the destination</SectionTitle>
         <Prose>
-          <p>Even with a complete specification, most spring development involves iteration with the manufacturer \u2014 testing samples, adjusting tolerances, balancing the target load curve against cost and material availability. The final spring is a negotiation between what the physics requires and what manufacturing can reliably produce.</p>
-          <p>This matters for instructors because it means the spring in your hand is the product of a set of deliberate choices \u2014 choices that produced a specific <V>k</V> and <V>b</V>, a specific load curve, a specific experience for the body moving through it. Understanding that the design is intentional, and that different manufacturers made different intentional choices, is the foundation for understanding why the same exercise can feel so different on different equipment.</p>
+          <p>Even with a complete specification, most spring development involves iteration with the manufacturer — testing samples, adjusting tolerances, balancing the target load curve against cost and material availability. The final spring is a negotiation between what the physics requires and what manufacturing can reliably produce.</p>
+          <p>This matters for instructors because it means the spring in your hand is the product of a set of deliberate choices — choices that produced a specific <V>k</V> and <V>b</V>, a specific load curve, a specific experience for the body moving through it. Understanding that the design is intentional, and that different manufacturers made different intentional choices, is the foundation for understanding why the same exercise can feel so different on different equipment.</p>
         </Prose>
       </div>
     ),
@@ -687,7 +687,7 @@ const m1Pages = {
               paddingLeft: '18px',
             }}
           >
-            The spring in your studio today is not the same spring it was when it was new. This lesson explains why \u2014 and what that means for the feedback you're getting from your clients.
+            The spring in your studio today is not the same spring it was when it was new. This lesson explains why — and what that means for the feedback you're getting from your clients.
           </div>
         </div>
       </div>
@@ -696,13 +696,13 @@ const m1Pages = {
     // Page 2: The boundary between safe and permanent
     () => (
       <div>
-        <Eyebrow>Lesson 3 \u2014 Spring Wear and Lifespan</Eyebrow>
+        <Eyebrow>Lesson 3 — Spring Wear and Lifespan</Eyebrow>
         <SectionTitle>The boundary between safe and permanent</SectionTitle>
         <Prose>
-          <p>A spring that's been in service for three years in a busy studio is not the same spring it was when it was new. The load curve has shifted. The resistance at any given extension is lower than the spec intended. The experience your client feels is no longer the experience you think you're delivering \u2014 and neither of you would know it.</p>
+          <p>A spring that's been in service for three years in a busy studio is not the same spring it was when it was new. The load curve has shifted. The resistance at any given extension is lower than the spec intended. The experience your client feels is no longer the experience you think you're delivering — and neither of you would know it.</p>
           <p>Spring wear is invisible in real time. It doesn't announce itself. It accumulates gradually, across thousands of cycles, until the gap between what the spring was designed to do and what it's actually doing becomes meaningful.</p>
           <p>To understand how springs wear, you need one more concept from Hooke's Law: the distinction between elastic and plastic deformation.</p>
-          <p>When you stretch a spring within its designed range, it returns to its original length every time. The metal deforms under load and recovers fully when the load is released. This is elastic deformation \u2014 the spring is doing exactly what it was designed to do, cycle after cycle, without permanent change.</p>
+          <p>When you stretch a spring within its designed range, it returns to its original length every time. The metal deforms under load and recovers fully when the load is released. This is elastic deformation — the spring is doing exactly what it was designed to do, cycle after cycle, without permanent change.</p>
           <p>Stretch a spring past its safe limit, and something different happens. The metal deforms beyond its ability to recover. It doesn't return to its original length. The coils are permanently altered. This is plastic deformation, and it's irreversible. A spring that has been plastically deformed will never behave the same way again.</p>
           <p>Most reformer springs, used correctly on well-maintained equipment, operate entirely within the elastic range. The carriage travel is designed to keep spring extension within safe limits. Plastic deformation from normal use is not the failure mode you're managing.</p>
           <p>The failure mode you're managing is fatigue.</p>
@@ -714,11 +714,11 @@ const m1Pages = {
     // Page 3: Fatigue is not a single event
     () => (
       <div>
-        <Eyebrow>Lesson 3 \u2014 Spring Wear and Lifespan</Eyebrow>
+        <Eyebrow>Lesson 3 — Spring Wear and Lifespan</Eyebrow>
         <SectionTitle>Fatigue is not a single event</SectionTitle>
         <Prose>
-          <p>Even within the elastic range, the metal undergoes microscopic stress with every cycle. Over thousands of repetitions, tiny cracks initiate in the wire. For most of a spring's service life it feels completely normal \u2014 and then it doesn't. The closer it operates to its safe extension limit on each rep, the sooner it reaches the point where one of those cracks propagates far enough to cause permanent deformation or even break the wire.</p>
-          <p>Garage door springs are a useful reference point here \u2014 there's extensive industry data on them because they're everywhere and their failure is inconvenient enough that manufacturers publish cycle ratings. A typical garage door spring is rated for 7,000 to 10,000 cycles. Pilates equipment manufacturers use similar thinking, which is why most publish replacement recommendations of one to two years for a working studio. That's not an arbitrary interval. It's an estimate of how many cycles a spring accumulates in normal professional use before its reliability becomes a concern.</p>
+          <p>Even within the elastic range, the metal undergoes microscopic stress with every cycle. Over thousands of repetitions, tiny cracks initiate in the wire. For most of a spring's service life it feels completely normal — and then it doesn't. The closer it operates to its safe extension limit on each rep, the sooner it reaches the point where one of those cracks propagates far enough to cause permanent deformation or even break the wire.</p>
+          <p>Garage door springs are a useful reference point here — there's extensive industry data on them because they're everywhere and their failure is inconvenient enough that manufacturers publish cycle ratings. A typical garage door spring is rated for 7,000 to 10,000 cycles. Pilates equipment manufacturers use similar thinking, which is why most publish replacement recommendations of one to two years for a working studio. That's not an arbitrary interval. It's an estimate of how many cycles a spring accumulates in normal professional use before its reliability becomes a concern.</p>
         </Prose>
       </div>
     ),
@@ -726,11 +726,11 @@ const m1Pages = {
     // Page 4: What accelerates wear
     () => (
       <div>
-        <Eyebrow>Lesson 3 \u2014 Spring Wear and Lifespan</Eyebrow>
+        <Eyebrow>Lesson 3 — Spring Wear and Lifespan</Eyebrow>
         <SectionTitle>What accelerates wear</SectionTitle>
         <Prose>
-          <p>Not all springs in a studio wear at the same rate. Usage patterns matter. Springs that get hooked up for every client \u2014 the middle springs, the standard footwork setup, whatever the studio default is \u2014 accumulate cycles faster than springs that rarely come off the bar. A spring that sees six sessions a day will reach its service limit faster than one that sees two.</p>
-          <p>Beyond usage frequency, several environmental factors accelerate degradation. Humidity and temperature cycling cause the metal to expand and contract, stressing the coils even between sessions. Oils and lotions transferred from hands to spring coils during handling can degrade the surface of the wire over time. And coil slamming \u2014 allowing the carriage to return hard enough that the spring coils crash together at the end of the movement \u2014 introduces impact stress that the spring was not designed to absorb.</p>
+          <p>Not all springs in a studio wear at the same rate. Usage patterns matter. Springs that get hooked up for every client — the middle springs, the standard footwork setup, whatever the studio default is — accumulate cycles faster than springs that rarely come off the bar. A spring that sees six sessions a day will reach its service limit faster than one that sees two.</p>
+          <p>Beyond usage frequency, several environmental factors accelerate degradation. Humidity and temperature cycling cause the metal to expand and contract, stressing the coils even between sessions. Oils and lotions transferred from hands to spring coils during handling can degrade the surface of the wire over time. And coil slamming — allowing the carriage to return hard enough that the spring coils crash together at the end of the movement — introduces impact stress that the spring was not designed to absorb.</p>
           <p>None of these factors cause immediate failure. They shorten the service life incrementally, in ways that compound.</p>
         </Prose>
       </div>
@@ -739,13 +739,13 @@ const m1Pages = {
     // Page 5: What you're actually managing
     () => (
       <div>
-        <Eyebrow>Lesson 3 \u2014 Spring Wear and Lifespan</Eyebrow>
+        <Eyebrow>Lesson 3 — Spring Wear and Lifespan</Eyebrow>
         <SectionTitle>What you're actually managing</SectionTitle>
         <Prose>
           <p>Spring replacement addresses two distinct risks, and it's worth being clear about both.</p>
-          <p>The first is breakage. A spring that has exceeded its service life is more likely to fail under load \u2014 and a spring failure during a session is a safety event. The risk is low on well-maintained equipment, but it's real, and it's the reason manufacturer replacement recommendations exist as guidelines rather than suggestions.</p>
-          <p>The second risk arrives earlier, and more quietly. Long before a spring breaks, its load curve drifts. The resistance at any given extension decreases. The experience your client feels is no longer the experience the equipment was designed to deliver. If you've been adjusting programming based on how exercises feel and how clients are progressing, some of that signal has been noise \u2014 the equipment changing underneath the training, invisibly, in a direction you weren't accounting for.</p>
-          <p>Regular replacement manages both. It keeps the equipment within its safe operating range, and it keeps the baseline consistent enough that the feedback you're getting from your clients actually reflects their bodies \u2014 not the slow deterioration of a spring that passed its service life six months ago.</p>
+          <p>The first is breakage. A spring that has exceeded its service life is more likely to fail under load — and a spring failure during a session is a safety event. The risk is low on well-maintained equipment, but it's real, and it's the reason manufacturer replacement recommendations exist as guidelines rather than suggestions.</p>
+          <p>The second risk arrives earlier, and more quietly. Long before a spring breaks, its load curve drifts. The resistance at any given extension decreases. The experience your client feels is no longer the experience the equipment was designed to deliver. If you've been adjusting programming based on how exercises feel and how clients are progressing, some of that signal has been noise — the equipment changing underneath the training, invisibly, in a direction you weren't accounting for.</p>
+          <p>Regular replacement manages both. It keeps the equipment within its safe operating range, and it keeps the baseline consistent enough that the feedback you're getting from your clients actually reflects their bodies — not the slow deterioration of a spring that passed its service life six months ago.</p>
         </Prose>
       </div>
     ),
@@ -796,7 +796,7 @@ const m1Pages = {
               marginBottom: '24px',
             }}
           >
-            Memorizing settings isn't enough \u2014 you need intent and principles to teach across equipment
+            Memorizing settings isn't enough — you need intent and principles to teach across equipment
           </p>
           <div
             style={{
@@ -807,7 +807,7 @@ const m1Pages = {
               paddingLeft: '18px',
             }}
           >
-            This lesson takes everything from Lessons 1\u20133 into a real studio context \u2014 one where you might teach on multiple brands in the same week, or encounter equipment you've never used before.
+            This lesson takes everything from Lessons 1–3 into a real studio context — one where you might teach on multiple brands in the same week, or encounter equipment you've never used before.
           </div>
         </div>
       </div>
@@ -816,12 +816,12 @@ const m1Pages = {
     // Page 2: Light springs
     () => (
       <div>
-        <Eyebrow>Lesson 4 \u2014 Real World Spring Comparisons</Eyebrow>
+        <Eyebrow>Lesson 4 — Real World Spring Comparisons</Eyebrow>
         <SectionTitle>The light springs are nearly interchangeable</SectionTitle>
         <Prose>
-          <p>By now you know that springs aren't a single weight, that their design determines their load curve, and that their load curve drifts over time. This lesson is about what happens when you take that knowledge into a real studio \u2014 one where you might teach on three different brands in a week, or pick up a guest teaching slot on equipment you've never used before.</p>
+          <p>By now you know that springs aren't a single weight, that their design determines their load curve, and that their load curve drifts over time. This lesson is about what happens when you take that knowledge into a real studio — one where you might teach on three different brands in a week, or pick up a guest teaching slot on equipment you've never used before.</p>
           <p>The short answer is that a spring conversion chart won't save you. The longer answer is worth understanding.</p>
-          <p>When you plot the lightest spring from four major contemporary reformer manufacturers \u2014 Balanced Body, STOTT, Peak, and Align-Pilates \u2014 on the same graph, something reassuring happens. Across their full range of travel, they stay within about 5 pounds of each other. The load curves are similar in slope, similar in initial tension, similar in behavior. For practical teaching purposes, the light springs across these brands are close enough that switching between them doesn't require significant reprogramming.</p>
+          <p>When you plot the lightest spring from four major contemporary reformer manufacturers — Balanced Body, STOTT, Peak, and Align-Pilates — on the same graph, something reassuring happens. Across their full range of travel, they stay within about 5 pounds of each other. The load curves are similar in slope, similar in initial tension, similar in behavior. For practical teaching purposes, the light springs across these brands are close enough that switching between them doesn't require significant reprogramming.</p>
           <p>This makes intuitive sense. A light spring has a low <V>k</V> and a low <V>b</V>. There's less room for the curves to diverge when the values are small to begin with.</p>
         </Prose>
         <LessonImage
@@ -834,12 +834,12 @@ const m1Pages = {
     // Page 3: Heavy springs
     () => (
       <div>
-        <Eyebrow>Lesson 4 \u2014 Real World Spring Comparisons</Eyebrow>
+        <Eyebrow>Lesson 4 — Real World Spring Comparisons</Eyebrow>
         <SectionTitle>The heavy springs are where it gets interesting</SectionTitle>
         <Prose>
           <p>The picture changes significantly when you look at the heavy springs. Plot them on the same graph and three things become apparent.</p>
-          <p>First, Balanced Body, STOTT, and Align all start with similar initial tension \u2014 their <V>b</V> values are close. But as you stretch those springs, the curves diverge. By 12 inches of extension, they differ by nearly 10 pounds. That's a meaningful difference, and 12 inches is squarely within normal footwork range for most clients.</p>
-          <p>Second, Peak behaves differently from the start. Its heavy spring carries significantly more initial tension than the other three \u2014 it feels heavier from the moment the carriage begins to move. But its <V>k</V> is similar to Balanced Body's, which means the slope of its curve is comparable. The lines run roughly parallel, with Peak sitting higher. By about 20 inches of extension, Peak and STOTT cross \u2014 beyond that point, the Peak spring is actually lighter than the STOTT spring.</p>
+          <p>First, Balanced Body, STOTT, and Align all start with similar initial tension — their <V>b</V> values are close. But as you stretch those springs, the curves diverge. By 12 inches of extension, they differ by nearly 10 pounds. That's a meaningful difference, and 12 inches is squarely within normal footwork range for most clients.</p>
+          <p>Second, Peak behaves differently from the start. Its heavy spring carries significantly more initial tension than the other three — it feels heavier from the moment the carriage begins to move. But its <V>k</V> is similar to Balanced Body's, which means the slope of its curve is comparable. The lines run roughly parallel, with Peak sitting higher. By about 20 inches of extension, Peak and STOTT cross — beyond that point, the Peak spring is actually lighter than the STOTT spring.</p>
           <p>Third, Align diverges most aggressively with extension. Its <V>k</V> is steeper than the others, meaning the resistance climbs faster per inch of carriage travel. A client working at the far end of their range on Align heavy springs is in meaningfully different territory than the same client on Balanced Body heavies.</p>
         </Prose>
         <LessonImage
@@ -852,12 +852,12 @@ const m1Pages = {
     // Page 4: What this means in practice
     () => (
       <div>
-        <Eyebrow>Lesson 4 \u2014 Real World Spring Comparisons</Eyebrow>
+        <Eyebrow>Lesson 4 — Real World Spring Comparisons</Eyebrow>
         <SectionTitle>What this means in practice</SectionTitle>
         <Prose>
           <p>If you teach on multiple brands, the light springs give you reasonable continuity. You can translate your programming with minor adjustments and your clients' experience will be close to what you intended.</p>
-          <p>The heavy springs do not give you that continuity. A client who has been training on Balanced Body heavies and walks into a studio with Peak equipment is going to feel a difference \u2014 particularly at the start of the movement, where Peak's higher initial tension is most noticeable. A client on Align heavies who is used to STOTT equipment will feel the resistance climb faster than expected as they move into range.</p>
-          <p>None of this is a problem if you understand it. It becomes a problem when you reach for a conversion chart \u2014 a document that assigns equivalencies between brands based on a single number \u2014 and trust it to translate your programming accurately. A single number cannot represent a load curve. It can only describe one point on that curve, at one extension value, which may or may not correspond to where your client is actually working.</p>
+          <p>The heavy springs do not give you that continuity. A client who has been training on Balanced Body heavies and walks into a studio with Peak equipment is going to feel a difference — particularly at the start of the movement, where Peak's higher initial tension is most noticeable. A client on Align heavies who is used to STOTT equipment will feel the resistance climb faster than expected as they move into range.</p>
+          <p>None of this is a problem if you understand it. It becomes a problem when you reach for a conversion chart — a document that assigns equivalencies between brands based on a single number — and trust it to translate your programming accurately. A single number cannot represent a load curve. It can only describe one point on that curve, at one extension value, which may or may not correspond to where your client is actually working.</p>
         </Prose>
       </div>
     ),
@@ -865,15 +865,15 @@ const m1Pages = {
     // Page 5: The three things you actually need
     () => (
       <div>
-        <Eyebrow>Lesson 4 \u2014 Real World Spring Comparisons</Eyebrow>
+        <Eyebrow>Lesson 4 — Real World Spring Comparisons</Eyebrow>
         <SectionTitle>The three things you actually need</SectionTitle>
         <Prose>
-          <p>The cross-brand comparison data makes one argument clearly: memorizing this chart is not the goal. You don't need to carry Balanced Body vs. Peak load curves in your head. What you need is a framework that travels with you \u2014 one that works on any equipment, in any studio, with any client.</p>
+          <p>The cross-brand comparison data makes one argument clearly: memorizing this chart is not the goal. You don't need to carry Balanced Body vs. Peak load curves in your head. What you need is a framework that travels with you — one that works on any equipment, in any studio, with any client.</p>
           <p>When you're planning to teach on unfamiliar equipment, or switching between brands in the same week, three questions do the work that no chart can.</p>
-          <p>What is the intention of the exercise? Not the name of the movement \u2014 the intention. What should the spring load be doing at each point in the range of motion, and for this particular client at this point in their training?</p>
+          <p>What is the intention of the exercise? Not the name of the movement — the intention. What should the spring load be doing at each point in the range of motion, and for this particular client at this point in their training?</p>
           <p>How does this specific equipment deliver load? Is this a brand with steep <V>k</V> values that climbs fast through range, or one with high initial tension that feels heavier from the first inch of travel? Knowing roughly where a brand sits on the spectrum tells you whether to expect the load to front-load or back-load the movement.</p>
-          <p>What is your client telling you? When the load feels wrong to them \u2014 when a progression that should be accessible isn't, or a movement is catching them earlier in range than expected \u2014 that's information. The dialogue in the room is where the adjustment happens. No chart survives contact with a specific body on a specific day.</p>
-          <p>Those three questions together are what make spring knowledge useful in practice. The comparison data in this lesson gives you a reference point. The framework gives you something to use when the equipment in front of you doesn't match anything you've taught on before \u2014 which, eventually, it will.</p>
+          <p>What is your client telling you? When the load feels wrong to them — when a progression that should be accessible isn't, or a movement is catching them earlier in range than expected — that's information. The dialogue in the room is where the adjustment happens. No chart survives contact with a specific body on a specific day.</p>
+          <p>Those three questions together are what make spring knowledge useful in practice. The comparison data in this lesson gives you a reference point. The framework gives you something to use when the equipment in front of you doesn't match anything you've taught on before — which, eventually, it will.</p>
         </Prose>
       </div>
     ),
@@ -885,15 +885,15 @@ const m1Pages = {
       <QuizQuestion
         number={1}
         total={5}
-        question="A red Balanced Body spring at 6 inches of extension and the same spring at 18 inches of extension \u2014 which is heavier?"
+        question="A red Balanced Body spring at 6 inches of extension and the same spring at 18 inches of extension — which is heavier?"
         choices={[
-          "They weigh the same \u2014 it's the same spring",
+          "They weigh the same — it's the same spring",
           'The spring at 6 inches is heavier',
           'The spring at 18 inches is heavier',
           'It depends on the reformer model',
         ]}
         correctIndex={2}
-        feedback="Spring resistance increases with extension \u2014 F = kx + b. The further the spring is stretched, the higher the resistance delivered. The setting doesn't change; the client's range of motion determines which part of the load curve they're working in."
+        feedback="Spring resistance increases with extension — F = kx + b. The further the spring is stretched, the higher the resistance delivered. The setting doesn't change; the client's range of motion determines which part of the load curve they're working in."
       />
     ),
     () => (
@@ -903,12 +903,12 @@ const m1Pages = {
         question="In the equation F = kx + b, what does b represent?"
         choices={[
           "The spring's maximum safe extension",
-          'The spring constant \u2014 how fast resistance climbs per inch',
-          'The initial tension \u2014 resistance before the spring is stretched',
+          'The spring constant — how fast resistance climbs per inch',
+          'The initial tension — resistance before the spring is stretched',
           'The total force at full extension',
         ]}
         correctIndex={2}
-        feedback="b is the y-intercept of the load curve: the resistance the spring exerts before the carriage has moved at all. k is the spring constant \u2014 how fast resistance climbs per inch of extension."
+        feedback="b is the y-intercept of the load curve: the resistance the spring exerts before the carriage has moved at all. k is the spring constant — how fast resistance climbs per inch of extension."
       />
     ),
     () => (
@@ -917,7 +917,7 @@ const m1Pages = {
         total={5}
         question="Two springs have the same color label but come from different manufacturers. Which statement is most accurate?"
         choices={[
-          'They will feel identical \u2014 color labels are standardized across brands',
+          'They will feel identical — color labels are standardized across brands',
           'They will feel similar at low extension but may diverge significantly at higher extension',
           'They may have different k and b values and should not be assumed equivalent',
           'The heavier spring will always have a higher k value',
@@ -938,7 +938,7 @@ const m1Pages = {
           'How fast you stretch the spring',
         ]}
         correctIndex={3}
-        feedback="Hooke\u2019s Law describes spring behavior in terms of extension distance, not velocity. The other three \u2014 extension distance, wire diameter and material, and coil length \u2014 all directly influence the load the spring delivers."
+        feedback="Hooke's Law describes spring behavior in terms of extension distance, not velocity. The other three — extension distance, wire diameter and material, and coil length — all directly influence the load the spring delivers."
       />
     ),
     () => (
@@ -953,7 +953,7 @@ const m1Pages = {
           "The spring's wire diameter, the client's weight, and the reformer model",
         ]}
         correctIndex={1}
-        feedback="These three questions form a portable framework that works on any equipment, in any studio, with any client \u2014 doing the work that no conversion chart can."
+        feedback="These three questions form a portable framework that works on any equipment, in any studio, with any client — doing the work that no conversion chart can."
       />
     ),
   ],
@@ -1015,7 +1015,7 @@ function Prose({ children }) {
 function MeetInstructorPage() {
   return (
     <div style={{ maxWidth: '840px', margin: '0 auto', padding: '48px 32px 40px' }}>
-      <Eyebrow>Module 1 \u2014 Spring Basics</Eyebrow>
+      <Eyebrow>Module 1 — Spring Basics</Eyebrow>
       <div
         style={{
           position: 'relative',
@@ -1052,7 +1052,7 @@ function MeetInstructorPage() {
               marginBottom: '12px',
             }}
           >
-            Kaleen Canevari
+            Hi! I'm Kaleen.
           </h3>
           <p
             style={{
@@ -1061,7 +1061,7 @@ function MeetInstructorPage() {
               color: 'var(--color-ink-muted)',
             }}
           >
-            Mechanical engineer, Pilates instructor, and former design engineer at Balanced Body. She has spent years maintaining, modifying, and building Pilates equipment \u2014 and teaching on all of it.
+            I'm a mechanical engineer and Pilates instructor. I've previously been a design engineer at Balanced Body, I started my own Pilates equipment technician business, and designed and built thousands of my own reformers with my own startup.
           </p>
         </div>
         <p
@@ -1072,7 +1072,7 @@ function MeetInstructorPage() {
             paddingTop: '4px',
           }}
         >
-          Pilates Physics exists because the gap between how instructors are trained and what the equipment is actually doing is real, and it affects every session. This course is her attempt to close that gap.
+          I built Pilates Physics because the gap between how instructors are trained and what the equipment is actually doing is real, and it affects every session. This course is my attempt to close that gap.
         </p>
       </div>
 
@@ -1088,11 +1088,11 @@ function MeetInstructorPage() {
 // ── Module Overview page ─────────────────────────────────────────────────────
 function ModuleOverviewPage() {
   const lessons = [
-    { id: 'L1', title: 'Springs 101', claim: 'Springs get heavier as they stretch \u2014 not the same as a weight stack' },
+    { id: 'L1', title: 'Springs 101', claim: 'Springs get heavier as they stretch — not the same as a weight stack' },
     { id: 'L2', title: 'Spring Design Basics', claim: 'Spring weights vary based on design, and that varies by manufacturer' },
     { id: 'L3', title: 'Spring Wear and Lifespan', claim: 'Springs degrade in predictable ways' },
-    { id: 'L4', title: 'Real World Spring Comparisons', claim: "Memorizing settings isn't enough \u2014 you need intent and principles to teach across equipment" },
-    { id: 'Quiz', title: 'Assessment Quiz', claim: '5 questions \u2014 pass to unlock Module 2' },
+    { id: 'L4', title: 'Real World Spring Comparisons', claim: "Memorizing settings isn't enough — you need intent and principles to teach across equipment" },
+    { id: 'Quiz', title: 'Assessment Quiz', claim: '5 questions — pass to unlock Module 2' },
   ]
 
   return (
@@ -1120,7 +1120,7 @@ function ModuleOverviewPage() {
           borderBottom: '1px solid var(--color-rule)',
         }}
       >
-        The foundation. What a spring actually does mechanically, how resistance changes through range of motion, and why the settings you choose don't determine a weight \u2014 they determine a range of weights delivered to a specific body.
+        The foundation. What a spring actually does mechanically, how resistance changes through range of motion, and why the settings you choose don't determine a weight — they determine a range of weights delivered to a specific body.
       </p>
       <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
         {lessons.map((l, i) => (
@@ -1192,9 +1192,9 @@ function ModuleOverviewPage() {
 // ── Module Summary page ──────────────────────────────────────────────────────
 function ModuleSummaryPage() {
   const takeaways = [
-    "Spring resistance is a curve, not a number \u2014 it changes with every inch of carriage travel, and it responds to the client's body, not just the setting you chose",
-    'The curve is determined by design choices that vary by manufacturer \u2014 color names are a convenience, not a specification, and two \u201cred\u201d springs from different brands are not the same spring',
-    'Springs degrade over time in predictable ways \u2014 regular replacement keeps the equipment honest and keeps the feedback from your clients meaningful',
+    "Spring resistance is a curve, not a number — it changes with every inch of carriage travel, and it responds to the client's body, not just the setting you chose",
+    'The curve is determined by design choices that vary by manufacturer — color names are a convenience, not a specification, and two "red" springs from different brands are not the same spring',
+    'Springs degrade over time in predictable ways — regular replacement keeps the equipment honest and keeps the feedback from your clients meaningful',
   ]
 
   return (
@@ -1227,7 +1227,7 @@ function ModuleSummaryPage() {
               color: 'var(--color-ink)',
             }}
           >
-            <span style={{ color: 'var(--color-accent)', flexShrink: 0 }}>\u2192</span>
+            <span style={{ color: 'var(--color-accent)', flexShrink: 0 }}>→</span>
             <span>{t}</span>
           </li>
         ))}
@@ -1244,7 +1244,7 @@ function ModuleSummaryPage() {
           lineHeight: 1.65,
         }}
       >
-        Their load behavior is predictable and describable \u2014 and that changes how you should be making decisions for clients, even if you don't yet know how to make those decisions. That's what Modules 2 and 3 are for.
+        Their load behavior is predictable and describable — and that changes how you should be making decisions for clients, even if you don't yet know how to make those decisions. That's what Modules 2 and 3 are for.
       </p>
     </div>
   )
@@ -1339,7 +1339,7 @@ export default function LessonContent({
         >
           {mod.alwaysOpen
             ? 'Advanced Physics Portal'
-            : `Module ${mod.number} \u2014 ${mod.title}`}
+            : `Module ${mod.number} — ${mod.title}`}
         </p>
         <h1
           style={{
@@ -1523,7 +1523,7 @@ function NavBtn({ direction, label, onClick }) {
           textTransform: 'uppercase',
         }}
       >
-        {direction === 'prev' ? '\u2190 Previous' : 'Next \u2192'}
+        {direction === 'prev' ? '← Previous' : 'Next →'}
       </span>
       <span style={{ color: 'var(--color-ink)' }}>{label}</span>
     </button>
