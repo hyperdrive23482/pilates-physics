@@ -499,11 +499,11 @@ const m1Pages = {
         <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
         <SectionTitle>What it means for your teaching</SectionTitle>
         <Prose>
-          <p>A tall client doing footwork pushes the carriage further out than a short client on the same setup. That means they're working in a higher range on the load curve — heavier at the end of the movement than their shorter colleague on the same springs. They may not be working harder in every sense, but they are moving more resistance at full extension. That's worth knowing when you're assessing fatigue, planning progressions, or trying to understand why the same setting feels very different to two people in the same class.</p>
+          <p>Here's a practical example. A tall client doing footwork pushes the carriage further out than a short client on the same spring settings. That means they're working in a higher range on the load curve — heavier at the end of the movement than their shorter colleague on the same springs.</p>
         </Prose>
         <AnimationSlot animationId="m1-l1-tall-short" />
         <Prose>
-          <p>The spring's resistance isn't a setting you choose. It's a consequence of everything — the spring's design, the carriage position, the client's body. Understanding that consequence is what makes the difference between matching a setting to a body and understanding why you're making that choice.</p>
+          <p>The spring's resistance isn't a setting you choose. It's a consequence of the spring's design, the carriage position, and the client's body. That's worth knowing so you can assess whether your intent is for the clients to move as much weight as possible over the sets you're teaching — in which case you might change the springs to account for differing client height and strength — or something else, in which case the different loading may be appropriate.</p>
         </Prose>
       </div>
     ),
