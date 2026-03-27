@@ -885,14 +885,16 @@ const m1Pages = {
         <SectionTitle>The light springs are nearly interchangeable</SectionTitle>
         <Prose>
           <p>By now you know that springs aren't a single weight, that their design determines their load profile, and that their load profile drifts over time. This lesson is about what happens when you take that knowledge into a real studio — one where you might teach on three different brands in a week, or pick up a guest teaching slot on equipment you've never used before.</p>
-          <p>The short answer is that a spring conversion chart won't save you. The longer answer is worth understanding.</p>
-          <p>When you plot the lightest spring from four major contemporary reformer manufacturers — Balanced Body, STOTT, Peak, and Align-Pilates — on the same graph, something reassuring happens. Across their full range of travel, they stay within about 5 pounds of each other. The load profiles are similar in slope, similar in initial tension, similar in behavior. For practical teaching purposes, the light springs across these brands are close enough that switching between them doesn't require significant reprogramming.</p>
-          <p>This makes intuitive sense. A light spring has a low <V>k</V> and a low <V>b</V>. There's less room for the curves to diverge when the values are small to begin with.</p>
+          <p>The short answer is that a spring conversion chart is only the starting point to teaching on different brands. The longer answer is worth understanding.</p>
+          <p>When you plot the lightest spring from five major contemporary reformer manufacturers — Balanced Body, STOTT, Peak, Align-Pilates, and BASI — on the same graph, something reassuring happens. Across their full range of travel, they stay within about 5 pounds of each other. The load profiles are similar in slope, similar in initial tension, similar in behavior. For practical teaching purposes, the light springs across these brands are close enough that switching between them doesn't require significant reprogramming.</p>
         </Prose>
         <LessonImage
           filename="cross-brand-light-springs.png"
           alt="Lightest springs from Balanced Body, STOTT, Peak, and Align-Pilates plotted on the same axes. Lines remain within approximately 5 lbs of each other across the full range of carriage travel."
         />
+        <Prose>
+          <p>This makes intuitive sense. A light spring has a low <V>k</V> and a low <V>b</V>. There's less room for the curves to diverge when the values are small to begin with.</p>
+        </Prose>
       </div>
     ),
 
@@ -903,14 +905,16 @@ const m1Pages = {
         <SectionTitle>The heavy springs are where it gets interesting</SectionTitle>
         <Prose>
           <p>The picture changes significantly when you look at the heavy springs. Plot them on the same graph and three things become apparent.</p>
-          <p>First, Balanced Body, STOTT, and Align all start with similar initial tension — their <V>b</V> values are close. But as you stretch those springs, the curves diverge. By 12 inches of extension, they differ by nearly 10 pounds. That's a meaningful difference, and 12 inches is squarely within normal footwork range for most clients.</p>
-          <p>Second, Peak behaves differently from the start. Its heavy spring carries significantly more initial tension than the other three — it feels heavier from the moment the carriage begins to move. But its <V>k</V> is similar to Balanced Body's, which means the slope of its curve is comparable. The lines run roughly parallel, with Peak sitting higher. By about 20 inches of extension, Peak and STOTT cross — beyond that point, the Peak spring is actually lighter than the STOTT spring.</p>
-          <p>Third, Align diverges most aggressively with extension. Its <V>k</V> is steeper than the others, meaning the resistance climbs faster per inch of carriage travel. A client working at the far end of their range on Align heavy springs is in meaningfully different territory than the same client on Balanced Body heavies.</p>
         </Prose>
         <LessonImage
           filename="cross-brand-heavy-springs.png"
           alt="Heaviest springs from Balanced Body, STOTT, Peak, and Align-Pilates on the same axes. Curves diverge significantly. Peak starts high, Align climbs steeply. Peak and STOTT cross at approximately 20 inches."
         />
+        <Prose>
+          <p>First, Balanced Body, STOTT, and Align all start with similar initial tension — their <V>b</V> values are close. But as you stretch those springs, the curves diverge. By 12 inches of extension, they differ by nearly 10 pounds. That's a meaningful difference, and 12 inches is squarely within normal footwork range for most clients.</p>
+          <p>Second, Peak behaves differently from the start. Its heavy spring carries significantly more initial tension than the other three — it feels heavier from the moment the carriage begins to move. But its <V>k</V> is similar to Balanced Body's, which means the slope of its curve is comparable. The lines run roughly parallel, with Peak sitting higher. By about 20 inches of extension, Peak and STOTT cross — beyond that point, the Peak spring is actually lighter than the STOTT spring.</p>
+          <p>Third, Align diverges most aggressively with extension. Its <V>k</V> is steeper than the others, meaning the resistance climbs faster per inch of carriage travel. A client working at the far end of their range on Align heavy springs is in meaningfully different territory than the same client on Balanced Body heavies.</p>
+        </Prose>
       </div>
     ),
 
@@ -921,7 +925,7 @@ const m1Pages = {
         <SectionTitle>What this means in practice</SectionTitle>
         <Prose>
           <p>If you teach on multiple brands, the light springs give you reasonable continuity. You can translate your programming with minor adjustments and your clients' experience will be close to what you intended.</p>
-          <p>The heavy springs do not give you that continuity. A client who has been training on Balanced Body heavies and walks into a studio with Peak equipment is going to feel a difference — particularly at the start of the movement, where Peak's higher initial tension is most noticeable. A client on Align heavies who is used to STOTT equipment will feel the resistance climb faster than expected as they move into range.</p>
+          <p>The heavy springs do not give you that continuity. A client who has been training on Balanced Body equipment and walks into a studio with Peak equipment is going to feel a difference — particularly at the start of the movement, where Peak's higher initial tension is most noticeable. A client on Align equipment who is used to STOTT equipment will feel the resistance climb faster than expected as they move.</p>
           <p>None of this is a problem if you understand it. It becomes a problem when you reach for a conversion chart — a document that assigns equivalencies between brands based on a single number — and trust it to translate your programming accurately. A single number cannot represent a load profile. It can only describe one point on that curve, at one extension value, which may or may not correspond to where your client is actually working.</p>
         </Prose>
         <div
@@ -967,9 +971,73 @@ const m1Pages = {
         <Prose>
           <p>The cross-brand comparison data makes one argument clearly: memorizing this chart is not the goal. You don't need to carry Balanced Body vs. Peak load profiles in your head. What you need is a framework that travels with you — one that works on any equipment, in any studio, with any client.</p>
           <p>When you're planning to teach on unfamiliar equipment, or switching between brands in the same week, three questions do the work that no chart can.</p>
-          <p>What is the intention of the exercise? Not the name of the movement — the intention. What should the spring load be doing at each point in the range of motion, and for this particular client at this point in their training?</p>
-          <p>How does this specific equipment deliver load? Is this a brand with steep <V>k</V> values that climbs fast through range, or one with high initial tension that feels heavier from the first inch of travel? Knowing roughly where a brand sits on the spectrum tells you whether to expect the load to front-load or back-load the movement.</p>
-          <p>What is your client telling you? When the load feels wrong to them — when a progression that should be accessible isn't, or a movement is catching them earlier in range than expected — that's information. The dialogue in the room is where the adjustment happens. No chart survives contact with a specific body on a specific day.</p>
+        </Prose>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', margin: '1.5rem 0' }}>
+          {[
+            {
+              num: '1',
+              title: 'What is the intention of the exercise?',
+              body: 'Not the name of the movement — the intention. What should the spring load be doing at each point in the range of motion, and for this particular client at this point in their training?',
+            },
+            {
+              num: '2',
+              title: 'How does this specific equipment deliver load?',
+              body: "Understand that each brand's springs will feel slightly different. You don't need to memorize numbers or do math while teaching. Simply expecting them to be different will help you figure it out on the fly.",
+            },
+            {
+              num: '3',
+              title: 'What is your client telling you?',
+              body: "Every Pilates instructor needs to be skilled at not only reading their clients but maintaining a verbal dialog with them about their movement experience. Every client is different. Developing this skill will help you pick the right springs and adjustments whether you're teaching across brands or always on the same one.",
+            },
+          ].map((item) => (
+            <div
+              key={item.num}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '40px 1fr',
+                gap: '16px',
+                background: 'var(--color-surface)',
+                border: '1px solid var(--color-rule)',
+                borderRadius: '8px',
+                padding: '20px 24px',
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: '"DM Serif Display", serif',
+                  fontSize: '28px',
+                  color: 'var(--color-accent)',
+                  lineHeight: 1,
+                  paddingTop: '2px',
+                }}
+              >
+                {item.num}
+              </span>
+              <div>
+                <div
+                  style={{
+                    fontWeight: 500,
+                    fontSize: '16px',
+                    color: 'var(--color-ink)',
+                    marginBottom: '6px',
+                  }}
+                >
+                  {item.title}
+                </div>
+                <div
+                  style={{
+                    fontSize: '15px',
+                    lineHeight: 1.65,
+                    color: 'var(--color-ink-muted)',
+                  }}
+                >
+                  {item.body}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <Prose>
           <p>Those three questions together are what make spring knowledge useful in practice. The comparison data in this lesson gives you a reference point. The framework gives you something to use when the equipment in front of you doesn't match anything you've taught on before — which, eventually, it will.</p>
         </Prose>
       </div>
