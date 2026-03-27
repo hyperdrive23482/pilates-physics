@@ -725,21 +725,32 @@ const m1Pages = {
       </div>
     ),
 
-    // Page 2: The boundary between safe and permanent
+    // Page 2: Springs wear invisibly
     () => (
       <div>
         <Eyebrow>Lesson 3 — Spring Wear and Lifespan</Eyebrow>
-        <SectionTitle>The boundary between safe and permanent</SectionTitle>
+        <SectionTitle>Your springs aren't what they used to be</SectionTitle>
         <Prose>
           <p>A spring that's been in service for three years in a busy studio is not the same spring it was when it was new. The load curve has shifted. The resistance at any given extension is lower than the spec intended. The experience your client feels is no longer the experience you think you're delivering — and neither of you would know it.</p>
           <p>Spring wear is invisible in real time. It doesn't announce itself. It accumulates gradually, across thousands of cycles, until the gap between what the spring was designed to do and what it's actually doing becomes meaningful.</p>
+        </Prose>
+      </div>
+    ),
+
+    // Page 3: Elastic vs. plastic deformation
+    () => (
+      <div>
+        <Eyebrow>Lesson 3 — Spring Wear and Lifespan</Eyebrow>
+        <SectionTitle>Elastic vs. plastic deformation</SectionTitle>
+        <Prose>
           <p>To understand how springs wear, you need one more concept from Hooke's Law: the distinction between elastic and plastic deformation.</p>
           <p>When you stretch a spring within its designed range, it returns to its original length every time. The metal deforms under load and recovers fully when the load is released. This is elastic deformation — the spring is doing exactly what it was designed to do, cycle after cycle, without permanent change.</p>
           <p>Stretch a spring past its safe limit, and something different happens. The metal deforms beyond its ability to recover. It doesn't return to its original length. The coils are permanently altered. This is plastic deformation, and it's irreversible. A spring that has been plastically deformed will never behave the same way again.</p>
-          <p>Most reformer springs, used correctly on well-maintained equipment, operate entirely within the elastic range. The carriage travel is designed to keep spring extension within safe limits. Plastic deformation from normal use is not the failure mode you're managing.</p>
-          <p>The failure mode you're managing is fatigue.</p>
         </Prose>
         <AnimationSlot animationId="m1-l3" />
+        <Prose>
+          <p>Most reformer springs, used correctly on well-maintained equipment, operate entirely within the elastic range. The carriage travel is designed to keep spring extension within safe limits.</p>
+        </Prose>
       </div>
     ),
 
