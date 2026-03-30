@@ -96,7 +96,7 @@ export default function CourseSidebar({
                       color: unlocked ? mod.color : 'var(--color-ink-muted)',
                     }}
                   >
-                    {mod.alwaysOpen ? 'Always Open' : `Module ${mod.number}`}
+                    Module {mod.number}
                   </span>
                   {!unlocked && (
                     <Lock size={11} color="var(--color-ink-muted)" strokeWidth={2} />
@@ -209,7 +209,7 @@ export default function CourseSidebar({
                     lineHeight: '1.5',
                   }}
                 >
-                  Complete Module {mod.number - 1} to unlock.
+                  {mod.comingSoon ? 'Coming Soon' : `Complete Module ${mod.number - 1} to unlock.`}
                 </p>
               )}
             </div>

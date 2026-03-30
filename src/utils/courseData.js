@@ -24,6 +24,7 @@ export const modules = [
     description: 'How height, weight, and equipment configuration change the actual force a client experiences.',
     color: 'var(--color-module-2)',
     alwaysOpen: false,
+    comingSoon: true,
     requiredModule: 'm1',
     lessons: [
       { id: 'm2-l1', title: 'Height and Spring Load', hasAnimation: true },
@@ -40,6 +41,7 @@ export const modules = [
     description: 'Force vectors, planes of movement, and why the same spring setting means different things on different exercises.',
     color: 'var(--color-module-3)',
     alwaysOpen: false,
+    comingSoon: true,
     requiredModule: 'm2',
     lessons: [
       { id: 'm3-l1', title: 'Understanding Force Vectors', hasAnimation: false },
@@ -55,7 +57,8 @@ export const modules = [
     title: 'Advanced Physics Portal',
     description: 'Self-directed, always open. Deeper dives into chair physics, Cadillac mechanics, and angular velocity.',
     color: 'var(--color-module-4)',
-    alwaysOpen: true,
+    alwaysOpen: false,
+    comingSoon: true,
     lessons: [
       { id: 'm4-l1', title: 'Angular Velocity', hasAnimation: false },
       { id: 'm4-l2', title: 'Chair Physics', hasAnimation: false },

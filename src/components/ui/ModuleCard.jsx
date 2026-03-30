@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 export default function ModuleCard({ module }) {
-  const { number, title, description, color, alwaysOpen } = module
+  const { number, title, description, color, comingSoon } = module
 
   return (
     <div
@@ -27,7 +27,7 @@ export default function ModuleCard({ module }) {
         >
           Module {number}
         </span>
-        {number !== 1 && (
+        {comingSoon && (
           <span
             style={{
               fontSize: '0.65rem',
@@ -67,23 +67,41 @@ export default function ModuleCard({ module }) {
         {description}
       </p>
 
-      <Link
-        to="/course"
-        style={{
-          marginTop: 'auto',
-          paddingTop: '0.75rem',
-          fontSize: '0.8rem',
-          fontWeight: '500',
-          color: color,
-          textDecoration: 'none',
-          borderTop: '1px solid var(--color-rule)',
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '0.35rem',
-        }}
-      >
-        {alwaysOpen ? 'Explore →' : 'Preview →'}
-      </Link>
+      {comingSoon ? (
+        <span
+          style={{
+            marginTop: 'auto',
+            paddingTop: '0.75rem',
+            fontSize: '0.8rem',
+            fontWeight: '500',
+            color: 'var(--color-ink-muted)',
+            borderTop: '1px solid var(--color-rule)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.35rem',
+          }}
+        >
+          Coming Soon
+        </span>
+      ) : (
+        <Link
+          to="/course"
+          style={{
+            marginTop: 'auto',
+            paddingTop: '0.75rem',
+            fontSize: '0.8rem',
+            fontWeight: '500',
+            color: color,
+            textDecoration: 'none',
+            borderTop: '1px solid var(--color-rule)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.35rem',
+          }}
+        >
+          Preview →
+        </Link>
+      )}
     </div>
   )
 }

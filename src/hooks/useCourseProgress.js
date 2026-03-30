@@ -43,6 +43,7 @@ export function useCourseProgress(userId) {
   function isModuleUnlocked(moduleId) {
     const mod = modules.find((m) => m.id === moduleId)
     if (!mod) return false
+    if (mod.comingSoon) return false
     if (mod.alwaysOpen || !mod.requiredModule) return true
 
     const required = modules.find((m) => m.id === mod.requiredModule)
