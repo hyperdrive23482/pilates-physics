@@ -1192,10 +1192,10 @@ function MeetInstructorPage() {
         }}
       >
         <iframe
-          src="https://www.youtube.com/embed/44L4UZvEX5E"
+          src="https://player.vimeo.com/video/1178561300?h=20196a151a"
           title="Meet Your Instructor"
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow="autoplay; fullscreen; picture-in-picture"
           allowFullScreen
         />
       </div>
