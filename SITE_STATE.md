@@ -1,6 +1,6 @@
 # SITE_STATE.md — Pilates Physics
 
-Last updated: 2026-03-26 (rev 2)
+Last updated: 2026-03-30 (rev 3)
 
 ---
 
@@ -26,16 +26,18 @@ Last updated: 2026-03-26 (rev 2)
 - Responsive grid
 
 ### `/course` — Course Portal
-**Status: Functional shell, placeholder lesson content**
+**Status: Module 1 fully built; Modules 2–4 placeholder content**
 - Protected route — shows `CourseGate` if unauthenticated
 - Top bar with overall progress display
 - Sidebar with module/lesson navigation, per-module progress
-- Lesson content area with mark-complete button + prev/next nav
+- Multi-page lesson system with Previous/Next navigation and page indicators (e.g. "3 / 7")
+- Mark-complete button on final page of each lesson (not shown on intro/summary pages)
 - Mobile sidebar via hamburger menu
 - URL state via search params (`?m=m1&l=m1-l1`)
-- 4 modules defined in `courseData.js` — current data defines 6 lessons per module (24 total) but Module 1 has been finalized as 4 lessons + 1 quiz (see Course Data Structure below)
-- **Lesson body text is placeholder** — contextually relevant to Pilates mechanics but not final copy
-- `AnimationSlot` component renders "Loading…" — no interactive diagrams yet
+- 4 modules defined in `courseData.js` (see Course Data Structure below)
+- Module 1: all 8 lessons have full, real content with rich formatting, images, and animations
+- Modules 2–4: brief placeholder content (2–3 sentence topic summaries)
+- `AnimationSlot` component fully implemented — renders iframes for mapped animations, fallback placeholder for unmapped IDs
 
 ### `/login` — Login Page
 **Status: Complete**
@@ -72,39 +74,112 @@ Last updated: 2026-03-26 (rev 2)
 
 **File:** `src/utils/courseData.js`
 
-Lessons are keyed by module and lesson ID strings. The expected format for Module 1 based on the content brief is:
-```js
-{
-  id: 'm1-l1',
-  title: 'Springs 101',
-  moduleId: 'm1',
-  hasAnimation: true,
-}
-```
+### Module 1: Spring Basics (m1) — 8 lessons
+| ID | Title | Type |
+|----|-------|------|
+| `m1-intro` | Meet Your Instructor | Intro (no animation) |
+| `m1-overview` | Module Overview | Intro (no animation) |
+| `m1-l1` | Springs 101 | Lesson (has animation) |
+| `m1-l2` | Spring Design Basics | Lesson |
+| `m1-l3` | Spring Wear and Lifespan | Lesson (has animation) |
+| `m1-l4` | Real World Spring Comparisons | Lesson |
+| `m1-quiz` | Assessment Quiz | Assessment |
+| `m1-summary` | Module Complete | Summary |
 
-**Known mismatch:** The current `courseData.js` defines 6 lessons per module (24 total). Module 1 is now 4 lessons + 1 quiz = 5 items. The data file needs to be updated to match the finalized lesson structure in `MODULE_1_CONTENT.md` before lesson content is populated. Do not add content to the old 6-lesson structure.
+### Module 2: Springs, Settings, and Bodies (m2) — 5 lessons, requires m1
+| ID | Title | Notes |
+|----|-------|-------|
+| `m2-l1` | Height and Spring Load | has animation flag |
+| `m2-l2` | Body Weight, Friction, and Gravity | |
+| `m2-l3` | Rope Adjustments | |
+| `m2-l4` | Supportive vs Resistive Spring Behavior | |
+| `m2-quiz` | Assessment Quiz | |
 
-**Correct Module 1 lesson IDs:**
-- `m1-l1` — Springs 101
-- `m1-l2` — Spring Design Basics
-- `m1-l3` — Spring Wear and Lifespan
-- `m1-l4` — Real World Spring Comparisons
-- `m1-quiz` — Assessment Quiz
+### Module 3: The Physics of Different Movement (m3) — 5 lessons, requires m2
+| ID | Title |
+|----|-------|
+| `m3-l1` | Force Vectors |
+| `m3-l2` | Standing vs Seated Reformer |
+| `m3-l3` | Pulley Height |
+| `m3-l4` | Plank/Pike |
+| `m3-quiz` | Assessment Quiz |
+
+### Module 4: Advanced Physics Portal (m4) — 3 lessons, always open (self-directed)
+| ID | Title |
+|----|-------|
+| `m4-l1` | Angular Velocity |
+| `m4-l2` | Chair Physics |
+| `m4-l3` | Cadillac Physics |
 
 ---
 
 ## Lesson Content Format
 
-Lesson body text is currently stored as placeholder strings in `LessonContent.jsx` or equivalent. For Module 1, real content should be structured as prose HTML or JSX — not a flat string and not bullet lists (except the five definition-list items in Lesson 2).
+**File:** `src/components/course/LessonContent.jsx` (~1,696 lines)
 
-The intended rendering pattern per lesson:
-- Section headings as `<h3>` declarative statements
-- Body copy as `<p>` paragraphs
-- The five k/b factor items in Lesson 2 as `<dl>` / `<dt>` / `<dd>` or equivalent bold-term + em-dash pattern
-- Visual slots as `<img>` (static images) or `<AnimationSlot>` (interactive HTML files)
-- F = kx + b equation rendered with k, x, b in `<em>` or monospace — not plain text
+Module 1 lessons use a multi-page array structure where each page is a render function. Custom components used throughout:
 
-All finalized copy is in `MODULE_1_CONTENT.md` in the project root.
+- **Eyebrow** — small label above section titles
+- **SectionTitle** — styled `<h3>` headings
+- **Prose** — wrapper for body paragraphs
+- **V** — styled inline variable (e.g., k, x, b)
+- **EquationBlock** — formatted equation display (F = kx + b)
+- **DefRow** — definition list row (bold term + em-dash + description)
+- **LessonImage** — `<img>` wrapper for static images from `/public/images/module1/`
+- **QuizQuestion** — multiple-choice quiz component
+- **NavBtn** — previous/next page navigation
+
+Modules 2–4 use a flat `placeholderContent` object with short topic summaries rendered as single-page lessons.
+
+---
+
+## Interactive Animations
+
+**Status: Fully implemented for Module 1**
+
+### Animation Files (`/public/animations/`)
+
+| File | Size | Lesson | Description |
+|------|------|--------|-------------|
+| `spring-animation.html` | 20.2 KB | m1-l1 | Spring load vs. constant weight |
+| `tall-short-animation.html` | 18.6 KB | m1-l1 | Tall vs. short client carriage comparison |
+| `elastic-plastic-animation.html` | 13.0 KB | m1-l3 | Elastic vs. plastic deformation |
+
+### AnimationSlot Component (`src/components/course/AnimationSlot.jsx`)
+
+- Maps animation IDs to HTML file sources:
+  - `m1-l1-spring` → `spring-animation.html`
+  - `m1-l1-tall-short` → `tall-short-animation.html`
+  - `m1-l3` → `elastic-plastic-animation.html`
+- Renders as `<iframe>` with dynamic height adjustment via `useEffect` and resize handling
+- Lazy loading enabled
+- Graceful cross-origin error handling
+- Unmapped animation IDs render a dashed-border placeholder div
+
+---
+
+## Static Image Assets — Module 1
+
+**Location:** `/public/images/module1/`
+
+**12 image files present:**
+
+| Filename | Used in |
+|----------|---------|
+| `bb-spring-graph.png` | Lessons 1 and 2 |
+| `spring-coil-factors.png` | Lesson 2 |
+| `spring-engineering-drawing.png` | Lesson 2 |
+| `cross-brand-light-springs.png` | Lesson 4 |
+| `cross-brand-heavy-springs.png` | Lesson 4 |
+| `example-spring-1.png` | Lesson content |
+| `example-spring-2.png` | Lesson content |
+| `example-spring-3.png` | Lesson content |
+| `example-spring-4.png` | Lesson content |
+| `example-spring-5.png` | Lesson content |
+| `bad-springs-1.jpg` | Lesson 3 |
+| `bad-springs-2.jpg` | Lesson 3 |
+
+All images are rendered via the `<LessonImage>` component.
 
 ---
 
@@ -168,57 +243,25 @@ Environment variables `VITE_CONVERTKIT_FORM_ID` and `VITE_CONVERTKIT_API_KEY` ar
 
 - Hook: `src/hooks/useCourseProgress.js`
 - Storage: localStorage key `pp_progress_${userId}`
-- Module unlocking: sequential (M2 requires all M1 lessons complete, etc.)
+- Module unlocking: sequential (M2 requires all M1 lessons complete, etc.; M4 is always open)
 - No server-side persistence — progress is lost if localStorage is cleared or user switches devices
 
 ---
 
-## Interactive Diagrams / Animations
+## Deployment
 
-**Status: Stubbed**
+**Status: Configured for Vercel**
 
-`AnimationSlot.jsx` exists as a placeholder component (renders "Loading…"). Lesson titles reference intended interactive content (e.g., "Spring Load vs. Constant Weight", "Height and Spring Load") but no actual diagram implementations exist.
+`vercel.json` exists with SPA rewrite configuration:
+```json
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
 
----
-
-## Animation Embedding
-
-Three standalone HTML animation files have been built for Module 1:
-
-| File | Lesson | Description |
-|------|--------|-------------|
-| `spring-animation.html` | m1-l1 | Spring load vs. constant weight |
-| `tall-short-animation.html` | m1-l1 | Tall vs. short client carriage comparison |
-| `elastic-plastic-animation.html` | m1-l3 | Elastic vs. plastic deformation |
-
-**Intended location in repo:** `/public/animations/`
-
-**Embedding approach:** `AnimationSlot.jsx` should render an `<iframe>` with `src` pointing to the animation file, `width="100%"`, `height` set per animation, no border, `scrolling="no"`. The component receives a `lessonId` prop and maps it to the correct file.
-
-Suggested height values:
-- `spring-animation.html` — 520px
-- `tall-short-animation.html` — 580px
-- `elastic-plastic-animation.html` — 480px
-
-Static image slots use a plain `<img>` tag — not `AnimationSlot`.
-
----
-
-## Static Image Assets — Module 1
-
-Five image assets are required for Module 1 lesson content. These do not yet exist in the repo.
-
-**Intended location:** `/public/images/module1/`
-
-| Filename (suggested) | Used in | Description |
-|----------------------|---------|-------------|
-| `bb-spring-graph.png` | Lessons 1 and 2 | Balanced Body multi-spring load curve graph |
-| `spring-coil-factors.png` | Lesson 2 | Coil length, diameter, wire diameter, end geometry diagram |
-| `spring-engineering-drawing.png` | Lesson 2 | Example spring spec / engineering drawing |
-| `cross-brand-light-springs.png` | Lesson 4 | Light springs load curves across BB, STOTT, Peak, Align |
-| `cross-brand-heavy-springs.png` | Lesson 4 | Heavy springs load curves across BB, STOTT, Peak, Align |
-
-Until these assets are added, render a placeholder `<div>` with a light border and the filename as a label — do not leave empty space or throw an error.
+The app is a static SPA. No GitHub Actions, Docker, or other CI/CD files.
 
 ---
 
@@ -226,14 +269,17 @@ Until these assets are added, render a placeholder `<div>` with a light border a
 
 | Phase | Planned | Actual |
 |-------|---------|--------|
-| Phase 1 | Setup, routing, global styles, Navbar, Footer, stubs | ✅ Complete |
-| Phase 2 | Landing page (static) | ✅ Complete |
-| Phase 3 | About page | ✅ Complete |
-| Phase 4 | Course portal shell | ✅ Complete (placeholder lesson copy) |
-| Phase 5 | Course gate + ConvertKit | ⚠️ Gate works via Supabase auth (email+password & magic link); full login/signup/forgot-password/set-password flow built; ConvertKit not integrated |
-| Phase 6 | Polish (animations, mobile, micro) | ⚠️ Mobile responsive done; animations not started |
+| Phase 1 | Setup, routing, global styles, Navbar, Footer, stubs | Complete |
+| Phase 2 | Landing page (static) | Complete |
+| Phase 3 | About page | Complete |
+| Phase 4 | Course portal shell | Complete — full multi-page lesson system built |
+| Phase 5 | Course gate + ConvertKit | Gate works via Supabase auth; ConvertKit not integrated |
+| Phase 6 | Polish (animations, mobile, micro) | Mobile responsive done; 3 animations built and embedded for M1 |
+| — | Module 1 content | Complete — all 8 lessons with full copy, images, animations, quiz |
+| — | Modules 2–4 content | Placeholder only |
+| — | Vercel deployment config | Added (`vercel.json`) |
 
-**Key deviation:** Auth was implemented with full Supabase email+password and magic link flows (login, signup, forgot password, set password pages) rather than a simple localStorage email gate. This is significantly stronger than originally scoped but means the site depends on a live Supabase project.
+**Key deviation:** Auth was implemented with full Supabase email+password and magic link flows rather than a simple localStorage email gate. Module 1 content was fully authored with rich multi-page lessons, which was not part of the original phase plan.
 
 ---
 
@@ -245,12 +291,6 @@ Until these assets are added, render a placeholder `<div>` with a light border a
 | ConvertKit | Email list capture | Not connected |
 | Substack | Linked from About page | External link only |
 | Instagram | Linked from About page | External link only |
-
----
-
-## Deployment
-
-**No deployment config exists.** No `vercel.json`, `.netlify.toml`, GitHub Actions, or Docker files. The `/dist` build output exists locally. The app is a static SPA ready for any static host — just needs env vars set.
 
 ---
 
