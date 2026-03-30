@@ -53,9 +53,23 @@ export function useEnrollment() {
     if (error) throw error
   }
 
+  async function updateProfile({ firstName, lastName, email, password }) {
+    const updates = {}
+    if (email) updates.email = email
+    if (password) updates.password = password
+    if (firstName !== undefined || lastName !== undefined) {
+      updates.data = {
+        ...(firstName !== undefined && { first_name: firstName }),
+        ...(lastName !== undefined && { last_name: lastName }),
+      }
+    }
+    const { error } = await supabase.auth.updateUser(updates)
+    if (error) throw error
+  }
+
   async function signOut() {
     await supabase.auth.signOut()
   }
 
-  return { user, loading, signUp, signIn, setPassword, resetPasswordRequest, signOut }
+  return { user, loading, signUp, signIn, setPassword, resetPasswordRequest, updateProfile, signOut }
 }

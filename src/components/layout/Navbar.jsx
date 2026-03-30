@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, User, HelpCircle, CreditCard, LogOut } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
+import ProfileDropdown from '../ui/ProfileDropdown'
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -73,21 +74,7 @@ export default function Navbar() {
               >
                 My Course
               </Link>
-              <button
-                onClick={handleSignOut}
-                style={{
-                  backgroundColor: 'transparent',
-                  color: 'var(--color-ink-muted)',
-                  border: '1.5px solid var(--color-rule)',
-                  padding: '0.5rem 1.25rem',
-                  fontSize: '0.9rem',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  fontFamily: '"DM Sans", sans-serif',
-                }}
-              >
-                Sign Out
-              </button>
+              <ProfileDropdown user={user} onSignOut={handleSignOut} />
             </>
           ) : (
             <>
@@ -164,21 +151,71 @@ export default function Navbar() {
                 >
                   My Course
                 </Link>
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileOpen(false)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    color: 'var(--color-ink)',
+                    textDecoration: 'none',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    padding: '0.5rem 0',
+                  }}
+                >
+                  <User size={16} /> Your Profile
+                </Link>
+                <Link
+                  to="/help"
+                  onClick={() => setMobileOpen(false)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    color: 'var(--color-ink)',
+                    textDecoration: 'none',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    padding: '0.5rem 0',
+                  }}
+                >
+                  <HelpCircle size={16} /> Help
+                </Link>
+                <Link
+                  to="/billing"
+                  onClick={() => setMobileOpen(false)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    color: 'var(--color-ink)',
+                    textDecoration: 'none',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    padding: '0.5rem 0',
+                  }}
+                >
+                  <CreditCard size={16} /> Billing
+                </Link>
                 <button
                   onClick={handleSignOut}
                   style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
                     backgroundColor: 'transparent',
                     color: 'var(--color-ink-muted)',
-                    border: '1.5px solid var(--color-rule)',
-                    padding: '0.625rem 1.25rem',
+                    border: 'none',
+                    padding: '0.5rem 0',
                     fontSize: '0.9rem',
                     fontWeight: '500',
-                    textAlign: 'center',
                     cursor: 'pointer',
                     fontFamily: '"DM Sans", sans-serif',
                   }}
                 >
-                  Sign Out
+                  <LogOut size={16} /> Log Out
                 </button>
               </>
             ) : (

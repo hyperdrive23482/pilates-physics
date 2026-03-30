@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams, useNavigate } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { useEnrollment } from '../hooks/useEnrollment'
+import ProfileDropdown from '../components/ui/ProfileDropdown'
 import { useCourseProgress } from '../hooks/useCourseProgress'
 import CourseGate from '../components/course/CourseGate'
 import CourseSidebar from '../components/course/CourseSidebar'
@@ -14,7 +15,8 @@ const DEFAULT_MODULE = modules[0].id
 const DEFAULT_LESSON = modules[0].lessons[0].id
 
 export default function Course() {
-  const { user, loading } = useEnrollment()
+  const { user, loading, signOut } = useEnrollment()
+  const navigate = useNavigate()
   const {
     markComplete,
     isLessonComplete,
@@ -28,6 +30,11 @@ export default function Course() {
 
   const currentModuleId = searchParams.get('m') || DEFAULT_MODULE
   const currentLessonId = searchParams.get('l') || DEFAULT_LESSON
+
+  async function handleSignOut() {
+    await signOut()
+    navigate('/')
+  }
 
   function handleSelectLesson(moduleId, lessonId) {
     setSearchParams({ m: moduleId, l: lessonId })
@@ -192,6 +199,8 @@ export default function Course() {
             {overallPercent}%
           </span>
         </div>
+
+        <ProfileDropdown user={user} onSignOut={handleSignOut} />
       </header>
 
       {/* ── Body: sidebar + content ──────────────────────────────────────── */}

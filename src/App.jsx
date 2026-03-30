@@ -8,6 +8,7 @@ import Signup from './pages/Signup'
 import ForgotPassword from './pages/ForgotPassword'
 import SetPassword from './pages/SetPassword'
 import AuthCallback from './pages/AuthCallback'
+import Profile from './pages/Profile'
 
 export default function App() {
   return (
@@ -48,6 +49,10 @@ export default function App() {
         <Route
           path="/set-password"
           element={<SetPassword />}
+        />
+        <Route
+          path="/profile"
+          element={<Profile />}
         />
         <Route
           path="/auth/callback"
