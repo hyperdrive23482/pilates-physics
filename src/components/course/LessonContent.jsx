@@ -146,7 +146,7 @@ function EquationBlock() {
               style={{
                 fontWeight: 300,
                 color: 'var(--color-ink-muted)',
-                fontSize: '15px',
+                fontSize: '16px',
                 lineHeight: 1.5,
               }}
             >
@@ -175,7 +175,7 @@ function DefRow({ term, children }) {
       <div
         style={{
           fontFamily: '"DM Mono", monospace',
-          fontSize: '13px',
+          fontSize: '15px',
           color: 'var(--color-accent)',
           fontWeight: 500,
           paddingTop: '2px',
@@ -186,7 +186,7 @@ function DefRow({ term, children }) {
       <div
         style={{
           fontWeight: 300,
-          fontSize: 'clamp(14px, 1.4vw, 16px)',
+          fontSize: 'clamp(15px, 1.5vw, 18px)',
           color: 'var(--color-ink)',
           lineHeight: 1.65,
         }}
@@ -207,7 +207,7 @@ function QuizQuestion({ number, total, question, choices, correctIndex, feedback
       <p
         style={{
           fontFamily: '"DM Mono", monospace',
-          fontSize: '11px',
+          fontSize: '13px',
           letterSpacing: '0.15em',
           textTransform: 'uppercase',
           color: 'var(--color-ink-muted)',
@@ -219,7 +219,7 @@ function QuizQuestion({ number, total, question, choices, correctIndex, feedback
       <p
         style={{
           fontFamily: '"DM Serif Display", serif',
-          fontSize: 'clamp(18px, 2.5vw, 24px)',
+          fontSize: 'clamp(20px, 2.5vw, 28px)',
           fontWeight: 400,
           lineHeight: 1.35,
           color: 'var(--color-ink)',
@@ -245,7 +245,7 @@ function QuizQuestion({ number, total, question, choices, correctIndex, feedback
                   : '1px solid var(--color-rule)',
                 borderLeftWidth: revealed && isCorrect ? '3px' : '1px',
                 borderRadius: '6px',
-                fontSize: '15px',
+                fontSize: '16px',
                 lineHeight: 1.55,
                 color: 'var(--color-ink)',
                 background: 'var(--color-surface)',
@@ -258,7 +258,7 @@ function QuizQuestion({ number, total, question, choices, correctIndex, feedback
               <span
                 style={{
                   fontFamily: '"DM Mono", monospace',
-                  fontSize: '12px',
+                  fontSize: '13px',
                   color: 'var(--color-accent)',
                   flexShrink: 0,
                   paddingTop: '1px',
@@ -279,10 +279,10 @@ function QuizQuestion({ number, total, question, choices, correctIndex, feedback
             border: '1px solid var(--color-accent)',
             color: 'var(--color-accent)',
             fontFamily: '"DM Mono", monospace',
-            fontSize: '11px',
+            fontSize: '13px',
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
-            padding: '10px 20px',
+            padding: '12px 24px',
             borderRadius: '4px',
             cursor: 'pointer',
           }}
@@ -298,7 +298,7 @@ function QuizQuestion({ number, total, question, choices, correctIndex, feedback
             background: 'var(--color-surface)',
             borderLeft: '3px solid var(--color-accent)',
             borderRadius: '0 6px 6px 0',
-            fontSize: '14px',
+            fontSize: '16px',
             lineHeight: 1.65,
             color: 'var(--color-ink)',
           }}
@@ -307,7 +307,7 @@ function QuizQuestion({ number, total, question, choices, correctIndex, feedback
             style={{
               display: 'block',
               fontFamily: '"DM Mono", monospace',
-              fontSize: '11px',
+              fontSize: '13px',
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
               color: '#1D9E75',
@@ -357,7 +357,7 @@ const m1Pages = {
           <p
             style={{
               fontFamily: '"DM Mono", monospace',
-              fontSize: '12px',
+              fontSize: '14px',
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
               color: 'var(--color-accent)',
@@ -369,7 +369,7 @@ const m1Pages = {
           <h2
             style={{
               fontFamily: '"DM Serif Display", serif',
-              fontSize: 'clamp(28px, 4vw, 46px)',
+              fontSize: 'clamp(32px, 4vw, 50px)',
               fontWeight: 400,
               lineHeight: 1.1,
               color: 'var(--color-ink)',
@@ -382,7 +382,7 @@ const m1Pages = {
             style={{
               fontFamily: '"DM Serif Display", serif',
               fontStyle: 'italic',
-              fontSize: 'clamp(16px, 2vw, 21px)',
+              fontSize: 'clamp(18px, 2vw, 23px)',
               color: 'var(--color-ink-muted)',
               lineHeight: 1.5,
               marginBottom: '24px',
@@ -392,7 +392,7 @@ const m1Pages = {
           </p>
           <div
             style={{
-              fontSize: '15px',
+              fontSize: '16px',
               lineHeight: 1.7,
               color: 'var(--color-ink-muted)',
               borderLeft: '2px solid var(--color-rule)',
@@ -511,7 +511,7 @@ const m1Pages = {
           <p
             style={{
               fontFamily: '"DM Mono", monospace',
-              fontSize: '12px',
+              fontSize: '14px',
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
               color: 'var(--color-accent)',
@@ -523,7 +523,7 @@ const m1Pages = {
           <h2
             style={{
               fontFamily: '"DM Serif Display", serif',
-              fontSize: 'clamp(28px, 4vw, 46px)',
+              fontSize: 'clamp(32px, 4vw, 50px)',
               fontWeight: 400,
               lineHeight: 1.1,
               color: 'var(--color-ink)',
@@ -536,7 +536,7 @@ const m1Pages = {
             style={{
               fontFamily: '"DM Serif Display", serif',
               fontStyle: 'italic',
-              fontSize: 'clamp(16px, 2vw, 21px)',
+              fontSize: 'clamp(18px, 2vw, 23px)',
               color: 'var(--color-ink-muted)',
               lineHeight: 1.5,
               marginBottom: '24px',
@@ -546,7 +546,7 @@ const m1Pages = {
           </p>
           <div
             style={{
-              fontSize: '15px',
+              fontSize: '16px',
               lineHeight: 1.7,
               color: 'var(--color-ink-muted)',
               borderLeft: '2px solid var(--color-rule)',
@@ -664,7 +664,7 @@ const m1Pages = {
           <p
             style={{
               fontFamily: '"DM Mono", monospace',
-              fontSize: '12px',
+              fontSize: '14px',
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
               color: 'var(--color-accent)',
@@ -676,7 +676,7 @@ const m1Pages = {
           <h2
             style={{
               fontFamily: '"DM Serif Display", serif',
-              fontSize: 'clamp(28px, 4vw, 46px)',
+              fontSize: 'clamp(32px, 4vw, 50px)',
               fontWeight: 400,
               lineHeight: 1.1,
               color: 'var(--color-ink)',
@@ -689,7 +689,7 @@ const m1Pages = {
             style={{
               fontFamily: '"DM Serif Display", serif',
               fontStyle: 'italic',
-              fontSize: 'clamp(16px, 2vw, 21px)',
+              fontSize: 'clamp(18px, 2vw, 23px)',
               color: 'var(--color-ink-muted)',
               lineHeight: 1.5,
               marginBottom: '24px',
@@ -699,7 +699,7 @@ const m1Pages = {
           </p>
           <div
             style={{
-              fontSize: '15px',
+              fontSize: '16px',
               lineHeight: 1.7,
               color: 'var(--color-ink-muted)',
               borderLeft: '2px solid var(--color-rule)',
@@ -785,7 +785,7 @@ const m1Pages = {
           </h4>
           <p
             style={{
-              fontSize: '15px',
+              fontSize: '16px',
               lineHeight: 1.72,
               color: 'var(--color-ink-muted)',
               margin: 0,
@@ -964,7 +964,7 @@ function Eyebrow({ children }) {
     <p
       style={{
         fontFamily: '"DM Mono", monospace',
-        fontSize: '11px',
+        fontSize: '13px',
         letterSpacing: '0.15em',
         textTransform: 'uppercase',
         color: 'var(--color-accent)',
@@ -981,7 +981,7 @@ function SectionTitle({ children }) {
     <h2
       style={{
         fontFamily: '"DM Serif Display", serif',
-        fontSize: 'clamp(24px, 3.5vw, 38px)',
+        fontSize: 'clamp(28px, 3.5vw, 44px)',
         fontWeight: 400,
         lineHeight: 1.2,
         color: 'var(--color-ink)',
@@ -1000,7 +1000,7 @@ function Prose({ children }) {
         display: 'flex',
         flexDirection: 'column',
         gap: '20px',
-        fontSize: 'clamp(15px, 1.5vw, 17px)',
+        fontSize: 'clamp(16px, 1.5vw, 19px)',
         lineHeight: 1.78,
         color: 'var(--color-ink)',
       }}
@@ -1041,7 +1041,7 @@ function VideoPage({ eyebrow, title, vimeoId }) {
 // ── Meet Your Instructor page ────────────────────────────────────────────────
 function MeetInstructorPage() {
   return (
-    <div style={{ maxWidth: '840px', margin: '0 auto', padding: '48px 32px 40px' }}>
+    <div style={{ maxWidth: '960px', margin: '0 auto', padding: '48px 32px 40px' }}>
       <Eyebrow>Module 1 — Spring Basics</Eyebrow>
       <div
         style={{
@@ -1073,7 +1073,7 @@ function MeetInstructorPage() {
           <h3
             style={{
               fontFamily: '"DM Serif Display", serif',
-              fontSize: '22px',
+              fontSize: '26px',
               fontWeight: 400,
               color: 'var(--color-ink)',
               marginBottom: '12px',
@@ -1083,7 +1083,7 @@ function MeetInstructorPage() {
           </h3>
           <p
             style={{
-              fontSize: '15px',
+              fontSize: '16px',
               lineHeight: 1.72,
               color: 'var(--color-ink-muted)',
             }}
@@ -1123,12 +1123,12 @@ function ModuleOverviewPage() {
   ]
 
   return (
-    <div style={{ maxWidth: '760px', margin: '0 auto', padding: '48px 32px 40px' }}>
+    <div style={{ maxWidth: '880px', margin: '0 auto', padding: '48px 32px 40px' }}>
       <Eyebrow>Module 1</Eyebrow>
       <h1
         style={{
           fontFamily: '"DM Serif Display", serif',
-          fontSize: 'clamp(28px, 4vw, 44px)',
+          fontSize: 'clamp(32px, 4vw, 48px)',
           fontWeight: 400,
           lineHeight: 1.15,
           color: 'var(--color-ink)',
@@ -1139,7 +1139,7 @@ function ModuleOverviewPage() {
       </h1>
       <p
         style={{
-          fontSize: 'clamp(15px, 1.5vw, 17px)',
+          fontSize: 'clamp(16px, 1.5vw, 19px)',
           lineHeight: 1.75,
           color: 'var(--color-ink-muted)',
           marginBottom: '36px',
@@ -1230,7 +1230,7 @@ function ModuleSummaryPage() {
       <h1
         style={{
           fontFamily: '"DM Serif Display", serif',
-          fontSize: 'clamp(28px, 4vw, 44px)',
+          fontSize: 'clamp(32px, 4vw, 48px)',
           fontWeight: 400,
           lineHeight: 1.15,
           color: 'var(--color-ink)',
@@ -1356,7 +1356,7 @@ export default function LessonContent({
       <>
         <p
           style={{
-            fontSize: '0.68rem',
+            fontSize: '0.78rem',
             fontWeight: '600',
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
@@ -1371,7 +1371,7 @@ export default function LessonContent({
         <h1
           style={{
             fontFamily: '"DM Serif Display", serif',
-            fontSize: 'clamp(1.6rem, 3vw, 2.25rem)',
+            fontSize: 'clamp(1.8rem, 3vw, 2.5rem)',
             lineHeight: '1.2',
             color: 'var(--color-ink)',
             margin: '0 0 2.5rem',
@@ -1405,7 +1405,7 @@ export default function LessonContent({
   return (
     <article
       style={{
-        maxWidth: '760px',
+        maxWidth: '880px',
         margin: '0 auto',
         padding: '3rem 2.5rem 5rem',
       }}
@@ -1431,23 +1431,23 @@ export default function LessonContent({
                 alignItems: 'center',
                 gap: '0.5rem',
                 color: mod.color,
-                fontSize: '0.875rem',
+                fontSize: '1rem',
                 fontWeight: '500',
               }}
             >
-              <CheckCircle size={16} strokeWidth={2} />
+              <CheckCircle size={18} strokeWidth={2} />
               Completed
             </div>
           ) : (
             <button
               onClick={() => onMarkComplete(lessonId)}
               style={{
-                padding: '0.75rem 1.75rem',
+                padding: '0.85rem 2rem',
                 background: mod.color,
                 color: '#fff',
                 border: 'none',
                 cursor: 'pointer',
-                fontSize: '0.875rem',
+                fontSize: '1rem',
                 fontWeight: '500',
                 fontFamily: '"DM Sans", sans-serif',
               }}
@@ -1492,7 +1492,7 @@ export default function LessonContent({
           <span
             style={{
               fontFamily: '"DM Mono", monospace',
-              fontSize: '11px',
+              fontSize: '13px',
               letterSpacing: '0.1em',
               color: 'var(--color-ink-muted)',
             }}
@@ -1531,9 +1531,9 @@ function NavBtn({ direction, label, onClick }) {
       style={{
         background: 'none',
         border: '1px solid var(--color-rule)',
-        padding: '0.625rem 1.25rem',
+        padding: '0.75rem 1.5rem',
         cursor: 'pointer',
-        fontSize: '0.85rem',
+        fontSize: '0.95rem',
         fontFamily: '"DM Sans", sans-serif',
         color: 'var(--color-ink-muted)',
         display: 'flex',
@@ -1545,7 +1545,7 @@ function NavBtn({ direction, label, onClick }) {
     >
       <span
         style={{
-          fontSize: '0.65rem',
+          fontSize: '0.75rem',
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
         }}

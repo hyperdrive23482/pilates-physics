@@ -13,7 +13,7 @@ export default function CourseSidebar({
   return (
     <aside
       style={{
-        width: '280px',
+        width: '320px',
         flexShrink: 0,
         borderRight: '1px solid var(--color-rule)',
         background: 'var(--color-surface)',
@@ -39,7 +39,7 @@ export default function CourseSidebar({
         >
           <span
             style={{
-              fontSize: '0.7rem',
+              fontSize: '0.8rem',
               fontWeight: '600',
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
@@ -50,7 +50,7 @@ export default function CourseSidebar({
           </span>
           <span
             style={{
-              fontSize: '0.8rem',
+              fontSize: '0.9rem',
               fontWeight: '600',
               color: 'var(--color-ink)',
             }}
@@ -89,7 +89,7 @@ export default function CourseSidebar({
                 >
                   <span
                     style={{
-                      fontSize: '0.65rem',
+                      fontSize: '0.75rem',
                       fontWeight: '600',
                       letterSpacing: '0.1em',
                       textTransform: 'uppercase',
@@ -99,11 +99,11 @@ export default function CourseSidebar({
                     Module {mod.number}
                   </span>
                   {!unlocked && (
-                    <Lock size={11} color="var(--color-ink-muted)" strokeWidth={2} />
+                    <Lock size={13} color="var(--color-ink-muted)" strokeWidth={2} />
                   )}
                   {unlocked && (
                     <span
-                      style={{ fontSize: '0.7rem', color: 'var(--color-ink-muted)' }}
+                      style={{ fontSize: '0.8rem', color: 'var(--color-ink-muted)' }}
                     >
                       {completed}/{total}
                     </span>
@@ -112,7 +112,7 @@ export default function CourseSidebar({
 
                 <span
                   style={{
-                    fontSize: '0.8rem',
+                    fontSize: '0.9rem',
                     fontWeight: '500',
                     color: unlocked ? 'var(--color-ink)' : 'var(--color-ink-muted)',
                     lineHeight: '1.3',
@@ -161,13 +161,13 @@ export default function CourseSidebar({
                           <span style={{ marginTop: '2px', flexShrink: 0 }}>
                             {done ? (
                               <CheckCircle
-                                size={13}
+                                size={15}
                                 color={mod.color}
                                 strokeWidth={2}
                               />
                             ) : (
                               <Circle
-                                size={13}
+                                size={15}
                                 color={
                                   active
                                     ? mod.color
@@ -179,7 +179,7 @@ export default function CourseSidebar({
                           </span>
                           <span
                             style={{
-                              fontSize: '0.8rem',
+                              fontSize: '0.9rem',
                               lineHeight: '1.45',
                               color: active
                                 ? 'var(--color-ink)'
@@ -203,7 +203,7 @@ export default function CourseSidebar({
                 <p
                   style={{
                     padding: '0 1.25rem 0.875rem',
-                    fontSize: '0.73rem',
+                    fontSize: '0.82rem',
                     color: 'var(--color-ink-muted)',
                     margin: 0,
                     lineHeight: '1.5',

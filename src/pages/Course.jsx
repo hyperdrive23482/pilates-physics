@@ -86,7 +86,7 @@ export default function Course() {
       {/* ── Top bar ─────────────────────────────────────────────────────── */}
       <header
         style={{
-          height: '56px',
+          height: '64px',
           borderBottom: '1px solid var(--color-rule)',
           background: 'var(--color-surface)',
           display: 'flex',
@@ -122,7 +122,7 @@ export default function Course() {
           <span style={{
             fontFamily: '"DM Sans", sans-serif',
             fontWeight: '500',
-            fontSize: '0.75rem',
+            fontSize: '0.85rem',
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
             color: 'var(--color-ink)',
@@ -135,7 +135,7 @@ export default function Course() {
           <span style={{
             fontFamily: '"DM Sans", sans-serif',
             fontWeight: '500',
-            fontSize: '0.75rem',
+            fontSize: '0.85rem',
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
             color: 'var(--color-accent)',
@@ -159,7 +159,7 @@ export default function Course() {
         {currentModule && (
           <span
             style={{
-              fontSize: '0.8rem',
+              fontSize: '0.9rem',
               color: 'var(--color-ink-muted)',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
@@ -184,12 +184,12 @@ export default function Course() {
             flexShrink: 0,
           }}
         >
-          <div style={{ width: '80px' }}>
+          <div style={{ width: '100px' }}>
             <ProgressBar percent={overallPercent} height={3} />
           </div>
           <span
             style={{
-              fontSize: '0.75rem',
+              fontSize: '0.85rem',
               fontWeight: '600',
               color: 'var(--color-ink)',
               minWidth: '32px',
