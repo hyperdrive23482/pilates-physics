@@ -329,184 +329,18 @@ const m1Pages = {
   'm1-intro': [() => <MeetInstructorPage />],
   'm1-overview': [() => <ModuleOverviewPage />],
   'm1-l1': [
-    // Page 1: Lesson intro
-    () => (
-      <div>
-        <div
-          style={{
-            borderTop: '2px solid var(--color-accent)',
-            paddingTop: '28px',
-            marginTop: '8px',
-          }}
-        >
-          <p
-            style={{
-              fontFamily: '"DM Mono", monospace',
-              fontSize: '12px',
-              letterSpacing: '0.2em',
-              textTransform: 'uppercase',
-              color: 'var(--color-accent)',
-              marginBottom: '12px',
-            }}
-          >
-            Lesson 1
-          </p>
-          <h2
-            style={{
-              fontFamily: '"DM Serif Display", serif',
-              fontSize: 'clamp(28px, 4vw, 46px)',
-              fontWeight: 400,
-              lineHeight: 1.1,
-              color: 'var(--color-ink)',
-              marginBottom: '16px',
-            }}
-          >
-            Springs 101
-          </h2>
-          <p
-            style={{
-              fontFamily: '"DM Serif Display", serif',
-              fontStyle: 'italic',
-              fontSize: 'clamp(16px, 2vw, 21px)',
-              color: 'var(--color-ink-muted)',
-              lineHeight: 1.5,
-              marginBottom: '24px',
-            }}
-          >
-            Springs get heavier as they stretch — not the same as gym weights
-          </p>
-          <div
-            style={{
-              fontSize: '15px',
-              lineHeight: 1.7,
-              color: 'var(--color-ink-muted)',
-              borderLeft: '2px solid var(--color-rule)',
-              paddingLeft: '18px',
-            }}
-          >
-            This lesson builds the core mental model. Before you can reason about spring settings, spring weights, or how to adapt for different bodies, you need to understand what a spring actually does mechanically — and why that's different from other forms of resistance you might use.
-          </div>
-        </div>
-      </div>
-    ),
-
-    // Page 2: Opening — A Pilates spring doesn't work that way
-    () => (
-      <div>
-        <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
-        <SectionTitle>A Pilates spring doesn't work that way</SectionTitle>
-        <Prose>
-          <p>Pick up a ten-pound weight and hold it at your side. That weight doesn't change whether your arm is straight or bent, or whether it's overhead or close to the floor. The weight is the weight.</p>
-          <p>A Pilates spring doesn't work that way.</p>
-          <p>The resistance a spring delivers is not a fixed number. It's a relationship between the spring's physical properties and how far you've stretched it. Stretch it further, and it gets heavier. Every time, without exception. That's not a quirk of cheap equipment or a sign of wear — it's the physics. It's how springs work.</p>
-          <p>This distinction matters more than most instructors realize, because the settings you choose don't determine a weight. They determine a range of weights, delivered across a range of motion, to a specific body on a specific piece of equipment. Two clients doing footwork on identical spring settings are not necessarily moving the same load.</p>
-        </Prose>
-      </div>
-    ),
-
-    // Page 3: The equation
-    () => (
-      <div>
-        <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
-        <SectionTitle>The equation</SectionTitle>
-        <Prose>
-          <p>The relationship between spring extension and resistance is described by Hooke's Law:</p>
-        </Prose>
-        <EquationBlock />
-        <Prose>
-          <p>You don't need to do this math in the studio. But you do need to understand what it means. The <V>k</V> tells you how quickly the spring gets heavier as you stretch it — the steeper the slope, the faster the resistance climbs. The <V>b</V> tells you what the spring feels like at the very start of the movement, before the carriage has moved an inch.</p>
-          <p>Together, <V>k</V> and <V>b</V> give every spring a unique load profile — a signature that describes how it behaves across its full range of motion.</p>
-        </Prose>
-      </div>
-    ),
-
-    // Page 4: What this looks like — reading the graph
-    () => (
-      <div>
-        <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
-        <SectionTitle>What this looks like</SectionTitle>
-        <Prose>
-          <p>The clearest way to see this is on a graph. Extension on the horizontal axis, resistance on the vertical. The green line represents the spring resistance.</p>
-        </Prose>
-        <LessonImage
-          filename="example-spring-1.png"
-          alt="Example spring graph — a single spring plotted as a straight line, with extension on the horizontal axis and resistance on the vertical."
-        />
-        <Prose>
-          <p>The spring resistance (the green line) — starts at <V>b</V> and climbs at a rate set by <V>k</V>.</p>
-        </Prose>
-        <LessonImage
-          filename="example-spring-2.png"
-          alt="The same graph with initial tension (b) circled at the y-intercept and the spring constant (k) labeled as the slope of the line."
-        />
-        <Prose>
-          <p>The initial tension of this example spring is 13 lbs because that's where the green line is at 0" of stretch.</p>
-        </Prose>
-        <LessonImage
-          filename="example-spring-3.png"
-          alt="Spring weight at 0 inches of stretch — 13 lbs. The initial tension is the resistance before the spring has been stretched at all."
-        />
-        <Prose>
-          <p>The graph shows us the spring weight at 6" of stretch is 20 lbs. First find the 6" on the horizontal axis. Travel straight up until the green line. Then draw a line straight left until it crosses the vertical axis. Where that line crosses the vertical axis is the resistance of the spring at 6" of stretch.</p>
-        </Prose>
-        <LessonImage
-          filename="example-spring-4.png"
-          alt="Spring weight at 6 inches of stretch — 20 lbs. Follow the extension up to the line, then across to the resistance axis."
-        />
-        <Prose>
-          <p>Using the same technique, the graph tells us that the spring resistance is 27 lbs at 12" stretch.</p>
-        </Prose>
-        <LessonImage
-          filename="example-spring-5.png"
-          alt="Spring weight at 12 inches of stretch — 27 lbs. The further the spring is stretched, the higher the resistance."
-        />
-      </div>
-    ),
-
-    // Page 5: Spring vs. constant weight animation
-    () => (
-      <div>
-        <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
-        <SectionTitle>A spring is different than a gym weight</SectionTitle>
-        <Prose>
-          <p>Let's compare what load a student experiences in footwork between springs and a typical gym weight.  Assume resistance similar to a green and two red Balanced Body springs.  At 18" extension they provide 83lbs of resistance.  Compare that with a weight stack of 83 lbs.</p>
-        </Prose>
-        <AnimationSlot animationId="m1-l1-spring" />
-        <Prose>
-          <p>The animation above graphs two scenarios side by side: a reformer carriage moving through a full range of footwork with a spring load, and the same movement with an equivalent constant weight. The work (area under the curve) for one rep is significantly lower using springs instead of a constant weight.</p>
-          <p>Put another way, when your hips and knees are flexed when the carriage is in, the weight is much less to start moving the carriage: 26 lbs instead of 83 lbs. Only at full carriage extension do the weights match.</p>
-          <p>This is the fundamental difference between springs and weight stacks. A weight stack gives you one number for the whole movement. A spring gives you a curve.</p>
-        </Prose>
-      </div>
-    ),
-
-    // Page 6: Why this matters
-    () => (
-      <div>
-        <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
-        <SectionTitle>The numbers illustrate a concept — you don't need to do math while teaching</SectionTitle>
-        <Prose>
-          <p>Understanding how to read spring graphs is important because it will change how you adapt exercises for each person you teach.</p>
-          <p>It's not that you need to know exactly how much weight your student is controlling, or that you must make every student feel the same load.</p>
-          <p>It's that it will help you understand what your clients are experiencing, and combined with their feedback, help you make sure your teaching intent is achieved.</p>
-        </Prose>
-      </div>
-    ),
-
-    // Page 6: What it means for your teaching — tall/short animation
-    () => (
-      <div>
-        <Eyebrow>Lesson 1 — Springs 101</Eyebrow>
-        <SectionTitle>What it means for your teaching</SectionTitle>
-        <Prose>
-          <p>Here's a practical example. A tall client doing footwork pushes the carriage further out than a short client on the same spring settings. That means they're working in a higher range on the load profile — heavier at the end of the movement than their shorter colleague on the same springs.</p>
-        </Prose>
-        <AnimationSlot animationId="m1-l1-tall-short" />
-        <Prose>
-          <p>The spring's resistance isn't a setting you choose. It's a consequence of the spring's design, the carriage position, and the client's body. That's worth knowing so you can assess whether your intent is for the clients to move as much weight as possible over the sets you're teaching — in which case you might change the springs to account for differing client height and strength — or something else, in which case the different loading may be appropriate.</p>
-        </Prose>
-      </div>
-    ),
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Introduction to Springs" vimeoId="1178595495" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="How Springs Create Resistance" vimeoId="1178595513" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Hooke's Law Explained" vimeoId="1178595533" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Reading a Spring Graph" vimeoId="1178595555" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Spring Rate and Initial Tension" vimeoId="1178595589" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Springs vs. Constant Weight" vimeoId="1178595612" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Load Profiles in Practice" vimeoId="1178595631" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="How Body Size Affects Loading" vimeoId="1178595663" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Choosing Spring Settings" vimeoId="1178595686" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Common Misconceptions" vimeoId="1178595732" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Applying This in the Studio" vimeoId="1178595757" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Lesson 1 Summary" vimeoId="1178595795" />,
   ],
 
   'm1-l2': [
@@ -1172,6 +1006,34 @@ function Prose({ children }) {
       }}
     >
       {children}
+    </div>
+  )
+}
+
+// ── Video lesson page ────────────────────────────────────────────────────────
+function VideoPage({ eyebrow, title, vimeoId }) {
+  return (
+    <div>
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <SectionTitle>{title}</SectionTitle>
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          aspectRatio: '16/9',
+          borderRadius: '8px',
+          overflow: 'hidden',
+          marginTop: '24px',
+        }}
+      >
+        <iframe
+          src={`https://player.vimeo.com/video/${vimeoId}`}
+          title={title}
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
     </div>
   )
 }
