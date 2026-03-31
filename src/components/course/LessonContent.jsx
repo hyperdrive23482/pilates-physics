@@ -1417,7 +1417,7 @@ export default function LessonContent({
       />
 
       {/* Mark complete — only show on last page, and not for intro/summary pages */}
-      {isLastPage && !lesson.isIntro && !lesson.isSummary && (
+      {isLastPage && !lesson.isSummary && (
         <div style={{ marginBottom: '2.5rem' }}>
           {done ? (
             <div
