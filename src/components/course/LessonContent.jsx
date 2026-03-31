@@ -329,14 +329,14 @@ const m1Pages = {
   'm1-intro': [() => <MeetInstructorPage />],
   'm1-overview': [() => <ModuleOverviewPage />],
   'm1-l1': [
-    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Introduction to Springs" vimeoId="1178682973" />,
-    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="How Springs Create Resistance" vimeoId="1178682983" />,
-    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Hooke's Law Explained" vimeoId="1178683002" />,
-    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Reading a Spring Graph" vimeoId="1178683016" />,
-    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Load Profiles in Practice" vimeoId="1178683064" />,
-    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="How Body Size Affects Loading" vimeoId="1178683085" />,
-    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Choosing Spring Settings" vimeoId="1178683097" />,
-    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Lesson 1 Summary" vimeoId="1178683106" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Introduction to Springs" vimeoId="1178682973" vimeoHash="79e932a488" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="How Springs Create Resistance" vimeoId="1178682983" vimeoHash="961c051746" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Hooke's Law Explained" vimeoId="1178683002" vimeoHash="7084923e94" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Reading a Spring Graph" vimeoId="1178683016" vimeoHash="58bf1ea845" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Load Profiles in Practice" vimeoId="1178683064" vimeoHash="95f23179a2" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="How Body Size Affects Loading" vimeoId="1178683085" vimeoHash="956f091656" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Choosing Spring Settings" vimeoId="1178683097" vimeoHash="20560654ff" />,
+    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Lesson 1 Summary" vimeoId="1178683106" vimeoHash="83fa7b4070" />,
   ],
 
   'm1-l2': [
@@ -1007,7 +1007,7 @@ function Prose({ children }) {
 }
 
 // ── Video lesson page ────────────────────────────────────────────────────────
-function VideoPage({ eyebrow, title, vimeoId }) {
+function VideoPage({ eyebrow, title, vimeoId, vimeoHash }) {
   return (
     <div>
       <Eyebrow>{eyebrow}</Eyebrow>
@@ -1022,7 +1022,7 @@ function VideoPage({ eyebrow, title, vimeoId }) {
         }}
       >
         <iframe
-          src={`https://player.vimeo.com/video/${vimeoId}`}
+          src={`https://player.vimeo.com/video/${vimeoId}${vimeoHash ? `?h=${vimeoHash}` : ''}&badge=0&autopause=0&player_id=0&app_id=58479`}
           title={title}
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
           allow="autoplay; fullscreen; picture-in-picture"
