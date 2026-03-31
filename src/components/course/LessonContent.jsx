@@ -333,8 +333,6 @@ const m1Pages = {
     () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="How Springs Create Resistance" vimeoId="1178682983" />,
     () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Hooke's Law Explained" vimeoId="1178683002" />,
     () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Reading a Spring Graph" vimeoId="1178683016" />,
-    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Spring Rate and Initial Tension" vimeoId="1178683032" />,
-    () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Springs vs. Constant Weight" vimeoId="1178683048" />,
     () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Load Profiles in Practice" vimeoId="1178683064" />,
     () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="How Body Size Affects Loading" vimeoId="1178683085" />,
     () => <VideoPage eyebrow="Lesson 1 — Springs 101" title="Choosing Spring Settings" vimeoId="1178683097" />,
@@ -1013,7 +1011,6 @@ function VideoPage({ eyebrow, title, vimeoId }) {
   return (
     <div>
       <Eyebrow>{eyebrow}</Eyebrow>
-      <SectionTitle>{title}</SectionTitle>
       <div
         style={{
           position: 'relative',
