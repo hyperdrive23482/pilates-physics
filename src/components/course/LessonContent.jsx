@@ -1398,128 +1398,134 @@ export default function LessonContent({
   const isLastPage = currentPage === totalPages - 1
 
   return (
-    <article
-      style={{
-        maxWidth: '880px',
-        margin: '0 auto',
-        padding: '3rem 2.5rem 5rem',
-      }}
-    >
-      {renderBody()}
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      {/* Scrollable content area */}
+      <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
+        <article
+          style={{
+            maxWidth: '880px',
+            margin: '0 auto',
+            padding: '3rem 2.5rem 2rem',
+          }}
+        >
+          {renderBody()}
 
-      {/* Divider before controls */}
-      <hr
-        style={{
-          border: 'none',
-          borderTop: '1px solid var(--color-rule)',
-          margin: '2rem 0',
-        }}
-      />
-
-      {/* Mark complete — only show on last page, and not for intro/summary pages */}
-      {isLastPage && !lesson.isSummary && (
-        <div style={{ marginBottom: '2.5rem' }}>
-          {done ? (
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                color: mod.color,
-                fontSize: '1rem',
-                fontWeight: '500',
-              }}
-            >
-              <CheckCircle size={18} strokeWidth={2} />
-              Completed
+          {/* Mark complete — only show on last page, and not for intro/summary pages */}
+          {isLastPage && !lesson.isSummary && (
+            <div style={{ marginTop: '2rem' }}>
+              {done ? (
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    color: mod.color,
+                    fontSize: '1rem',
+                    fontWeight: '500',
+                  }}
+                >
+                  <CheckCircle size={18} strokeWidth={2} />
+                  Completed
+                </div>
+              ) : (
+                <button
+                  onClick={() => onMarkComplete(lessonId)}
+                  style={{
+                    padding: '0.85rem 2rem',
+                    background: mod.color,
+                    color: '#fff',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    fontWeight: '500',
+                    fontFamily: '"DM Sans", sans-serif',
+                  }}
+                >
+                  Mark Complete
+                </button>
+              )}
             </div>
-          ) : (
-            <button
-              onClick={() => onMarkComplete(lessonId)}
-              style={{
-                padding: '0.85rem 2rem',
-                background: mod.color,
-                color: '#fff',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '1rem',
-                fontWeight: '500',
-                fontFamily: '"DM Sans", sans-serif',
-              }}
-            >
-              Mark Complete
-            </button>
           )}
-        </div>
-      )}
+        </article>
+      </div>
 
-      {/* Navigation: within-lesson pages + between lessons */}
+      {/* Fixed bottom navigation bar */}
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '1rem',
-          flexWrap: 'wrap',
+          borderTop: '1px solid var(--color-rule)',
+          background: 'var(--color-bg)',
+          padding: '1rem 2.5rem',
+          flexShrink: 0,
         }}
       >
-        <div>
-          {currentPage > 0 ? (
-            <NavBtn
-              direction="prev"
-              label="Previous"
-              onClick={() => {
-                setCurrentPage(currentPage - 1)
-                window.scrollTo({ top: 0 })
-              }}
-            />
-          ) : canGoPrev ? (
-            <NavBtn
-              direction="prev"
-              label={prevLesson.title}
-              onClick={() => onSelectLesson(prevLesson.moduleId, prevLesson.id)}
-            />
-          ) : null}
-        </div>
+        <div
+          style={{
+            maxWidth: '880px',
+            margin: '0 auto',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '1rem',
+          }}
+        >
+          <div>
+            {currentPage > 0 ? (
+              <NavBtn
+                direction="prev"
+                label="Previous"
+                onClick={() => {
+                  setCurrentPage(currentPage - 1)
+                  window.scrollTo({ top: 0 })
+                }}
+              />
+            ) : canGoPrev ? (
+              <NavBtn
+                direction="prev"
+                label={prevLesson.title}
+                onClick={() => onSelectLesson(prevLesson.moduleId, prevLesson.id)}
+              />
+            ) : null}
+          </div>
 
-        {/* Page indicator for multi-page lessons */}
-        {isMultiPage && totalPages > 1 && (
-          <span
-            style={{
-              fontFamily: '"DM Mono", monospace',
-              fontSize: '13px',
-              letterSpacing: '0.1em',
-              color: 'var(--color-ink-muted)',
-            }}
-          >
-            {currentPage + 1} / {totalPages}
-          </span>
-        )}
-
-        <div>
-          {currentPage < totalPages - 1 ? (
-            <NavBtn
-              direction="next"
-              label="Continue"
-              onClick={() => {
-                setCurrentPage(currentPage + 1)
-                window.scrollTo({ top: 0 })
+          {/* Page indicator for multi-page lessons */}
+          {isMultiPage && totalPages > 1 && (
+            <span
+              style={{
+                fontFamily: '"DM Mono", monospace',
+                fontSize: '13px',
+                letterSpacing: '0.1em',
+                color: 'var(--color-ink-muted)',
               }}
-            />
-          ) : canGoNext ? (
-            <NavBtn
-              direction="next"
-              label={nextLesson.title}
-              onClick={() => onSelectLesson(nextLesson.moduleId, nextLesson.id)}
-            />
-          ) : null}
+            >
+              {currentPage + 1} / {totalPages}
+            </span>
+          )}
+
+          <div>
+            {currentPage < totalPages - 1 ? (
+              <NavBtn
+                direction="next"
+                label="Continue"
+                onClick={() => {
+                  setCurrentPage(currentPage + 1)
+                  window.scrollTo({ top: 0 })
+                }}
+              />
+            ) : canGoNext ? (
+              <NavBtn
+                direction="next"
+                label={nextLesson.title}
+                onClick={() => onSelectLesson(nextLesson.moduleId, nextLesson.id)}
+              />
+            ) : null}
+          </div>
         </div>
       </div>
-    </article>
+    </div>
   )
 }
 
-function NavBtn({ direction, label, onClick }) {
+function NavBtn({ direction, onClick }) {
   return (
     <button
       onClick={onClick}
@@ -1528,26 +1534,14 @@ function NavBtn({ direction, label, onClick }) {
         border: '1px solid var(--color-rule)',
         padding: '0.75rem 1.5rem',
         cursor: 'pointer',
-        fontSize: '0.95rem',
+        fontSize: '0.75rem',
         fontFamily: '"DM Sans", sans-serif',
         color: 'var(--color-ink-muted)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: direction === 'prev' ? 'flex-start' : 'flex-end',
-        gap: '0.2rem',
-        textAlign: direction === 'prev' ? 'left' : 'right',
+        letterSpacing: '0.08em',
+        textTransform: 'uppercase',
       }}
     >
-      <span
-        style={{
-          fontSize: '0.75rem',
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-        }}
-      >
-        {direction === 'prev' ? '← Previous' : 'Next →'}
-      </span>
-      <span style={{ color: 'var(--color-ink)' }}>{label}</span>
+      {direction === 'prev' ? '← Previous' : 'Next →'}
     </button>
   )
 }

@@ -246,7 +246,7 @@ export default function Course() {
         <main
           style={{
             flex: 1,
-            overflowY: 'auto',
+            overflow: 'hidden',
             background: 'var(--color-bg)',
           }}
         >
