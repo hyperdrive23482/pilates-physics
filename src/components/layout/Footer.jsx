@@ -53,7 +53,7 @@ export default function Footer() {
             </p>
             <nav className="flex flex-col gap-2">
               <Link to="/about" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>
-                About
+                About Kaleen
               </Link>
 
 <Link to="/contact" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>

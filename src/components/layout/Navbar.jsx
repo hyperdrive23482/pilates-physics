@@ -56,7 +56,7 @@ export default function Navbar() {
               fontWeight: '500',
             }}
           >
-            About
+            About Kaleen
           </Link>
         </nav>
 
@@ -91,7 +91,7 @@ export default function Navbar() {
                 padding: '0.5rem 0',
               }}
             >
-              About
+              About Kaleen
             </Link>
           </nav>
         </div>
