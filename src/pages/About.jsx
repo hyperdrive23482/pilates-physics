@@ -162,7 +162,7 @@ export default function About() {
                 flexDirection: 'column',
                 gap: '1.25rem',
                 fontSize: '1rem',
-                lineHeight: '1.8',
+                lineHeight: '1.7',
                 color: 'var(--color-ink-muted)',
               }}
             >
@@ -203,18 +203,17 @@ export default function About() {
         <Section style={{ paddingTop: '5rem', paddingBottom: '5rem' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
             <div>
-              <p
+              <h2
                 style={{
-                  fontSize: '0.7rem',
-                  fontWeight: '600',
-                  letterSpacing: '0.15em',
-                  textTransform: 'uppercase',
-                  color: 'var(--color-accent)',
-                  marginBottom: '0.75rem',
+                  fontFamily: '"DM Serif Display", serif',
+                  fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+                  lineHeight: '1.2',
+                  color: 'var(--color-ink)',
+                  margin: '0 0 0.75rem',
                 }}
               >
-                Tools I've Built for Instructors
-              </p>
+                Tools I've built for instructors
+              </h2>
               <p
                 style={{
                   fontSize: '1rem',
@@ -281,7 +280,7 @@ export default function About() {
                   </h3>
                   <p
                     style={{
-                      fontSize: '0.875rem',
+                      fontSize: '0.85rem',
                       fontWeight: '500',
                       color: 'var(--color-ink)',
                       margin: 0,
@@ -292,7 +291,7 @@ export default function About() {
                   </p>
                   <p
                     style={{
-                      fontSize: '0.875rem',
+                      fontSize: '0.85rem',
                       lineHeight: '1.7',
                       color: 'var(--color-ink-muted)',
                       margin: 0,
@@ -328,18 +327,17 @@ export default function About() {
       <Section>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
           <div>
-            <p
+            <h2
               style={{
-                fontSize: '0.7rem',
-                fontWeight: '600',
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: 'var(--color-accent)',
-                marginBottom: '0.75rem',
+                fontFamily: '"DM Serif Display", serif',
+                fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+                lineHeight: '1.2',
+                color: 'var(--color-ink)',
+                margin: '0 0 0.75rem',
               }}
             >
               Connect with Kaleen
-            </p>
+            </h2>
             <p
               style={{
                 fontSize: '1rem',
@@ -349,8 +347,7 @@ export default function About() {
                 margin: 0,
               }}
             >
-              Follow along on Substack for writing on Pilates mechanics, or on Instagram for
-              shorter-form content and behind-the-scenes.
+              Follow along on Substack for writing on Pilates mechanics, or on Instagram and YouTube for video content and behind-the-scenes.
             </p>
           </div>
 
@@ -389,7 +386,7 @@ export default function About() {
                 </p>
                 <p
                   style={{
-                    fontSize: '0.95rem',
+                    fontSize: '0.85rem',
                     color: 'var(--color-ink)',
                     margin: 0,
                     fontWeight: '500',
@@ -431,13 +428,55 @@ export default function About() {
                 </p>
                 <p
                   style={{
-                    fontSize: '0.95rem',
+                    fontSize: '0.85rem',
                     color: 'var(--color-ink)',
                     margin: 0,
                     fontWeight: '500',
                   }}
                 >
                   @kaleenc_ →
+                </p>
+              </div>
+            </a>
+
+            <a
+              href="https://www.youtube.com/@kaleenc"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '1rem 1.5rem',
+                background: 'var(--color-surface)',
+                border: '1px solid var(--color-rule)',
+                textDecoration: 'none',
+                flex: '1',
+                minWidth: '200px',
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    fontSize: '0.7rem',
+                    fontWeight: '600',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: 'var(--color-accent)',
+                    margin: '0 0 0.2rem',
+                  }}
+                >
+                  YouTube
+                </p>
+                <p
+                  style={{
+                    fontSize: '0.85rem',
+                    color: 'var(--color-ink)',
+                    margin: 0,
+                    fontWeight: '500',
+                  }}
+                >
+                  @kaleenc →
                 </p>
               </div>
             </a>
@@ -477,7 +516,7 @@ export default function About() {
             <p
               style={{
                 fontFamily: '"DM Serif Display", serif',
-                fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
+                fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
                 lineHeight: '1.3',
                 color: 'var(--color-ink)',
                 margin: 0,
