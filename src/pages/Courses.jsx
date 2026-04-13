@@ -76,7 +76,7 @@ export default function Courses() {
               use.
             </p>
 
-            <WaitlistForm />
+            <WaitlistForm compact />
 
             <p
               style={{

@@ -86,7 +86,7 @@ export default function Landing() {
               Our first live webinar is coming soon — a 2-hour session on the mechanics behind spring-based equipment.
             </p>
 
-            <WaitlistForm />
+            <WaitlistForm compact />
 
             <p
               style={{
@@ -301,7 +301,7 @@ export default function Landing() {
             </p>
           </div>
 
-          <WaitlistForm style={{ width: '100%' }} />
+          <WaitlistForm compact style={{ width: '100%' }} />
 
           <p
             style={{

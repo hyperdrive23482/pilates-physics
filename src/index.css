@@ -65,3 +65,164 @@ h1, h2, h3, h4 {
 .nav-link.active {
   border-bottom-color: var(--color-accent);
 }
+
+/* ─── Kit.com waitlist form overrides ─────────────────────────────────── */
+.pp-kit-form .formkit-form[data-uid] {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  font-family: 'DM Sans', sans-serif !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+.pp-kit-form .formkit-form * {
+  font-family: 'DM Sans', sans-serif !important;
+  box-shadow: none !important;
+}
+
+.pp-kit-form .formkit-header,
+.pp-kit-form .formkit-header h1,
+.pp-kit-form .formkit-header h2,
+.pp-kit-form .formkit-header h3 {
+  font-family: 'DM Serif Display', serif !important;
+  color: var(--color-ink) !important;
+  margin: 0 0 0.5rem !important;
+  font-weight: 400 !important;
+  font-size: 1.2rem !important;
+  line-height: 1.3 !important;
+}
+
+.pp-kit-form .formkit-subheader,
+.pp-kit-form .formkit-subheader p {
+  color: var(--color-ink-muted) !important;
+  font-size: 0.9rem !important;
+  line-height: 1.6 !important;
+  margin: 0 0 1rem !important;
+}
+
+.pp-kit-form .formkit-fields {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.75rem !important;
+  margin: 0 !important;
+}
+
+.pp-kit-form .formkit-field {
+  margin: 0 !important;
+}
+
+.pp-kit-form .formkit-input {
+  background: var(--color-bg) !important;
+  border: 1px solid var(--color-rule) !important;
+  border-radius: 0 !important;
+  color: var(--color-ink) !important;
+  font-size: 1rem !important;
+  padding: 0.85rem 1rem !important;
+  width: 100% !important;
+  transition: border-color 0.2s ease !important;
+}
+
+.pp-kit-form .formkit-input::placeholder {
+  color: var(--color-ink-dim) !important;
+}
+
+.pp-kit-form .formkit-input:focus {
+  outline: none !important;
+  border-color: var(--color-accent) !important;
+}
+
+.pp-kit-form .formkit-submit {
+  background: var(--color-accent) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  color: var(--color-bg) !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  padding: 0.95rem 1.5rem !important;
+  cursor: pointer !important;
+  transition: opacity 0.2s ease !important;
+  width: 100% !important;
+}
+
+.pp-kit-form .formkit-submit > span {
+  background: transparent !important;
+  padding: 0 !important;
+  color: var(--color-bg) !important;
+}
+
+.pp-kit-form .formkit-submit:hover {
+  opacity: 0.88 !important;
+}
+
+.pp-kit-form .formkit-guarantee,
+.pp-kit-form .formkit-powered-by-convertkit-container,
+.pp-kit-form [class*="powered-by"] {
+  display: none !important;
+}
+
+.pp-kit-form .formkit-alert {
+  background: transparent !important;
+  border: 1px solid var(--color-rule) !important;
+  color: var(--color-ink-muted) !important;
+  border-radius: 0 !important;
+  font-size: 0.85rem !important;
+  padding: 0.75rem 1rem !important;
+}
+
+.pp-kit-form .formkit-alert-success {
+  border-color: var(--color-accent) !important;
+  color: var(--color-ink) !important;
+}
+
+/* Compact variant — no box, inline fields on desktop */
+.pp-kit-form--compact .formkit-form[data-uid] {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.pp-kit-form--compact .formkit-header,
+.pp-kit-form--compact .formkit-subheader {
+  display: none !important;
+}
+
+.pp-kit-form--compact .formkit-fields {
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  gap: 0.5rem !important;
+  align-items: stretch !important;
+}
+
+.pp-kit-form--compact .formkit-field {
+  flex: 1 1 160px !important;
+  min-width: 0 !important;
+}
+
+.pp-kit-form--compact .formkit-input {
+  padding: 0.7rem 0.85rem !important;
+  font-size: 0.95rem !important;
+  height: 100% !important;
+}
+
+.pp-kit-form--compact .formkit-submit {
+  flex: 0 0 auto !important;
+  padding: 0.7rem 1.25rem !important;
+  font-size: 0.75rem !important;
+}
+
+@media (max-width: 600px) {
+  .pp-kit-form--compact .formkit-fields {
+    flex-direction: column !important;
+  }
+  .pp-kit-form--compact .formkit-field {
+    flex-basis: auto !important;
+  }
+  .pp-kit-form--compact .formkit-submit {
+    width: 100% !important;
+  }
+}
