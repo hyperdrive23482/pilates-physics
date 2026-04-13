@@ -47,3 +47,21 @@ body {
 h1, h2, h3, h4 {
   font-family: 'DM Serif Display', serif;
 }
+
+.nav-link {
+  color: var(--color-ink-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 2px;
+  transition: border-color 0.2s ease;
+}
+
+.nav-link:hover {
+  border-bottom-color: var(--color-accent);
+}
+
+.nav-link.active {
+  border-bottom-color: var(--color-accent);
+}

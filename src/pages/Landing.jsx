@@ -168,13 +168,6 @@ export default function Landing() {
               what you're doing.
             </p>
             <p style={{ margin: 0 }}>
-              The conventions we inherited weren't derived from first principles. Joe built his
-              apparatus around the materials available in the 1940s — leather straps, bushing
-              wheels, hand-wound springs. The physics of those decisions have never changed. The
-              reasons behind them were rarely taught. So we've been passing down outcomes
-              without mechanisms, and calling that expertise.
-            </p>
-            <p style={{ margin: 0 }}>
               That gap — between knowing what to do and knowing why it works — is exactly where
               this webinar lives. It won't replace your training. It will make everything in your
               training make sense.

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 
 export default function Navbar() {
@@ -47,39 +47,9 @@ export default function Navbar() {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-4">
-          <Link
-            to="/"
-            style={{
-              color: 'var(--color-ink-muted)',
-              textDecoration: 'none',
-              fontSize: '0.9rem',
-              fontWeight: '500',
-            }}
-          >
-            Home
-          </Link>
-          <Link
-            to="/courses"
-            style={{
-              color: 'var(--color-ink-muted)',
-              textDecoration: 'none',
-              fontSize: '0.9rem',
-              fontWeight: '500',
-            }}
-          >
-            Webinar
-          </Link>
-          <Link
-            to="/about"
-            style={{
-              color: 'var(--color-ink-muted)',
-              textDecoration: 'none',
-              fontSize: '0.9rem',
-              fontWeight: '500',
-            }}
-          >
-            About Kaleen
-          </Link>
+          <NavLink to="/" className="nav-link" end>Home</NavLink>
+          <NavLink to="/courses" className="nav-link">Webinar</NavLink>
+          <NavLink to="/about" className="nav-link">About Kaleen</NavLink>
         </nav>
 
         {/* Mobile hamburger */}
@@ -102,45 +72,9 @@ export default function Navbar() {
           }}
         >
           <nav className="flex flex-col px-6 py-4 gap-4">
-            <Link
-              to="/"
-              onClick={() => setMobileOpen(false)}
-              style={{
-                color: 'var(--color-ink-muted)',
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-                fontWeight: '500',
-                padding: '0.5rem 0',
-              }}
-            >
-              Home
-            </Link>
-            <Link
-              to="/courses"
-              onClick={() => setMobileOpen(false)}
-              style={{
-                color: 'var(--color-ink-muted)',
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-                fontWeight: '500',
-                padding: '0.5rem 0',
-              }}
-            >
-              Webinar
-            </Link>
-            <Link
-              to="/about"
-              onClick={() => setMobileOpen(false)}
-              style={{
-                color: 'var(--color-ink-muted)',
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-                fontWeight: '500',
-                padding: '0.5rem 0',
-              }}
-            >
-              About Kaleen
-            </Link>
+            <NavLink to="/" className="nav-link" end onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Home</NavLink>
+            <NavLink to="/courses" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Webinar</NavLink>
+            <NavLink to="/about" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>About Kaleen</NavLink>
           </nav>
         </div>
       )}

@@ -52,16 +52,9 @@ export default function Footer() {
               Navigation
             </p>
             <nav className="flex flex-col gap-2">
-              <Link to="/about" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>
-                About Kaleen
-              </Link>
-              <Link to="/courses" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>
-                Webinar
-              </Link>
-
-<Link to="/contact" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>
-                Contact
-              </Link>
+              <Link to="/about" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>About Kaleen</Link>
+              <Link to="/courses" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Webinar</Link>
+              <Link to="/contact" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Contact</Link>
             </nav>
           </div>
 
@@ -74,15 +67,9 @@ export default function Footer() {
               Admin
             </p>
             <nav className="flex flex-col gap-2">
-              <Link to="/terms" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>
-                Terms
-              </Link>
-              <Link to="/privacy" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>
-                Privacy
-              </Link>
-              <Link to="/help" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>
-                Help
-              </Link>
+              <Link to="/terms" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Terms</Link>
+              <Link to="/privacy" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Privacy</Link>
+              <Link to="/help" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Help</Link>
             </nav>
             </div>
         </div>
