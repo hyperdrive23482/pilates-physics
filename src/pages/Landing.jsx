@@ -288,6 +288,85 @@ export default function Landing() {
 
       <Rule />
 
+      {/* ── About the Instructor ──────────────────────────────────────────── */}
+      <Section>
+        <div
+          className="instructor-grid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'auto 1fr',
+            gap: '2.5rem',
+            alignItems: 'center',
+          }}
+        >
+          <img
+            src="/images/homepage/kaleen-shop.jpg"
+            alt="Kaleen Canevari"
+            style={{
+              width: '180px',
+              height: '180px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              display: 'block',
+            }}
+          />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div>
+              <h2
+                style={{
+                  fontFamily: '"DM Serif Display", serif',
+                  fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
+                  lineHeight: '1.2',
+                  color: 'var(--color-ink)',
+                  margin: '0 0 0.35rem',
+                }}
+              >
+                Meet your instructor
+              </h2>
+              <p
+                style={{
+                  fontSize: '0.7rem',
+                  fontWeight: '600',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color: 'var(--color-accent)',
+                  margin: 0,
+                }}
+              >
+                Kaleen Canevari — Mechanical engineer &amp; Pilates instructor
+              </p>
+            </div>
+            <p
+              style={{
+                fontSize: '0.95rem',
+                lineHeight: '1.7',
+                color: 'var(--color-ink-muted)',
+                margin: 0,
+                maxWidth: '540px',
+              }}
+            >
+              Kaleen studied mechanical engineering and worked as a design engineer at Balanced Body
+              before she ever taught a Pilates class. She brings an engineer's eye to movement —
+              building frameworks that help instructors understand the physics behind every spring,
+              setting, and cue.
+            </p>
+            <a
+              href="/about"
+              style={{
+                color: 'var(--color-accent)',
+                fontSize: '0.85rem',
+                fontWeight: '500',
+                textDecoration: 'none',
+              }}
+            >
+              Learn more →
+            </a>
+          </div>
+        </div>
+      </Section>
+
+      <Rule />
+
       {/* ── Praise / Testimonials ─────────────────────────────────────────── */}
       <Section>
         <h2
@@ -382,6 +461,11 @@ export default function Landing() {
           }
           .carousel-arrow {
             display: none !important;
+          }
+          .instructor-grid {
+            grid-template-columns: 1fr !important;
+            justify-items: center;
+            text-align: center;
           }
         }
         @media (max-width: 600px) {
