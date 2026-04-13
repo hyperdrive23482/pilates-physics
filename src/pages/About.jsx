@@ -232,7 +232,8 @@ export default function About() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
+                gridTemplateColumns: '1fr',
+                maxWidth: '540px',
                 gap: '1.5rem',
               }}
               className="tools-grid"
@@ -243,12 +244,6 @@ export default function About() {
                   tagline: 'AI Notetaker for private Pilates instructors.',
                   body: 'Built for the way you actually teach. Capture audio of what you teach and get a session summary, exercise list, client feedback, progress maps, and more with the click of a button.',
                   url: 'https://www.RemoPilates.com',
-                },
-                {
-                  name: 'Motra',
-                  tagline: 'Create your online Pilates studio.',
-                  body: 'Built to enable hybrid and fully-online Pilates instruction, this platform enables instructors to sell subscriptions to their video library, assign homework, create programs, and extend their community beyond brick-and-mortar.',
-                  url: 'https://www.motrastudio.com',
                 },
               ].map((tool) => (
                 <div
@@ -463,7 +458,7 @@ export default function About() {
                 marginBottom: '0.75rem',
               }}
             >
-              Start here
+              Coming soon
             </p>
             <p
               style={{
@@ -475,11 +470,11 @@ export default function About() {
                 maxWidth: '520px',
               }}
             >
-              This free course is the best introduction to how I think about Pilates mechanics.
+              A 2-hour live webinar on the mechanics behind every spring setting, equipment decision, and cueing choice you make.
             </p>
           </div>
           <Link
-            to="/course"
+            to="/"
             style={{
               display: 'inline-block',
               padding: '0.875rem 2rem',
@@ -492,7 +487,7 @@ export default function About() {
               whiteSpace: 'nowrap',
             }}
           >
-            Take the free course →
+            Join the waitlist →
           </Link>
         </div>
       </section>

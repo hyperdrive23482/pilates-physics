@@ -1,7 +1,4 @@
-import { useNavigate } from 'react-router-dom'
-import EmailCapture from '../components/ui/EmailCapture'
-import ModuleCard from '../components/ui/ModuleCard'
-import { modules } from '../utils/courseData'
+import WaitlistForm from '../components/ui/WaitlistForm'
 
 // ─── Spring Force Diagram SVG ─────────────────────────────────────────────────
 // Illustrates F = kx: spring force increases linearly with extension.
@@ -108,12 +105,6 @@ function Rule() {
 
 // ─── Landing page ─────────────────────────────────────────────────────────────
 export default function Landing() {
-  const navigate = useNavigate()
-
-  function handleEnrollSuccess() {
-    navigate('/course')
-  }
-
   return (
     <div>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
@@ -147,7 +138,7 @@ export default function Landing() {
                   marginBottom: '1.25rem',
                 }}
               >
-                Free Course — Pilates Physics
+                Live Webinar — Pilates Physics
               </p>
               <h1
                 style={{
@@ -158,7 +149,7 @@ export default function Landing() {
                   margin: 0,
                 }}
               >
-                Most Pilates instructors were taught what to do. This course teaches you why it works.
+                Most Pilates instructors were taught what to do. This webinar teaches you why it works.
               </h1>
             </div>
 
@@ -170,10 +161,10 @@ export default function Landing() {
                 margin: 0,
               }}
             >
-              So you can adapt to any body, on any equipment, without second-guessing yourself.
+              A 2-hour live session on the mechanics behind spring-based equipment — with recording shared after.
             </p>
 
-            <EmailCapture onSuccess={handleEnrollSuccess} />
+            <WaitlistForm />
 
             <p
               style={{
@@ -182,7 +173,7 @@ export default function Landing() {
                 margin: 0,
               }}
             >
-              No spam. Unsubscribe anytime.
+              We'll email you when the date is set. No spam.
             </p>
           </div>
 
@@ -264,7 +255,7 @@ export default function Landing() {
             </p>
             <p style={{ margin: 0 }}>
               That gap — between knowing what to do and knowing why it works — is exactly where
-              this course lives. It won't replace your training. It will make everything in your
+              this webinar lives. It won't replace your training. It will make everything in your
               training make sense.
             </p>
           </div>
@@ -292,7 +283,7 @@ export default function Landing() {
               maxWidth: '560px',
             }}
           >
-            You'll learn the mechanics behind the decisions
+            What you'll learn in two hours
           </h2>
 
           <div
@@ -357,58 +348,7 @@ export default function Landing() {
 
       <Rule />
 
-      {/* ── Module Preview ───────────────────────────────────────────────── */}
-      <Section>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
-              flexWrap: 'wrap',
-              gap: '1rem',
-            }}
-          >
-            <h2
-              style={{
-                fontFamily: '"DM Serif Display", serif',
-                fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
-                lineHeight: '1.2',
-                color: 'var(--color-ink)',
-                margin: 0,
-              }}
-            >
-              Four modules. One through-line.
-            </h2>
-            <p
-              style={{
-                fontSize: '0.875rem',
-                color: 'var(--color-ink-muted)',
-                margin: 0,
-              }}
-            >
-              Start at Module 1. Each builds on the previous one.
-            </p>
-          </div>
-
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: '1.5rem',
-            }}
-            className="module-grid"
-          >
-            {modules.map((mod) => (
-              <ModuleCard key={mod.id} module={mod} />
-            ))}
-          </div>
-        </div>
-      </Section>
-
-      <Rule />
-
-      {/* ── Email Capture (repeat) ───────────────────────────────────────── */}
+      {/* ── Waitlist CTA (repeat) ────────────────────────────────────────── */}
       <section style={{ background: 'var(--color-accent-light)' }}>
         <div
           style={{
@@ -431,7 +371,7 @@ export default function Landing() {
                 margin: '0 0 1rem',
               }}
             >
-              Free. No prerequisites. Built for working instructors.
+              Live. Interactive. Built for working instructors.
             </h2>
             <p
               style={{
@@ -441,12 +381,13 @@ export default function Landing() {
                 margin: 0,
               }}
             >
-              If you've been teaching for a year or ten, this course gives you a framework
-              for the questions you already have. Enter your email and start immediately.
+              Whether you've been teaching for a year or ten, this webinar gives you a mechanical
+              framework for the questions you already have. Join the waitlist and we'll notify you
+              when registration opens.
             </p>
           </div>
 
-          <EmailCapture onSuccess={handleEnrollSuccess} style={{ width: '100%' }} />
+          <WaitlistForm style={{ width: '100%' }} />
 
           <p
             style={{
@@ -455,7 +396,7 @@ export default function Landing() {
               margin: 0,
             }}
           >
-            No spam. Unsubscribe anytime.
+            We'll email you when the date is set. No spam.
           </p>
         </div>
       </section>
@@ -470,9 +411,6 @@ export default function Landing() {
             grid-template-columns: 1fr !important;
             gap: 2rem !important;
           }
-          .module-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
           .value-grid {
             grid-template-columns: 1fr !important;
           }
@@ -482,11 +420,6 @@ export default function Landing() {
           }
           .value-card:last-child {
             border-bottom: none;
-          }
-        }
-        @media (max-width: 540px) {
-          .module-grid {
-            grid-template-columns: 1fr !important;
           }
         }
       `}</style>

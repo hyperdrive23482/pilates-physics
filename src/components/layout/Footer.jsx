@@ -55,9 +55,7 @@ export default function Footer() {
               <Link to="/about" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>
                 About
               </Link>
-              <Link to="/login" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>
-                Login
-              </Link>
+
 <Link to="/contact" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>
                 Contact
               </Link>
