@@ -48,6 +48,28 @@ export default function Navbar() {
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-4">
           <Link
+            to="/"
+            style={{
+              color: 'var(--color-ink-muted)',
+              textDecoration: 'none',
+              fontSize: '0.9rem',
+              fontWeight: '500',
+            }}
+          >
+            Home
+          </Link>
+          <Link
+            to="/courses"
+            style={{
+              color: 'var(--color-ink-muted)',
+              textDecoration: 'none',
+              fontSize: '0.9rem',
+              fontWeight: '500',
+            }}
+          >
+            Courses
+          </Link>
+          <Link
             to="/about"
             style={{
               color: 'var(--color-ink-muted)',
@@ -80,6 +102,32 @@ export default function Navbar() {
           }}
         >
           <nav className="flex flex-col px-6 py-4 gap-4">
+            <Link
+              to="/"
+              onClick={() => setMobileOpen(false)}
+              style={{
+                color: 'var(--color-ink-muted)',
+                textDecoration: 'none',
+                fontSize: '0.9rem',
+                fontWeight: '500',
+                padding: '0.5rem 0',
+              }}
+            >
+              Home
+            </Link>
+            <Link
+              to="/courses"
+              onClick={() => setMobileOpen(false)}
+              style={{
+                color: 'var(--color-ink-muted)',
+                textDecoration: 'none',
+                fontSize: '0.9rem',
+                fontWeight: '500',
+                padding: '0.5rem 0',
+              }}
+            >
+              Courses
+            </Link>
             <Link
               to="/about"
               onClick={() => setMobileOpen(false)}

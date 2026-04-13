@@ -11,6 +11,7 @@ function ScrollToTop() {
 }
 import Landing from './pages/Landing'
 import About from './pages/About'
+import Courses from './pages/Courses'
 import Course from './pages/Course'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -37,6 +38,14 @@ export default function App() {
           element={
             <PageWrapper>
               <About />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/courses"
+          element={
+            <PageWrapper>
+              <Courses />
             </PageWrapper>
           }
         />
