@@ -1,10 +1,35 @@
+import { Link } from 'react-router-dom'
+import WaitlistForm from '../components/ui/WaitlistForm'
+
+function Section({ children, style = {}, className = '' }) {
+  return (
+    <section
+      className={className}
+      style={{
+        maxWidth: '1100px',
+        margin: '0 auto',
+        padding: '6rem 2rem',
+        ...style,
+      }}
+    >
+      {children}
+    </section>
+  )
+}
+
+function Rule() {
+  return (
+    <hr style={{ border: 'none', borderTop: '1px solid var(--color-rule)', margin: 0 }} />
+  )
+}
+
 export default function Courses() {
   return (
     <div>
+      {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section
         style={{
           borderBottom: '1px solid var(--color-rule)',
-          background: 'var(--color-surface)',
         }}
       >
         <div
@@ -14,31 +39,744 @@ export default function Courses() {
             padding: '7rem 2rem 5rem',
           }}
         >
-          <h1
+          <div style={{ maxWidth: '680px' }}>
+            <p
+              style={{
+                fontSize: '0.7rem',
+                fontWeight: '600',
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                color: 'var(--color-accent)',
+                marginBottom: '1.25rem',
+              }}
+            >
+              Live Webinar
+            </p>
+            <h1
+              style={{
+                fontFamily: '"DM Serif Display", serif',
+                fontSize: 'clamp(2rem, 4vw, 3rem)',
+                lineHeight: '1.15',
+                color: 'var(--color-ink)',
+                margin: '0 0 1.5rem',
+              }}
+            >
+              The Mechanics Behind the Spring
+            </h1>
+            <p
+              style={{
+                fontSize: '1.1rem',
+                lineHeight: '1.65',
+                color: 'var(--color-ink-muted)',
+                margin: '0 0 2rem',
+              }}
+            >
+              A 2-hour live session for Pilates instructors who want to understand
+              why their equipment works the way it does — not just what settings to
+              use.
+            </p>
+
+            <WaitlistForm />
+
+            <p
+              style={{
+                fontSize: '0.78rem',
+                color: 'var(--color-ink-muted)',
+                marginTop: '1rem',
+              }}
+            >
+              We'll email you when the date is set. No spam.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <Rule />
+
+      {/* ── Who It's For ─────────────────────────────────────────────────── */}
+      <Section>
+        <h2
+          style={{
+            fontFamily: '"DM Serif Display", serif',
+            fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+            lineHeight: '1.2',
+            color: 'var(--color-ink)',
+            margin: '0 0 3rem',
+          }}
+        >
+          Who this is for
+        </h2>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '0',
+            borderTop: '1px solid var(--color-rule)',
+          }}
+          className="value-grid"
+        >
+          {[
+            {
+              number: '01',
+              title: 'Pilates Instructors',
+              body: 'Any certification, any lineage. If you teach on spring-based equipment and want to understand why it works — not just what to do — this is for you.',
+            },
+            {
+              number: '02',
+              title: 'Studio Owners',
+              body: 'Give your team a shared mechanical framework. When instructors understand the physics, they make better decisions for every client who walks through the door.',
+            },
+            {
+              number: '03',
+              title: 'Movement Professionals',
+              body: 'Physical therapists, personal trainers, or anyone curious about how spring mechanics differ from weight stacks, bands, and bodyweight.',
+            },
+          ].map((item, i) => (
+            <div
+              key={item.number}
+              style={{
+                padding: '2rem',
+                borderRight: i < 2 ? '1px solid var(--color-rule)' : 'none',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem',
+              }}
+              className="value-card"
+            >
+              <span
+                style={{
+                  fontFamily: '"DM Serif Display", serif',
+                  fontSize: '2rem',
+                  color: 'var(--color-rule)',
+                  lineHeight: 1,
+                }}
+              >
+                {item.number}
+              </span>
+              <h3
+                style={{
+                  fontFamily: '"DM Serif Display", serif',
+                  fontSize: '1.15rem',
+                  color: 'var(--color-ink)',
+                  margin: 0,
+                }}
+              >
+                {item.title}
+              </h3>
+              <p
+                style={{
+                  fontSize: '0.95rem',
+                  lineHeight: '1.7',
+                  color: 'var(--color-ink-muted)',
+                  margin: 0,
+                }}
+              >
+                {item.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Rule />
+
+      {/* ── What's Included ──────────────────────────────────────────────── */}
+      <section style={{ background: 'var(--color-surface)' }}>
+        <Section>
+          <h2
             style={{
-              fontFamily: '"DM Sans", sans-serif',
-              fontWeight: '500',
-              fontSize: '2.5rem',
-              letterSpacing: '-0.01em',
+              fontFamily: '"DM Serif Display", serif',
+              fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+              lineHeight: '1.2',
               color: 'var(--color-ink)',
-              margin: '0 0 1rem',
+              margin: '0 0 3rem',
             }}
           >
-            Courses
-          </h1>
+            What's included
+          </h2>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '1.5rem',
+            }}
+            className="included-grid"
+          >
+            {[
+              {
+                label: '2-Hour Live Session',
+                desc: 'Real-time instruction with live Q&A. Ask questions, get answers, go deeper on the topics that matter to your practice.',
+              },
+              {
+                label: 'Full Recording',
+                desc: 'Can\'t attend live? The full recording is shared within 24 hours. Lifetime access — revisit it whenever you need.',
+              },
+              {
+                label: 'Reference Guide',
+                desc: 'A downloadable PDF covering the key formulas, diagrams, and frameworks from the session. Built for quick reference in the studio.',
+              },
+              {
+                label: 'Community Access',
+                desc: 'Join a private discussion space to continue the conversation with other instructors who think mechanically.',
+              },
+            ].map((item) => (
+              <div
+                key={item.label}
+                style={{
+                  padding: '2rem',
+                  background: 'var(--color-surface-raised)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                }}
+              >
+                <h3
+                  style={{
+                    fontFamily: '"DM Serif Display", serif',
+                    fontSize: '1.1rem',
+                    color: 'var(--color-ink)',
+                    margin: 0,
+                  }}
+                >
+                  {item.label}
+                </h3>
+                <p
+                  style={{
+                    fontSize: '0.95rem',
+                    lineHeight: '1.7',
+                    color: 'var(--color-ink-muted)',
+                    margin: 0,
+                  }}
+                >
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Section>
+      </section>
+
+      <Rule />
+
+      {/* ── Topics Covered ───────────────────────────────────────────────── */}
+      <Section>
+        <h2
+          style={{
+            fontFamily: '"DM Serif Display", serif',
+            fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+            lineHeight: '1.2',
+            color: 'var(--color-ink)',
+            margin: '0 0 1rem',
+            maxWidth: '560px',
+          }}
+        >
+          What you'll learn in two hours
+        </h2>
+        <p
+          style={{
+            fontSize: '1rem',
+            lineHeight: '1.7',
+            color: 'var(--color-ink-muted)',
+            margin: '0 0 3rem',
+            maxWidth: '600px',
+          }}
+        >
+          Four connected topics that build a mechanical framework you can apply to
+          any exercise, any reformer, any client.
+        </p>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '0',
+            borderTop: '1px solid var(--color-rule)',
+          }}
+          className="topics-grid"
+        >
+          {[
+            {
+              number: '01',
+              title: 'Spring Mechanics',
+              body: 'Why springs get heavier as they stretch (F = kx), how that differs from weight stacks and bands, and what it means for load progression.',
+            },
+            {
+              number: '02',
+              title: 'Equipment Variables',
+              body: 'How spring count, footbar height, and rope length change the force environment — not just the difficulty, but what the body is actually asked to do.',
+            },
+            {
+              number: '03',
+              title: 'Body Mechanics',
+              body: 'How limb length, bodyweight, and strength interact with equipment settings. Why the same spring feels different for every client.',
+            },
+            {
+              number: '04',
+              title: 'A Transferable Framework',
+              body: 'Not a new table to memorize — a way of reading movement mechanically. Applicable to any exercise, any brand of reformer, any body.',
+            },
+          ].map((item, i) => (
+            <div
+              key={item.number}
+              style={{
+                padding: '2rem',
+                borderBottom: i < 2 ? '1px solid var(--color-rule)' : 'none',
+                borderRight: i % 2 === 0 ? '1px solid var(--color-rule)' : 'none',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+              }}
+              className="topic-card"
+            >
+              <span
+                style={{
+                  fontFamily: '"DM Serif Display", serif',
+                  fontSize: '1.75rem',
+                  color: 'var(--color-rule)',
+                  lineHeight: 1,
+                }}
+              >
+                {item.number}
+              </span>
+              <h3
+                style={{
+                  fontFamily: '"DM Serif Display", serif',
+                  fontSize: '1.1rem',
+                  color: 'var(--color-ink)',
+                  margin: 0,
+                }}
+              >
+                {item.title}
+              </h3>
+              <p
+                style={{
+                  fontSize: '0.95rem',
+                  lineHeight: '1.7',
+                  color: 'var(--color-ink-muted)',
+                  margin: 0,
+                }}
+              >
+                {item.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Rule />
+
+      {/* ── Meet Your Instructor ─────────────────────────────────────────── */}
+      <section style={{ background: 'var(--color-surface)' }}>
+        <Section>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'minmax(0, 280px) 1fr',
+              gap: '4rem',
+              alignItems: 'start',
+            }}
+            className="instructor-grid"
+          >
+            <img
+              src="/images/about/kaleen-sitting.jpg"
+              alt="Kaleen Canevari"
+              style={{
+                width: '100%',
+                display: 'block',
+                objectFit: 'cover',
+                aspectRatio: '2 / 3',
+              }}
+            />
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <div>
+                <p
+                  style={{
+                    fontSize: '0.7rem',
+                    fontWeight: '600',
+                    letterSpacing: '0.15em',
+                    textTransform: 'uppercase',
+                    color: 'var(--color-accent)',
+                    marginBottom: '0.75rem',
+                  }}
+                >
+                  Your Instructor
+                </p>
+                <h2
+                  style={{
+                    fontFamily: '"DM Serif Display", serif',
+                    fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+                    lineHeight: '1.2',
+                    color: 'var(--color-ink)',
+                    margin: '0 0 0.5rem',
+                  }}
+                >
+                  Kaleen Canevari
+                </h2>
+                <p
+                  style={{
+                    fontSize: '0.85rem',
+                    fontWeight: '500',
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: 'var(--color-accent)',
+                    margin: 0,
+                  }}
+                >
+                  Mechanical engineer & Pilates instructor
+                </p>
+              </div>
+
+              <p
+                style={{
+                  fontSize: '1rem',
+                  lineHeight: '1.8',
+                  color: 'var(--color-ink-muted)',
+                  margin: 0,
+                }}
+              >
+                Kaleen studied mechanical engineering before stepping on a reformer.
+                In 2013 she joined Balanced Body as a design engineer, and started
+                teaching Pilates in 2014. She's spent over a decade at the
+                intersection of engineering and movement — designing equipment,
+                running a Pilates equipment maintenance business, and founding a
+                connected Pilates equipment company.
+              </p>
+
+              <p
+                style={{
+                  fontSize: '1rem',
+                  lineHeight: '1.8',
+                  color: 'var(--color-ink-muted)',
+                  margin: 0,
+                }}
+              >
+                Pilates Physics is where she brings that engineering lens to
+                instructor education — making the mechanics behind the equipment
+                accessible to every working instructor.
+              </p>
+
+              <Link
+                to="/about"
+                style={{
+                  color: 'var(--color-accent)',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  textDecoration: 'none',
+                }}
+              >
+                More about Kaleen →
+              </Link>
+            </div>
+          </div>
+        </Section>
+      </section>
+
+      <Rule />
+
+      {/* ── Details & Pricing ────────────────────────────────────────────── */}
+      <Section>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '4rem',
+            alignItems: 'start',
+          }}
+          className="details-grid"
+        >
+          <div>
+            <h2
+              style={{
+                fontFamily: '"DM Serif Display", serif',
+                fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+                lineHeight: '1.2',
+                color: 'var(--color-ink)',
+                margin: '0 0 2rem',
+              }}
+            >
+              Details
+            </h2>
+
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.25rem',
+              }}
+            >
+              {[
+                { label: 'Date', value: 'TBD — join the waitlist to be first to know' },
+                { label: 'Duration', value: '2 hours' },
+                { label: 'Format', value: 'Live via Zoom, recording included' },
+                { label: 'Price', value: '$97' },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.25rem',
+                    paddingBottom: '1.25rem',
+                    borderBottom: '1px solid var(--color-rule)',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      fontWeight: '600',
+                      letterSpacing: '0.15em',
+                      textTransform: 'uppercase',
+                      color: 'var(--color-accent)',
+                    }}
+                  >
+                    {item.label}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '1rem',
+                      color: 'var(--color-ink)',
+                    }}
+                  >
+                    {item.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <p
+              style={{
+                fontSize: '0.85rem',
+                lineHeight: '1.7',
+                color: 'var(--color-ink-muted)',
+                marginTop: '1.5rem',
+              }}
+            >
+              Early-bird pricing available for waitlist subscribers.
+            </p>
+          </div>
+
+          <div
+            style={{
+              background: 'var(--color-surface)',
+              padding: '2.5rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1.5rem',
+            }}
+          >
+            <h3
+              style={{
+                fontFamily: '"DM Serif Display", serif',
+                fontSize: '1.3rem',
+                color: 'var(--color-ink)',
+                margin: 0,
+              }}
+            >
+              Reserve your spot
+            </h3>
+            <p
+              style={{
+                fontSize: '0.95rem',
+                lineHeight: '1.7',
+                color: 'var(--color-ink-muted)',
+                margin: 0,
+              }}
+            >
+              Join the waitlist and we'll notify you as soon as registration opens.
+              Waitlist subscribers get early-bird pricing.
+            </p>
+            <WaitlistForm />
+            <p
+              style={{
+                fontSize: '0.78rem',
+                color: 'var(--color-ink-muted)',
+                margin: 0,
+              }}
+            >
+              No spam. Unsubscribe anytime.
+            </p>
+          </div>
+        </div>
+      </Section>
+
+      <Rule />
+
+      {/* ── FAQ ──────────────────────────────────────────────────────────── */}
+      <section style={{ background: 'var(--color-surface)' }}>
+        <Section>
+          <h2
+            style={{
+              fontFamily: '"DM Serif Display", serif',
+              fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+              lineHeight: '1.2',
+              color: 'var(--color-ink)',
+              margin: '0 0 3rem',
+            }}
+          >
+            Common questions
+          </h2>
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0',
+            }}
+          >
+            {[
+              {
+                q: 'Do I need an engineering background?',
+                a: 'Not at all. The concepts are explained for movement professionals — no math prerequisites, no jargon without context. If you can teach footwork, you can follow this.',
+              },
+              {
+                q: 'Will there be a recording?',
+                a: 'Yes. The full recording is shared within 24 hours of the live session. You get lifetime access.',
+              },
+              {
+                q: 'What equipment knowledge do I need?',
+                a: 'Any reformer experience is enough. The principles apply across all spring-based Pilates equipment.',
+              },
+              {
+                q: 'Is this for classical or contemporary instructors?',
+                a: 'Both. Physics doesn\'t take sides. A spring behaves the same way regardless of your training lineage.',
+              },
+              {
+                q: 'What if I can\'t make the live session?',
+                a: 'The recording is included with every registration. You won\'t miss anything — though live Q&A is a big part of the value.',
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                style={{
+                  padding: '1.75rem 0',
+                  borderBottom: '1px solid var(--color-rule)',
+                }}
+              >
+                <h3
+                  style={{
+                    fontFamily: '"DM Serif Display", serif',
+                    fontSize: '1.1rem',
+                    color: 'var(--color-ink)',
+                    margin: '0 0 0.75rem',
+                  }}
+                >
+                  {item.q}
+                </h3>
+                <p
+                  style={{
+                    fontSize: '0.95rem',
+                    lineHeight: '1.7',
+                    color: 'var(--color-ink-muted)',
+                    margin: 0,
+                    maxWidth: '680px',
+                  }}
+                >
+                  {item.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Section>
+      </section>
+
+      <Rule />
+
+      {/* ── Final CTA ────────────────────────────────────────────────────── */}
+      <section style={{ background: 'var(--color-accent-light)' }}>
+        <div
+          style={{
+            maxWidth: '680px',
+            margin: '0 auto',
+            padding: '6rem 2rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2rem',
+            alignItems: 'flex-start',
+          }}
+        >
+          <div>
+            <h2
+              style={{
+                fontFamily: '"DM Serif Display", serif',
+                fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
+                lineHeight: '1.2',
+                color: 'var(--color-ink)',
+                margin: '0 0 1rem',
+              }}
+            >
+              Live. Interactive. Built for working instructors.
+            </h2>
+            <p
+              style={{
+                fontSize: '1rem',
+                lineHeight: '1.65',
+                color: 'var(--color-ink-muted)',
+                margin: 0,
+              }}
+            >
+              Whether you've been teaching for a year or ten, this webinar gives you a
+              mechanical framework for the questions you already have. Join the waitlist
+              and we'll notify you when registration opens.
+            </p>
+          </div>
+
+          <WaitlistForm style={{ width: '100%' }} />
+
           <p
             style={{
+              fontSize: '0.78rem',
               color: 'var(--color-ink-muted)',
-              fontSize: '1.05rem',
-              lineHeight: 1.6,
-              maxWidth: '640px',
+              margin: 0,
             }}
           >
-            Course catalog coming soon. Check back for upcoming offerings on
-            Pilates, biomechanics, and applied physics for movement.
+            We'll email you when the date is set. No spam.
           </p>
         </div>
       </section>
+
+      {/* Responsive styles */}
+      <style>{`
+        @media (max-width: 900px) {
+          .value-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .value-card {
+            border-right: none !important;
+            border-bottom: 1px solid var(--color-rule);
+          }
+          .value-card:last-child {
+            border-bottom: none;
+          }
+          .included-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .topics-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .topic-card {
+            border-right: none !important;
+            border-bottom: 1px solid var(--color-rule) !important;
+          }
+          .topic-card:last-child {
+            border-bottom: none !important;
+          }
+          .instructor-grid {
+            grid-template-columns: 1fr !important;
+            gap: 2.5rem !important;
+          }
+          .instructor-grid img {
+            max-height: 400px;
+            aspect-ratio: 3 / 4 !important;
+          }
+          .details-grid {
+            grid-template-columns: 1fr !important;
+            gap: 2.5rem !important;
+          }
+        }
+      `}</style>
     </div>
   )
 }

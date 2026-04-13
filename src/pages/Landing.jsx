@@ -1,83 +1,5 @@
 import WaitlistForm from '../components/ui/WaitlistForm'
-
-// ─── Spring Force Diagram SVG ─────────────────────────────────────────────────
-// Illustrates F = kx: spring force increases linearly with extension.
-// A reformer spring is not constant-load — it gets heavier as you move.
-function SpringDiagram() {
-  return (
-    <svg
-      viewBox="0 0 480 280"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-label="Force diagram: spring resistance increases with extension"
-      style={{ width: '100%', maxWidth: '480px' }}
-    >
-      {/* Grid lines */}
-      {[60, 100, 140, 180, 220].map((y) => (
-        <line key={y} x1="60" y1={y} x2="420" y2={y} stroke="#2E2B26" strokeWidth="1" />
-      ))}
-      {[120, 180, 240, 300, 360].map((x) => (
-        <line key={x} x1={x} y1="40" x2={x} y2="240" stroke="#2E2B26" strokeWidth="1" />
-      ))}
-
-      {/* Axes */}
-      <line x1="60" y1="240" x2="420" y2="240" stroke="#F1EFE8" strokeWidth="1.5" />
-      <line x1="60" y1="40" x2="60" y2="240" stroke="#F1EFE8" strokeWidth="1.5" />
-
-      {/* Axis labels */}
-      <text x="240" y="270" textAnchor="middle" fill="#888780" fontSize="11" fontFamily="DM Sans, sans-serif">
-        Spring extension
-      </text>
-      <text
-        x="18"
-        y="140"
-        textAnchor="middle"
-        fill="#888780"
-        fontSize="11"
-        fontFamily="DM Sans, sans-serif"
-        transform="rotate(-90, 18, 140)"
-      >
-        Force (N)
-      </text>
-
-      {/* Constant weight reference line — horizontal */}
-      <line x1="60" y1="160" x2="420" y2="160" stroke="#888780" strokeWidth="1.5" strokeDasharray="6 4" />
-      <text x="424" y="164" fill="#888780" fontSize="10" fontFamily="DM Sans, sans-serif">
-        Weight
-      </text>
-
-      {/* Spring force line — F = kx (diagonal) */}
-      <line x1="60" y1="240" x2="420" y2="55" stroke="#EF9F27" strokeWidth="2" />
-
-      {/* Spring force label */}
-      <text x="340" y="88" fill="#EF9F27" fontSize="10" fontFamily="DM Sans, sans-serif" fontWeight="600">
-        Spring (F = kx)
-      </text>
-
-      {/* Intersection dot */}
-      <circle cx="230" cy="160" r="3.5" fill="#EF9F27" />
-
-      {/* Annotation: crossover point */}
-      <line x1="230" y1="160" x2="230" y2="195" stroke="#EF9F27" strokeWidth="1" strokeDasharray="3 3" />
-      <text x="232" y="208" fill="#EF9F27" fontSize="9.5" fontFamily="DM Sans, sans-serif">
-        Heavier than
-      </text>
-      <text x="232" y="220" fill="#EF9F27" fontSize="9.5" fontFamily="DM Sans, sans-serif">
-        bodyweight here
-      </text>
-
-      {/* Tick marks — x axis */}
-      {[120, 180, 240, 300, 360].map((x, i) => (
-        <g key={x}>
-          <line x1={x} y1="240" x2={x} y2="246" stroke="#F1EFE8" strokeWidth="1" />
-          <text x={x} y="258" textAnchor="middle" fill="#888780" fontSize="9" fontFamily="DM Sans, sans-serif">
-            {(i + 1) * 5}&quot;
-          </text>
-        </g>
-      ))}
-    </svg>
-  )
-}
+import InteractiveSpringDiagram from '../components/ui/InteractiveSpringDiagram'
 
 // ─── Section wrapper ──────────────────────────────────────────────────────────
 function Section({ children, style = {}, className = '' }) {
@@ -138,7 +60,7 @@ export default function Landing() {
                   marginBottom: '1.25rem',
                 }}
               >
-                Live Webinar — Pilates Physics
+                Pilates Physics
               </p>
               <h1
                 style={{
@@ -149,7 +71,7 @@ export default function Landing() {
                   margin: 0,
                 }}
               >
-                Most Pilates instructors were taught what to do. This webinar teaches you why it works.
+                Pilates through the physics lens.
               </h1>
             </div>
 
@@ -161,7 +83,7 @@ export default function Landing() {
                 margin: 0,
               }}
             >
-              A 2-hour live session on the mechanics behind spring-based equipment — with recording shared after.
+              Our first live webinar is coming soon — a 2-hour session on the mechanics behind spring-based equipment.
             </p>
 
             <WaitlistForm />
@@ -186,7 +108,7 @@ export default function Landing() {
               gap: '0.75rem',
             }}
           >
-            <SpringDiagram />
+            <InteractiveSpringDiagram />
             <p
               style={{
                 fontSize: '0.75rem',
@@ -195,8 +117,7 @@ export default function Landing() {
                 maxWidth: '320px',
               }}
             >
-              Spring force scales with extension. A weight stack does not. Understanding this difference
-              changes how you program.
+              Spring force scales with extension. Drag to feel how resistance changes across the range of motion.
             </p>
           </div>
         </div>

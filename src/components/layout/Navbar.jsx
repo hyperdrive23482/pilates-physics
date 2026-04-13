@@ -67,7 +67,7 @@ export default function Navbar() {
               fontWeight: '500',
             }}
           >
-            Courses
+            Webinar
           </Link>
           <Link
             to="/about"
@@ -126,7 +126,7 @@ export default function Navbar() {
                 padding: '0.5rem 0',
               }}
             >
-              Courses
+              Webinar
             </Link>
             <Link
               to="/about"

@@ -56,7 +56,7 @@ export default function Footer() {
                 About Kaleen
               </Link>
               <Link to="/courses" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>
-                Courses
+                Webinar
               </Link>
 
 <Link to="/contact" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>
