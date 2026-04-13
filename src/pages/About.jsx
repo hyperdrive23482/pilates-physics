@@ -251,12 +251,23 @@ export default function About() {
                     background: 'var(--color-surface-raised)',
                     padding: '2rem',
                     display: 'grid',
-                    gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
+                    gridTemplateColumns: 'minmax(0, 220px) minmax(0, 1fr)',
                     gap: '2rem',
                     alignItems: 'center',
                   }}
                   className="remo-card"
                 >
+                  <img
+                    src="/images/homepage/remo-mockup.png"
+                    alt="Remo app mockup"
+                    style={{
+                      width: '100%',
+                      maxWidth: '220px',
+                      height: 'auto',
+                      display: 'block',
+                      justifySelf: 'center',
+                    }}
+                  />
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   <h3
                     style={{
@@ -304,16 +315,6 @@ export default function About() {
                     Learn more →
                   </a>
                   </div>
-                  <img
-                    src="/images/homepage/remo-mockup.png"
-                    alt="Remo app mockup"
-                    style={{
-                      width: '100%',
-                      height: 'auto',
-                      display: 'block',
-                      justifySelf: 'center',
-                    }}
-                  />
                 </div>
               ))}
             </div>
