@@ -176,13 +176,13 @@ export default function InteractiveSpringDiagram() {
       {Y_TICKS.map((lb) => {
         const gy = AREA.y + AREA.h - (lb / MAX_FORCE) * AREA.h
         return (
-          <line key={`yg-${lb}`} x1={AREA.x} y1={gy} x2={AREA.x + AREA.w} y2={gy} stroke="#2E2B26" strokeWidth="1" />
+          <line key={`yg-${lb}`} x1={AREA.x} y1={gy} x2={AREA.x + AREA.w} y2={gy} stroke="#5F5E5A" strokeWidth="1" />
         )
       })}
       {X_TICKS.map((inch) => {
         const gx = AREA.x + (inch / TRAVEL) * AREA.w
         return (
-          <line key={`xg-${inch}`} x1={gx} y1={AREA.y} x2={gx} y2={AREA.y + AREA.h} stroke="#2E2B26" strokeWidth="1" />
+          <line key={`xg-${inch}`} x1={gx} y1={AREA.y} x2={gx} y2={AREA.y + AREA.h} stroke="#5F5E5A" strokeWidth="1" />
         )
       })}
 
@@ -238,22 +238,14 @@ export default function InteractiveSpringDiagram() {
         )
       })}
 
-      {/* F_START reference line */}
-      {(() => {
-        const yStart = AREA.y + AREA.h - (F_START / MAX_FORCE) * AREA.h
-        return (
-          <line x1={AREA.x} y1={yStart} x2={AREA.x + AREA.w} y2={yStart} stroke="rgba(239,159,39,0.2)" strokeWidth="1" strokeDasharray="4 5" />
-        )
-      })()}
-
-      {/* Full diagonal reference (ghost line showing where the curve goes) */}
+{/* Full diagonal reference (ghost line showing where the curve goes) */}
       {(() => {
         const start = toGraph(0, springForce(0))
         const end = toGraph(1, springForce(1))
         return (
           <line
             x1={start.x} y1={start.y} x2={end.x} y2={end.y}
-            stroke="rgba(239,159,39,0.08)"
+            stroke="rgba(239,159,39,0.25)"
             strokeWidth="1.5"
             strokeDasharray="3 4"
           />
@@ -307,19 +299,17 @@ export default function InteractiveSpringDiagram() {
       </text>
 
       {/* F = kx + b label */}
-      {pos > 0.3 && (
-        <text
-          x={AREA.x + AREA.w - 4}
-          y={AREA.y + 16}
-          textAnchor="end"
-          fill="rgba(239,159,39,0.6)"
-          fontSize="11"
-          fontFamily="DM Sans, sans-serif"
-          fontWeight="600"
-        >
-          F = kx + b
-        </text>
-      )}
+      <text
+        x={AREA.x + AREA.w - 4}
+        y={AREA.y + 16}
+        textAnchor="end"
+        fill="rgba(239,159,39,0.6)"
+        fontSize="11"
+        fontFamily="DM Sans, sans-serif"
+        fontWeight="600"
+      >
+        F = kx + b
+      </text>
 
       {/* Invisible drag overlay */}
       <rect

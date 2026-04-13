@@ -33,10 +33,25 @@ export default function Landing() {
       <section
         style={{
           borderBottom: '1px solid var(--color-rule)',
+          backgroundImage: 'url(/images/homepage/hero-image.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          position: 'relative',
         }}
       >
+        {/* Dark overlay for text readability */}
         <div
           style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(28, 26, 23, 0.7)',
+          }}
+        />
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 1,
             maxWidth: '1100px',
             margin: '0 auto',
             padding: '7rem 2rem 5rem',
