@@ -233,7 +233,6 @@ export default function About() {
               style={{
                 display: 'grid',
                 gridTemplateColumns: '1fr',
-                maxWidth: '540px',
                 gap: '1.5rem',
               }}
               className="tools-grid"
@@ -251,11 +250,14 @@ export default function About() {
                   style={{
                     background: 'var(--color-surface-raised)',
                     padding: '2rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.75rem',
+                    display: 'grid',
+                    gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
+                    gap: '2rem',
+                    alignItems: 'center',
                   }}
+                  className="remo-card"
                 >
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   <h3
                     style={{
                       fontFamily: '"DM Serif Display", serif',
@@ -301,6 +303,17 @@ export default function About() {
                   >
                     Learn more →
                   </a>
+                  </div>
+                  <img
+                    src="/images/homepage/remo-mockup.png"
+                    alt="Remo app mockup"
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      display: 'block',
+                      justifySelf: 'center',
+                    }}
+                  />
                 </div>
               ))}
             </div>
@@ -511,6 +524,13 @@ export default function About() {
           }
           .tools-grid {
             grid-template-columns: 1fr !important;
+          }
+          .remo-card {
+            grid-template-columns: 1fr !important;
+          }
+          .remo-card > img {
+            order: -1;
+            max-width: 320px;
           }
           .two-col-grid {
             grid-template-columns: 1fr !important;
