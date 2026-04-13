@@ -204,13 +204,13 @@ export default function Landing() {
 
       <Rule />
 
-      {/* ── What This Course Does ─────────────────────────────────────────── */}
+      {/* ── What Good Teaching Takes ─────────────────────────────────────── */}
       <Section style={{ background: 'var(--color-surface)' }}>
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '3rem',
+            gap: '2.5rem',
           }}
         >
           <h2
@@ -220,51 +220,41 @@ export default function Landing() {
               lineHeight: '1.2',
               color: 'var(--color-ink)',
               margin: 0,
-              maxWidth: '560px',
             }}
           >
-            What you'll learn in two hours
+            What good teaching takes
           </h2>
 
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '0',
-              borderTop: '1px solid var(--color-rule)',
+              gap: '1.25rem',
             }}
-            className="value-grid"
+            className="teaching-grid"
           >
             {[
-              {
-                number: '01',
-                body: 'Why springs get heavier as they stretch — and what that means for clients of different sizes, strengths, and movement histories.',
-              },
-              {
-                number: '02',
-                body: 'How equipment settings change the force environment, not just the difficulty. Spring count, footbar height, rope length — each one shifts what the body is actually asked to do.',
-              },
-              {
-                number: '03',
-                body: 'A transferable framework for any exercise, any reformer, any client. Not a new table to memorize — a way of reading movement mechanically.',
-              },
-            ].map((item, i) => (
+              { number: '1', label: 'Know the intention', desc: "What the exercise is training and why you're doing it", highlighted: false },
+              { number: '2', label: 'Get feedback', desc: "Observe what's happening in your client's body and have a verbal dialogue about their experience", highlighted: false },
+              { number: '3', label: 'Understand equipment loading', desc: 'How springs, settings, and geometry shape the forces your client feels', highlighted: true },
+            ].map((item) => (
               <div
                 key={item.number}
                 style={{
-                  padding: '2rem',
-                  borderRight: i < 2 ? '1px solid var(--color-rule)' : 'none',
+                  padding: '1.75rem',
+                  borderRadius: '8px',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '1rem',
+                  gap: '0.75rem',
+                  border: item.highlighted ? '2px solid var(--color-accent)' : '1px solid var(--color-rule)',
+                  background: item.highlighted ? 'rgba(239, 159, 39, 0.08)' : 'transparent',
                 }}
-                className="value-card"
               >
                 <span
                   style={{
                     fontFamily: '"DM Serif Display", serif',
-                    fontSize: '2rem',
-                    color: 'var(--color-rule)',
+                    fontSize: '1.5rem',
+                    color: item.highlighted ? 'var(--color-accent)' : 'var(--color-rule)',
                     lineHeight: 1,
                   }}
                 >
@@ -272,17 +262,41 @@ export default function Landing() {
                 </span>
                 <p
                   style={{
+                    fontSize: '0.85rem',
+                    fontWeight: '600',
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase',
+                    color: item.highlighted ? 'var(--color-accent)' : 'var(--color-ink)',
+                    margin: 0,
+                  }}
+                >
+                  {item.label}
+                </p>
+                <p
+                  style={{
                     fontSize: '0.95rem',
-                    lineHeight: '1.7',
+                    lineHeight: '1.65',
                     color: 'var(--color-ink-muted)',
                     margin: 0,
                   }}
                 >
-                  {item.body}
+                  {item.desc}
                 </p>
               </div>
             ))}
           </div>
+
+          <p
+            style={{
+              fontSize: '1rem',
+              lineHeight: '1.65',
+              color: 'var(--color-accent)',
+              margin: 0,
+              fontStyle: 'italic',
+            }}
+          >
+            Missing one is like building a house out of matchsticks. Works in perfect conditions, but susceptible to even the smallest shift in environment. Pilates Physics makes sure #3 isn't your blind spot.
+          </p>
         </div>
       </Section>
 
@@ -315,13 +329,13 @@ export default function Landing() {
               <h2
                 style={{
                   fontFamily: '"DM Serif Display", serif',
-                  fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
+                  fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
                   lineHeight: '1.2',
                   color: 'var(--color-ink)',
                   margin: '0 0 0.35rem',
                 }}
               >
-                Meet your instructor
+                Meet Kaleen
               </h2>
               <p
                 style={{
@@ -333,7 +347,7 @@ export default function Landing() {
                   margin: 0,
                 }}
               >
-                Kaleen Canevari — Mechanical engineer &amp; Pilates instructor
+                Mechanical Engineer + Pilates Instructor
               </p>
             </div>
             <p
@@ -360,25 +374,23 @@ export default function Landing() {
             </a>
           </div>
         </div>
-      </Section>
 
-      <Rule />
-
-      {/* ── Praise / Testimonials ─────────────────────────────────────────── */}
-      <Section>
-        <h2
-          style={{
-            fontFamily: '"DM Serif Display", serif',
-            fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
-            lineHeight: '1.2',
-            color: 'var(--color-ink)',
-            margin: '0 0 2.5rem',
-            textAlign: 'center',
-          }}
-        >
-          Praise for Kaleen's work
-        </h2>
-        <TestimonialCarousel images={testimonials} />
+        <div style={{ marginTop: '3rem' }}>
+          <p
+            style={{
+              fontSize: '0.7rem',
+              fontWeight: '600',
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              color: 'var(--color-accent)',
+              margin: '0 0 1.25rem',
+              textAlign: 'center',
+            }}
+          >
+            What instructors are saying
+          </p>
+          <TestimonialCarousel images={testimonials} />
+        </div>
       </Section>
 
       <Rule />
@@ -400,7 +412,7 @@ export default function Landing() {
             <h2
               style={{
                 fontFamily: '"DM Serif Display", serif',
-                fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
+                fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
                 lineHeight: '1.2',
                 color: 'var(--color-ink)',
                 margin: '0 0 1rem',
@@ -446,15 +458,8 @@ export default function Landing() {
             grid-template-columns: 1fr !important;
             gap: 2rem !important;
           }
-          .value-grid {
+          .teaching-grid {
             grid-template-columns: 1fr !important;
-          }
-          .value-card {
-            border-right: none !important;
-            border-bottom: 1px solid var(--color-rule);
-          }
-          .value-card:last-child {
-            border-bottom: none;
           }
           .carousel-arrow {
             display: none !important;
