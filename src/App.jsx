@@ -19,6 +19,8 @@ import ForgotPassword from './pages/ForgotPassword'
 import SetPassword from './pages/SetPassword'
 import AuthCallback from './pages/AuthCallback'
 import Profile from './pages/Profile'
+import Terms from './pages/Terms'
+import Privacy from './pages/Privacy'
 
 export default function App() {
   return (
@@ -72,6 +74,22 @@ export default function App() {
         <Route
           path="/profile"
           element={<Profile />}
+        />
+        <Route
+          path="/terms"
+          element={
+            <PageWrapper>
+              <Terms />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/privacy"
+          element={
+            <PageWrapper>
+              <Privacy />
+            </PageWrapper>
+          }
         />
         <Route
           path="/auth/callback"
