@@ -222,7 +222,7 @@ export default function Landing() {
               margin: 0,
             }}
           >
-            What good teaching takes
+            What great teaching takes
           </h2>
 
           <div
@@ -246,7 +246,7 @@ export default function Landing() {
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '0.75rem',
-                  border: item.highlighted ? '2px solid var(--color-accent)' : '1px solid var(--color-rule)',
+                  border: item.highlighted ? '2px solid var(--color-accent)' : '1px solid #2E2C28',
                   background: item.highlighted ? 'rgba(239, 159, 39, 0.08)' : 'transparent',
                 }}
               >
@@ -254,7 +254,7 @@ export default function Landing() {
                   style={{
                     fontFamily: '"DM Serif Display", serif',
                     fontSize: '1.5rem',
-                    color: item.highlighted ? 'var(--color-accent)' : 'var(--color-rule)',
+                    color: item.highlighted ? 'var(--color-accent)' : 'var(--color-ink)',
                     lineHeight: 1,
                   }}
                 >
@@ -276,7 +276,7 @@ export default function Landing() {
                   style={{
                     fontSize: '0.95rem',
                     lineHeight: '1.65',
-                    color: 'var(--color-ink-muted)',
+                    color: item.highlighted ? '#E8E4DC' : 'var(--color-ink-muted)',
                     margin: 0,
                   }}
                 >
@@ -290,9 +290,8 @@ export default function Landing() {
             style={{
               fontSize: '1rem',
               lineHeight: '1.65',
-              color: 'var(--color-accent)',
+              color: 'var(--color-ink-muted)',
               margin: 0,
-              fontStyle: 'italic',
             }}
           >
             Missing one is like building a house out of matchsticks. Works in perfect conditions, but susceptible to even the smallest shift in environment. Pilates Physics makes sure #3 isn't your blind spot.
@@ -428,9 +427,9 @@ export default function Landing() {
                 margin: 0,
               }}
             >
-              Whether you've been teaching for a year or ten, this webinar gives you a mechanical
-              framework for the questions you already have. Join the waitlist and we'll notify you
-              when registration opens.
+              Whether you've been teaching for a year or ten, this webinar gives you a framework to
+              answer the questions you already have about how Pilates equipment applies load and
+              what that means for your teaching.
             </p>
           </div>
 

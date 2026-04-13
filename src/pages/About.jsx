@@ -92,8 +92,8 @@ export default function About() {
 
               <p
                 style={{
-                  fontSize: '1.05rem',
-                  lineHeight: '1.8',
+                  fontSize: '1rem',
+                  lineHeight: '1.7',
                   color: 'var(--color-ink-muted)',
                   margin: 0,
                 }}
@@ -109,8 +109,8 @@ export default function About() {
 
               <p
                 style={{
-                  fontSize: '1.05rem',
-                  lineHeight: '1.8',
+                  fontSize: '1rem',
+                  lineHeight: '1.7',
                   color: 'var(--color-ink-muted)',
                   margin: 0,
                 }}
@@ -148,7 +148,7 @@ export default function About() {
             <h2
               style={{
                 fontFamily: '"DM Serif Display", serif',
-                fontSize: 'clamp(1.6rem, 3vw, 2.4rem)',
+                fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
                 lineHeight: '1.2',
                 color: 'var(--color-ink)',
                 margin: 0,
@@ -484,7 +484,7 @@ export default function About() {
                 maxWidth: '520px',
               }}
             >
-              A 2-hour live webinar on the mechanics behind every spring setting, equipment decision, and cueing choice you make.
+              A 2-hour live webinar on the physics of Pilates
             </p>
           </div>
           <Link

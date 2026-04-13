@@ -29,14 +29,25 @@ export default function Courses() {
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section
         style={{
-          borderBottom: '1px solid var(--color-rule)',
+          backgroundImage: 'url(/images/homepage/webinar-hero-image.JPG)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          position: 'relative',
         }}
       >
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.55)',
+          }}
+        />
         <div
           style={{
             maxWidth: '1100px',
             margin: '0 auto',
             padding: '7rem 2rem 5rem',
+            position: 'relative',
           }}
         >
           <div style={{ maxWidth: '680px' }}>
@@ -46,7 +57,7 @@ export default function Courses() {
                 fontWeight: '600',
                 letterSpacing: '0.15em',
                 textTransform: 'uppercase',
-                color: 'var(--color-accent)',
+                color: 'rgba(255, 255, 255, 0.85)',
                 marginBottom: '1.25rem',
               }}
             >
@@ -57,17 +68,17 @@ export default function Courses() {
                 fontFamily: '"DM Serif Display", serif',
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
                 lineHeight: '1.15',
-                color: 'var(--color-ink)',
+                color: '#fff',
                 margin: '0 0 1.5rem',
               }}
             >
-              The Mechanics Behind the Spring
+              The physics behind the equipment
             </h1>
             <p
               style={{
                 fontSize: '1.1rem',
                 lineHeight: '1.65',
-                color: 'var(--color-ink-muted)',
+                color: 'rgba(255, 255, 255, 0.85)',
                 margin: '0 0 2rem',
               }}
             >
@@ -81,7 +92,7 @@ export default function Courses() {
             <p
               style={{
                 fontSize: '0.78rem',
-                color: 'var(--color-ink-muted)',
+                color: 'rgba(255, 255, 255, 0.7)',
                 marginTop: '1rem',
               }}
             >
@@ -101,78 +112,68 @@ export default function Courses() {
             fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
             lineHeight: '1.2',
             color: 'var(--color-ink)',
-            margin: '0 0 3rem',
+            margin: '0 0 2.5rem',
           }}
         >
-          Who this is for
+          For Pilates instructors who...
         </h2>
 
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '0',
-            borderTop: '1px solid var(--color-rule)',
+            gap: '1.25rem',
           }}
-          className="value-grid"
+          className="who-grid"
         >
           {[
             {
-              number: '01',
-              title: 'Pilates Instructors',
-              body: 'Any certification, any lineage. If you teach on spring-based equipment and want to understand why it works — not just what to do — this is for you.',
+              number: '1',
+              text: 'Have been teaching long enough to notice that the same setup doesn\u2019t work the same way on every body',
             },
             {
-              number: '02',
-              title: 'Studio Owners',
-              body: 'Give your team a shared mechanical framework. When instructors understand the physics, they make better decisions for every client who walks through the door.',
+              number: '2',
+              text: null,
             },
             {
-              number: '03',
-              title: 'Movement Professionals',
-              body: 'Physical therapists, personal trainers, or anyone curious about how spring mechanics differ from weight stacks, bands, and bodyweight.',
+              number: '3',
+              text: 'Would rather learn a framework than memorize another chart',
             },
-          ].map((item, i) => (
+          ].map((item) => (
             <div
               key={item.number}
               style={{
-                padding: '2rem',
-                borderRight: i < 2 ? '1px solid var(--color-rule)' : 'none',
+                padding: '1.75rem',
+                borderRadius: '8px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '1rem',
+                gap: '0.75rem',
+                border: '1px solid #2E2C28',
               }}
-              className="value-card"
             >
               <span
                 style={{
                   fontFamily: '"DM Serif Display", serif',
-                  fontSize: '2rem',
-                  color: 'var(--color-rule)',
+                  fontSize: '1.5rem',
+                  color: '#EF9F27',
                   lineHeight: 1,
                 }}
               >
                 {item.number}
               </span>
-              <h3
-                style={{
-                  fontFamily: '"DM Serif Display", serif',
-                  fontSize: '1.15rem',
-                  color: 'var(--color-ink)',
-                  margin: 0,
-                }}
-              >
-                {item.title}
-              </h3>
               <p
                 style={{
                   fontSize: '0.95rem',
-                  lineHeight: '1.7',
+                  lineHeight: '1.65',
                   color: 'var(--color-ink-muted)',
                   margin: 0,
                 }}
               >
-                {item.body}
+                {item.number === '2' ? (
+                  <>Want to understand <em>why</em> their adjustments work, not just <em>that</em> they work</>
+                ) : (
+                  item.text
+                )}
               </p>
             </div>
           ))}
@@ -181,7 +182,7 @@ export default function Courses() {
 
       <Rule />
 
-      {/* ── What's Included ──────────────────────────────────────────────── */}
+      {/* ── Topics Covered ───────────────────────────────────────────────── */}
       <section style={{ background: 'var(--color-surface)' }}>
         <Section>
           <h2
@@ -190,48 +191,78 @@ export default function Courses() {
               fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
               lineHeight: '1.2',
               color: 'var(--color-ink)',
-              margin: '0 0 3rem',
+              margin: '0 0 1rem',
+              maxWidth: '560px',
             }}
           >
-            What's included
+            What you'll learn in two hours
           </h2>
+          <p
+            style={{
+              fontSize: '1rem',
+              lineHeight: '1.7',
+              color: 'var(--color-ink-muted)',
+              margin: '0 0 3rem',
+              maxWidth: '600px',
+            }}
+          >
+            Four connected topics that build a mechanical framework you can apply to
+            any exercise, any reformer, any client.
+          </p>
 
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '1.5rem',
+              gap: '0',
+              borderTop: '1px solid var(--color-rule)',
             }}
-            className="included-grid"
+            className="topics-grid"
           >
             {[
               {
-                label: '2-Hour Live Session',
-                desc: 'Real-time instruction with live Q&A. Ask questions, get answers, go deeper on the topics that matter to your practice.',
+                number: '01',
+                title: 'Spring Mechanics',
+                body: 'Why springs get heavier as they stretch, how that differs from weight stacks, and whether they really push and pull (and why).',
               },
               {
-                label: 'Full Recording',
-                desc: 'Can\'t attend live? The full recording is shared within 24 hours. Lifetime access — revisit it whenever you need.',
+                number: '02',
+                title: 'Equipment Variables',
+                body: 'How gear position, footbar height, and rope length change the force environment — not just the difficulty, but what the body is actually asked to do.',
               },
               {
-                label: 'Reference Guide',
-                desc: 'A downloadable PDF covering the key formulas, diagrams, and frameworks from the session. Built for quick reference in the studio.',
+                number: '03',
+                title: 'Body Mechanics',
+                body: 'How limb length, bodyweight, and strength interact with equipment settings. Why the same spring feels different for every client.',
               },
               {
-                label: 'Community Access',
-                desc: 'Join a private discussion space to continue the conversation with other instructors who think mechanically.',
+                number: '04',
+                title: 'A Transferable Framework',
+                body: 'Not a new table to memorize — a way of understanding the loading environment mechanically. Applicable to any exercise, any brand of reformer, any body.',
               },
-            ].map((item) => (
+            ].map((item, i) => (
               <div
-                key={item.label}
+                key={item.number}
                 style={{
                   padding: '2rem',
-                  background: 'var(--color-surface-raised)',
+                  borderBottom: i < 2 ? '1px solid var(--color-rule)' : 'none',
+                  borderRight: i % 2 === 0 ? '1px solid var(--color-rule)' : 'none',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '0.75rem',
                 }}
+                className="topic-card"
               >
+                <span
+                  style={{
+                    fontFamily: '"DM Serif Display", serif',
+                    fontSize: '1.75rem',
+                    color: 'var(--color-rule)',
+                    lineHeight: 1,
+                  }}
+                >
+                  {item.number}
+                </span>
                 <h3
                   style={{
                     fontFamily: '"DM Serif Display", serif',
@@ -240,7 +271,7 @@ export default function Courses() {
                     margin: 0,
                   }}
                 >
-                  {item.label}
+                  {item.title}
                 </h3>
                 <p
                   style={{
@@ -250,7 +281,7 @@ export default function Courses() {
                     margin: 0,
                   }}
                 >
-                  {item.desc}
+                  {item.body}
                 </p>
               </div>
             ))}
@@ -260,108 +291,127 @@ export default function Courses() {
 
       <Rule />
 
-      {/* ── Topics Covered ───────────────────────────────────────────────── */}
+      {/* ── Details & Pricing ────────────────────────────────────────────── */}
       <Section>
-        <h2
-          style={{
-            fontFamily: '"DM Serif Display", serif',
-            fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
-            lineHeight: '1.2',
-            color: 'var(--color-ink)',
-            margin: '0 0 1rem',
-            maxWidth: '560px',
-          }}
-        >
-          What you'll learn in two hours
-        </h2>
-        <p
-          style={{
-            fontSize: '1rem',
-            lineHeight: '1.7',
-            color: 'var(--color-ink-muted)',
-            margin: '0 0 3rem',
-            maxWidth: '600px',
-          }}
-        >
-          Four connected topics that build a mechanical framework you can apply to
-          any exercise, any reformer, any client.
-        </p>
-
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '0',
-            borderTop: '1px solid var(--color-rule)',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '4rem',
+            alignItems: 'start',
           }}
-          className="topics-grid"
+          className="details-grid"
         >
-          {[
-            {
-              number: '01',
-              title: 'Spring Mechanics',
-              body: 'Why springs get heavier as they stretch (F = kx), how that differs from weight stacks and bands, and what it means for load progression.',
-            },
-            {
-              number: '02',
-              title: 'Equipment Variables',
-              body: 'How spring count, footbar height, and rope length change the force environment — not just the difficulty, but what the body is actually asked to do.',
-            },
-            {
-              number: '03',
-              title: 'Body Mechanics',
-              body: 'How limb length, bodyweight, and strength interact with equipment settings. Why the same spring feels different for every client.',
-            },
-            {
-              number: '04',
-              title: 'A Transferable Framework',
-              body: 'Not a new table to memorize — a way of reading movement mechanically. Applicable to any exercise, any brand of reformer, any body.',
-            },
-          ].map((item, i) => (
-            <div
-              key={item.number}
+          <div>
+            <h2
               style={{
-                padding: '2rem',
-                borderBottom: i < 2 ? '1px solid var(--color-rule)' : 'none',
-                borderRight: i % 2 === 0 ? '1px solid var(--color-rule)' : 'none',
+                fontFamily: '"DM Serif Display", serif',
+                fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+                lineHeight: '1.2',
+                color: 'var(--color-ink)',
+                margin: '0 0 2rem',
+              }}
+            >
+              Details
+            </h2>
+
+            <div
+              style={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '0.75rem',
+                gap: '1.25rem',
               }}
-              className="topic-card"
             >
-              <span
-                style={{
-                  fontFamily: '"DM Serif Display", serif',
-                  fontSize: '1.75rem',
-                  color: 'var(--color-rule)',
-                  lineHeight: 1,
-                }}
-              >
-                {item.number}
-              </span>
-              <h3
-                style={{
-                  fontFamily: '"DM Serif Display", serif',
-                  fontSize: '1.1rem',
-                  color: 'var(--color-ink)',
-                  margin: 0,
-                }}
-              >
-                {item.title}
-              </h3>
-              <p
-                style={{
-                  fontSize: '0.95rem',
-                  lineHeight: '1.7',
-                  color: 'var(--color-ink-muted)',
-                  margin: 0,
-                }}
-              >
-                {item.body}
-              </p>
+              {[
+                { label: 'Date', value: 'Wednesday, May 20, 2026' },
+                { label: 'Duration', value: '2 hours' },
+                { label: 'Format', value: 'Live via Zoom, recording included' },
+                { label: 'Price', value: '$99' },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.25rem',
+                    paddingBottom: '1.25rem',
+                    borderBottom: '1px solid var(--color-rule)',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      fontWeight: '600',
+                      letterSpacing: '0.15em',
+                      textTransform: 'uppercase',
+                      color: 'var(--color-accent)',
+                    }}
+                  >
+                    {item.label}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '1rem',
+                      color: 'var(--color-ink)',
+                    }}
+                  >
+                    {item.value}
+                  </span>
+                </div>
+              ))}
             </div>
-          ))}
+
+            <p
+              style={{
+                fontSize: '0.85rem',
+                lineHeight: '1.7',
+                color: 'var(--color-ink-muted)',
+                marginTop: '1.5rem',
+              }}
+            >
+            </p>
+          </div>
+
+          <div
+            style={{
+              background: 'var(--color-surface)',
+              padding: '2.5rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1.5rem',
+            }}
+          >
+            <h3
+              style={{
+                fontFamily: '"DM Serif Display", serif',
+                fontSize: '1.3rem',
+                color: 'var(--color-ink)',
+                margin: 0,
+              }}
+            >
+              Registration opens soon
+            </h3>
+            <p
+              style={{
+                fontSize: '0.95rem',
+                lineHeight: '1.7',
+                color: 'var(--color-ink-muted)',
+                margin: 0,
+              }}
+            >
+              Join the waitlist and we'll notify you as soon as registration opens.
+            </p>
+            <WaitlistForm />
+            <p
+              style={{
+                fontSize: '0.78rem',
+                color: 'var(--color-ink-muted)',
+                margin: 0,
+              }}
+            >
+              No spam. Unsubscribe anytime.
+            </p>
+          </div>
         </div>
       </Section>
 
@@ -476,129 +526,74 @@ export default function Courses() {
 
       <Rule />
 
-      {/* ── Details & Pricing ────────────────────────────────────────────── */}
+      {/* ── What's Included ──────────────────────────────────────────────── */}
       <Section>
+        <h2
+          style={{
+            fontFamily: '"DM Serif Display", serif',
+            fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+            lineHeight: '1.2',
+            color: 'var(--color-ink)',
+            margin: '0 0 3rem',
+          }}
+        >
+          What's included
+        </h2>
+
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '4rem',
-            alignItems: 'start',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '1.5rem',
           }}
-          className="details-grid"
+          className="included-grid"
         >
-          <div>
-            <h2
-              style={{
-                fontFamily: '"DM Serif Display", serif',
-                fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
-                lineHeight: '1.2',
-                color: 'var(--color-ink)',
-                margin: '0 0 2rem',
-              }}
-            >
-              Details
-            </h2>
-
+          {[
+            {
+              label: '2-Hour Live Session',
+              desc: 'Real-time instruction with live Q&A. Ask questions, get answers, go deeper on the topics that matter to your practice.',
+            },
+            {
+              label: 'Full Recording',
+              desc: 'Can\'t attend live? The full recording is shared within 24 hours.',
+            },
+            {
+              label: 'Reference Guide',
+              desc: 'A downloadable PDF covering the key topics from the session built for quick reference in the studio.',
+            },
+          ].map((item) => (
             <div
+              key={item.label}
               style={{
+                padding: '2rem',
+                background: 'var(--color-surface-raised)',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '1.25rem',
+                gap: '0.75rem',
               }}
             >
-              {[
-                { label: 'Date', value: 'Wednesday, May 20, 2026' },
-                { label: 'Duration', value: '2 hours' },
-                { label: 'Format', value: 'Live via Zoom, recording included' },
-                { label: 'Price', value: '$97' },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.25rem',
-                    paddingBottom: '1.25rem',
-                    borderBottom: '1px solid var(--color-rule)',
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: '0.7rem',
-                      fontWeight: '600',
-                      letterSpacing: '0.15em',
-                      textTransform: 'uppercase',
-                      color: 'var(--color-accent)',
-                    }}
-                  >
-                    {item.label}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: '1rem',
-                      color: 'var(--color-ink)',
-                    }}
-                  >
-                    {item.value}
-                  </span>
-                </div>
-              ))}
+              <h3
+                style={{
+                  fontFamily: '"DM Serif Display", serif',
+                  fontSize: '1.1rem',
+                  color: 'var(--color-ink)',
+                  margin: 0,
+                }}
+              >
+                {item.label}
+              </h3>
+              <p
+                style={{
+                  fontSize: '0.95rem',
+                  lineHeight: '1.7',
+                  color: 'var(--color-ink-muted)',
+                  margin: 0,
+                }}
+              >
+                {item.desc}
+              </p>
             </div>
-
-            <p
-              style={{
-                fontSize: '0.85rem',
-                lineHeight: '1.7',
-                color: 'var(--color-ink-muted)',
-                marginTop: '1.5rem',
-              }}
-            >
-              Early-bird pricing available for waitlist subscribers.
-            </p>
-          </div>
-
-          <div
-            style={{
-              background: 'var(--color-surface)',
-              padding: '2.5rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1.5rem',
-            }}
-          >
-            <h3
-              style={{
-                fontFamily: '"DM Serif Display", serif',
-                fontSize: '1.3rem',
-                color: 'var(--color-ink)',
-                margin: 0,
-              }}
-            >
-              Reserve your spot
-            </h3>
-            <p
-              style={{
-                fontSize: '0.95rem',
-                lineHeight: '1.7',
-                color: 'var(--color-ink-muted)',
-                margin: 0,
-              }}
-            >
-              Join the waitlist and we'll notify you as soon as registration opens.
-              Waitlist subscribers get early-bird pricing.
-            </p>
-            <WaitlistForm />
-            <p
-              style={{
-                fontSize: '0.78rem',
-                color: 'var(--color-ink-muted)',
-                margin: 0,
-              }}
-            >
-              No spam. Unsubscribe anytime.
-            </p>
-          </div>
+          ))}
         </div>
       </Section>
 
@@ -629,15 +624,15 @@ export default function Courses() {
             {[
               {
                 q: 'Do I need an engineering background?',
-                a: 'Not at all. The concepts are explained for movement professionals — no math prerequisites, no jargon without context. If you can teach footwork, you can follow this.',
+                a: 'Not at all. The concepts are explained for movement professionals — no math prerequisites, no jargon without context.',
               },
               {
                 q: 'Will there be a recording?',
-                a: 'Yes. The full recording is shared within 24 hours of the live session. You get lifetime access.',
+                a: 'Yes. The full recording is shared within 24 hours of the live session.',
               },
               {
                 q: 'What equipment knowledge do I need?',
-                a: 'Any reformer experience is enough. The principles apply across all spring-based Pilates equipment.',
+                a: 'This course is best for professionals who are certified to teach on a reformer and have active clients or group classes.',
               },
               {
                 q: 'Is this for classical or contemporary instructors?',
@@ -685,7 +680,7 @@ export default function Courses() {
       <Rule />
 
       {/* ── Final CTA ────────────────────────────────────────────────────── */}
-      <section style={{ background: 'var(--color-accent-light)' }}>
+      <section style={{ background: 'var(--color-surface-raised)' }}>
         <div
           style={{
             maxWidth: '680px',
@@ -740,15 +735,8 @@ export default function Courses() {
       {/* Responsive styles */}
       <style>{`
         @media (max-width: 900px) {
-          .value-grid {
+          .who-grid {
             grid-template-columns: 1fr !important;
-          }
-          .value-card {
-            border-right: none !important;
-            border-bottom: 1px solid var(--color-rule);
-          }
-          .value-card:last-child {
-            border-bottom: none;
           }
           .included-grid {
             grid-template-columns: 1fr !important;
