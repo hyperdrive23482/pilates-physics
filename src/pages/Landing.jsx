@@ -1,5 +1,16 @@
 import WaitlistForm from '../components/ui/WaitlistForm'
 import InteractiveSpringDiagram from '../components/ui/InteractiveSpringDiagram'
+import TestimonialCarousel from '../components/ui/TestimonialCarousel'
+
+const testimonials = [
+  { src: '/images/homepage/insta-testimonial-1.jpg', alt: 'Testimonial 1' },
+  { src: '/images/homepage/insta-testimonial-2.jpg', alt: 'Testimonial 2' },
+  { src: '/images/homepage/insta-testimonial-3.jpg', alt: 'Testimonial 3' },
+  { src: '/images/homepage/insta-testimonial-4.jpg', alt: 'Testimonial 4' },
+  { src: '/images/homepage/insta-testimonial-5.jpg', alt: 'Testimonial 5' },
+  { src: '/images/homepage/insta-testimonial-6.jpg', alt: 'Testimonial 6' },
+  { src: '/images/homepage/insta-testimonial-7.jpg', alt: 'Testimonial 7' },
+]
 
 // ─── Section wrapper ──────────────────────────────────────────────────────────
 function Section({ children, style = {}, className = '' }) {
@@ -277,6 +288,25 @@ export default function Landing() {
 
       <Rule />
 
+      {/* ── Praise / Testimonials ─────────────────────────────────────────── */}
+      <Section>
+        <h2
+          style={{
+            fontFamily: '"DM Serif Display", serif',
+            fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+            lineHeight: '1.2',
+            color: 'var(--color-ink)',
+            margin: '0 0 2.5rem',
+            textAlign: 'center',
+          }}
+        >
+          Praise for Kaleen's work
+        </h2>
+        <TestimonialCarousel images={testimonials} />
+      </Section>
+
+      <Rule />
+
       {/* ── Waitlist CTA (repeat) ────────────────────────────────────────── */}
       <section style={{ background: 'var(--color-accent-light)' }}>
         <div
@@ -349,6 +379,15 @@ export default function Landing() {
           }
           .value-card:last-child {
             border-bottom: none;
+          }
+          .carousel-arrow {
+            display: none !important;
+          }
+        }
+        @media (max-width: 600px) {
+          .testimonial-scroll img {
+            height: 100px !important;
+            width: 250px !important;
           }
         }
       `}</style>
