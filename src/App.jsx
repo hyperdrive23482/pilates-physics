@@ -1,5 +1,14 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import PageWrapper from './components/layout/PageWrapper'
+
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  return null
+}
 import Landing from './pages/Landing'
 import About from './pages/About'
 import Course from './pages/Course'
@@ -13,6 +22,7 @@ import Profile from './pages/Profile'
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route
           path="/"
