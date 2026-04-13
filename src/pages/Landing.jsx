@@ -345,10 +345,7 @@ export default function Landing() {
                 maxWidth: '540px',
               }}
             >
-              Kaleen studied mechanical engineering and worked as a design engineer at Balanced Body
-              before she ever taught a Pilates class. She brings an engineer's eye to movement —
-              building frameworks that help instructors understand the physics behind every spring,
-              setting, and cue.
+              Kaleen came to Pilates through engineering, not the other way around.  She has been designing and teaching on Pilates equipment since 2013 across multiple companies and studios.  Pilates Physics closes the gap between how this equipment was designed and how most of us were taught to use it.
             </p>
             <a
               href="/about"
