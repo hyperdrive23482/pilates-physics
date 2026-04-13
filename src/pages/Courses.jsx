@@ -85,7 +85,7 @@ export default function Courses() {
                 marginTop: '1rem',
               }}
             >
-              We'll email you when the date is set. No spam.
+              Registration opens soon. Join the waitlist to be first to know. No spam.
             </p>
           </div>
         </div>
@@ -508,7 +508,7 @@ export default function Courses() {
               }}
             >
               {[
-                { label: 'Date', value: 'TBD — join the waitlist to be first to know' },
+                { label: 'Date', value: 'Wednesday, May 20, 2026' },
                 { label: 'Duration', value: '2 hours' },
                 { label: 'Format', value: 'Live via Zoom, recording included' },
                 { label: 'Price', value: '$97' },
@@ -732,7 +732,7 @@ export default function Courses() {
               margin: 0,
             }}
           >
-            We'll email you when the date is set. No spam.
+            Registration opens soon. Join the waitlist to be first to know. No spam.
           </p>
         </div>
       </section>

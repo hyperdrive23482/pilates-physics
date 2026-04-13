@@ -98,7 +98,7 @@ export default function Landing() {
                 margin: 0,
               }}
             >
-              Our first live webinar is coming soon — a 2-hour session on the mechanics behind spring-based equipment.
+              Join me for a live webinar on May 20th to learn about easy, science-based principles even the most math-averse instructor can grasp.
             </p>
 
             <WaitlistForm compact />
@@ -110,7 +110,7 @@ export default function Landing() {
                 margin: 0,
               }}
             >
-              We'll email you when the date is set. No spam.
+              Registration opens soon. Join the waitlist to be first to know. No spam.
             </p>
           </div>
 
@@ -325,7 +325,7 @@ export default function Landing() {
               margin: 0,
             }}
           >
-            We'll email you when the date is set. No spam.
+            Registration opens soon. Join the waitlist to be first to know. No spam.
           </p>
         </div>
       </section>

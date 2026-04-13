@@ -472,7 +472,7 @@ export default function About() {
                 marginBottom: '0.75rem',
               }}
             >
-              Coming soon
+              May 20, 2026
             </p>
             <p
               style={{
