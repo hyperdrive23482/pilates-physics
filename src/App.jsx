@@ -23,6 +23,7 @@ import AuthCallback from './pages/AuthCallback'
 import Profile from './pages/Profile'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
+import SubscriptionConfirmed from './pages/SubscriptionConfirmed'
 
 export default function App() {
   return (
@@ -107,6 +108,14 @@ export default function App() {
           element={
             <PageWrapper>
               <Privacy />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/subscription-confirmed"
+          element={
+            <PageWrapper>
+              <SubscriptionConfirmed />
             </PageWrapper>
           }
         />
