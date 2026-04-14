@@ -12,6 +12,7 @@ function ScrollToTop() {
 import Landing from './pages/Landing'
 import About from './pages/About'
 import WebinarCatalog from './pages/WebinarCatalog'
+import Courses from './pages/Courses'
 import WebinarSalesPage from './pages/WebinarSalesPage'
 import PortalDashboard from './pages/PortalDashboard'
 import WebinarPortal from './pages/WebinarPortal'
@@ -50,7 +51,7 @@ export default function App() {
           path="/courses"
           element={
             <PageWrapper>
-              <WebinarCatalog />
+              <Courses />
             </PageWrapper>
           }
         />
