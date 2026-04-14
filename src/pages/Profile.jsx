@@ -124,7 +124,7 @@ export default function Profile() {
     >
       <div style={{ maxWidth: '420px', width: '100%' }}>
         <Link
-          to="/course"
+          to="/portal"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -135,7 +135,7 @@ export default function Profile() {
             marginBottom: '1.5rem',
           }}
         >
-          <ArrowLeft size={14} /> Back to Course
+          <ArrowLeft size={14} /> Back to Portal
         </Link>
 
         <p

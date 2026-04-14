@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import PageWrapper from './components/layout/PageWrapper'
 
 function ScrollToTop() {
@@ -11,8 +11,10 @@ function ScrollToTop() {
 }
 import Landing from './pages/Landing'
 import About from './pages/About'
-import Courses from './pages/Courses'
-import Course from './pages/Course'
+import WebinarCatalog from './pages/WebinarCatalog'
+import WebinarSalesPage from './pages/WebinarSalesPage'
+import PortalDashboard from './pages/PortalDashboard'
+import WebinarPortal from './pages/WebinarPortal'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import ForgotPassword from './pages/ForgotPassword'
@@ -47,13 +49,30 @@ export default function App() {
           path="/courses"
           element={
             <PageWrapper>
-              <Courses />
+              <WebinarCatalog />
             </PageWrapper>
           }
         />
         <Route
+          path="/courses/:slug"
+          element={
+            <PageWrapper>
+              <WebinarSalesPage />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/portal"
+          element={<PortalDashboard />}
+        />
+        <Route
+          path="/portal/:slug"
+          element={<WebinarPortal />}
+        />
+        {/* Redirect old /course path */}
+        <Route
           path="/course"
-          element={<Course />}
+          element={<Navigate to="/portal" replace />}
         />
         <Route
           path="/login"

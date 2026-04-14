@@ -12,7 +12,7 @@ export default function AuthCallback() {
       } else if (session?.user?.user_metadata?.needs_password) {
         navigate('/set-password', { replace: true })
       } else if (session) {
-        navigate('/course', { replace: true })
+        navigate('/portal', { replace: true })
       }
     }
 

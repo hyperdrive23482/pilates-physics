@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import WaitlistForm from '../components/ui/WaitlistForm'
 import InteractiveSpringDiagram from '../components/ui/InteractiveSpringDiagram'
 import TestimonialCarousel from '../components/ui/TestimonialCarousel'
@@ -109,20 +110,28 @@ export default function Landing() {
                 margin: 0,
               }}
             >
-              Join me for a live webinar on May 20th to learn about easy, science-based principles even the most math-averse instructor can grasp.
+              Live webinars that give working Pilates instructors a mechanical understanding
+              of the equipment they teach on every day. No memorizing tables — real understanding.
             </p>
 
-            <WaitlistForm compact />
-
-            <p
+            <Link
+              to="/courses"
               style={{
-                fontSize: '0.78rem',
-                color: 'var(--color-ink-muted)',
-                margin: 0,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.75rem 1.5rem',
+                background: 'var(--color-accent)',
+                color: '#1C1A17',
+                textDecoration: 'none',
+                fontSize: '0.9rem',
+                fontWeight: '500',
+                fontFamily: '"DM Sans", sans-serif',
+                alignSelf: 'flex-start',
               }}
             >
-              Registration opens soon. Join the waitlist to be first to know. No spam.
-            </p>
+              Browse Webinars
+            </Link>
           </div>
 
           {/* Right: diagram */}
@@ -195,7 +204,7 @@ export default function Landing() {
             </p>
             <p style={{ margin: 0 }}>
               That gap — between knowing what to do and knowing why it works — is exactly where
-              this webinar lives. It won't replace your training. It will make everything in your
+              these webinars live. They won't replace your training. They will make everything in your
               training make sense.
             </p>
           </div>
@@ -427,23 +436,29 @@ export default function Landing() {
                 margin: 0,
               }}
             >
-              Whether you've been teaching for a year or ten, this webinar gives you a framework to
+              Whether you've been teaching for a year or ten, these webinars give you a framework to
               answer the questions you already have about how Pilates equipment applies load and
               what that means for your teaching.
             </p>
           </div>
 
-          <WaitlistForm compact style={{ width: '100%' }} />
-
-          <p
+          <Link
+            to="/courses"
             style={{
-              fontSize: '0.78rem',
-              color: 'var(--color-ink-muted)',
-              margin: 0,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              padding: '0.75rem 1.5rem',
+              background: 'var(--color-accent)',
+              color: '#1C1A17',
+              textDecoration: 'none',
+              fontSize: '0.9rem',
+              fontWeight: '500',
+              fontFamily: '"DM Sans", sans-serif',
             }}
           >
-            Registration opens soon. Join the waitlist to be first to know. No spam.
-          </p>
+            Browse Webinars
+          </Link>
         </div>
       </section>
 
