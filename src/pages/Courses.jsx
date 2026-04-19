@@ -640,7 +640,7 @@ export default function Courses() {
               },
               {
                 q: 'What if I can\'t make the live session?',
-                a: 'The recording is included with every registration. You won\'t miss anything — though live Q&A is a big part of the value.',
+                a: 'The recording is included with every registration. You can submit questions ahead of time. Of course, a big value of the workshop is the live Q&A, but I understand the difficulties of scheduling.',
               },
             ].map((item, i) => (
               <div
