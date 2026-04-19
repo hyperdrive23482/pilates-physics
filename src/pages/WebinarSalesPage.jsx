@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
 import { useWebinar } from '../hooks/useWebinars'
 import WaitlistForm from '../components/ui/WaitlistForm'
+import RegisterCard from '../components/ui/RegisterCard'
 import StatusBadge from '../components/portal/StatusBadge'
 import { Calendar, Clock, DollarSign, Video, FileText, Download, ArrowRight } from 'lucide-react'
 
@@ -224,36 +225,7 @@ export default function WebinarSalesPage() {
               gap: '1.5rem',
             }}
           >
-            <h3
-              style={{
-                fontFamily: '"DM Serif Display", serif',
-                fontSize: '1.3rem',
-                color: 'var(--color-ink)',
-                margin: 0,
-              }}
-            >
-              Registration opens soon
-            </h3>
-            <p
-              style={{
-                fontSize: '0.95rem',
-                lineHeight: '1.7',
-                color: 'var(--color-ink-muted)',
-                margin: 0,
-              }}
-            >
-              Join the waitlist and we'll notify you as soon as registration opens.
-            </p>
-            <WaitlistForm />
-            <p
-              style={{
-                fontSize: '0.78rem',
-                color: 'var(--color-ink-muted)',
-                margin: 0,
-              }}
-            >
-              No spam. Unsubscribe anytime.
-            </p>
+            <RegisterCard webinar={webinar} />
           </div>
         </div>
       </Section>

@@ -25,6 +25,7 @@ import Profile from './pages/Profile'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
 import SubscriptionConfirmed from './pages/SubscriptionConfirmed'
+import RegistrationSuccess from './pages/RegistrationSuccess'
 
 export default function App() {
   return (
@@ -60,6 +61,14 @@ export default function App() {
           element={
             <PageWrapper>
               <WebinarSalesPage />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/courses/:slug/success"
+          element={
+            <PageWrapper>
+              <RegistrationSuccess />
             </PageWrapper>
           }
         />
