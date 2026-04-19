@@ -227,6 +227,7 @@ export default function Profile() {
                 disabled={status === 'loading'}
                 minLength={6}
                 placeholder="Leave blank to keep current"
+                autoComplete="new-password"
                 style={passwordInputStyle}
               />
               <button
@@ -259,6 +260,7 @@ export default function Profile() {
                 disabled={status === 'loading'}
                 minLength={6}
                 placeholder="Leave blank to keep current"
+                autoComplete="new-password"
                 style={passwordInputStyle}
               />
               <button

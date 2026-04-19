@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import { useAdmin } from './useAdmin'
 
 export function useWebinars() {
   const [webinars, setWebinars] = useState([])
@@ -44,13 +45,34 @@ export function useWebinar(slug) {
 }
 
 export function useMyWebinars(userId) {
+  const { isAdmin, loading: adminLoading } = useAdmin()
   const [webinars, setWebinars] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (adminLoading) return
     if (!userId) {
       setWebinars([])
       setLoading(false)
+      return
+    }
+
+    const sortByStatus = (list) =>
+      list.sort((a, b) => {
+        const order = { live: 0, upcoming: 1, complete: 2, archived: 3 }
+        return (order[a.status] ?? 9) - (order[b.status] ?? 9)
+      })
+
+    // Admins see every non-draft webinar without needing entitlements.
+    if (isAdmin) {
+      supabase
+        .from('webinars')
+        .select('*')
+        .neq('status', 'draft')
+        .then(({ data, error }) => {
+          if (!error) setWebinars(sortByStatus(data || []))
+          setLoading(false)
+        })
       return
     }
 
@@ -61,18 +83,16 @@ export function useMyWebinars(userId) {
       .then(({ data, error }) => {
         if (!error) {
           setWebinars(
-            (data || [])
-              .map((e) => e.webinar)
-              .filter(Boolean)
-              .sort((a, b) => {
-                const order = { live: 0, upcoming: 1, complete: 2, archived: 3 }
-                return (order[a.status] ?? 9) - (order[b.status] ?? 9)
-              })
+            sortByStatus(
+              (data || [])
+                .map((e) => e.webinar)
+                .filter(Boolean)
+            )
           )
         }
         setLoading(false)
       })
-  }, [userId])
+  }, [userId, isAdmin, adminLoading])
 
   return { webinars, loading }
 }

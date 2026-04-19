@@ -190,7 +190,7 @@ export default function WebinarForm({ initial, onSubmit, submitLabel = 'Save', b
       <Row>
         <Field label="Zoom link">
           <input
-            type="url"
+            type="text"
             value={form.zoom_link}
             onChange={(e) => update('zoom_link', e.target.value)}
             style={inputStyle}
@@ -209,7 +209,7 @@ export default function WebinarForm({ initial, onSubmit, submitLabel = 'Save', b
       <Row>
         <Field label="Recording URL">
           <input
-            type="url"
+            type="text"
             value={form.recording_url}
             onChange={(e) => update('recording_url', e.target.value)}
             style={inputStyle}
@@ -217,7 +217,7 @@ export default function WebinarForm({ initial, onSubmit, submitLabel = 'Save', b
         </Field>
         <Field label="Hero image URL">
           <input
-            type="url"
+            type="text"
             value={form.hero_image_url}
             onChange={(e) => update('hero_image_url', e.target.value)}
             style={inputStyle}
