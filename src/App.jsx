@@ -26,6 +26,12 @@ import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
 import SubscriptionConfirmed from './pages/SubscriptionConfirmed'
 import RegistrationSuccess from './pages/RegistrationSuccess'
+import AdminGate from './components/admin/AdminGate'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminWebinars from './pages/admin/AdminWebinars'
+import AdminWebinarEdit from './pages/admin/AdminWebinarEdit'
+import AdminUsers from './pages/admin/AdminUsers'
+import AdminAnalytics from './pages/admin/AdminAnalytics'
 
 export default function App() {
   return (
@@ -132,6 +138,54 @@ export default function App() {
         <Route
           path="/auth/callback"
           element={<AuthCallback />}
+        />
+        <Route
+          path="/admin"
+          element={
+            <AdminGate>
+              <AdminDashboard />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/webinars"
+          element={
+            <AdminGate>
+              <AdminWebinars />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/webinars/new"
+          element={
+            <AdminGate>
+              <AdminWebinarEdit />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/webinars/:slug/edit"
+          element={
+            <AdminGate>
+              <AdminWebinarEdit />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <AdminGate>
+              <AdminUsers />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/analytics"
+          element={
+            <AdminGate>
+              <AdminAnalytics />
+            </AdminGate>
+          }
         />
       </Routes>
     </BrowserRouter>
