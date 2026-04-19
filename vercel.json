@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/stripe/webhook.js": {
+      "includeFiles": "supabase/email-templates/**"
+    }
+  },
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]

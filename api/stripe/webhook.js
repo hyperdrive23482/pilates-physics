@@ -2,6 +2,7 @@ import crypto from 'node:crypto'
 import { stripe } from '../_lib/stripe.js'
 import { supabaseAdmin } from '../_lib/supabase-admin.js'
 import { tagSubscriber } from '../_lib/kit.js'
+import { sendAuthEmail } from '../_lib/resend.js'
 
 // Vercel pure Node functions don't have the Next.js bodyParser flag —
 // we build the raw body from the stream ourselves for signature verification.
@@ -95,6 +96,7 @@ export default async function handler(req, res) {
     // ---- Three-branch user resolution ----
     let userId
     let userState
+    let tokenHash = null
     const origin = `${req.headers['x-forwarded-proto'] ?? 'https'}://${req.headers.host}`
 
     if (meta.user_id) {
@@ -108,11 +110,13 @@ export default async function handler(req, res) {
         userId = existing.id
         userState = 'returning'
         // Do NOT update user_metadata — existing account values win over form values
-        await supabaseAdmin.auth.admin.generateLink({
+        const { data: linkData, error: linkErr } = await supabaseAdmin.auth.admin.generateLink({
           type: 'magiclink',
           email,
           options: { redirectTo: `${origin}/auth/callback` },
         })
+        if (linkErr) throw linkErr
+        tokenHash = linkData.properties.hashed_token
       } else {
         // Branch (c): new user — create account + send magic link; AuthCallback routes to /set-password
         const { data: created, error: createErr } = await supabaseAdmin.auth.admin.createUser({
@@ -128,11 +132,13 @@ export default async function handler(req, res) {
         if (createErr) throw createErr
         userId = created.user.id
         userState = 'new'
-        await supabaseAdmin.auth.admin.generateLink({
+        const { data: linkData, error: linkErr } = await supabaseAdmin.auth.admin.generateLink({
           type: 'magiclink',
           email,
           options: { redirectTo: `${origin}/auth/callback` },
         })
+        if (linkErr) throw linkErr
+        tokenHash = linkData.properties.hashed_token
       }
     }
 
@@ -144,6 +150,21 @@ export default async function handler(req, res) {
         { onConflict: 'user_id,webinar_id', ignoreDuplicates: true }
       )
     if (entErr) throw entErr
+
+    // ---- Magic-link email (non-fatal — entitlement already granted) ----
+    // generateLink only mints the token; sending is on us. Skip for branch (a).
+    let emailStatus = 'skipped'
+    let emailError = null
+    if (tokenHash) {
+      try {
+        await sendAuthEmail({ to: email, kind: 'magiclink', siteURL: origin, tokenHash })
+        emailStatus = 'sent'
+      } catch (err) {
+        emailStatus = 'failed'
+        emailError = err.message
+        console.error('Resend magic-link send failed:', err)
+      }
+    }
 
     // ---- Kit.com tag (non-fatal) ----
     let kitError = null
@@ -165,6 +186,8 @@ export default async function handler(req, res) {
       user_state: userState,
       status: kitError ? 'kit_failed' : 'processed',
       error: kitError,
+      email_status: emailStatus,
+      email_error: emailError,
       payload: session,
     })
 
