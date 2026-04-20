@@ -1,12 +1,13 @@
 import Navbar from './Navbar'
 import Footer from './Footer'
+import EarlyBirdBanner from '../ui/EarlyBirdBanner'
 
 export default function PageWrapper({ children }) {
   return (
     <div className="min-h-screen flex flex-col">
+      <EarlyBirdBanner />
       <Navbar />
-      {/* pt-16 clears the fixed navbar (64px = h-16) */}
-      <main className="flex-1 pt-16">
+      <main className="flex-1" style={{ paddingTop: '6.5rem' }}>
         {children}
       </main>
       <Footer />
