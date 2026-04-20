@@ -193,15 +193,10 @@ export default function Login() {
             marginTop: '1.5rem',
             fontSize: '0.85rem',
             color: 'var(--color-ink-muted)',
+            lineHeight: '1.5',
           }}
         >
-          Don't have an account?{' '}
-          <Link
-            to="/signup"
-            style={{ color: 'var(--color-accent)', textDecoration: 'underline' }}
-          >
-            Sign up
-          </Link>
+          This portal is available to workshop participants only. An account is created for you when you purchase a workshop.
         </p>
       </div>
     </div>
