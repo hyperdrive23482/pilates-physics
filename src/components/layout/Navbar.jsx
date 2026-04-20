@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
+import Button from '../ui/Button'
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -52,6 +53,9 @@ export default function Navbar() {
           <NavLink to="/about" className="nav-link">About Kaleen</NavLink>
         </nav>
 
+        {/* Desktop login */}
+        <Button href="/login" variant="secondary" className="hidden md:inline-block">Login</Button>
+
         {/* Mobile hamburger */}
         <button
           className="md:hidden"
@@ -75,6 +79,7 @@ export default function Navbar() {
             <NavLink to="/" className="nav-link" end onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Home</NavLink>
             <NavLink to="/workshops" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Workshops</NavLink>
             <NavLink to="/about" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>About Kaleen</NavLink>
+            <NavLink to="/login" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Login</NavLink>
           </nav>
         </div>
       )}

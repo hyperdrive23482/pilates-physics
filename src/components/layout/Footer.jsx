@@ -95,6 +95,7 @@ export default function Footer() {
               Admin
             </p>
             <nav className="flex flex-col gap-2">
+              <Link to="/login" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Login</Link>
               <Link to="/terms" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Terms</Link>
               <Link to="/privacy" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Privacy</Link>
               {/* <Link to="/help" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Help</Link> */}
