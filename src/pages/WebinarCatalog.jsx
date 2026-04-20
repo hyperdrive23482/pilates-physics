@@ -32,7 +32,7 @@ function CatalogCard({ webinar }) {
 
   return (
     <Link
-      to={`/courses/${webinar.slug}`}
+      to={`/workshops/${webinar.slug}`}
       style={{
         display: 'flex',
         flexDirection: 'column',

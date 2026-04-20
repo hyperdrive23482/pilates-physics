@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom'
 import PageWrapper from './components/layout/PageWrapper'
 
 function ScrollToTop() {
@@ -8,6 +8,11 @@ function ScrollToTop() {
     window.scrollTo(0, 0)
   }, [pathname])
   return null
+}
+
+function RedirectWithSlug({ to }) {
+  const { slug } = useParams()
+  return <Navigate to={to.replace(':slug', slug)} replace />
 }
 import Landing from './pages/Landing'
 import About from './pages/About'
@@ -54,8 +59,13 @@ export default function App() {
             </PageWrapper>
           }
         />
+        {/* Hide the PP-101 standalone sales page — must come BEFORE the dynamic route */}
         <Route
-          path="/courses"
+          path="/workshops/PP-101-May-2026"
+          element={<Navigate to="/workshops" replace />}
+        />
+        <Route
+          path="/workshops"
           element={
             <PageWrapper>
               <Courses />
@@ -63,7 +73,7 @@ export default function App() {
           }
         />
         <Route
-          path="/courses/:slug"
+          path="/workshops/:slug"
           element={
             <PageWrapper>
               <WebinarSalesPage />
@@ -71,12 +81,29 @@ export default function App() {
           }
         />
         <Route
-          path="/courses/:slug/success"
+          path="/workshops/:slug/success"
           element={
             <PageWrapper>
               <RegistrationSuccess />
             </PageWrapper>
           }
+        />
+        {/* Backward-compat redirects */}
+        <Route
+          path="/courses/PP-101-May-2026"
+          element={<Navigate to="/workshops" replace />}
+        />
+        <Route
+          path="/courses"
+          element={<Navigate to="/workshops" replace />}
+        />
+        <Route
+          path="/courses/:slug"
+          element={<RedirectWithSlug to="/workshops/:slug" />}
+        />
+        <Route
+          path="/courses/:slug/success"
+          element={<RedirectWithSlug to="/workshops/:slug/success" />}
         />
         <Route
           path="/portal"

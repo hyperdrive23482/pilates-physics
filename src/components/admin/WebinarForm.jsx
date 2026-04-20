@@ -110,7 +110,7 @@ export default function WebinarForm({ initial, onSubmit, submitLabel = 'Save', b
             required
           />
         </Field>
-        <Field label="Slug *" hint="URL path: /courses/{slug}">
+        <Field label="Slug *" hint="URL path: /workshops/{slug}">
           <input
             type="text"
             value={form.slug}

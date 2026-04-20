@@ -1,5 +1,19 @@
 import { Link } from 'react-router-dom'
-import WaitlistForm from '../components/ui/WaitlistForm'
+import RegisterCard from '../components/ui/RegisterCard'
+import { useWebinar } from '../hooks/useWebinars'
+
+const primaryButtonStyle = {
+  display: 'inline-block',
+  padding: '0.875rem 1.75rem',
+  fontSize: '0.95rem',
+  fontWeight: '500',
+  fontFamily: '"DM Sans", sans-serif',
+  background: 'var(--color-accent)',
+  color: '#1C1A17',
+  border: 'none',
+  textDecoration: 'none',
+  cursor: 'pointer',
+}
 
 function Section({ children, style = {}, className = '' }) {
   return (
@@ -24,6 +38,8 @@ function Rule() {
 }
 
 export default function Courses() {
+  const { webinar } = useWebinar('PP-101-May-2026')
+
   return (
     <div>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
@@ -87,7 +103,7 @@ export default function Courses() {
               use.
             </p>
 
-            <WaitlistForm compact />
+            <a href="#register" style={primaryButtonStyle}>Register Now — $99</a>
 
             <p
               style={{
@@ -96,7 +112,7 @@ export default function Courses() {
                 marginTop: '1rem',
               }}
             >
-              Registration opens soon. Join the waitlist to be first to know. No spam.
+              Live on Wednesday, May 20, 2026. Recording included.
             </p>
           </div>
         </div>
@@ -324,6 +340,7 @@ export default function Courses() {
             >
               {[
                 { label: 'Date', value: 'Wednesday, May 20, 2026' },
+                { label: 'Time', value: '11am PDT / 2pm EDT' },
                 { label: 'Duration', value: '2 hours' },
                 { label: 'Format', value: 'Live via Zoom, recording included' },
                 { label: 'Price', value: '$99' },
@@ -373,44 +390,23 @@ export default function Courses() {
           </div>
 
           <div
+            id="register"
             style={{
               background: 'var(--color-surface)',
               padding: '2.5rem',
               display: 'flex',
               flexDirection: 'column',
               gap: '1.5rem',
+              scrollMarginTop: '5rem',
             }}
           >
-            <h3
-              style={{
-                fontFamily: '"DM Serif Display", serif',
-                fontSize: '1.3rem',
-                color: 'var(--color-ink)',
-                margin: 0,
-              }}
-            >
-              Registration opens soon
-            </h3>
-            <p
-              style={{
-                fontSize: '0.95rem',
-                lineHeight: '1.7',
-                color: 'var(--color-ink-muted)',
-                margin: 0,
-              }}
-            >
-              Join the waitlist and we'll notify you as soon as registration opens.
-            </p>
-            <WaitlistForm />
-            <p
-              style={{
-                fontSize: '0.78rem',
-                color: 'var(--color-ink-muted)',
-                margin: 0,
-              }}
-            >
-              No spam. Unsubscribe anytime.
-            </p>
+            {webinar ? (
+              <RegisterCard webinar={webinar} />
+            ) : (
+              <p style={{ fontSize: '0.9rem', color: 'var(--color-ink-muted)', margin: 0 }}>
+                Loading registration…
+              </p>
+            )}
           </div>
         </div>
       </Section>
@@ -713,22 +709,12 @@ export default function Courses() {
               }}
             >
               Whether you've been teaching for a year or ten, this webinar gives you a
-              mechanical framework for the questions you already have. Join the waitlist
-              and we'll notify you when registration opens.
+              mechanical framework for the questions you already have. Reserve your seat —
+              registration is open now.
             </p>
           </div>
 
-          <WaitlistForm style={{ width: '100%' }} />
-
-          <p
-            style={{
-              fontSize: '0.78rem',
-              color: 'var(--color-ink-muted)',
-              margin: 0,
-            }}
-          >
-            Registration opens soon. Join the waitlist to be first to know. No spam.
-          </p>
+          <a href="#register" style={primaryButtonStyle}>Register Now — $99</a>
         </div>
       </section>
 

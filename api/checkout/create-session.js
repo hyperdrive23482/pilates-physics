@@ -62,8 +62,8 @@ export default async function handler(req, res) {
       mode: 'payment',
       line_items: [{ price: webinar.stripe_price_id, quantity: 1 }],
       customer_email: resolvedEmail,
-      success_url: `${origin}/courses/${slug}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/courses/${slug}`,
+      success_url: `${origin}/workshops/${slug}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/workshops/${slug}`,
       metadata: {
         webinar_id: webinar.id,
         webinar_slug: slug,

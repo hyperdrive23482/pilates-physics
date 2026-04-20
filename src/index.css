@@ -226,3 +226,68 @@ h1, h2, h3, h4 {
     width: 100% !important;
   }
 }
+
+/* Inline modifier — keep all fields + submit on a single row at desktop. */
+.pp-kit-form--inline .formkit-form[data-uid] {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  gap: 0.5rem !important;
+}
+.pp-kit-form--inline .formkit-form[data-uid] .formkit-fields {
+  flex: 1 1 auto !important;
+  flex-wrap: nowrap !important;
+  margin: 0 !important;
+}
+.pp-kit-form--inline .formkit-form[data-uid] .formkit-field {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  align-self: stretch !important;
+  display: flex !important;
+}
+.pp-kit-form--inline .formkit-form[data-uid] input.formkit-input {
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  padding: 0 0.85rem !important;
+  font-size: 0.85rem !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+.pp-kit-form--inline .formkit-form[data-uid] .formkit-fields,
+.pp-kit-form--inline .formkit-form[data-uid] .formkit-field {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.pp-kit-form--inline .formkit-form[data-uid] button.formkit-submit {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  align-self: stretch !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  padding: 0 1.5rem !important;
+  font-size: 0.75rem !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+.pp-kit-form--inline .formkit-form[data-uid] button.formkit-submit > span {
+  height: 100% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 600px) {
+  .pp-kit-form--inline .formkit-form[data-uid] {
+    flex-direction: column !important;
+  }
+  .pp-kit-form--inline .formkit-form[data-uid] .formkit-submit {
+    width: 100% !important;
+  }
+}

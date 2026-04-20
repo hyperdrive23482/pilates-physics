@@ -90,7 +90,7 @@ export default function WebinarPortal() {
             You don't have access to this webinar. Register to get access.
           </p>
           <Link
-            to={`/courses/${slug}`}
+            to={`/workshops/${slug}`}
             style={{
               display: 'inline-block',
               padding: '0.75rem 1.5rem',

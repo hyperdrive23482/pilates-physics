@@ -121,7 +121,7 @@ export default function PortalDashboard() {
               You don't have access to any webinars yet. Browse available sessions and register for one.
             </p>
             <Link
-              to="/courses"
+              to="/workshops"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -222,7 +222,7 @@ export default function PortalDashboard() {
             }}
           >
             <Link
-              to="/courses"
+              to="/workshops"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',

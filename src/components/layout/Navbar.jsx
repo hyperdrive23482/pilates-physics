@@ -48,7 +48,7 @@ export default function Navbar() {
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-4">
           <NavLink to="/" className="nav-link" end>Home</NavLink>
-          <NavLink to="/courses" className="nav-link">Webinars</NavLink>
+          <NavLink to="/workshops" className="nav-link">Workshops</NavLink>
           <NavLink to="/about" className="nav-link">About Kaleen</NavLink>
         </nav>
 
@@ -73,7 +73,7 @@ export default function Navbar() {
         >
           <nav className="flex flex-col px-6 py-4 gap-4">
             <NavLink to="/" className="nav-link" end onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Home</NavLink>
-            <NavLink to="/courses" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Webinars</NavLink>
+            <NavLink to="/workshops" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Workshops</NavLink>
             <NavLink to="/about" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>About Kaleen</NavLink>
           </nav>
         </div>

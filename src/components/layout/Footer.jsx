@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import NewsletterForm from '../ui/NewsletterForm'
 
 export default function Footer() {
   return (
@@ -9,6 +10,33 @@ export default function Footer() {
       }}
     >
       <div className="max-w-6xl mx-auto px-6 py-12">
+        {/* Newsletter row */}
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1.5rem',
+            paddingBottom: '2rem',
+            marginBottom: '2.5rem',
+            borderBottom: '1px solid var(--color-rule)',
+          }}
+        >
+          <div style={{ flex: '1 1 280px', minWidth: 0 }}>
+            <p
+              className="text-sm font-medium"
+              style={{ color: 'var(--color-ink)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}
+            >
+              Newsletter
+            </p>
+            <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.85rem', lineHeight: '1.5', margin: 0 }}>
+              Occasional notes on the physics behind Pilates equipment plus workshop and mentorship announcements.
+            </p>
+          </div>
+          <NewsletterForm compact className="pp-kit-form--inline" style={{ flex: '1 1 360px', maxWidth: '520px' }} />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Column 1: Brand + tagline */}
           <div className="md:col-span-2">
@@ -53,7 +81,7 @@ export default function Footer() {
             </p>
             <nav className="flex flex-col gap-2">
               <Link to="/about" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>About Kaleen</Link>
-              <Link to="/courses" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Webinar</Link>
+              <Link to="/workshops" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Workshops</Link>
               {/* <Link to="/contact" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Contact</Link> */}
             </nav>
           </div>

@@ -1,9 +1,21 @@
 import { useParams, Link } from 'react-router-dom'
 import { useWebinar } from '../hooks/useWebinars'
-import WaitlistForm from '../components/ui/WaitlistForm'
 import RegisterCard from '../components/ui/RegisterCard'
 import StatusBadge from '../components/portal/StatusBadge'
 import { Calendar, Clock, DollarSign, Video, FileText, Download, ArrowRight } from 'lucide-react'
+
+const heroButtonStyle = {
+  display: 'inline-block',
+  padding: '0.875rem 1.75rem',
+  fontSize: '0.95rem',
+  fontWeight: '500',
+  fontFamily: '"DM Sans", sans-serif',
+  background: 'var(--color-accent)',
+  color: '#1C1A17',
+  border: 'none',
+  textDecoration: 'none',
+  cursor: 'pointer',
+}
 
 function Section({ children, style = {} }) {
   return (
@@ -50,10 +62,10 @@ export default function WebinarSalesPage() {
           Webinar not found
         </h1>
         <Link
-          to="/courses"
+          to="/workshops"
           style={{ color: 'var(--color-accent)', textDecoration: 'none', fontSize: '0.9rem' }}
         >
-          Browse all webinars
+          Browse all workshops
         </Link>
       </div>
     )
@@ -136,17 +148,19 @@ export default function WebinarSalesPage() {
               </p>
             )}
 
-            <WaitlistForm compact />
+            <a href="#register" style={heroButtonStyle}>Register Now — {price}</a>
 
-            <p
-              style={{
-                fontSize: '0.78rem',
-                color: 'rgba(255, 255, 255, 0.7)',
-                marginTop: '1rem',
-              }}
-            >
-              Registration opens soon. Join the waitlist to be first to know. No spam.
-            </p>
+            {date && (
+              <p
+                style={{
+                  fontSize: '0.78rem',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  marginTop: '1rem',
+                }}
+              >
+                Live on {date}. Recording included.
+              </p>
+            )}
           </div>
         </div>
       </section>
@@ -217,12 +231,14 @@ export default function WebinarSalesPage() {
 
           {/* Right: register card */}
           <div
+            id="register"
             style={{
               background: 'var(--color-surface)',
               padding: '2.5rem',
               display: 'flex',
               flexDirection: 'column',
               gap: '1.5rem',
+              scrollMarginTop: '5rem',
             }}
           >
             <RegisterCard webinar={webinar} />

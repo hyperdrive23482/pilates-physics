@@ -488,7 +488,7 @@ export default function About() {
             </p>
           </div>
           <Link
-            to="/"
+            to="/workshops"
             style={{
               display: 'inline-block',
               padding: '0.875rem 2rem',
@@ -501,7 +501,7 @@ export default function About() {
               whiteSpace: 'nowrap',
             }}
           >
-            Join the waitlist →
+            Register Now →
           </Link>
         </div>
       </section>

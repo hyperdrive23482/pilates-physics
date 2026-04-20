@@ -1,6 +1,19 @@
-import WaitlistForm from '../components/ui/WaitlistForm'
+import { Link } from 'react-router-dom'
 import InteractiveSpringDiagram from '../components/ui/InteractiveSpringDiagram'
 import TestimonialCarousel from '../components/ui/TestimonialCarousel'
+
+const primaryButtonStyle = {
+  display: 'inline-block',
+  padding: '0.875rem 1.75rem',
+  fontSize: '0.95rem',
+  fontWeight: '500',
+  fontFamily: '"DM Sans", sans-serif',
+  background: 'var(--color-accent)',
+  color: '#1C1A17',
+  border: 'none',
+  textDecoration: 'none',
+  cursor: 'pointer',
+}
 
 const testimonials = [
   { src: '/images/homepage/insta-testimonial-1.jpg', alt: 'Testimonial 1' },
@@ -112,7 +125,17 @@ export default function Landing() {
               Join me for a live webinar on May 20th to learn about easy, science-based principles even the most math-averse instructor can grasp.
             </p>
 
-            <WaitlistForm compact />
+            <Link
+              to="/workshops"
+              style={{
+                ...primaryButtonStyle,
+                alignSelf: 'flex-start',
+                padding: '0.65rem 1.25rem',
+                fontSize: '0.85rem',
+              }}
+            >
+              Register Now
+            </Link>
 
             <p
               style={{
@@ -121,7 +144,7 @@ export default function Landing() {
                 margin: 0,
               }}
             >
-              Registration opens soon. Join the waitlist to be first to know. No spam.
+              Live on Wednesday, May 20, 2026. Recording included.
             </p>
           </div>
 
@@ -433,17 +456,7 @@ export default function Landing() {
             </p>
           </div>
 
-          <WaitlistForm compact style={{ width: '100%' }} />
-
-          <p
-            style={{
-              fontSize: '0.78rem',
-              color: 'var(--color-ink-muted)',
-              margin: 0,
-            }}
-          >
-            Registration opens soon. Join the waitlist to be first to know. No spam.
-          </p>
+          <Link to="/workshops" style={primaryButtonStyle}>Register Now</Link>
         </div>
       </section>
 
