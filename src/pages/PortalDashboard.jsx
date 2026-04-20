@@ -38,9 +38,11 @@ export default function PortalDashboard() {
 
   const firstName = user.user_metadata?.first_name || ''
 
-  const upcoming = webinars.filter((w) => w.status === 'upcoming' || w.status === 'live')
-  const completed = webinars.filter((w) => w.status === 'complete')
-  const archived = webinars.filter((w) => w.status === 'archived')
+  const tools = webinars.filter((w) => w.kind === 'tool')
+  const nonTools = webinars.filter((w) => w.kind !== 'tool')
+  const upcoming = nonTools.filter((w) => w.status === 'upcoming' || w.status === 'live')
+  const completed = nonTools.filter((w) => w.status === 'complete')
+  const archived = nonTools.filter((w) => w.status === 'archived')
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
@@ -140,6 +142,29 @@ export default function PortalDashboard() {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+            {/* Tools */}
+            {tools.length > 0 && (
+              <section>
+                <h2
+                  style={{
+                    fontSize: '0.7rem',
+                    fontWeight: '600',
+                    letterSpacing: '0.15em',
+                    textTransform: 'uppercase',
+                    color: 'var(--color-ink-muted)',
+                    marginBottom: '1.25rem',
+                  }}
+                >
+                  Tools
+                </h2>
+                <div className="portal-grid">
+                  {tools.map((w) => (
+                    <WebinarCard key={w.id} webinar={w} linkTo={`/portal/${w.slug}`} />
+                  ))}
+                </div>
+              </section>
+            )}
+
             {/* Upcoming / Live */}
             {upcoming.length > 0 && (
               <section>

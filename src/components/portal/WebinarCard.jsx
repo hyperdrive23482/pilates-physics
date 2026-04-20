@@ -48,7 +48,7 @@ export default function WebinarCard({ webinar, linkTo }) {
         />
       )}
 
-      <StatusBadge status={webinar.status} />
+      <StatusBadge status={webinar.kind === 'tool' ? 'tool' : webinar.status} />
 
       <h3
         style={{
@@ -107,7 +107,11 @@ export default function WebinarCard({ webinar, linkTo }) {
           marginTop: 'auto',
         }}
       >
-        {webinar.status === 'complete' ? 'View Recording' : 'View Details'}
+        {webinar.kind === 'tool'
+          ? 'Open Tool'
+          : webinar.status === 'complete'
+          ? 'View Recording'
+          : 'View Details'}
         <ArrowRight size={14} />
       </div>
     </Link>

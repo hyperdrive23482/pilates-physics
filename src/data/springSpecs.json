@@ -1,0 +1,55 @@
+{
+  "apparatus": "reformer",
+  "maxTravel": 32,
+  "brands": [
+    {
+      "id": "balanced-body",
+      "name": "Balanced Body",
+      "springs": [
+        { "color": "yellow", "label": "Yellow", "tensionLabel": "25%",  "displayColor": "#E8C547", "k": 0.33333, "b": 4 },
+        { "color": "blue",   "label": "Blue",   "tensionLabel": "50%",  "displayColor": "#3E7BC7", "k": 0.66667, "b": 6 },
+        { "color": "red",    "label": "Red",    "tensionLabel": "100%", "displayColor": "#C73E3E", "k": 1.00000, "b": 8 },
+        { "color": "green",  "label": "Green",  "tensionLabel": "125%", "displayColor": "#5FA85E", "k": 1.16667, "b": 10 }
+      ]
+    },
+    {
+      "id": "stott",
+      "name": "Stott",
+      "springs": [
+        { "color": "white", "label": "White", "tensionLabel": "25%",  "displayColor": "#E8E4D8", "k": 0.37800, "b": 2.75 },
+        { "color": "blue",  "label": "Blue",  "tensionLabel": "50%",  "displayColor": "#3E7BC7", "k": 0.62500, "b": 3.5 },
+        { "color": "red",   "label": "Red",   "tensionLabel": "100%", "displayColor": "#C73E3E", "k": 1.25000, "b": 6.75 },
+        { "color": "black", "label": "Black", "tensionLabel": "125%", "displayColor": "#3A3833", "k": 1.56000, "b": 9 }
+      ]
+    },
+    {
+      "id": "align-pilates",
+      "name": "Align Pilates",
+      "springs": [
+        { "color": "yellow", "label": "Yellow", "tensionLabel": "25%",  "displayColor": "#E8C547", "k": 0.46203, "b": 1 },
+        { "color": "blue",   "label": "Blue",   "tensionLabel": "50%",  "displayColor": "#3E7BC7", "k": 0.90712, "b": 4 },
+        { "color": "red",    "label": "Red",    "tensionLabel": "100%", "displayColor": "#C73E3E", "k": 1.21415, "b": 6 },
+        { "color": "green",  "label": "Green",  "tensionLabel": "125%", "displayColor": "#5FA85E", "k": 2.03055, "b": 10 }
+      ]
+    },
+    {
+      "id": "peak-pilates",
+      "name": "Peak Pilates",
+      "springs": [
+        { "color": "green",  "label": "Green",  "tensionLabel": "25%",  "displayColor": "#5FA85E", "k": 0.47222, "b": 4.1 },
+        { "color": "blue",   "label": "Blue",   "tensionLabel": "50%",  "displayColor": "#3E7BC7", "k": 0.72222, "b": 9 },
+        { "color": "yellow", "label": "Yellow", "tensionLabel": "100%", "displayColor": "#E8C547", "k": 0.97222, "b": 13 },
+        { "color": "red",    "label": "Red",    "tensionLabel": "125%", "displayColor": "#C73E3E", "k": 1.16667, "b": 17 }
+      ]
+    },
+    {
+      "id": "basi",
+      "name": "BASI",
+      "springs": [
+        { "color": "yellow", "label": "Yellow", "tensionLabel": "25%",  "displayColor": "#E8C547", "k": 0.42552, "b": 3.3075 },
+        { "color": "blue",   "label": "Blue",   "tensionLabel": "50%",  "displayColor": "#3E7BC7", "k": 0.69428, "b": 4.41 },
+        { "color": "red",    "label": "Red",    "tensionLabel": "100%", "displayColor": "#C73E3E", "k": 1.21498, "b": 6.615 }
+      ]
+    }
+  ]
+}

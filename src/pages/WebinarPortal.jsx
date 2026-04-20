@@ -10,6 +10,7 @@ import StatusBadge from '../components/portal/StatusBadge'
 import ZoomInfo from '../components/portal/ZoomInfo'
 import ContentItem from '../components/portal/ContentItem'
 import QuestionForm from '../components/portal/QuestionForm'
+import ToolHost from '../components/portal/ToolHost'
 
 export default function WebinarPortal() {
   const { slug } = useParams()
@@ -108,8 +109,9 @@ export default function WebinarPortal() {
     )
   }
 
-  const isPreWebinar = webinar.status === 'upcoming' || webinar.status === 'live'
-  const isPostWebinar = webinar.status === 'complete' || webinar.status === 'archived'
+  const isTool = webinar.kind === 'tool'
+  const isPreWebinar = !isTool && (webinar.status === 'upcoming' || webinar.status === 'live')
+  const isPostWebinar = !isTool && (webinar.status === 'complete' || webinar.status === 'archived')
 
   const recordings = content.filter((c) => c.type === 'recording')
   const downloads = content.filter((c) => c.type === 'download' || c.type === 'slide_deck')
@@ -132,7 +134,7 @@ export default function WebinarPortal() {
 
       <main
         style={{
-          maxWidth: '760px',
+          maxWidth: isTool ? '1080px' : '760px',
           margin: '0 auto',
           padding: '5.5rem 2rem 4rem',
         }}
@@ -155,7 +157,7 @@ export default function WebinarPortal() {
 
         {/* Header */}
         <div style={{ marginBottom: '2.5rem' }}>
-          <StatusBadge status={webinar.status} />
+          <StatusBadge status={isTool ? 'tool' : webinar.status} />
           <h1
             style={{
               fontFamily: '"DM Serif Display", serif',
@@ -179,7 +181,7 @@ export default function WebinarPortal() {
               {webinar.subtitle}
             </p>
           )}
-          {date && (
+          {!isTool && date && (
             <p
               style={{
                 fontSize: '0.85rem',
@@ -194,6 +196,9 @@ export default function WebinarPortal() {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          {/* Tool body (replaces the standard webinar sections) */}
+          {isTool && <ToolHost webinar={webinar} />}
+
           {/* Zoom info (pre-webinar only) */}
           {isPreWebinar && <ZoomInfo webinar={webinar} />}
 
@@ -247,7 +252,7 @@ export default function WebinarPortal() {
           )}
 
           {/* Downloads */}
-          {downloads.length > 0 && (
+          {!isTool && downloads.length > 0 && (
             <section>
               <h2
                 style={{
@@ -270,7 +275,7 @@ export default function WebinarPortal() {
           )}
 
           {/* Bonus content & resources */}
-          {bonusAndResources.length > 0 && (
+          {!isTool && bonusAndResources.length > 0 && (
             <section>
               <h2
                 style={{
@@ -296,7 +301,7 @@ export default function WebinarPortal() {
           {isPreWebinar && <QuestionForm webinarId={webinar.id} userId={user.id} />}
 
           {/* Description */}
-          {webinar.description && (
+          {!isTool && webinar.description && (
             <section>
               <h2
                 style={{
