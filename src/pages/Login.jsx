@@ -42,6 +42,19 @@ export default function Login() {
       }}
     >
       <div style={{ maxWidth: '420px', width: '100%' }}>
+        <Link
+          to="/"
+          style={{
+            display: 'inline-block',
+            fontSize: '0.85rem',
+            color: 'var(--color-ink-muted)',
+            textDecoration: 'none',
+            marginBottom: '2rem',
+          }}
+        >
+          ← Back to home
+        </Link>
+
         <p
           style={{
             fontSize: '0.7rem',

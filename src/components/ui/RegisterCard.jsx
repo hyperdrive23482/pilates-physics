@@ -25,7 +25,7 @@ const inputStyle = {
 }
 
 export default function RegisterCard({ webinar }) {
-  const { user } = useEnrollment()
+  const { user, signOut } = useEnrollment()
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
@@ -170,6 +170,22 @@ export default function RegisterCard({ webinar }) {
         <>
           <p style={{ fontSize: '0.9rem', color: 'var(--color-ink-muted)', margin: 0 }}>
             Registering as <strong style={{ color: 'var(--color-ink)' }}>{user.email}</strong>
+            {' · '}
+            <button
+              type="button"
+              onClick={signOut}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                color: 'var(--color-accent)',
+                textDecoration: 'underline',
+                cursor: 'pointer',
+                font: 'inherit',
+              }}
+            >
+              Not you? Log out
+            </button>
           </p>
           <button
             type="button"
