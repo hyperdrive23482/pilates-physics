@@ -258,7 +258,7 @@ export default function PortalDashboard() {
                 fontWeight: '500',
               }}
             >
-              Browse all webinars <ArrowRight size={14} />
+              Browse workshops <ArrowRight size={14} />
             </Link>
           </div>
         )}

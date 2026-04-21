@@ -68,16 +68,6 @@ export default function PortalNav({ user, onSignOut }) {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <Link
-          to="/workshops"
-          style={{
-            fontSize: '0.8rem',
-            color: 'var(--color-ink-muted)',
-            textDecoration: 'none',
-          }}
-        >
-          Browse Workshops
-        </Link>
         <ProfileDropdown user={user} onSignOut={onSignOut} />
       </div>
     </header>

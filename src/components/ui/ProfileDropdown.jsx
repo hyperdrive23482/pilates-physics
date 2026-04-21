@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { User, HelpCircle, CreditCard, LogOut } from 'lucide-react'
+import { User, HelpCircle, LogOut } from 'lucide-react'
 
 export default function ProfileDropdown({ user, onSignOut }) {
   const [open, setOpen] = useState(false)
@@ -25,7 +25,6 @@ export default function ProfileDropdown({ user, onSignOut }) {
   const menuItems = [
     { label: 'Your Profile', icon: User, to: '/profile' },
     { label: 'Help', icon: HelpCircle, to: '/help' },
-    { label: 'Billing', icon: CreditCard, to: '/billing' },
   ]
 
   return (
