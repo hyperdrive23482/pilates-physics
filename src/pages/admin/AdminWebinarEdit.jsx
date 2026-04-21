@@ -3,6 +3,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminWebinar } from '../../hooks/admin/useAllWebinars'
+import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import { supabase } from '../../lib/supabase'
 import AdminNav from '../../components/admin/AdminNav'
 import WebinarForm from '../../components/admin/WebinarForm'
@@ -19,9 +20,26 @@ export default function AdminWebinarEdit() {
   const isNew = !slug
   const { user, signOut } = useEnrollment()
   const { webinar, loading, refetch } = useAdminWebinar(isNew ? null : slug)
+  const { request } = useAdminAPI()
   const navigate = useNavigate()
   const [tab, setTab] = useState('details')
   const [saving, setSaving] = useState(false)
+  const [bonusOptions, setBonusOptions] = useState([])
+  const [backfilling, setBackfilling] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    async function load() {
+      let q = supabase.from('webinars').select('id, title, kind, slug').order('title')
+      if (webinar?.id) q = q.neq('id', webinar.id)
+      const { data, error } = await q
+      if (!cancelled && !error) setBonusOptions(data ?? [])
+    }
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [webinar?.id])
 
   async function save(payload) {
     setSaving(true)
@@ -47,6 +65,35 @@ export default function AdminWebinarEdit() {
       }
     } finally {
       setSaving(false)
+    }
+  }
+
+  async function handleBackfill() {
+    if (!webinar?.id) return
+    const bonusTitle =
+      bonusOptions.find((w) => w.id === webinar.bonus_webinar_id)?.title ?? 'the bonus'
+    const start = new Date(webinar.bonus_starts_at).toLocaleString()
+    const end = new Date(webinar.bonus_ends_at).toLocaleString()
+    if (
+      !window.confirm(
+        `Grant "${bonusTitle}" to everyone who purchased "${webinar.title}" between ${start} and ${end}? This is idempotent.`,
+      )
+    ) {
+      return
+    }
+    setBackfilling(true)
+    try {
+      const result = await request('/api/admin/apply-bonus-backfill', {
+        method: 'POST',
+        body: { webinar_id: webinar.id },
+      })
+      window.alert(
+        `Done. Newly granted: ${result.newly_granted}. Already had it: ${result.already_granted}.`,
+      )
+    } catch (err) {
+      window.alert(`Backfill failed: ${err.message}`)
+    } finally {
+      setBackfilling(false)
     }
   }
 
@@ -121,6 +168,9 @@ export default function AdminWebinarEdit() {
               onSubmit={save}
               submitLabel={isNew ? 'Create webinar' : 'Save changes'}
               busy={saving}
+              webinars={bonusOptions}
+              onBackfill={isNew ? undefined : handleBackfill}
+              backfilling={backfilling}
             />
           )
         ) : null}

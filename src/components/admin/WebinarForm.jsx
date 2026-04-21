@@ -19,7 +19,15 @@ function toLocalInput(iso) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 
-export default function WebinarForm({ initial, onSubmit, submitLabel = 'Save', busy = false }) {
+export default function WebinarForm({
+  initial,
+  onSubmit,
+  submitLabel = 'Save',
+  busy = false,
+  webinars = [],
+  onBackfill,
+  backfilling = false,
+}) {
   const [form, setForm] = useState({
     title: '',
     slug: '',
@@ -35,9 +43,13 @@ export default function WebinarForm({ initial, onSubmit, submitLabel = 'Save', b
     hero_image_url: '',
     kit_tag: '',
     stripe_price_id: '',
+    bonus_webinar_id: '',
+    bonus_starts_at: '',
+    bonus_ends_at: '',
   })
   const [slugTouched, setSlugTouched] = useState(false)
   const [error, setError] = useState(null)
+  const [dirty, setDirty] = useState(false)
 
   useEffect(() => {
     if (!initial) return
@@ -56,11 +68,16 @@ export default function WebinarForm({ initial, onSubmit, submitLabel = 'Save', b
       hero_image_url: initial.hero_image_url ?? '',
       kit_tag: initial.kit_tag ?? '',
       stripe_price_id: initial.stripe_price_id ?? '',
+      bonus_webinar_id: initial.bonus_webinar_id ?? '',
+      bonus_starts_at: toLocalInput(initial.bonus_starts_at),
+      bonus_ends_at: toLocalInput(initial.bonus_ends_at),
     })
     setSlugTouched(true)
+    setDirty(false)
   }, [initial])
 
   function update(field, value) {
+    setDirty(true)
     setForm((f) => {
       const next = { ...f, [field]: value }
       if (field === 'title' && !slugTouched) next.slug = slugify(value)
@@ -73,6 +90,18 @@ export default function WebinarForm({ initial, onSubmit, submitLabel = 'Save', b
     setError(null)
     if (!form.title.trim()) return setError('Title is required')
     if (!form.slug.trim()) return setError('Slug is required')
+
+    const bonusFieldsSet = [form.bonus_webinar_id, form.bonus_starts_at, form.bonus_ends_at].filter(
+      (v) => v !== '' && v != null,
+    ).length
+    if (bonusFieldsSet > 0 && bonusFieldsSet < 3) {
+      return setError('Bonus requires all three fields: tool, start date, and end date')
+    }
+    if (form.bonus_starts_at && form.bonus_ends_at) {
+      if (new Date(form.bonus_ends_at) <= new Date(form.bonus_starts_at)) {
+        return setError('Bonus end date must be after start date')
+      }
+    }
 
     const payload = {
       title: form.title.trim(),
@@ -89,14 +118,22 @@ export default function WebinarForm({ initial, onSubmit, submitLabel = 'Save', b
       hero_image_url: form.hero_image_url.trim() || null,
       kit_tag: form.kit_tag.trim() || null,
       stripe_price_id: form.stripe_price_id.trim() || null,
+      bonus_webinar_id: form.bonus_webinar_id || null,
+      bonus_starts_at: form.bonus_starts_at ? new Date(form.bonus_starts_at).toISOString() : null,
+      bonus_ends_at: form.bonus_ends_at ? new Date(form.bonus_ends_at).toISOString() : null,
     }
 
     try {
       await onSubmit(payload)
+      setDirty(false)
     } catch (err) {
       setError(err.message ?? 'Save failed')
     }
   }
+
+  const bonusComplete =
+    !!form.bonus_webinar_id && !!form.bonus_starts_at && !!form.bonus_ends_at
+  const canBackfill = !!onBackfill && bonusComplete && !dirty && !busy && !backfilling
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -243,6 +280,92 @@ export default function WebinarForm({ initial, onSubmit, submitLabel = 'Save', b
           />
         </Field>
       </Row>
+
+      <details
+        style={{
+          border: '1px solid var(--color-rule)',
+          padding: '1rem 1.25rem',
+          background: 'var(--color-surface)',
+        }}
+      >
+        <summary
+          style={{
+            cursor: 'pointer',
+            fontSize: '0.85rem',
+            fontWeight: 500,
+            color: 'var(--color-ink)',
+            fontFamily: '"DM Sans", sans-serif',
+          }}
+        >
+          Early registration bonus
+        </summary>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+          <Field
+            label="Bonus tool / webinar"
+            hint="Auto-granted to anyone who buys this webinar via Stripe inside the window below"
+          >
+            <select
+              value={form.bonus_webinar_id}
+              onChange={(e) => update('bonus_webinar_id', e.target.value)}
+              style={inputStyle}
+            >
+              <option value="">None</option>
+              {webinars.map((w) => (
+                <option key={w.id} value={w.id}>
+                  {w.title} ({w.kind})
+                </option>
+              ))}
+            </select>
+          </Field>
+          <Row>
+            <Field label="Bonus starts at" hint="Local time">
+              <input
+                type="datetime-local"
+                value={form.bonus_starts_at}
+                onChange={(e) => update('bonus_starts_at', e.target.value)}
+                style={inputStyle}
+              />
+            </Field>
+            <Field label="Bonus ends at" hint="Local time">
+              <input
+                type="datetime-local"
+                value={form.bonus_ends_at}
+                onChange={(e) => update('bonus_ends_at', e.target.value)}
+                style={inputStyle}
+              />
+            </Field>
+          </Row>
+          {onBackfill && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              <button
+                type="button"
+                disabled={!canBackfill}
+                onClick={() => onBackfill()}
+                style={{
+                  alignSelf: 'flex-start',
+                  padding: '0.6rem 1.1rem',
+                  background: 'transparent',
+                  color: 'var(--color-ink)',
+                  border: '1px solid var(--color-rule)',
+                  cursor: canBackfill ? 'pointer' : 'not-allowed',
+                  fontSize: '0.85rem',
+                  fontFamily: '"DM Sans", sans-serif',
+                  opacity: canBackfill ? 1 : 0.5,
+                }}
+              >
+                {backfilling ? 'Backfilling…' : 'Backfill bonus to past buyers'}
+              </button>
+              <span style={{ fontSize: '0.72rem', color: 'var(--color-ink-muted)' }}>
+                {dirty
+                  ? 'Save changes first to enable backfill.'
+                  : !bonusComplete
+                  ? 'Set tool, start, and end before backfilling.'
+                  : 'Grants the bonus to anyone who already purchased inside the window. Idempotent.'}
+              </span>
+            </div>
+          )}
+        </div>
+      </details>
 
       {error && (
         <p style={{ color: '#ff7d7d', fontSize: '0.85rem', margin: 0 }}>{error}</p>

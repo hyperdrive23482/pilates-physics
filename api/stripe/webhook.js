@@ -88,7 +88,7 @@ export default async function handler(req, res) {
     // Look up webinar for kit_tag
     const { data: webinar, error: webErr } = await supabaseAdmin
       .from('webinars')
-      .select('id, kit_tag')
+      .select('id, kit_tag, bonus_webinar_id, bonus_starts_at, bonus_ends_at')
       .eq('id', webinarId)
       .single()
     if (webErr) throw webErr
@@ -150,6 +150,28 @@ export default async function handler(req, res) {
         { onConflict: 'user_id,webinar_id', ignoreDuplicates: true }
       )
     if (entErr) throw entErr
+
+    // ---- Early-registration bonus (non-fatal; backfill API is the safety net) ----
+    if (
+      webinar.bonus_webinar_id &&
+      webinar.bonus_webinar_id !== webinarId &&
+      webinar.bonus_starts_at &&
+      webinar.bonus_ends_at
+    ) {
+      const purchasedAt = new Date(event.created * 1000)
+      if (
+        purchasedAt >= new Date(webinar.bonus_starts_at) &&
+        purchasedAt <= new Date(webinar.bonus_ends_at)
+      ) {
+        const { error: bonusErr } = await supabaseAdmin
+          .from('user_entitlements')
+          .upsert(
+            { user_id: userId, webinar_id: webinar.bonus_webinar_id, source: 'bonus' },
+            { onConflict: 'user_id,webinar_id', ignoreDuplicates: true }
+          )
+        if (bonusErr) console.error('bonus grant failed:', bonusErr)
+      }
+    }
 
     // ---- Magic-link email (non-fatal — entitlement already granted) ----
     // generateLink only mints the token; sending is on us. Skip for branch (a).
