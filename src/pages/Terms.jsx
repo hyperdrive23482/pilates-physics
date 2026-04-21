@@ -100,9 +100,19 @@ export default function Terms() {
       <h2 style={h2Style}>5. Payments &amp; Refunds</h2>
       <p style={pStyle}>
         All prices are listed in US dollars. Payments are processed securely through Stripe.
-        We do not store your credit card information on our servers. Refund eligibility depends
-        on the specific product or service and will be stated at the time of purchase. If no
-        refund policy is stated, all sales are final.
+        We do not store your credit card information on our servers.
+      </p>
+      <p style={pStyle}>
+        <strong>All sales are final.</strong> We do not offer refunds on workshops, courses,
+        recordings, or any other digital products. Once your purchase is complete, you have
+        immediate access to the associated materials and scheduled sessions, and no refund
+        will be issued for any reason — including inability to attend a live session, change
+        of mind, or failure to use the purchased content. Recordings of live sessions are
+        made available to all registrants, so access is not contingent on attending live.
+      </p>
+      <p style={pStyle}>
+        If you experience a technical issue that prevents you from accessing purchased
+        content, please contact us and we will work with you to resolve it.
       </p>
 
       <h2 style={h2Style}>6. Disclaimer of Warranties</h2>

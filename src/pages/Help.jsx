@@ -130,14 +130,6 @@ export default function Help() {
         sessions and recordings once they're posted.
       </p>
 
-      <h3 style={h3Style}>Can I get a refund?</h3>
-      <p style={pStyle}>
-        Refund eligibility depends on the specific workshop or product and is stated at the
-        time of purchase. See section 5 of our{' '}
-        <Link to="/terms" style={{ color: 'var(--color-accent)' }}>Terms &amp; Conditions</Link>{' '}
-        for the full policy, or reach out below with your order details.
-      </p>
-
       <h3 style={h3Style}>I'm having trouble logging in.</h3>
       <p style={pStyle}>
         Try the{' '}
@@ -157,6 +149,17 @@ export default function Help() {
       <p style={pStyle}>
         Mentorship slots are limited and open periodically. Mention "mentorship" in your
         message below and we'll let you know when the next cohort opens.
+      </p>
+
+      <h3 style={h3Style}>Can I get a refund?</h3>
+      <p style={pStyle}>
+        All sales are final — we don't offer refunds on workshops, courses, or recordings.
+        Because recordings are posted to your portal after each live session, your access
+        doesn't depend on attending live. If a technical issue is blocking you from
+        accessing purchased content, message us below and we'll sort it out. See section 5
+        of our{' '}
+        <Link to="/terms" style={{ color: 'var(--color-accent)' }}>Terms &amp; Conditions</Link>{' '}
+        for the full policy.
       </p>
 
       <h2 style={h2Style}>Send a message</h2>
