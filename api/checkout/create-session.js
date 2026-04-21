@@ -62,6 +62,7 @@ export default async function handler(req, res) {
       mode: 'payment',
       line_items: [{ price: webinar.stripe_price_id, quantity: 1 }],
       customer_email: resolvedEmail,
+      allow_promotion_codes: true,
       success_url: `${origin}/workshops/${slug}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/workshops/${slug}`,
       metadata: {
