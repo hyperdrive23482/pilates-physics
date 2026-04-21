@@ -81,7 +81,7 @@ export async function sendContactEmail({ name, email, message }) {
     subject: `Contact form: ${name}`,
     html,
     text,
-    reply_to: email,
+    replyTo: email,
   })
   if (error) throw new Error(`Resend send failed: ${error.message ?? JSON.stringify(error)}`)
   return data
@@ -94,14 +94,14 @@ export async function sendContactAcknowledgement({ to, name, message }) {
   const html = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1C1A17; line-height: 1.6; max-width: 560px;">
       <p>Hi ${safeName},</p>
-      <p>Thanks for reaching out — your message came through, and Kaleen will reply within a few days.</p>
+      <p>Thanks for reaching out — your message came through, and I will reply within a few days.</p>
       <p style="margin: 1.5rem 0 0.5rem; font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 0.08em;">Your message</p>
       <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeMessage}</div>
-      <p style="margin-top: 1.5rem;">— Pilates Physics</p>
+      <p style="margin-top: 1.5rem;">— Kaleen</p>
     </div>
   `.trim()
 
-  const text = `Hi ${name},\n\nThanks for reaching out — your message came through, and Kaleen will reply within a few days.\n\nYour message:\n${message}\n\n— Pilates Physics`
+  const text = `Hi ${name},\n\nThanks for reaching out — your message came through, and I will reply within a few days.\n\nYour message:\n${message}\n\n— Kaleen`
 
   const { data, error } = await getResend().emails.send({
     from: FROM,
