@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { useSpring } from 'framer-motion'
-import { Plus, X } from 'lucide-react'
+import { Plus, X, ChevronDown } from 'lucide-react'
 import springSpecs from '../../data/springSpecs.json'
 import { expandSelections, combinedConstants, selectionKey } from '../../lib/springMath'
 
@@ -8,8 +8,8 @@ import { expandSelections, combinedConstants, selectionKey } from '../../lib/spr
 const MAX_TRAVEL = springSpecs.maxTravel // inches
 const INITIAL_POS = 1 / 3
 const VB_W = 560
-const VB_H = 360
-const GRAPH = { left: 64, right: 24, top: 28, bottom: 84 }
+const VB_H = 336
+const GRAPH = { left: 64, right: 24, top: 28, bottom: 60 }
 const AREA = {
   x: GRAPH.left,
   y: GRAPH.top,
@@ -49,7 +49,7 @@ function linePath(kTotal, bTotal, maxForce) {
 // ----- sub: Mode toggle -----
 function ModeToggle({ mode, onChange }) {
   const options = [
-    { value: 'add', label: 'Add' },
+    { value: 'sum', label: 'Sum' },
     { value: 'compare', label: 'Compare' },
   ]
   return (
@@ -149,7 +149,7 @@ function SpringSelectorRow({ selection, onChange, onRemove }) {
       >
         {brand.springs.map((s) => (
           <option key={s.color} value={s.color}>
-            {s.label} ({s.tensionLabel})
+            {s.tensionLabel ? `${s.label} (${s.tensionLabel})` : s.label}
           </option>
         ))}
       </select>
@@ -281,10 +281,10 @@ function SpringSelectorPanel({ selections, setSelections, mode, setMode }) {
 }
 
 // ----- sub: Force graph -----
-function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove, onPointerUp, svgRef, hasInteracted }) {
+function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove, onPointerUp, svgRef }) {
   // Compute lines based on mode
   const lines = useMemo(() => {
-    if (mode === 'add') {
+    if (mode === 'sum') {
       if (selections.length === 0) return []
       const allSprings = expandSelections(selections)
       const { k, b } = combinedConstants(allSprings)
@@ -299,15 +299,26 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
         },
       ]
     }
-    // compare mode: one line per selection (qty baked into the line by multiplying constants)
-    return selections.map((sel) => ({
-      id: selectionKey(sel),
-      label: `${sel.spring.label}${sel.quantity > 1 ? ` ×${sel.quantity}` : ''}`,
-      color: sel.spring.displayColor,
-      strokeColor: sel.spring.displayColor,
-      k: sel.spring.k * sel.quantity,
-      b: sel.spring.b * sel.quantity,
-    }))
+    // compare mode: one line per UNIQUE spring type (brand+color), quantity ignored.
+    // Each line shows what ONE of that spring does — use Sum mode to see totals.
+    const seen = new Set()
+    const out = []
+    for (const sel of selections) {
+      const key = selectionKey(sel)
+      if (seen.has(key)) continue
+      seen.add(key)
+      const brand = springSpecs.brands.find((b) => b.id === sel.brandId)
+      const prefix = brand?.shortName || brand?.name || ''
+      out.push({
+        id: key,
+        label: `${prefix} ${sel.spring.label}`.trim(),
+        color: sel.spring.displayColor,
+        strokeColor: sel.spring.displayColor,
+        k: sel.spring.k,
+        b: sel.spring.b,
+      })
+    }
+    return out
   }, [selections, mode])
 
   // Auto-scale y-axis
@@ -435,22 +446,21 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
       {lines.map((ln, i) => {
         const force = ln.k * cursorExtension + ln.b
         const pt = toGraph(cursorExtension, force, maxForce)
-        // In compare mode with several lines, stack readouts above the graph to avoid overlap
-        const readoutY =
-          mode === 'compare' && lines.length > 1
-            ? AREA.y - 8 + i * 14
-            : pt.y - 12
-        const readoutX =
-          mode === 'compare' && lines.length > 1
-            ? AREA.x + AREA.w - 8
-            : Math.min(pt.x + 10, AREA.x + AREA.w - 80)
+        // Multi-line readouts stack at top-left, left-aligned.
+        // Single-line readout floats above the dot, right-anchored just LEFT of
+        // the cursor line so it never sits on top of the curve.
+        const isStacked = lines.length > 1
+        const readoutY = isStacked ? AREA.y + 14 + i * 16 : Math.max(AREA.y + 14, pt.y - 22)
+        const readoutX = isStacked
+          ? AREA.x + 8
+          : Math.max(AREA.x + 110, pt.x - 8)
         return (
           <g key={`dot-${ln.id}`}>
             <circle cx={pt.x} cy={pt.y} r="4.5" fill={ln.strokeColor} />
             <text
               x={readoutX}
               y={readoutY}
-              textAnchor={mode === 'compare' && lines.length > 1 ? 'end' : 'start'}
+              textAnchor={isStacked ? 'start' : 'end'}
               fill={ln.strokeColor}
               fontSize="11"
               fontFamily="DM Sans, sans-serif"
@@ -474,21 +484,6 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
           fontWeight="600"
         >
           {cursorExtension.toFixed(1)}&quot; extension
-        </text>
-      )}
-
-      {/* Hint */}
-      {lines.length > 0 && !hasInteracted && (
-        <text
-          x={AREA.x + AREA.w / 2}
-          y={AREA.y + AREA.h / 2}
-          textAnchor="middle"
-          fill="#888780"
-          fontSize="11"
-          fontFamily="DM Sans, sans-serif"
-          style={{ opacity: 0.8 }}
-        >
-          drag anywhere on the graph to read the load
         </text>
       )}
 
@@ -521,68 +516,247 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
   )
 }
 
-// ----- sub: Animated coil row -----
+// ----- sub: Animated coil -----
+// One representative coil for all selected springs (they all stretch together).
+// Shares the graph's viewBox width so its right end aligns with the cursor X.
 function SpringCoils({ selections, pos }) {
   if (selections.length === 0) return null
-  const width = 420
-  const height = 40 + selections.length * 36
-  const coilStart = 40
-  const coilEndMax = width - 16
+  const height = 48
+  const WALL_X = 24
+  const y = 24
+  const endX = AREA.x + pos * AREA.w
+  const coilCount = 20
+  const amp = 8 * (1 - pos * 0.45)
+
+  let d = `M${WALL_X},${y}`
+  for (let c = 1; c <= coilCount * 2; c++) {
+    const px = WALL_X + ((endX - WALL_X) * c) / (coilCount * 2)
+    const py = y + (c % 2 === 0 ? -amp : amp)
+    d += ` L${px.toFixed(1)},${py.toFixed(1)}`
+  }
+  d += ` L${endX.toFixed(1)},${y}`
 
   return (
     <svg
-      viewBox={`0 0 ${width} ${height}`}
+      viewBox={`0 0 ${VB_W} ${height}`}
       xmlns="http://www.w3.org/2000/svg"
-      style={{ width: '100%', maxWidth: `${width}px`, display: 'block', marginTop: '1.25rem' }}
+      style={{ width: '100%', display: 'block', marginTop: '0.625rem' }}
       aria-hidden="true"
     >
-      {selections.map((sel, i) => {
-        const y = 24 + i * 36
-        const stretch = 0.35 + pos * 0.65
-        const endX = coilStart + (coilEndMax - coilStart) * stretch
-        const coils = 18
-        const amp = 7 * (1 - pos * 0.45)
-        let d = `M${coilStart},${y}`
-        for (let c = 1; c <= coils * 2; c++) {
-          const px = coilStart + ((endX - coilStart) * c) / (coils * 2)
-          const py = y + (c % 2 === 0 ? -amp : amp)
-          d += ` L${px.toFixed(1)},${py.toFixed(1)}`
-        }
-        d += ` L${endX.toFixed(1)},${y}`
-        return (
-          <g key={`${sel.brandId}-${sel.spring.color}-${i}`}>
-            {/* wall anchor */}
-            <line x1={coilStart} y1={y - 12} x2={coilStart} y2={y + 12} stroke="#888780" strokeWidth="2" />
-            {/* coil */}
-            <path d={d} stroke={sel.spring.displayColor} strokeWidth="1.5" fill="none" strokeLinejoin="round" />
-            {/* end cap */}
-            <circle cx={endX} cy={y} r="3" fill={sel.spring.displayColor} />
-            {/* label */}
-            <text
-              x={coilStart - 8}
-              y={y + 3}
-              textAnchor="end"
-              fill="#888780"
-              fontSize="10"
-              fontFamily="DM Sans, sans-serif"
-            >
-              {sel.spring.label}
-              {sel.quantity > 1 ? ` ×${sel.quantity}` : ''}
-            </text>
-          </g>
-        )
-      })}
+      {/* wall anchor (off-graph, left side) */}
+      <line x1={WALL_X} y1={y - 14} x2={WALL_X} y2={y + 14} stroke="#888780" strokeWidth="2" />
+      {/* coil */}
+      <path d={d} stroke="#EF9F27" strokeWidth="1.75" fill="none" strokeLinejoin="round" />
+      {/* end cap (sits at cursor X) */}
+      <circle cx={endX} cy={y} r="3.5" fill="#EF9F27" />
     </svg>
+  )
+}
+
+// ----- sub: FAQ accordion -----
+const FAQ_ITEMS = [
+  {
+    id: 'data-source',
+    q: 'Where does this spring data come from?',
+    a: (
+      <>
+        <p style={{ margin: '0 0 0.75rem' }}>
+          Spring data was compiled from publicly available manufacturer
+          specifications with the exception of Gratz, which was a measurement of
+          two new Gratz Reformer springs done by Kaleen.
+        </p>
+        <p style={{ margin: 0 }}>
+          Brands currently included: Balanced Body, Stott, Align Pilates, Peak
+          Pilates, BASI, and Gratz.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'basic-equation',
+    q: 'What is the basic spring force equation?',
+    a: (
+      <>
+        <p style={{ margin: '0 0 0.75rem' }}>
+          A linear spring follows{' '}
+          <code style={{ fontWeight: 600 }}>F(x) = k · x + b</code>, where:
+        </p>
+        <ul style={{ margin: '0 0 0.75rem', paddingLeft: '1.25rem' }}>
+          <li><code>F</code> — force in pounds</li>
+          <li><code>x</code> — extension in inches (how far the spring is stretched from rest)</li>
+          <li><code>k</code> — spring stiffness (how much heavier the load gets per additional inch)</li>
+          <li><code>b</code> — preload (the load already on the spring at zero extension)</li>
+        </ul>
+        <p style={{ margin: 0 }}>
+          <strong>Your takeaway:</strong> Springs get heavier the more they stretch.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'represent-my-springs',
+    q: 'Does this information represent my springs?',
+    a: (
+      <>
+        <p style={{ margin: '0 0 0.75rem' }}>
+          Probably very close, but not exactly. Real springs vary based on age and
+          use plus environmental conditions.
+        </p>
+        <p style={{ margin: 0 }}>
+          Use this as a teaching reference and a starting point — not a calibrated
+          load measurement that&apos;s exactly representative of your setup.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'multiple-springs',
+    q: 'What is the formula for finding the load of multiple springs at once?',
+    a: (
+      <p style={{ margin: 0 }}>
+        Simply add the total weight of each spring at that extension. For example,
+        two reds and a green Balanced Body springs at 10″ extension are 18 lbs,
+        18 lbs, and 21.7 lbs. So the total weight of all those springs is{' '}
+        18 + 18 + 21.7 = 57.7 lbs.
+      </p>
+    ),
+  },
+  {
+    id: 'modes',
+    q: "What's the difference between Sum and Compare modes?",
+    a: (
+      <ul style={{ margin: 0, paddingLeft: '1.25rem' }}>
+        <li>
+          <strong>Sum</strong> — sums every selected spring (with quantity) into one
+          combined load curve. Use this to plan a real Reformer setup.
+        </li>
+        <li style={{ marginTop: '0.5rem' }}>
+          <strong>Compare</strong> — shows each unique spring as its own line
+          (quantity is ignored). Use this to see how brands or colors stack up
+          against each other.
+        </li>
+      </ul>
+    ),
+  },
+  {
+    id: 'apparatus',
+    q: 'What apparatus are these springs for?',
+    a: (
+      <p style={{ margin: 0 }}>
+        All values currently apply to <strong>Reformer</strong> springs only.
+        Cadillac, Tower, Wunda Chair, Trap Table, and arm springs use different
+        stiffness profiles and aren&apos;t covered here yet.
+      </p>
+    ),
+  },
+  {
+    id: 'preload',
+    q: 'Why does the force start above zero?',
+    a: (
+      <p style={{ margin: 0 }}>
+        At zero extension (springs at rest) each spring has some level of
+        pretension. This is the force it takes to initially open the spring.
+      </p>
+    ),
+  },
+]
+
+function FAQItem({ item, isOpen, onToggle }) {
+  return (
+    <div style={{ borderBottom: '1px solid var(--color-rule)' }}>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '1rem',
+          padding: '1rem 0',
+          background: 'transparent',
+          border: 'none',
+          cursor: 'pointer',
+          textAlign: 'left',
+          color: 'var(--color-ink)',
+          fontFamily: '"DM Sans", sans-serif',
+          fontSize: '0.95rem',
+          fontWeight: '500',
+        }}
+      >
+        <span>{item.q}</span>
+        <ChevronDown
+          size={16}
+          style={{
+            color: 'var(--color-ink-muted)',
+            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.2s',
+            flexShrink: 0,
+          }}
+        />
+      </button>
+      {isOpen && (
+        <div
+          style={{
+            padding: '0 0 1.25rem',
+            color: 'var(--color-ink-muted)',
+            fontFamily: '"DM Sans", sans-serif',
+            fontSize: '0.9rem',
+            lineHeight: '1.65',
+          }}
+        >
+          {item.a}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function FAQ() {
+  const [openIds, setOpenIds] = useState(new Set())
+  function toggle(id) {
+    setOpenIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+  return (
+    <section className="spring-calc-faq">
+      <h2
+        style={{
+          fontSize: '0.7rem',
+          fontWeight: '600',
+          letterSpacing: '0.15em',
+          textTransform: 'uppercase',
+          color: 'var(--color-ink-muted)',
+          margin: '0 0 1rem',
+          fontFamily: '"DM Sans", sans-serif',
+        }}
+      >
+        Frequently Asked Questions
+      </h2>
+      <div style={{ borderTop: '1px solid var(--color-rule)' }}>
+        {FAQ_ITEMS.map((item) => (
+          <FAQItem
+            key={item.id}
+            item={item}
+            isOpen={openIds.has(item.id)}
+            onToggle={() => toggle(item.id)}
+          />
+        ))}
+      </div>
+    </section>
   )
 }
 
 // ----- main -----
 export default function SpringLoadCalculator() {
   const svgRef = useRef(null)
-  const [selections, setSelections] = useState(() => [
-    { brandId: 'balanced-body', spring: springSpecs.brands[0].springs[2], quantity: 1 },
-  ])
-  const [mode, setMode] = useState('add')
+  const [selections, setSelections] = useState([])
+  const [mode, setMode] = useState('sum')
   const [isDragging, setIsDragging] = useState(false)
   const [hasInteracted, setHasInteracted] = useState(false)
 
@@ -626,56 +800,76 @@ export default function SpringLoadCalculator() {
 
   return (
     <div className="spring-calc-root">
-      <div className="spring-calc-grid">
-        <aside className="spring-calc-panel">
-          <SpringSelectorPanel
-            selections={selections}
-            setSelections={setSelections}
-            mode={mode}
-            setMode={setMode}
-          />
-        </aside>
+      <section className="spring-calc-graph">
+        <p
+          className="spring-calc-hint"
+          style={{
+            fontSize: '0.75rem',
+            color: 'var(--color-ink-muted)',
+            fontFamily: '"DM Sans", sans-serif',
+            margin: '0 0 0.75rem',
+            minHeight: '1.1em',
+            textAlign: 'center',
+            /* Offset to match the SVG graph grid (AREA.x=64, right=24, VB_W=560) */
+            paddingLeft: `${(64 / 560) * 100}%`,
+            paddingRight: `${(24 / 560) * 100}%`,
+            opacity: selections.length > 0 && !hasInteracted ? 1 : 0,
+            transition: 'opacity 0.3s',
+          }}
+        >
+          ← drag anywhere on the graph to read the load →
+        </p>
+        <SpringForceGraph
+          selections={selections}
+          mode={mode}
+          pos={pos}
+          svgRef={svgRef}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+        />
+        <SpringCoils selections={selections} pos={pos} />
+      </section>
 
-        <section className="spring-calc-graph">
-          <SpringForceGraph
-            selections={selections}
-            mode={mode}
-            pos={pos}
-            svgRef={svgRef}
-            hasInteracted={hasInteracted}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-          />
-          <SpringCoils selections={selections} pos={pos} />
-        </section>
-      </div>
+      <aside className="spring-calc-panel">
+        <SpringSelectorPanel
+          selections={selections}
+          setSelections={setSelections}
+          mode={mode}
+          setMode={setMode}
+        />
+      </aside>
+
+      <FAQ />
 
       <style>{`
         .spring-calc-root {
           width: 100%;
-        }
-        .spring-calc-grid {
-          display: grid;
-          grid-template-columns: 340px 1fr;
+          display: flex;
+          flex-direction: column;
           gap: 2rem;
-          align-items: start;
-        }
-        .spring-calc-panel {
-          min-width: 0;
         }
         .spring-calc-graph {
-          min-width: 0;
           background: var(--color-surface);
           border: 1px solid var(--color-rule);
           padding: 1.25rem;
           border-radius: 2px;
         }
-        @media (max-width: 860px) {
-          .spring-calc-grid {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-          }
+        .spring-calc-panel {
+          width: 100%;
+          max-width: 720px;
+        }
+        .spring-calc-faq {
+          width: 100%;
+          max-width: 720px;
+          margin-top: 1rem;
+        }
+        .spring-calc-faq code {
+          font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+          font-size: 0.85em;
+          background: var(--color-surface);
+          padding: 0.05em 0.3em;
+          border-radius: 2px;
         }
       `}</style>
     </div>
