@@ -29,6 +29,7 @@ import AuthCallback from './pages/AuthCallback'
 import Profile from './pages/Profile'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
+import Help from './pages/Help'
 import SubscriptionConfirmed from './pages/SubscriptionConfirmed'
 import RegistrationSuccess from './pages/RegistrationSuccess'
 import AdminGate from './components/admin/AdminGate'
@@ -151,6 +152,14 @@ export default function App() {
           element={
             <PageWrapper>
               <Privacy />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/help"
+          element={
+            <PageWrapper>
+              <Help />
             </PageWrapper>
           }
         />
