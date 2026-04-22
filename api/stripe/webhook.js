@@ -2,7 +2,7 @@ import crypto from 'node:crypto'
 import { stripe } from '../_lib/stripe.js'
 import { supabaseAdmin } from '../_lib/supabase-admin.js'
 import { tagSubscriber } from '../_lib/kit.js'
-import { sendAuthEmail } from '../_lib/resend.js'
+import { sendAuthEmail, sendPurchaseNotification } from '../_lib/resend.js'
 
 // Vercel pure Node functions don't have the Next.js bodyParser flag —
 // we build the raw body from the stream ourselves for signature verification.
@@ -88,7 +88,7 @@ export default async function handler(req, res) {
     // Look up webinar for kit_tag
     const { data: webinar, error: webErr } = await supabaseAdmin
       .from('webinars')
-      .select('id, kit_tag, bonus_webinar_id, bonus_starts_at, bonus_ends_at')
+      .select('id, title, kit_tag, bonus_webinar_id, bonus_starts_at, bonus_ends_at')
       .eq('id', webinarId)
       .single()
     if (webErr) throw webErr
@@ -171,6 +171,21 @@ export default async function handler(req, res) {
           )
         if (bonusErr) console.error('bonus grant failed:', bonusErr)
       }
+    }
+
+    // ---- Owner notification (non-fatal — observability only) ----
+    try {
+      await sendPurchaseNotification({
+        email,
+        firstName,
+        lastName,
+        webinarTitle: webinar.title,
+        amountCents: session.amount_total,
+        userState,
+        sessionId: session.id,
+      })
+    } catch (err) {
+      console.error('Purchase notification send failed:', err)
     }
 
     // ---- Magic-link email (non-fatal — entitlement already granted) ----
