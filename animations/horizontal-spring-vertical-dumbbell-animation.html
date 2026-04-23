@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wall Spring vs. Hanging Dumbbell — Load at Hand — Pilates Physics</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --border: #2a2a2a;
+    --text: #e8e4dc;
+    --muted: #6b6660;
+    --accent-spring: #c8a96e;
+    --accent-constant: #6e9ec8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 400;
+    color: #EF9F27;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  h1 em { font-style: italic; color: var(--accent-spring); }
+  h1 em.constant { color: var(--accent-constant); }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 28px;
+    max-width: 640px;
+    line-height: 1.65;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .graph-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    padding: 20px 48px 12px;
+  }
+
+  .graph-wrap-mid {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-bottom: none;
+    padding: 20px 48px 12px;
+  }
+
+  .arm-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 16px 24px 20px;
+  }
+
+  .arm-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .arm-cell {
+    flex: 1 1 340px;
+    min-width: 300px;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .arm-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  canvas { width: 100%; height: auto; display: block; }
+
+  .controls {
+    display: flex;
+    gap: 14px;
+    margin-top: 28px;
+    justify-content: center;
+  }
+
+  button {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 12px 32px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  button:hover { border-color: var(--accent-spring); color: var(--accent-spring); }
+
+  button.primary {
+    background: var(--accent-spring);
+    border-color: var(--accent-spring);
+    color: #0e0e0e;
+    font-weight: 500;
+  }
+
+  button.primary:hover { background: #d4b87a; }
+</style>
+</head>
+<body>
+
+<h1>Wall <em>Spring</em> vs. Hanging <em class="constant">Dumbbell</em> — Load at Hand</h1>
+<p class="subtitle">Left: humerus horizontal, spring anchored on a wall in front of the shoulder. Right: humerus vertical, 20 lb dumbbell hangs from the fist. Same 100° of elbow flexion drives both.</p>
+
+<div class="stage">
+  <div class="graph-wrap">
+    <canvas id="graph-weight" width="780" height="300"></canvas>
+  </div>
+  <div class="graph-wrap-mid">
+    <canvas id="graph-torque" width="780" height="300"></canvas>
+  </div>
+  <div class="arm-wrap">
+    <div class="arm-row">
+      <div class="arm-cell">
+        <div class="arm-label">horizontal humerus · wall spring</div>
+        <canvas id="arm-spring" width="380" height="360"></canvas>
+      </div>
+      <div class="arm-cell">
+        <div class="arm-label">vertical humerus · dumbbell</div>
+        <canvas id="arm-dumbbell" width="380" height="360"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="primary" id="btn-play">Play</button>
+    <button id="btn-reset">Reset</button>
+  </div>
+</div>
+
+<script>
+  // --- Canvas refs ---
+  const SAC = document.getElementById('arm-spring');
+  const sac = SAC.getContext('2d');
+  const DAC = document.getElementById('arm-dumbbell');
+  const dac = DAC.getContext('2d');
+  const GC  = document.getElementById('graph-weight');
+  const gc  = GC.getContext('2d');
+  const TC  = document.getElementById('graph-torque');
+  const tc  = TC.getContext('2d');
+
+  const SAW = 380, SAH = 360;
+  const DAW = 380, DAH = 360;
+  const GW  = 780, GH  = 300;
+  const TW  = 780, TH  = 300;
+
+  // --- Colors ---
+  const SPRING_C = '#c8a96e';
+  const CONST_C  = '#6e9ec8';
+  const SPRING_F = 'rgba(200,169,110,0.2)';
+  const CONST_F  = 'rgba(110,158,200,0.14)';
+  const GRID_C   = 'rgba(255,255,255,0.045)';
+  const MUTED    = '#6b6660';
+  const ARM_C    = '#cfc9be';
+
+  // --- Physics constants ---
+  const HUMERUS   = 8;                       // inches, elbow → shoulder
+  const FOREARM   = 12;                      // inches, elbow → fist
+  const WEIGHT    = 20;                      // lbs, dumbbell
+  const THETA_MAX = 100 * Math.PI / 180;     // 100° of flexion
+
+  // Spring geometry: wall anchor ~3 ft in front of the fist (arm fully extended),
+  // dropped 6" below elbow height so the spring is already at an angle at rest.
+  const WALL_X = 56;   // inches forward of shoulder (= HUMERUS + FOREARM + 36)
+  const WALL_Y = -6;   // 6" below elbow/shoulder level
+  // Natural length = fist→anchor distance at theta=0, so the spring starts at 0 stretch.
+  const L0     = Math.hypot(WALL_X - (HUMERUS + FOREARM), WALL_Y);
+  const K_SPR  = 1.2;  // spring constant (lbs / inch)
+
+  // --- Geometry helpers ---
+  // Spring model: shoulder at world (0,0), humerus horizontal +x, elbow at (HUMERUS, 0).
+  // Theta = flexion angle of forearm above humerus. Theta=0 → fist at (HUMERUS+FOREARM, 0).
+  function fistSpring(theta) {
+    return {
+      x: HUMERUS + FOREARM * Math.cos(theta),
+      y: FOREARM * Math.sin(theta)
+    };
+  }
+  function springDist(theta) {
+    const f = fistSpring(theta);
+    return Math.hypot(WALL_X - f.x, WALL_Y - f.y);
+  }
+  function springExt(theta) {
+    return Math.max(0, springDist(theta) - L0);
+  }
+  function springForceMag(theta) {
+    return K_SPR * springExt(theta);
+  }
+
+  // Dumbbell model: elbow at world (0,0), humerus vertical +y, shoulder at (0, HUMERUS).
+  // Theta = flexion from hanging-down. Theta=0 → fist at (0, -FOREARM).
+  function fistDumbbell(theta) {
+    return {
+      x: FOREARM * Math.sin(theta),
+      y: -FOREARM * Math.cos(theta)
+    };
+  }
+  function dumbbellForceMag() {
+    return WEIGHT;
+  }
+
+  // Torque magnitude about the elbow (in·lb) — |r × F| where r is elbow→fist.
+  function springTorque(theta) {
+    const f = fistSpring(theta);
+    const rx = f.x - HUMERUS;   // elbow at (HUMERUS, 0)
+    const ry = f.y;
+    const dx = WALL_X - f.x;
+    const dy = WALL_Y - f.y;
+    const len = Math.hypot(dx, dy);
+    if (len < 1e-9) return 0;
+    const F = springForceMag(theta);
+    const Fx = F * dx / len;
+    const Fy = F * dy / len;
+    return Math.abs(rx * Fy - ry * Fx);
+  }
+  function dumbbellTorque(theta) {
+    // Gravity (0, -WEIGHT) on fist at (FOREARM·sin θ, -FOREARM·cos θ) about elbow at origin.
+    // |r × F| = WEIGHT · FOREARM · sin(θ).
+    return Math.abs(WEIGHT * FOREARM * Math.sin(theta));
+  }
+
+  // --- Graph layout ---
+  const gP = { left: 80, right: 40, top: 28, bottom: 62 };
+  const gI = {
+    x: gP.left, y: gP.top,
+    w: GW - gP.left - gP.right,
+    h: GH - gP.top - gP.bottom
+  };
+  const maxF = 25;
+  const FLEX_MAX_DEG = 100;
+
+  function thetaToGraphX(theta) {
+    return gI.x + (theta / THETA_MAX) * gI.w;
+  }
+  function forceToGraphY(f) {
+    return gI.y + gI.h - (Math.min(f, maxF) / maxF) * gI.h;
+  }
+
+  // Torque graph layout (same x-axis as weight graph; wider left pad for in·lb labels).
+  const tP = { left: 90, right: 40, top: 28, bottom: 62 };
+  const tI = {
+    x: tP.left, y: tP.top,
+    w: TW - tP.left - tP.right,
+    h: TH - tP.top - tP.bottom
+  };
+  const maxT = 250;   // in·lb (dumbbell peak = WEIGHT·FOREARM = 240)
+
+  function thetaToTorqueX(theta) {
+    return tI.x + (theta / THETA_MAX) * tI.w;
+  }
+  function torqueToGraphY(v) {
+    return tI.y + tI.h - (Math.min(v, maxT) / maxT) * tI.h;
+  }
+
+  // --- Animation state ---
+  let t = 0, phase = 0, rep = 0;
+  let animating = false;
+  let rafId = null, lastTime = null;
+  const PHASE_DUR = 2600;
+  const MAX_REPS  = 2;
+
+  function currentTheta() {
+    const u = phase === 0 ? t : 1 - t;
+    return u * THETA_MAX;
+  }
+
+  // --- Shared spring-coil drawing ---
+  function drawSpringCoil(ctx, x1, y1, x2, y2) {
+    const coils = 14, amp = 5;
+    const dx = x2 - x1, dy = y2 - y1;
+    const len = Math.hypot(dx, dy);
+    if (len < 1) return;
+    const ux = dx / len, uy = dy / len;
+    const px = -uy, py = ux;
+    ctx.strokeStyle = SPRING_C;
+    ctx.lineWidth = 1.5;
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    const steps = coils * 2;
+    for (let i = 0; i <= steps; i++) {
+      const f = i / steps;
+      const along = f * len;
+      const side = (i % 2 === 0 ? -amp : amp);
+      ctx.lineTo(x1 + ux * along + px * side, y1 + uy * along + py * side);
+    }
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
+
+  // ============================================================
+  // Spring arm (horizontal humerus)
+  // ============================================================
+  const S_PX_PER_IN = 5;               // halved so the 56" wall-span fits the canvas
+  const S_ELBOW = { x: 90, y: 220 };   // canvas pixel of the elbow
+  // World (0,0) = shoulder, world (HUMERUS, 0) = elbow — shift so the elbow lands on S_ELBOW.
+  function sToPx(wx, wy) {
+    return {
+      x: S_ELBOW.x + (wx - HUMERUS) * S_PX_PER_IN,
+      y: S_ELBOW.y - wy * S_PX_PER_IN
+    };
+  }
+
+  function drawArmSpring(theta) {
+    sac.clearRect(0, 0, SAW, SAH);
+
+    const wallPx = sToPx(WALL_X, WALL_Y);
+    const wallTop = 40;
+    const wallBot = SAH - 30;
+
+    // Wall face (solid vertical line)
+    sac.strokeStyle = '#4a4a4a';
+    sac.lineWidth = 2;
+    sac.beginPath();
+    sac.moveTo(wallPx.x, wallTop);
+    sac.lineTo(wallPx.x, wallBot);
+    sac.stroke();
+    // Hatching on the wall-side (right of the line) indicating solid material
+    sac.strokeStyle = '#2a2a2a';
+    sac.lineWidth = 1;
+    for (let y = wallTop; y <= wallBot; y += 8) {
+      sac.beginPath();
+      sac.moveTo(wallPx.x, y);
+      sac.lineTo(wallPx.x + 8, y - 6);
+      sac.stroke();
+    }
+
+    // Anchor bracket on the wall at shoulder height
+    sac.fillStyle = '#3a3a3a';
+    sac.strokeStyle = '#555';
+    sac.lineWidth = 1.2;
+    sac.beginPath();
+    sac.rect(wallPx.x - 8, wallPx.y - 4, 8, 8);
+    sac.fill();
+    sac.stroke();
+
+    // Fist position
+    const fist = fistSpring(theta);
+    const fistPx = sToPx(fist.x, fist.y);
+
+    // Spring from fist to wall anchor
+    drawSpringCoil(sac, fistPx.x, fistPx.y, wallPx.x, wallPx.y);
+
+    // Shoulder (left end of humerus)
+    const shoulderPx = sToPx(0, 0);
+
+    // Humerus (shoulder → elbow, horizontal)
+    sac.strokeStyle = ARM_C;
+    sac.lineWidth = 8;
+    sac.lineCap = 'round';
+    sac.beginPath();
+    sac.moveTo(shoulderPx.x, shoulderPx.y);
+    sac.lineTo(S_ELBOW.x, S_ELBOW.y);
+    sac.stroke();
+
+    // Forearm (elbow → fist)
+    sac.beginPath();
+    sac.moveTo(S_ELBOW.x, S_ELBOW.y);
+    sac.lineTo(fistPx.x, fistPx.y);
+    sac.stroke();
+
+    // Shoulder joint
+    sac.fillStyle = '#8f8a7e';
+    sac.beginPath();
+    sac.arc(shoulderPx.x, shoulderPx.y, 7, 0, Math.PI * 2);
+    sac.fill();
+
+    // Elbow pivot
+    sac.fillStyle = '#161616';
+    sac.strokeStyle = ARM_C;
+    sac.lineWidth = 2;
+    sac.beginPath();
+    sac.arc(S_ELBOW.x, S_ELBOW.y, 6, 0, Math.PI * 2);
+    sac.fill();
+    sac.stroke();
+
+    // Fist
+    sac.fillStyle = ARM_C;
+    sac.beginPath();
+    sac.arc(fistPx.x, fistPx.y, 7, 0, Math.PI * 2);
+    sac.fill();
+
+    // Elbow interior-angle arc. Humerus direction from elbow→shoulder is -x (canvas π);
+    // forearm direction from elbow→fist at angle theta above +x is canvas angle -theta.
+    // We want the arc that passes through the TOP of the elbow (increasing canvas angle).
+    sac.strokeStyle = 'rgba(200,169,110,0.55)';
+    sac.lineWidth = 1.5;
+    sac.beginPath();
+    sac.arc(S_ELBOW.x, S_ELBOW.y, 22, Math.PI, 2 * Math.PI - theta, false);
+    sac.stroke();
+
+    // Labels
+    const elbowInterior = Math.round(180 - theta * 180 / Math.PI);
+    sac.fillStyle = MUTED;
+    sac.font = '11px DM Mono, monospace';
+    sac.textAlign = 'center';
+    sac.fillText('shoulder', shoulderPx.x, shoulderPx.y + 22);
+    sac.fillText('elbow ' + elbowInterior + '°', S_ELBOW.x, S_ELBOW.y + 22);
+
+    sac.textAlign = 'left';
+    sac.fillText('wall', wallPx.x + 12, wallTop + 14);
+
+    // Spring extension readout (mid-spring)
+    const ext = springExt(theta);
+    const midX = (fistPx.x + wallPx.x) / 2;
+    const midY = (fistPx.y + wallPx.y) / 2;
+    sac.fillStyle = 'rgba(200,169,110,0.85)';
+    sac.font = '11px DM Mono, monospace';
+    sac.textAlign = 'left';
+    sac.fillText(ext.toFixed(1) + '" stretch', midX + 8, midY - 6);
+  }
+
+  // ============================================================
+  // Dumbbell arm (vertical humerus)
+  // ============================================================
+  const D_PX_PER_IN = 10;
+  const D_ELBOW = { x: 150, y: 160 };
+  function dToPx(wx, wy) {
+    return { x: D_ELBOW.x + wx * D_PX_PER_IN, y: D_ELBOW.y - wy * D_PX_PER_IN };
+  }
+
+  function drawArmDumbbell(theta) {
+    dac.clearRect(0, 0, DAW, DAH);
+
+    const shoulderPx = dToPx(0, HUMERUS);
+
+    // Shoulder anchor (small hatched "ceiling" strip)
+    dac.strokeStyle = '#4a4a4a';
+    dac.lineWidth = 2;
+    dac.beginPath();
+    dac.moveTo(shoulderPx.x - 44, shoulderPx.y - 8);
+    dac.lineTo(shoulderPx.x + 44, shoulderPx.y - 8);
+    dac.stroke();
+    dac.strokeStyle = '#2a2a2a';
+    dac.lineWidth = 1;
+    for (let x = -40; x <= 40; x += 8) {
+      dac.beginPath();
+      dac.moveTo(shoulderPx.x + x, shoulderPx.y - 8);
+      dac.lineTo(shoulderPx.x + x - 6, shoulderPx.y - 16);
+      dac.stroke();
+    }
+
+    // Fist position
+    const fist = fistDumbbell(theta);
+    const fistPx = dToPx(fist.x, fist.y);
+
+    // Humerus (shoulder → elbow, vertical)
+    dac.strokeStyle = ARM_C;
+    dac.lineWidth = 8;
+    dac.lineCap = 'round';
+    dac.beginPath();
+    dac.moveTo(shoulderPx.x, shoulderPx.y);
+    dac.lineTo(D_ELBOW.x, D_ELBOW.y);
+    dac.stroke();
+
+    // Forearm (elbow → fist)
+    dac.beginPath();
+    dac.moveTo(D_ELBOW.x, D_ELBOW.y);
+    dac.lineTo(fistPx.x, fistPx.y);
+    dac.stroke();
+
+    // Shoulder joint
+    dac.fillStyle = '#8f8a7e';
+    dac.beginPath();
+    dac.arc(shoulderPx.x, shoulderPx.y, 7, 0, Math.PI * 2);
+    dac.fill();
+
+    // Elbow pivot
+    dac.fillStyle = '#161616';
+    dac.strokeStyle = ARM_C;
+    dac.lineWidth = 2;
+    dac.beginPath();
+    dac.arc(D_ELBOW.x, D_ELBOW.y, 6, 0, Math.PI * 2);
+    dac.fill();
+    dac.stroke();
+
+    // Dumbbell at fist: short perpendicular bar with weighted disks on each end.
+    const forearmAngle = Math.atan2(fistPx.y - D_ELBOW.y, fistPx.x - D_ELBOW.x);
+    const perpX = -Math.sin(forearmAngle);
+    const perpY =  Math.cos(forearmAngle);
+    const barHalf = 11;
+    const ex1 = fistPx.x + perpX * barHalf;
+    const ey1 = fistPx.y + perpY * barHalf;
+    const ex2 = fistPx.x - perpX * barHalf;
+    const ey2 = fistPx.y - perpY * barHalf;
+    dac.strokeStyle = ARM_C;
+    dac.lineWidth = 3;
+    dac.lineCap = 'round';
+    dac.beginPath();
+    dac.moveTo(ex1, ey1);
+    dac.lineTo(ex2, ey2);
+    dac.stroke();
+    // Weighted disks
+    dac.fillStyle = CONST_C;
+    dac.beginPath(); dac.arc(ex1, ey1, 7, 0, Math.PI * 2); dac.fill();
+    dac.beginPath(); dac.arc(ex2, ey2, 7, 0, Math.PI * 2); dac.fill();
+    // Small fist node on top of the bar
+    dac.fillStyle = ARM_C;
+    dac.beginPath(); dac.arc(fistPx.x, fistPx.y, 4, 0, Math.PI * 2); dac.fill();
+
+    // Gravity arrow hanging below the dumbbell
+    const gravTop = Math.max(ey1, ey2) + 10;
+    const gravBot = gravTop + 26;
+    dac.strokeStyle = CONST_C;
+    dac.lineWidth = 1.5;
+    dac.beginPath();
+    dac.moveTo(fistPx.x, gravTop);
+    dac.lineTo(fistPx.x, gravBot);
+    dac.stroke();
+    dac.beginPath();
+    dac.moveTo(fistPx.x, gravBot);
+    dac.lineTo(fistPx.x - 5, gravBot - 7);
+    dac.moveTo(fistPx.x, gravBot);
+    dac.lineTo(fistPx.x + 5, gravBot - 7);
+    dac.stroke();
+    dac.fillStyle = CONST_C;
+    dac.font = '11px DM Mono, monospace';
+    dac.textAlign = 'left';
+    dac.fillText('20 lb', fistPx.x + 8, gravBot - 3);
+
+    // Elbow interior-angle arc. Humerus → shoulder points up (canvas -π/2);
+    // forearm at theta=0 points down (canvas +π/2), and canvas angle = π/2 − theta at general theta.
+    // Sweep clockwise (increasing canvas angle) = CCW=false, through the +x side.
+    dac.strokeStyle = 'rgba(200,169,110,0.55)';
+    dac.lineWidth = 1.5;
+    dac.beginPath();
+    dac.arc(D_ELBOW.x, D_ELBOW.y, 22, -Math.PI / 2, Math.PI / 2 - theta, false);
+    dac.stroke();
+
+    // Labels
+    const elbowInterior = Math.round(180 - theta * 180 / Math.PI);
+    dac.fillStyle = MUTED;
+    dac.font = '11px DM Mono, monospace';
+    dac.textAlign = 'left';
+    dac.fillText('elbow ' + elbowInterior + '°', D_ELBOW.x + 30, D_ELBOW.y - 4);
+
+    dac.textAlign = 'center';
+    dac.fillText('shoulder', shoulderPx.x, shoulderPx.y - 22);
+  }
+
+  // ============================================================
+  // Graph: load magnitude vs. elbow flexion angle
+  // ============================================================
+  function drawGraphBase() {
+    gc.clearRect(0, 0, GW, GH);
+
+    // Horizontal grid + y tick labels (0..25 lb, every 5)
+    gc.strokeStyle = GRID_C;
+    gc.lineWidth = 1;
+    const yTicks = [0, 5, 10, 15, 20, 25];
+    for (const lb of yTicks) {
+      const gy = forceToGraphY(lb);
+      gc.beginPath();
+      gc.moveTo(gI.x, gy);
+      gc.lineTo(gI.x + gI.w, gy);
+      gc.stroke();
+      gc.fillStyle = MUTED;
+      gc.font = '13px DM Mono, monospace';
+      gc.textAlign = 'right';
+      gc.fillText(lb + ' lb', gI.x - 6, gy + 4);
+    }
+
+    // Vertical grid + x tick labels (flexion 0..100°, every 20)
+    const xTicks = [0, 20, 40, 60, 80, 100];
+    for (const deg of xTicks) {
+      const gx = gI.x + (deg / FLEX_MAX_DEG) * gI.w;
+      gc.strokeStyle = GRID_C;
+      gc.lineWidth = 1;
+      gc.beginPath();
+      gc.moveTo(gx, gI.y);
+      gc.lineTo(gx, gI.y + gI.h);
+      gc.stroke();
+      gc.fillStyle = MUTED;
+      gc.font = '13px DM Mono, monospace';
+      gc.textAlign = 'center';
+      gc.fillText(deg + '°', gx, gI.y + gI.h + 16);
+    }
+
+    // Axes
+    gc.strokeStyle = '#333';
+    gc.lineWidth = 1.5;
+    gc.beginPath();
+    gc.moveTo(gI.x, gI.y);
+    gc.lineTo(gI.x, gI.y + gI.h);
+    gc.lineTo(gI.x + gI.w, gI.y + gI.h);
+    gc.stroke();
+
+    // X-axis title (flexion + interior-angle reference)
+    gc.fillStyle = MUTED;
+    gc.font = '13px DM Mono, monospace';
+    gc.textAlign = 'center';
+    gc.fillText('elbow flexion   (interior: 180° extended  →  80° fully curled)', gI.x + gI.w / 2, gI.y + gI.h + 42);
+
+    // Y-axis title (rotated)
+    gc.save();
+    gc.translate(14, gI.y + gI.h / 2);
+    gc.rotate(-Math.PI / 2);
+    gc.textAlign = 'center';
+    gc.fillStyle = MUTED;
+    gc.font = '13px DM Mono, monospace';
+    gc.fillText('Load at hand (lbs)', 0, 0);
+    gc.restore();
+
+    // Legend inside top-right of plot area
+    const legX = gI.x + gI.w - 12;
+    const legY0 = gI.y + 14;
+    gc.font = '12px DM Mono, monospace';
+    gc.textAlign = 'right';
+    gc.fillStyle = 'rgba(200,169,110,0.9)';
+    gc.fillText('— wall spring', legX, legY0);
+    gc.fillStyle = 'rgba(110,158,200,0.9)';
+    gc.fillText('— 20 lb dumbbell', legX, legY0 + 16);
+  }
+
+  function drawCurves() {
+    // Dumbbell: flat line at WEIGHT.
+    const yConst = forceToGraphY(WEIGHT);
+    gc.fillStyle = CONST_F;
+    gc.beginPath();
+    gc.moveTo(gI.x, gI.y + gI.h);
+    gc.lineTo(gI.x, yConst);
+    gc.lineTo(gI.x + gI.w, yConst);
+    gc.lineTo(gI.x + gI.w, gI.y + gI.h);
+    gc.closePath();
+    gc.fill();
+    gc.strokeStyle = CONST_C;
+    gc.lineWidth = 2.5;
+    gc.lineJoin = 'round';
+    gc.beginPath();
+    gc.moveTo(gI.x, yConst);
+    gc.lineTo(gI.x + gI.w, yConst);
+    gc.stroke();
+
+    // Spring: sample K·ext(theta) over 0..THETA_MAX.
+    const samples = 120;
+    // Fill below curve
+    gc.fillStyle = SPRING_F;
+    gc.beginPath();
+    gc.moveTo(gI.x, gI.y + gI.h);
+    for (let i = 0; i <= samples; i++) {
+      const theta = (i / samples) * THETA_MAX;
+      const gx = thetaToGraphX(theta);
+      const gy = forceToGraphY(springForceMag(theta));
+      gc.lineTo(gx, gy);
+    }
+    gc.lineTo(gI.x + gI.w, gI.y + gI.h);
+    gc.closePath();
+    gc.fill();
+    // Curve stroke
+    gc.strokeStyle = SPRING_C;
+    gc.lineWidth = 2.5;
+    gc.lineJoin = 'round';
+    gc.beginPath();
+    for (let i = 0; i <= samples; i++) {
+      const theta = (i / samples) * THETA_MAX;
+      const gx = thetaToGraphX(theta);
+      const gy = forceToGraphY(springForceMag(theta));
+      if (i === 0) gc.moveTo(gx, gy);
+      else gc.lineTo(gx, gy);
+    }
+    gc.stroke();
+  }
+
+  function drawDots(theta) {
+    const gx = thetaToGraphX(theta);
+    // Dumbbell dot
+    gc.fillStyle = CONST_C;
+    gc.beginPath();
+    gc.arc(gx, forceToGraphY(WEIGHT), 5, 0, Math.PI * 2);
+    gc.fill();
+    // Spring dot
+    gc.fillStyle = SPRING_C;
+    gc.beginPath();
+    gc.arc(gx, forceToGraphY(springForceMag(theta)), 5, 0, Math.PI * 2);
+    gc.fill();
+  }
+
+  function drawGraph(showDots) {
+    drawGraphBase();
+    drawCurves();
+    if (showDots) drawDots(currentTheta());
+  }
+
+  // ============================================================
+  // Graph: torque at elbow vs. elbow flexion angle
+  // ============================================================
+  function drawTorqueBase() {
+    tc.clearRect(0, 0, TW, TH);
+
+    // Horizontal grid + y tick labels (0..250 in·lb, every 50)
+    tc.strokeStyle = GRID_C;
+    tc.lineWidth = 1;
+    const yTicks = [0, 50, 100, 150, 200, 250];
+    for (const v of yTicks) {
+      const gy = torqueToGraphY(v);
+      tc.beginPath();
+      tc.moveTo(tI.x, gy);
+      tc.lineTo(tI.x + tI.w, gy);
+      tc.stroke();
+      tc.fillStyle = MUTED;
+      tc.font = '13px DM Mono, monospace';
+      tc.textAlign = 'right';
+      tc.fillText(v + ' in·lb', tI.x - 6, gy + 4);
+    }
+
+    // Vertical grid + x tick labels (flexion 0..100°, every 20)
+    const xTicks = [0, 20, 40, 60, 80, 100];
+    for (const deg of xTicks) {
+      const gx = tI.x + (deg / FLEX_MAX_DEG) * tI.w;
+      tc.strokeStyle = GRID_C;
+      tc.lineWidth = 1;
+      tc.beginPath();
+      tc.moveTo(gx, tI.y);
+      tc.lineTo(gx, tI.y + tI.h);
+      tc.stroke();
+      tc.fillStyle = MUTED;
+      tc.font = '13px DM Mono, monospace';
+      tc.textAlign = 'center';
+      tc.fillText(deg + '°', gx, tI.y + tI.h + 16);
+    }
+
+    // Axes
+    tc.strokeStyle = '#333';
+    tc.lineWidth = 1.5;
+    tc.beginPath();
+    tc.moveTo(tI.x, tI.y);
+    tc.lineTo(tI.x, tI.y + tI.h);
+    tc.lineTo(tI.x + tI.w, tI.y + tI.h);
+    tc.stroke();
+
+    // X-axis title
+    tc.fillStyle = MUTED;
+    tc.font = '13px DM Mono, monospace';
+    tc.textAlign = 'center';
+    tc.fillText('elbow flexion   (interior: 180° extended  →  80° fully curled)', tI.x + tI.w / 2, tI.y + tI.h + 42);
+
+    // Y-axis title (rotated)
+    tc.save();
+    tc.translate(14, tI.y + tI.h / 2);
+    tc.rotate(-Math.PI / 2);
+    tc.textAlign = 'center';
+    tc.fillStyle = MUTED;
+    tc.font = '13px DM Mono, monospace';
+    tc.fillText('Torque at elbow (in·lb)', 0, 0);
+    tc.restore();
+
+    // Legend inside top-right of plot area
+    const legX = tI.x + tI.w - 12;
+    const legY0 = tI.y + 14;
+    tc.font = '12px DM Mono, monospace';
+    tc.textAlign = 'right';
+    tc.fillStyle = 'rgba(200,169,110,0.9)';
+    tc.fillText('— wall spring', legX, legY0);
+    tc.fillStyle = 'rgba(110,158,200,0.9)';
+    tc.fillText('— 20 lb dumbbell', legX, legY0 + 16);
+  }
+
+  function drawTorqueCurves() {
+    const samples = 120;
+
+    // Dumbbell torque: WEIGHT · FOREARM · sin(θ). Peaks near θ=90°, droops slightly past it.
+    tc.fillStyle = CONST_F;
+    tc.beginPath();
+    tc.moveTo(tI.x, tI.y + tI.h);
+    for (let i = 0; i <= samples; i++) {
+      const theta = (i / samples) * THETA_MAX;
+      tc.lineTo(thetaToTorqueX(theta), torqueToGraphY(dumbbellTorque(theta)));
+    }
+    tc.lineTo(tI.x + tI.w, tI.y + tI.h);
+    tc.closePath();
+    tc.fill();
+    tc.strokeStyle = CONST_C;
+    tc.lineWidth = 2.5;
+    tc.lineJoin = 'round';
+    tc.beginPath();
+    for (let i = 0; i <= samples; i++) {
+      const theta = (i / samples) * THETA_MAX;
+      const gx = thetaToTorqueX(theta);
+      const gy = torqueToGraphY(dumbbellTorque(theta));
+      if (i === 0) tc.moveTo(gx, gy);
+      else tc.lineTo(gx, gy);
+    }
+    tc.stroke();
+
+    // Spring torque: |r × F| — non-zero slope at θ=0 because of the 6" wall drop.
+    tc.fillStyle = SPRING_F;
+    tc.beginPath();
+    tc.moveTo(tI.x, tI.y + tI.h);
+    for (let i = 0; i <= samples; i++) {
+      const theta = (i / samples) * THETA_MAX;
+      tc.lineTo(thetaToTorqueX(theta), torqueToGraphY(springTorque(theta)));
+    }
+    tc.lineTo(tI.x + tI.w, tI.y + tI.h);
+    tc.closePath();
+    tc.fill();
+    tc.strokeStyle = SPRING_C;
+    tc.lineWidth = 2.5;
+    tc.lineJoin = 'round';
+    tc.beginPath();
+    for (let i = 0; i <= samples; i++) {
+      const theta = (i / samples) * THETA_MAX;
+      const gx = thetaToTorqueX(theta);
+      const gy = torqueToGraphY(springTorque(theta));
+      if (i === 0) tc.moveTo(gx, gy);
+      else tc.lineTo(gx, gy);
+    }
+    tc.stroke();
+  }
+
+  function drawTorqueDots(theta) {
+    const gx = thetaToTorqueX(theta);
+    tc.fillStyle = CONST_C;
+    tc.beginPath();
+    tc.arc(gx, torqueToGraphY(dumbbellTorque(theta)), 5, 0, Math.PI * 2);
+    tc.fill();
+    tc.fillStyle = SPRING_C;
+    tc.beginPath();
+    tc.arc(gx, torqueToGraphY(springTorque(theta)), 5, 0, Math.PI * 2);
+    tc.fill();
+  }
+
+  function drawTorqueGraph(showDots) {
+    drawTorqueBase();
+    drawTorqueCurves();
+    if (showDots) drawTorqueDots(currentTheta());
+  }
+
+  // ============================================================
+  // Animation loop
+  // ============================================================
+  function animate(ts) {
+    if (!lastTime) lastTime = ts;
+    const dt = ts - lastTime;
+    lastTime = ts;
+
+    t += dt / PHASE_DUR;
+
+    if (t >= 1) {
+      if (phase === 0) {
+        t = 0;
+        phase = 1;
+        lastTime = ts;
+      } else {
+        rep++;
+        if (rep >= MAX_REPS) {
+          animating = false;
+          drawArmSpring(0);
+          drawArmDumbbell(0);
+          drawGraph(false);
+          drawTorqueGraph(false);
+          return;
+        }
+        t = 0;
+        phase = 0;
+        lastTime = ts;
+      }
+    }
+
+    const theta = currentTheta();
+    drawArmSpring(theta);
+    drawArmDumbbell(theta);
+    drawGraph(true);
+    drawTorqueGraph(true);
+    rafId = requestAnimationFrame(animate);
+  }
+
+  function startAnimation() {
+    if (rafId) cancelAnimationFrame(rafId);
+    t = 0;
+    phase = 0;
+    rep = 0;
+    animating = true;
+    lastTime = null;
+    drawArmSpring(0);
+    drawArmDumbbell(0);
+    drawGraph(true);
+    drawTorqueGraph(true);
+    rafId = requestAnimationFrame(animate);
+  }
+
+  function reset() {
+    if (rafId) cancelAnimationFrame(rafId);
+    t = 0;
+    phase = 0;
+    rep = 0;
+    animating = false;
+    lastTime = null;
+    drawArmSpring(0);
+    drawArmDumbbell(0);
+    drawGraph(false);
+    drawTorqueGraph(false);
+  }
+
+  document.getElementById('btn-play').addEventListener('click', startAnimation);
+  document.getElementById('btn-reset').addEventListener('click', reset);
+
+  // Initial render
+  drawArmSpring(0);
+  drawArmDumbbell(0);
+  drawGraph(false);
+  drawTorqueGraph(false);
+</script>
+</body>
+</html>

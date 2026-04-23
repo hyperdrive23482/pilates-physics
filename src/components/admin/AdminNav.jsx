@@ -6,6 +6,7 @@ const links = [
   { to: '/admin/webinars', label: 'Webinars' },
   { to: '/admin/users', label: 'Users' },
   { to: '/admin/analytics', label: 'Analytics' },
+  { to: '/admin/animations', label: 'Animations' },
 ]
 
 export default function AdminNav({ user, onSignOut }) {

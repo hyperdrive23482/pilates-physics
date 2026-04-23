@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bicep Curl — Spring vs. Dumbbell — Pilates Physics</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --border: #2a2a2a;
+    --text: #e8e4dc;
+    --muted: #6b6660;
+    --accent-spring: #c8a96e;
+    --accent-constant: #6e9ec8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px;
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 400;
+    color: #EF9F27;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  h1 em { font-style: italic; color: var(--accent-spring); }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 28px;
+    max-width: 560px;
+    line-height: 1.65;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .arm-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 16px 48px 16px;
+  }
+
+  .graph-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    padding: 20px 48px 12px;
+  }
+
+  .panel-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  canvas { width: 100%; height: auto; display: block; }
+
+  /* Compact work row */
+  .work-row {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 28px;
+  }
+
+  .work-cell {
+    flex: 1;
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-right: 1px solid var(--border);
+  }
+
+  .work-cell:last-child { border-right: none; }
+
+  .work-cell.center {
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 160px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .work-cell.right { text-align: right; }
+
+  .work-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .work-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    line-height: 1.1;
+  }
+
+  .work-value.spring   { color: var(--accent-spring); }
+  .work-value.constant { color: var(--accent-constant); }
+
+  .work-sub {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .work-diff {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--text);
+  }
+
+  .legend {
+    display: flex;
+    gap: 36px;
+    margin-top: 28px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .legend-swatch { width: 32px; height: 2px; border-radius: 2px; }
+  .legend-swatch.spring   { background: var(--accent-spring); }
+  .legend-swatch.constant { background: var(--accent-constant); }
+
+  .controls {
+    display: flex;
+    gap: 14px;
+    margin-top: 32px;
+    justify-content: center;
+  }
+
+  button {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 12px 32px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  button:hover { border-color: var(--accent-spring); color: var(--accent-spring); }
+
+  button.primary {
+    background: var(--accent-spring);
+    border-color: var(--accent-spring);
+    color: #0e0e0e;
+    font-weight: 500;
+  }
+
+  button.primary:hover { background: #d4b87a; }
+</style>
+</head>
+<body>
+
+
+<h1>Bicep Curl — Spring vs. Dumbbell</h1>
+<p class="subtitle">Single BB blue spring vs. a 20 lb dumbbell — forearm 12", elbow flexes 180° → 80°</p>
+
+<div class="stage">
+  <div class="graph-wrap">
+    <canvas id="graph" width="780" height="300"></canvas>
+  </div>
+  <div class="arm-wrap">
+    <canvas id="arm" width="780" height="340"></canvas>
+  </div>
+  <div class="controls">
+    <button class="primary" id="btn-play">Play</button>
+    <button id="btn-reset">Reset</button>
+  </div>
+  <div class="work-row">
+    <div class="work-cell">
+      <span class="work-label">Spring — work per rep</span>
+      <span class="work-value spring" id="val-spring">202 in·lb</span>
+      <span class="work-sub">7.7 lb → 11.0 lb peak at hand</span>
+    </div>
+    <div class="work-cell center">
+      <span class="work-diff" id="val-diff">−15%</span>
+      <span class="work-label">less work than dumbbell</span>
+    </div>
+    <div class="work-cell right">
+      <span class="work-label">20 lb Dumbbell — work per rep</span>
+      <span class="work-value constant" id="val-barbell">236 in·lb</span>
+      <span class="work-sub">20 lb × 11.8" net height gained</span>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  const AC = document.getElementById('arm');
+  const ac = AC.getContext('2d');
+  const GC = document.getElementById('graph');
+  const gc = GC.getContext('2d');
+
+  const AW = 780, AH = 340;
+  const GW = 780, GH = 300;
+
+  const SPRING_C = '#c8a96e';
+  const CONST_C  = '#6e9ec8';
+  const SPRING_F = 'rgba(200,169,110,0.2)';
+  const CONST_F  = 'rgba(110,158,200,0.14)';
+  const GRID_C   = 'rgba(255,255,255,0.045)';
+  const MUTED    = '#6b6660';
+
+  // --- Physics ---
+  const FOREARM   = 12;          // inches (elbow → fist)
+  const ALPHA_MAX = 100 * Math.PI / 180;  // 100° flexion = 80° elbow interior; forearm passes vertical at α=90°
+  const WEIGHT    = 20;          // lbs
+  // BB blue spring: F = K·x + B, where x = extension (inches)
+  const K = 0.66667;
+  const B = 6;
+  const START_EXT = 2.6;         // starting extension (inches)
+  const L0 = 10;                 // natural length of spring (arbitrary reference)
+  // Anchor directly below the starting fist position
+  const ANCHOR_WX = -FOREARM;                  // -12 in world units (elbow = origin)
+  const ANCHOR_WY = -(L0 + START_EXT);         // -12.6
+
+  function fistWorld(alpha) {
+    return { x: -FOREARM * Math.cos(alpha), y: FOREARM * Math.sin(alpha) };
+  }
+  function springVec(alpha) {
+    const f = fistWorld(alpha);
+    const dx = ANCHOR_WX - f.x;
+    const dy = ANCHOR_WY - f.y;
+    const len = Math.hypot(dx, dy);
+    return { dx, dy, len, ext: len - L0 };
+  }
+  function springForce(alpha) {
+    return K * springVec(alpha).ext + B;
+  }
+  // "Resistance at hand" = force perpendicular to forearm at the fist (lbs)
+  // = torque about elbow / forearm length. Past α=90° the forearm is past vertical,
+  // cos(α) goes negative — we plot magnitude since the muscle tension is what we care about.
+  function weightHandForce(alpha) {
+    return Math.abs(WEIGHT * Math.cos(alpha));
+  }
+  function springHandForce(alpha) {
+    const f = fistWorld(alpha);
+    const { dx, dy, len } = springVec(alpha);
+    const F = springForce(alpha);
+    const Fx = F * dx / len, Fy = F * dy / len;
+    // torque magnitude about elbow
+    const tau = Math.abs(f.x * Fy - f.y * Fx);
+    return tau / FOREARM;
+  }
+
+  // Work over concentric phase (0 → alpha)
+  function weightWorkAt(alpha)  { return WEIGHT * FOREARM * Math.sin(alpha); }
+  function springWorkAt(alpha) {
+    const pe = x => 0.5 * K * x * x + B * x;
+    return pe(springVec(alpha).ext) - pe(START_EXT);
+  }
+  const WORK_WEIGHT = weightWorkAt(ALPHA_MAX);
+  const WORK_SPRING = springWorkAt(ALPHA_MAX);
+
+  // --- Graph layout ---
+  const gP = { left: 80, right: 40, top: 28, bottom: 62 };
+  const gI = {
+    x: gP.left, y: gP.top,
+    w: GW - gP.left - gP.right,
+    h: GH - gP.top - gP.bottom
+  };
+  const maxF = 25;   // lbs (max is 20 at α=0 for weight)
+
+  // cycle: 0→1 flex up, 1→2 release back. alphaFromCycle handles both phases.
+  function alphaFromCycle(cycle) {
+    const c = Math.min(Math.max(cycle, 0), 2);
+    return (c <= 1 ? c : 2 - c) * ALPHA_MAX;
+  }
+  function cycleToGraph(cycle, force) {
+    return {
+      gx: gI.x + (cycle / 2) * gI.w,
+      gy: gI.y + gI.h - (force / maxF) * gI.h
+    };
+  }
+
+  // --- Arm rendering ---
+  const PX_PER_IN = 10;
+  const ELBOW_PX  = { x: 410, y: 170 };
+  const HUMERUS_IN = 8;
+  function worldToPx(wx, wy) {
+    // world y is "up"; canvas y is "down"
+    return { x: ELBOW_PX.x + wx * PX_PER_IN, y: ELBOW_PX.y - wy * PX_PER_IN };
+  }
+
+  // Animation state
+  let t = 0, phase = 0, rep = 0;
+  let animating = false;
+  let rafId = null, lastTime = null;
+  let springPts = [], constPts = [];
+  const PHASE_DUR = 2600;
+  const MAX_REPS  = 2;
+
+  // ---- ARM ----
+  function drawArm(alpha) {
+    ac.clearRect(0, 0, AW, AH);
+
+    // Ground hatching around anchor
+    const anchorPx = worldToPx(ANCHOR_WX, ANCHOR_WY);
+    const groundY = anchorPx.y + 6;
+    ac.strokeStyle = '#2f2f2f'; ac.lineWidth = 1;
+    ac.beginPath();
+    ac.moveTo(anchorPx.x - 44, groundY);
+    ac.lineTo(anchorPx.x + 44, groundY);
+    ac.stroke();
+    for (let i = -40; i <= 40; i += 8) {
+      ac.beginPath();
+      ac.moveTo(anchorPx.x + i, groundY);
+      ac.lineTo(anchorPx.x + i - 6, groundY + 8);
+      ac.stroke();
+    }
+
+    // Anchor bracket
+    ac.fillStyle = '#3a3a3a'; ac.strokeStyle = '#555'; ac.lineWidth = 1.2;
+    ac.beginPath(); ac.rect(anchorPx.x - 8, anchorPx.y - 3, 16, 8); ac.fill(); ac.stroke();
+
+    // Fist position
+    const fist = fistWorld(alpha);
+    const fistPx = worldToPx(fist.x, fist.y);
+
+    // Spring fist → anchor
+    drawSpring(fistPx.x, fistPx.y, anchorPx.x, anchorPx.y);
+
+    // Humerus (elbow → shoulder, pointing right)
+    const shoulderPx = { x: ELBOW_PX.x + HUMERUS_IN * PX_PER_IN, y: ELBOW_PX.y };
+    ac.strokeStyle = '#cfc9be'; ac.lineWidth = 8; ac.lineCap = 'round';
+    ac.beginPath();
+    ac.moveTo(ELBOW_PX.x, ELBOW_PX.y);
+    ac.lineTo(shoulderPx.x, shoulderPx.y);
+    ac.stroke();
+
+    // Forearm (elbow → fist)
+    ac.strokeStyle = '#cfc9be'; ac.lineWidth = 8; ac.lineCap = 'round';
+    ac.beginPath();
+    ac.moveTo(ELBOW_PX.x, ELBOW_PX.y);
+    ac.lineTo(fistPx.x, fistPx.y);
+    ac.stroke();
+
+    // Shoulder joint
+    ac.fillStyle = '#8f8a7e';
+    ac.beginPath(); ac.arc(shoulderPx.x, shoulderPx.y, 7, 0, Math.PI * 2); ac.fill();
+
+    // Elbow pivot
+    ac.fillStyle = '#161616'; ac.strokeStyle = '#cfc9be'; ac.lineWidth = 2;
+    ac.beginPath(); ac.arc(ELBOW_PX.x, ELBOW_PX.y, 6, 0, Math.PI * 2); ac.fill(); ac.stroke();
+
+    // Fist
+    ac.fillStyle = '#cfc9be';
+    ac.beginPath(); ac.arc(fistPx.x, fistPx.y, 7, 0, Math.PI * 2); ac.fill();
+
+    // Angle arc at elbow (interior angle between humerus and forearm)
+    // Canvas is y-down, so the forearm swinging UP is at canvas angle (alpha - π).
+    // Drawing anticlockwise from 0 to (alpha - π) sweeps through the top = the interior.
+    const elbowAngle = 180 - alpha * 180 / Math.PI;
+    ac.strokeStyle = 'rgba(200,169,110,0.5)'; ac.lineWidth = 1.5;
+    ac.beginPath();
+    ac.arc(ELBOW_PX.x, ELBOW_PX.y, 22, 0, alpha - Math.PI, true);
+    ac.stroke();
+
+    // Angle label
+    ac.fillStyle = MUTED; ac.font = '12px DM Mono, monospace'; ac.textAlign = 'left';
+    ac.fillText('elbow ' + Math.round(elbowAngle) + '°', ELBOW_PX.x + 30, ELBOW_PX.y - 22);
+
+    // Spring extension label (near mid-spring)
+    const ext = springVec(alpha).ext;
+    const midX = (fistPx.x + anchorPx.x) / 2;
+    const midY = (fistPx.y + anchorPx.y) / 2;
+    ac.fillStyle = 'rgba(200,169,110,0.85)';
+    ac.font = '11px DM Mono, monospace';
+    ac.textAlign = 'left';
+    ac.fillText(ext.toFixed(1) + '" ext', midX + 10, midY);
+
+    // Shoulder / body label
+    ac.fillStyle = MUTED; ac.font = '11px DM Mono, monospace'; ac.textAlign = 'left';
+    ac.fillText('shoulder', shoulderPx.x + 10, shoulderPx.y + 4);
+
+    // Anchor label
+    ac.fillStyle = MUTED; ac.textAlign = 'center';
+    ac.fillText('anchor', anchorPx.x, groundY + 24);
+  }
+
+  function drawSpring(x1, y1, x2, y2) {
+    const coils = 14, amp = 5;
+    const dx = x2 - x1, dy = y2 - y1;
+    const len = Math.hypot(dx, dy);
+    if (len < 1) return;
+    const ux = dx / len, uy = dy / len;   // along-spring unit
+    const px = -uy, py = ux;              // perpendicular unit
+    ac.strokeStyle = SPRING_C; ac.lineWidth = 1.5; ac.lineJoin = 'round';
+    ac.beginPath();
+    ac.moveTo(x1, y1);
+    const steps = coils * 2;
+    for (let i = 0; i <= steps; i++) {
+      const f = i / steps;
+      const along = f * len;
+      const side = (i % 2 === 0 ? -amp : amp);
+      ac.lineTo(x1 + ux * along + px * side, y1 + uy * along + py * side);
+    }
+    ac.lineTo(x2, y2);
+    ac.stroke();
+  }
+
+  // ---- GRAPH ----
+  function drawGraphBase() {
+    gc.clearRect(0, 0, GW, GH);
+
+    gc.strokeStyle = GRID_C; gc.lineWidth = 1;
+    const yTicks = [0, 5, 10, 15, 20, 25];
+    for (const lb of yTicks) {
+      const gy = gI.y + gI.h - (lb / maxF) * gI.h;
+      gc.beginPath(); gc.moveTo(gI.x, gy); gc.lineTo(gI.x + gI.w, gy); gc.stroke();
+      gc.fillStyle = MUTED; gc.font = '13px DM Mono, monospace'; gc.textAlign = 'right';
+      gc.fillText(lb + ' lb', gI.x - 6, gy + 4);
+    }
+
+    // X-axis: degrees of flexion 0 → 100 → 0
+    const FLEX_MAX_DEG = 100;
+    const xTicks = [0, 20, 40, 60, 80, 100];
+    for (const deg of xTicks) {
+      const gxOut = gI.x + (deg / FLEX_MAX_DEG / 2) * gI.w;
+      gc.strokeStyle = GRID_C; gc.lineWidth = 1;
+      gc.beginPath(); gc.moveTo(gxOut, gI.y); gc.lineTo(gxOut, gI.y + gI.h); gc.stroke();
+      gc.fillStyle = MUTED; gc.font = '13px DM Mono, monospace'; gc.textAlign = 'center';
+      if (deg > 0) gc.fillText(deg + '°', gxOut, gI.y + gI.h + 16);
+      if (deg > 0 && deg < FLEX_MAX_DEG) {
+        const gxRet = gI.x + ((FLEX_MAX_DEG + (FLEX_MAX_DEG - deg)) / FLEX_MAX_DEG / 2) * gI.w;
+        gc.beginPath(); gc.moveTo(gxRet, gI.y); gc.lineTo(gxRet, gI.y + gI.h); gc.stroke();
+        gc.fillText(deg + '°', gxRet, gI.y + gI.h + 16);
+      }
+    }
+
+    const midX = gI.x + gI.w / 2;
+    gc.strokeStyle = 'rgba(255,255,255,0.1)'; gc.lineWidth = 1; gc.setLineDash([4, 5]);
+    gc.beginPath(); gc.moveTo(midX, gI.y - 4); gc.lineTo(midX, gI.y + gI.h); gc.stroke();
+    gc.setLineDash([]);
+    gc.fillStyle = MUTED; gc.font = '12px DM Mono, monospace'; gc.textAlign = 'center';
+    gc.fillText('peak flex', midX, gI.y - 8);
+
+    gc.strokeStyle = '#333'; gc.lineWidth = 1.5;
+    gc.beginPath(); gc.moveTo(gI.x, gI.y); gc.lineTo(gI.x, gI.y + gI.h); gc.lineTo(gI.x + gI.w, gI.y + gI.h); gc.stroke();
+
+    gc.fillStyle = MUTED; gc.font = '13px DM Mono, monospace';
+    gc.textAlign = 'left';  gc.fillText('0°', gI.x + 3, gI.y + gI.h + 18);
+    gc.textAlign = 'right'; gc.fillText('0°', gI.x + gI.w - 3, gI.y + gI.h + 18);
+    gc.textAlign = 'center'; gc.fillText('← curling up  ·  lowering →', gI.x + gI.w / 2, gI.y + gI.h + 42);
+
+    gc.save(); gc.translate(14, gI.y + gI.h / 2); gc.rotate(-Math.PI / 2);
+    gc.textAlign = 'center'; gc.fillStyle = MUTED; gc.font = '13px DM Mono, monospace';
+    gc.fillText('Resistance at hand (lbs)', 0, 0); gc.restore();
+
+    // Dashed labels on the right
+    gc.font = '12px DM Mono, monospace'; gc.textAlign = 'right';
+    gc.fillStyle = 'rgba(200,169,110,0.85)';
+    gc.fillText('spring', gI.x + gI.w - 6, gI.y + 14);
+    gc.fillStyle = 'rgba(110,158,200,0.85)';
+    gc.fillText('20 lb dumbbell', gI.x + gI.w - 6, gI.y + 30);
+  }
+
+  // Static shapes shown before play / after finish — both full curves over the rep
+  function drawFullShapes() {
+    // Dumbbell curve (20·cos(α))
+    gc.fillStyle = CONST_F;
+    gc.beginPath();
+    const c0 = cycleToGraph(0, weightHandForce(0));
+    gc.moveTo(c0.gx, gI.y + gI.h);
+    gc.lineTo(c0.gx, c0.gy);
+    for (let i = 1; i <= 120; i++) {
+      const cyc = i / 60;  // 0..2
+      const a = alphaFromCycle(cyc);
+      const p = cycleToGraph(cyc, weightHandForce(a));
+      gc.lineTo(p.gx, p.gy);
+    }
+    const cEnd = cycleToGraph(2, weightHandForce(0));
+    gc.lineTo(cEnd.gx, gI.y + gI.h);
+    gc.closePath(); gc.fill();
+    gc.strokeStyle = CONST_C; gc.lineWidth = 2.5; gc.lineJoin = 'round';
+    gc.beginPath();
+    gc.moveTo(c0.gx, c0.gy);
+    for (let i = 1; i <= 120; i++) {
+      const cyc = i / 60;
+      const a = alphaFromCycle(cyc);
+      const p = cycleToGraph(cyc, weightHandForce(a));
+      gc.lineTo(p.gx, p.gy);
+    }
+    gc.stroke();
+
+    // Spring curve
+    gc.fillStyle = SPRING_F;
+    const s0 = cycleToGraph(0, springHandForce(0));
+    gc.beginPath();
+    gc.moveTo(s0.gx, gI.y + gI.h);
+    gc.lineTo(s0.gx, s0.gy);
+    for (let i = 1; i <= 120; i++) {
+      const cyc = i / 60;
+      const a = alphaFromCycle(cyc);
+      const p = cycleToGraph(cyc, springHandForce(a));
+      gc.lineTo(p.gx, p.gy);
+    }
+    const sEnd = cycleToGraph(2, springHandForce(0));
+    gc.lineTo(sEnd.gx, gI.y + gI.h);
+    gc.closePath(); gc.fill();
+    gc.strokeStyle = SPRING_C; gc.lineWidth = 2.5; gc.lineJoin = 'round';
+    gc.beginPath();
+    gc.moveTo(s0.gx, s0.gy);
+    for (let i = 1; i <= 120; i++) {
+      const cyc = i / 60;
+      const a = alphaFromCycle(cyc);
+      const p = cycleToGraph(cyc, springHandForce(a));
+      gc.lineTo(p.gx, p.gy);
+    }
+    gc.stroke();
+  }
+
+  function drawAnimatingShapes() {
+    if (constPts.length > 1) {
+      gc.fillStyle = CONST_F;
+      gc.beginPath();
+      gc.moveTo(constPts[0].gx, gI.y + gI.h);
+      for (const p of constPts) gc.lineTo(p.gx, p.gy);
+      gc.lineTo(constPts[constPts.length-1].gx, gI.y + gI.h);
+      gc.closePath(); gc.fill();
+      gc.strokeStyle = CONST_C; gc.lineWidth = 2.5; gc.lineJoin = 'round';
+      gc.beginPath();
+      gc.moveTo(constPts[0].gx, constPts[0].gy);
+      for (const p of constPts) gc.lineTo(p.gx, p.gy);
+      gc.stroke();
+    }
+    if (springPts.length > 1) {
+      gc.fillStyle = SPRING_F;
+      gc.beginPath();
+      gc.moveTo(springPts[0].gx, gI.y + gI.h);
+      gc.lineTo(springPts[0].gx, springPts[0].gy);
+      for (let i = 1; i < springPts.length; i++) gc.lineTo(springPts[i].gx, springPts[i].gy);
+      gc.lineTo(springPts[springPts.length-1].gx, gI.y + gI.h);
+      gc.closePath(); gc.fill();
+      gc.strokeStyle = SPRING_C; gc.lineWidth = 2.5; gc.lineJoin = 'round';
+      gc.beginPath();
+      gc.moveTo(springPts[0].gx, springPts[0].gy);
+      for (let i = 1; i < springPts.length; i++) gc.lineTo(springPts[i].gx, springPts[i].gy);
+      gc.stroke();
+    }
+
+    const cycle = phase === 0 ? t : 1 + t;
+    const alpha = alphaFromCycle(cycle);
+    const sp = cycleToGraph(cycle, springHandForce(alpha));
+    gc.fillStyle = SPRING_C;
+    gc.beginPath(); gc.arc(sp.gx, sp.gy, 5, 0, Math.PI * 2); gc.fill();
+    const cp = cycleToGraph(cycle, weightHandForce(alpha));
+    gc.fillStyle = CONST_C;
+    gc.beginPath(); gc.arc(cp.gx, cp.gy, 5, 0, Math.PI * 2); gc.fill();
+  }
+
+  function drawGraph(animMode) {
+    drawGraphBase();
+    if (animMode) {
+      drawAnimatingShapes();
+    } else {
+      drawFullShapes();
+    }
+  }
+
+  function fmt(n) {
+    return Math.round(n).toLocaleString() + ' in·lb';
+  }
+
+  function updateWorkDisplay(springWork, barbellWork) {
+    document.getElementById('val-spring').textContent  = fmt(springWork);
+    document.getElementById('val-barbell').textContent = fmt(barbellWork);
+    if (barbellWork > 0) {
+      const pct = Math.round((1 - springWork / barbellWork) * 100);
+      document.getElementById('val-diff').textContent = (pct >= 0 ? '−' : '+') + Math.abs(pct) + '%';
+    } else {
+      document.getElementById('val-diff').textContent = '0%';
+    }
+  }
+
+  function animate(ts) {
+    if (!lastTime) lastTime = ts;
+    const dt = ts - lastTime;
+    lastTime = ts;
+
+    t += dt / PHASE_DUR;
+
+    if (t >= 1) {
+      if (phase === 0) {
+        t = 0; phase = 1; lastTime = ts;
+      } else {
+        rep++;
+        if (rep >= MAX_REPS) {
+          animating = false;
+          updateWorkDisplay(WORK_SPRING, WORK_WEIGHT);
+          drawArm(0);
+          drawGraph(false);
+          return;
+        } else {
+          t = 0; phase = 0; lastTime = ts;
+          springPts = [cycleToGraph(0, springHandForce(0))];
+          constPts  = [cycleToGraph(0, weightHandForce(0))];
+        }
+      }
+    }
+
+    const cycle = phase === 0 ? t : 1 + t;
+    const alpha = alphaFromCycle(cycle);
+
+    springPts.push(cycleToGraph(cycle, springHandForce(alpha)));
+    constPts.push(cycleToGraph(cycle, weightHandForce(alpha)));
+
+    // Running work: only accumulate during concentric (phase 0). During return, hold final.
+    const cWork = phase === 0 ? t : 1;
+    const alphaW = cWork * ALPHA_MAX;
+    const sw = springWorkAt(alphaW);
+    const bw = weightWorkAt(alphaW);
+    updateWorkDisplay(sw, bw);
+
+    drawArm(alpha);
+    drawGraph(true);
+    rafId = requestAnimationFrame(animate);
+  }
+
+  function startAnimation() {
+    if (rafId) cancelAnimationFrame(rafId);
+    t = 0; phase = 0; rep = 0;
+    animating = true;
+    springPts = [cycleToGraph(0, springHandForce(0))];
+    constPts  = [cycleToGraph(0, weightHandForce(0))];
+    lastTime  = null;
+    updateWorkDisplay(0, 0);
+    drawArm(0);
+    drawGraph(true);
+    rafId = requestAnimationFrame(animate);
+  }
+
+  function reset() {
+    if (rafId) cancelAnimationFrame(rafId);
+    t = 0; phase = 0; rep = 0;
+    animating = false;
+    springPts = []; constPts = [];
+    lastTime  = null;
+    updateWorkDisplay(WORK_SPRING, WORK_WEIGHT);
+    drawArm(0);
+    drawGraph(false);
+  }
+
+  document.getElementById('btn-play').addEventListener('click', startAnimation);
+  document.getElementById('btn-reset').addEventListener('click', reset);
+
+  updateWorkDisplay(WORK_SPRING, WORK_WEIGHT);
+  drawArm(0);
+  drawGraph(false);
+</script>
+</body>
+</html>

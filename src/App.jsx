@@ -38,6 +38,7 @@ import AdminWebinars from './pages/admin/AdminWebinars'
 import AdminWebinarEdit from './pages/admin/AdminWebinarEdit'
 import AdminUsers from './pages/admin/AdminUsers'
 import AdminAnalytics from './pages/admin/AdminAnalytics'
+import AdminAnimations from './pages/admin/AdminAnimations'
 
 export default function App() {
   return (
@@ -220,6 +221,14 @@ export default function App() {
           element={
             <AdminGate>
               <AdminAnalytics />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/animations"
+          element={
+            <AdminGate>
+              <AdminAnimations />
             </AdminGate>
           }
         />
