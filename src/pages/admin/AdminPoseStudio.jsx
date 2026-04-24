@@ -264,7 +264,7 @@ export default function AdminPoseStudio() {
 
       drawFrame()
       if (state.lastLandmarks && state.showAngles) {
-        updateAnglePanel(state.lastLandmarks)
+        updateAnglePanel(state.lastLandmarks, canvas.width, canvas.height)
       }
     }
 
@@ -346,8 +346,13 @@ export default function AdminPoseStudio() {
       }
     }
 
-    function computeAngles(lm) {
-      const get = (i) => (lm[i] && lm[i].visibility > 0.3 ? lm[i] : null)
+    function computeAngles(lm, w, h) {
+      // Scale normalized landmarks to pixel space so angle math isn't
+      // distorted by non-square video aspect ratios.
+      const get = (i) =>
+        lm[i] && lm[i].visibility > 0.3
+          ? { x: lm[i].x * w, y: lm[i].y * h, visibility: lm[i].visibility }
+          : null
       const lShoulder = get(11), rShoulder = get(12)
       const lElbow = get(13), rElbow = get(14)
       const lWrist = get(15), rWrist = get(16)
@@ -371,7 +376,7 @@ export default function AdminPoseStudio() {
       if (nose && lShoulder && rShoulder) {
         const shoulderMid = mid(lShoulder, rShoulder)
         angles.neck = angleDeg(
-          { x: shoulderMid.x, y: shoulderMid.y - 0.1 },
+          { x: shoulderMid.x, y: shoulderMid.y - 0.1 * h },
           shoulderMid,
           nose,
         )
@@ -379,8 +384,8 @@ export default function AdminPoseStudio() {
       return angles
     }
 
-    function updateAnglePanel(lm) {
-      const a = computeAngles(lm)
+    function updateAnglePanel(lm, w, h) {
+      const a = computeAngles(lm, w, h)
       const set = (id, v) => {
         const el = q('#' + id)
         if (!el) return
@@ -399,7 +404,7 @@ export default function AdminPoseStudio() {
     }
 
     function drawAngleLabels(lm, w, h) {
-      const a = computeAngles(lm)
+      const a = computeAngles(lm, w, h)
       const labelAtXY = (x, y, val, key) => {
         if (val == null) return
         if (!state.angleOverlays[key]) return
