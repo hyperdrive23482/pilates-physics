@@ -101,7 +101,7 @@ export default function AdminWebinarEdit() {
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
       <AdminNav user={user} onSignOut={signOut} />
 
-      <main style={{ maxWidth: '900px', margin: '0 auto', padding: '6rem 2rem 4rem' }}>
+      <main className="pp-main" style={{ maxWidth: '900px', margin: '0 auto' }}>
         <Link
           to="/admin/webinars"
           style={{
@@ -130,6 +130,7 @@ export default function AdminWebinarEdit() {
 
         {!isNew && (
           <nav
+            className="pp-tabs-scroll"
             style={{
               display: 'flex',
               gap: '1.5rem',

@@ -395,9 +395,7 @@ export default function WebinarForm({
 }
 
 function Row({ children }) {
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>{children}</div>
-  )
+  return <div className="pp-grid-2">{children}</div>
 }
 
 function Field({ label, hint, children }) {

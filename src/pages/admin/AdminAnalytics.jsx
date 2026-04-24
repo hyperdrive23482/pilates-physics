@@ -24,7 +24,7 @@ export default function AdminAnalytics() {
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
       <AdminNav user={user} onSignOut={signOut} />
 
-      <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '6rem 2rem 4rem' }}>
+      <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <h1
           style={{
             fontFamily: '"DM Serif Display", serif',
@@ -70,7 +70,7 @@ export default function AdminAnalytics() {
               >
                 Per webinar
               </h2>
-              <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-rule)' }}>
+              <div className="pp-table-wrap" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-rule)' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid var(--color-rule)' }}>

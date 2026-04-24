@@ -4,6 +4,7 @@ import ProfileDropdown from '../ui/ProfileDropdown'
 export default function PortalNav({ user, onSignOut }) {
   return (
     <header
+      className="pp-nav-compact"
       style={{
         position: 'fixed',
         top: 0,
@@ -16,7 +17,6 @@ export default function PortalNav({ user, onSignOut }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0 1.5rem',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>

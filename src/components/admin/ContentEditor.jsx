@@ -113,7 +113,7 @@ export default function ContentEditor({ webinarId }) {
               gap: '0.75rem',
             }}
           >
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr auto', gap: '0.75rem' }}>
+            <div className="pp-grid-content-editor">
               <input
                 type="text"
                 value={item.title ?? ''}
@@ -169,7 +169,7 @@ export default function ContentEditor({ webinarId }) {
               style={{ ...inputStyle, resize: 'vertical', fontFamily: 'inherit' }}
             />
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <div className="pp-grid-2">
               <label style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                 <span style={labelStyle}>File URL</span>
                 <input

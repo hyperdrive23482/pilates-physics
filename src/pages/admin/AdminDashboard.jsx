@@ -29,8 +29,8 @@ export default function AdminDashboard() {
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
       <AdminNav user={user} onSignOut={signOut} />
 
-      <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '6rem 2rem 4rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', marginBottom: '2rem' }}>
+      <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
+        <div className="pp-header-row" style={{ marginBottom: '2rem' }}>
           <div>
             <p
               style={{

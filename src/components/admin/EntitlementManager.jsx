@@ -97,7 +97,7 @@ export default function EntitlementManager({ userRow, webinars, onChange }) {
         </p>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr auto', gap: '0.4rem' }}>
+      <div className="pp-entitlement-row">
         <select
           value={webinarId}
           onChange={(e) => setWebinarId(e.target.value)}

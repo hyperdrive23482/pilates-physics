@@ -61,7 +61,7 @@ export default function AdminAnimations() {
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
       <AdminNav user={user} onSignOut={signOut} />
 
-      <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '6rem 2rem 4rem' }}>
+      <main className="pp-main" style={{ maxWidth: '1400px', margin: '0 auto' }}>
         <div style={{ marginBottom: '1.5rem' }}>
           <h1
             style={{
@@ -89,12 +89,11 @@ export default function AdminAnimations() {
             No animations found.
           </p>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '1.5rem' }}>
+          <div className="pp-animations-layout">
             <aside
               style={{
                 background: 'var(--color-surface)',
                 border: '1px solid var(--color-rule)',
-                alignSelf: 'start',
               }}
             >
               {list.map((a) => {
@@ -141,7 +140,6 @@ export default function AdminAnimations() {
               style={{
                 background: 'var(--color-surface)',
                 border: '1px solid var(--color-rule)',
-                minHeight: '900px',
                 position: 'relative',
               }}
             >
@@ -161,7 +159,6 @@ export default function AdminAnimations() {
                   title={selected ?? 'Animation preview'}
                   style={{
                     width: '100%',
-                    height: '900px',
                     border: 'none',
                     display: 'block',
                     background: '#0e0e0e',

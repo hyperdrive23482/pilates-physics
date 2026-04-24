@@ -46,8 +46,8 @@ export default function AdminUsers() {
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
       <AdminNav user={user} onSignOut={signOut} />
 
-      <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '6rem 2rem 4rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', marginBottom: '1.5rem' }}>
+      <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
+        <div className="pp-header-row" style={{ marginBottom: '1.5rem' }}>
           <h1
             style={{
               fontFamily: '"DM Serif Display", serif',
@@ -93,12 +93,9 @@ export default function AdminUsers() {
                   <button
                     type="button"
                     onClick={() => setExpanded(isOpen ? null : u.id)}
+                    className="pp-user-row"
                     style={{
                       width: '100%',
-                      display: 'grid',
-                      gridTemplateColumns: '2fr 1fr auto',
-                      alignItems: 'center',
-                      gap: '1rem',
                       padding: '0.9rem 1rem',
                       background: 'transparent',
                       border: 'none',

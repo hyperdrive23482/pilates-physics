@@ -110,10 +110,8 @@ function SpringSelectorRow({ selection, onChange, onRemove }) {
 
   return (
     <div
+      className="pp-spring-row"
       style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr 70px auto',
-        gap: '0.5rem',
         alignItems: 'center',
         padding: '0.6rem',
         background: 'var(--color-surface)',

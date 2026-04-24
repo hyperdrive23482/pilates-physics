@@ -49,10 +49,10 @@ export default function PortalDashboard() {
       <PortalNav user={user} onSignOut={signOut} />
 
       <main
+        className="pp-main"
         style={{
           maxWidth: '960px',
           margin: '0 auto',
-          padding: '6rem 2rem 4rem',
         }}
       >
         {/* Welcome */}

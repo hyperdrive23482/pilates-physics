@@ -133,10 +133,10 @@ export default function WebinarPortal() {
       <PortalNav user={user} onSignOut={signOut} />
 
       <main
+        className="pp-main"
         style={{
           maxWidth: isTool ? '1080px' : '760px',
           margin: '0 auto',
-          padding: '5.5rem 2rem 4rem',
         }}
       >
         {/* Back link */}
