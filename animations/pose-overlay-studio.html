@@ -12,14 +12,14 @@
 
 <style>
   :root {
-    --bg: #0d0e10;
-    --panel: #15171b;
-    --panel-2: #1c1f25;
-    --border: #2a2e36;
-    --text: #e8e6e1;
-    --text-dim: #8a8d95;
-    --accent: #d4ff3a;
-    --accent-2: #ff6b4a;
+    --bg: #1C1A17;
+    --panel: #242118;
+    --panel-2: #2E2B26;
+    --border: #2E2B26;
+    --text: #F1EFE8;
+    --text-dim: #888780;
+    --accent: #EF9F27;
+    --accent-2: #FFB856;
     --danger: #ff4a6b;
   }
 
@@ -38,8 +38,8 @@
     position: fixed;
     inset: 0;
     background-image:
-      radial-gradient(circle at 20% 10%, rgba(212, 255, 58, 0.04), transparent 40%),
-      radial-gradient(circle at 85% 90%, rgba(255, 107, 74, 0.035), transparent 45%);
+      radial-gradient(circle at 20% 10%, rgba(239, 159, 39, 0.04), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(255, 184, 86, 0.035), transparent 45%);
     pointer-events: none;
     z-index: 0;
   }
@@ -171,13 +171,13 @@
     cursor: pointer;
     transition: all 0.2s;
     z-index: 3;
-    background: rgba(13, 14, 16, 0.6);
+    background: rgba(28, 26, 23, 0.6);
     backdrop-filter: blur(4px);
   }
 
   .dropzone:hover, .dropzone.drag {
     border-color: var(--accent);
-    background: rgba(212, 255, 58, 0.04);
+    background: rgba(239, 159, 39, 0.04);
   }
 
   .dropzone.hidden { display: none; }
@@ -332,7 +332,7 @@
     font-weight: 700;
   }
   button.primary:hover:not(:disabled) {
-    background: #c4ee2a;
+    background: #D88A15;
     color: #000;
   }
 
@@ -746,7 +746,7 @@
     if (state.showVideo) {
       ctx.drawImage(video, 0, 0, w, h);
     } else {
-      ctx.fillStyle = '#0d0e10';
+      ctx.fillStyle = '#1C1A17';
       ctx.fillRect(0, 0, w, h);
     }
 
@@ -757,9 +757,9 @@
     if (state.showSkeleton) {
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-      ctx.strokeStyle = '#d4ff3a';
+      ctx.strokeStyle = '#EF9F27';
       ctx.lineWidth = state.lineWeight;
-      ctx.shadowColor = 'rgba(212, 255, 58, 0.6)';
+      ctx.shadowColor = 'rgba(239, 159, 39, 0.6)';
       ctx.shadowBlur = 8;
 
       for (const [a, b] of CONNECTIONS) {
@@ -776,7 +776,7 @@
 
     // Joints
     if (state.showJoints) {
-      ctx.fillStyle = '#ff6b4a';
+      ctx.fillStyle = '#FFB856';
       const keyJoints = [11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28];
       for (const i of keyJoints) {
         const p = lm[i];
@@ -883,9 +883,9 @@
       const padding = 4;
       const m = ctx.measureText(text);
       const bx = x + 10, by = y - 10 - 14;
-      ctx.fillStyle = 'rgba(13, 14, 16, 0.85)';
+      ctx.fillStyle = 'rgba(28, 26, 23, 0.85)';
       ctx.fillRect(bx - padding, by - padding, m.width + padding * 2, 20);
-      ctx.fillStyle = '#d4ff3a';
+      ctx.fillStyle = '#EF9F27';
       ctx.fillText(text, bx, by + 10);
     };
     labelAt(13, a.lelbow);
