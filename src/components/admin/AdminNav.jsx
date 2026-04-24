@@ -7,6 +7,7 @@ const links = [
   { to: '/admin/users', label: 'Users' },
   { to: '/admin/analytics', label: 'Analytics' },
   { to: '/admin/animations', label: 'Animations' },
+  { to: '/admin/pose-studio', label: 'Pose Studio' },
 ]
 
 export default function AdminNav({ user, onSignOut }) {

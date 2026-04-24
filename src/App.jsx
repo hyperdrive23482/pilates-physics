@@ -39,6 +39,7 @@ import AdminWebinarEdit from './pages/admin/AdminWebinarEdit'
 import AdminUsers from './pages/admin/AdminUsers'
 import AdminAnalytics from './pages/admin/AdminAnalytics'
 import AdminAnimations from './pages/admin/AdminAnimations'
+import AdminPoseStudio from './pages/admin/AdminPoseStudio'
 
 export default function App() {
   return (
@@ -229,6 +230,14 @@ export default function App() {
           element={
             <AdminGate>
               <AdminAnimations />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/pose-studio"
+          element={
+            <AdminGate>
+              <AdminPoseStudio />
             </AdminGate>
           }
         />
