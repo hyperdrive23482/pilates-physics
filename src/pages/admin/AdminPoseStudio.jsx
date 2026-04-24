@@ -75,6 +75,7 @@ export default function AdminPoseStudio() {
     const metaTracked = q('#ps-metaTracked')
     const toast = q('#ps-toast')
     const lineWeightInput = q('#ps-lineWeight')
+    const labelScaleInput = q('#ps-labelScale')
 
     const state = {
       showSkeleton: true,
@@ -82,6 +83,7 @@ export default function AdminPoseStudio() {
       showVideo: true,
       showAngles: true,
       lineWeight: 4,
+      labelScale: 1,
       pose: null,
       lastLandmarks: null,
       recording: false,
@@ -139,6 +141,10 @@ export default function AdminPoseStudio() {
 
     addL(lineWeightInput, 'input', (e) => {
       state.lineWeight = parseInt(e.target.value, 10)
+    })
+
+    addL(labelScaleInput, 'input', (e) => {
+      state.labelScale = parseFloat(e.target.value)
     })
 
     root.querySelectorAll('[data-angle]').forEach((el) => {
@@ -409,14 +415,19 @@ export default function AdminPoseStudio() {
         if (val == null) return
         if (!state.angleOverlays[key]) return
         const text = val + '°'
-        ctx.font = `500 ${Math.max(12, w * 0.018)}px "JetBrains Mono", monospace`
-        const padding = 4
+        const scale = state.labelScale
+        const fontSize = Math.max(12, w * 0.018) * scale
+        ctx.font = `500 ${fontSize}px "JetBrains Mono", monospace`
+        ctx.textBaseline = 'top'
+        const padding = 4 * scale
+        const gap = 10 * scale
         const m = ctx.measureText(text)
-        const bx = x + 10, by = y - 10 - 14
+        const bx = x + gap
+        const by = y - gap - fontSize
         ctx.fillStyle = 'rgba(28, 26, 23, 0.85)'
-        ctx.fillRect(bx - padding, by - padding, m.width + padding * 2, 20)
+        ctx.fillRect(bx - padding, by - padding, m.width + padding * 2, fontSize + padding * 2)
         ctx.fillStyle = '#EF9F27'
-        ctx.fillText(text, bx, by + 10)
+        ctx.fillText(text, bx, by)
       }
       const labelAt = (idx, val, key) => {
         const p = lm[idx]
@@ -674,6 +685,17 @@ export default function AdminPoseStudio() {
               <div className="row">
                 <label>Line weight</label>
                 <input type="range" id="ps-lineWeight" min="2" max="10" defaultValue="4" />
+              </div>
+              <div className="row">
+                <label>Label size</label>
+                <input
+                  type="range"
+                  id="ps-labelScale"
+                  min="0.5"
+                  max="3"
+                  step="0.1"
+                  defaultValue="1"
+                />
               </div>
             </div>
           </aside>
