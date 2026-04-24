@@ -15,8 +15,7 @@ export default async function handler(req, res) {
 
   try {
     const dir = join(process.cwd(), 'animations')
-    const HIDDEN = new Set(['pose-overlay-studio.html'])
-    const files = readdirSync(dir).filter((f) => f.endsWith('.html') && !HIDDEN.has(f))
+    const files = readdirSync(dir).filter((f) => f.endsWith('.html'))
     const animations = files
       .map((name) => {
         const content = readFileSync(join(dir, name), 'utf8')
