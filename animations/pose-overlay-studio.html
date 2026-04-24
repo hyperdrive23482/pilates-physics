@@ -358,7 +358,13 @@
     background: var(--panel-2);
     padding: 10px;
     border: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.15s, border-color 0.15s;
   }
+  .angle-item:hover { border-color: var(--accent); }
+  .angle-item.off { opacity: 0.4; }
+  .angle-item.off .val { text-decoration: line-through; text-decoration-color: var(--text-dim); }
 
   .angle-item .label {
     color: var(--text-dim);
@@ -511,18 +517,18 @@
       </div>
 
       <div class="card">
-        <h3>Joint Angles <span>live</span></h3>
+        <h3>Joint Angles <span>click to toggle</span></h3>
         <div class="angles-grid" id="anglesGrid">
-          <div class="angle-item"><div class="label">L Elbow</div><div class="val" id="ang-lelbow">—</div></div>
-          <div class="angle-item"><div class="label">R Elbow</div><div class="val" id="ang-relbow">—</div></div>
-          <div class="angle-item"><div class="label">L Shoulder</div><div class="val" id="ang-lshoulder">—</div></div>
-          <div class="angle-item"><div class="label">R Shoulder</div><div class="val" id="ang-rshoulder">—</div></div>
-          <div class="angle-item"><div class="label">L Hip</div><div class="val" id="ang-lhip">—</div></div>
-          <div class="angle-item"><div class="label">R Hip</div><div class="val" id="ang-rhip">—</div></div>
-          <div class="angle-item"><div class="label">L Knee</div><div class="val" id="ang-lknee">—</div></div>
-          <div class="angle-item"><div class="label">R Knee</div><div class="val" id="ang-rknee">—</div></div>
-          <div class="angle-item"><div class="label">Spine</div><div class="val" id="ang-spine">—</div></div>
-          <div class="angle-item"><div class="label">Neck</div><div class="val" id="ang-neck">—</div></div>
+          <div class="angle-item" data-angle="lelbow"><div class="label">L Elbow</div><div class="val" id="ang-lelbow">—</div></div>
+          <div class="angle-item" data-angle="relbow"><div class="label">R Elbow</div><div class="val" id="ang-relbow">—</div></div>
+          <div class="angle-item" data-angle="lshoulder"><div class="label">L Shoulder</div><div class="val" id="ang-lshoulder">—</div></div>
+          <div class="angle-item" data-angle="rshoulder"><div class="label">R Shoulder</div><div class="val" id="ang-rshoulder">—</div></div>
+          <div class="angle-item" data-angle="lhip"><div class="label">L Hip</div><div class="val" id="ang-lhip">—</div></div>
+          <div class="angle-item" data-angle="rhip"><div class="label">R Hip</div><div class="val" id="ang-rhip">—</div></div>
+          <div class="angle-item" data-angle="lknee"><div class="label">L Knee</div><div class="val" id="ang-lknee">—</div></div>
+          <div class="angle-item" data-angle="rknee"><div class="label">R Knee</div><div class="val" id="ang-rknee">—</div></div>
+          <div class="angle-item" data-angle="spine"><div class="label">Spine</div><div class="val" id="ang-spine">—</div></div>
+          <div class="angle-item" data-angle="neck"><div class="label">Neck</div><div class="val" id="ang-neck">—</div></div>
         </div>
       </div>
     </aside>
@@ -572,6 +578,13 @@
     frameCount: 0,
     lastTime: performance.now(),
     fps: 0,
+    angleOverlays: {
+      lelbow: true, relbow: true,
+      lshoulder: true, rshoulder: true,
+      lhip: true, rhip: true,
+      lknee: true, rknee: true,
+      spine: true, neck: true,
+    },
   };
 
   // ========== MediaPipe Skeleton connections (subset that matters) ==========
@@ -604,6 +617,15 @@
 
   lineWeightInput.addEventListener('input', e => {
     state.lineWeight = parseInt(e.target.value, 10);
+  });
+
+  // Per-angle overlay toggles
+  document.querySelectorAll('[data-angle]').forEach(el => {
+    el.addEventListener('click', () => {
+      const key = el.getAttribute('data-angle');
+      state.angleOverlays[key] = !state.angleOverlays[key];
+      el.classList.toggle('off', !state.angleOverlays[key]);
+    });
   });
 
   // ========== Status ==========
@@ -873,11 +895,9 @@
 
   function drawAngleLabels(lm, w, h) {
     const a = computeAngles(lm);
-    const labelAt = (idx, val) => {
+    const labelAtXY = (x, y, val, key) => {
       if (val == null) return;
-      const p = lm[idx];
-      if (!p || p.visibility < 0.3) return;
-      const x = p.x * w, y = p.y * h;
+      if (!state.angleOverlays[key]) return;
       const text = val + '°';
       ctx.font = `500 ${Math.max(12, w * 0.018)}px "JetBrains Mono", monospace`;
       const padding = 4;
@@ -888,12 +908,34 @@
       ctx.fillStyle = '#EF9F27';
       ctx.fillText(text, bx, by + 10);
     };
-    labelAt(13, a.lelbow);
-    labelAt(14, a.relbow);
-    labelAt(25, a.lknee);
-    labelAt(26, a.rknee);
-    labelAt(23, a.lhip);
-    labelAt(24, a.rhip);
+    const labelAt = (idx, val, key) => {
+      const p = lm[idx];
+      if (!p || p.visibility < 0.3) return;
+      labelAtXY(p.x * w, p.y * h, val, key);
+    };
+    labelAt(11, a.lshoulder, 'lshoulder');
+    labelAt(12, a.rshoulder, 'rshoulder');
+    labelAt(13, a.lelbow, 'lelbow');
+    labelAt(14, a.relbow, 'relbow');
+    labelAt(23, a.lhip, 'lhip');
+    labelAt(24, a.rhip, 'rhip');
+    labelAt(25, a.lknee, 'lknee');
+    labelAt(26, a.rknee, 'rknee');
+
+    const lSh = lm[11], rSh = lm[12], lHip = lm[23], rHip = lm[24], nose = lm[0];
+    if (lSh && rSh && lHip && rHip &&
+        lSh.visibility > 0.3 && rSh.visibility > 0.3 &&
+        lHip.visibility > 0.3 && rHip.visibility > 0.3) {
+      const sx = (lSh.x + rSh.x + lHip.x + rHip.x) / 4;
+      const sy = (lSh.y + rSh.y + lHip.y + rHip.y) / 4;
+      labelAtXY(sx * w, sy * h, a.spine, 'spine');
+    }
+    if (lSh && rSh && nose &&
+        lSh.visibility > 0.3 && rSh.visibility > 0.3 && nose.visibility > 0.3) {
+      const nx = ((lSh.x + rSh.x) / 2 + nose.x) / 2;
+      const ny = ((lSh.y + rSh.y) / 2 + nose.y) / 2;
+      labelAtXY(nx * w, ny * h, a.neck, 'neck');
+    }
   }
 
   // ========== Recording ==========
