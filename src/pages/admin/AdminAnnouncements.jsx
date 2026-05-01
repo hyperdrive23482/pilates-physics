@@ -5,11 +5,19 @@ import { useAllAnnouncements } from '../../hooks/admin/useAllAnnouncements'
 import { supabase } from '../../lib/supabase'
 import AdminNav from '../../components/admin/AdminNav'
 
+function isLive(row, now) {
+  if (!row.enabled) return false
+  if (new Date(row.starts_at).getTime() > now) return false
+  if (row.ends_at && new Date(row.ends_at).getTime() <= now) return false
+  return true
+}
+
 function computeStatus(row, allRows, now) {
   if (!row.enabled) return 'disabled'
   if (new Date(row.starts_at).getTime() > now) return 'scheduled'
+  if (row.ends_at && new Date(row.ends_at).getTime() <= now) return 'expired'
   const activeId = allRows
-    .filter((r) => r.enabled && new Date(r.starts_at).getTime() <= now)
+    .filter((r) => isLive(r, now))
     .sort((a, b) => new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime())[0]?.id
   return row.id === activeId ? 'active' : 'past'
 }
@@ -77,8 +85,9 @@ export default function AdminAnnouncements() {
             lineHeight: 1.5,
           }}
         >
-          The site bar shows the most recent enabled announcement whose start date has passed.
-          Schedule a future announcement and it will replace the current one automatically.
+          The site bar shows the most recent enabled announcement whose start date has passed and
+          end date (if set) hasn't. Schedule a future announcement and it will replace the current
+          one automatically. Set an end date to hide the bar with no replacement.
         </p>
 
         {loading ? (
@@ -101,6 +110,7 @@ export default function AdminAnnouncements() {
                   <Th>Message</Th>
                   <Th>Link</Th>
                   <Th>Starts at</Th>
+                  <Th>Ends at</Th>
                   <Th>Status</Th>
                   <Th align="right">Actions</Th>
                 </tr>
@@ -115,6 +125,9 @@ export default function AdminAnnouncements() {
                         {a.link_url ? truncate(a.link_url, 30) : '—'}
                       </Td>
                       <Td mono>{new Date(a.starts_at).toLocaleString()}</Td>
+                      <Td mono>
+                        {a.ends_at ? new Date(a.ends_at).toLocaleString() : '—'}
+                      </Td>
                       <Td>
                         <StatusPill status={status} />
                       </Td>
@@ -189,6 +202,7 @@ function StatusPill({ status }) {
       active: 'rgba(100,255,150,0.15)',
       scheduled: 'rgba(100,180,255,0.15)',
       past: 'rgba(255,255,255,0.05)',
+      expired: 'rgba(200,180,100,0.15)',
       disabled: 'rgba(255,255,255,0.08)',
     }[status] ?? 'rgba(255,255,255,0.08)'
   return (

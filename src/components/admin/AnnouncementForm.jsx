@@ -20,6 +20,7 @@ export default function AnnouncementForm({
     link_url: '',
     link_text: '',
     starts_at: '',
+    ends_at: '',
     enabled: true,
   })
   const [error, setError] = useState(null)
@@ -31,6 +32,7 @@ export default function AnnouncementForm({
       link_url: initial.link_url ?? '',
       link_text: initial.link_text ?? '',
       starts_at: toLocalInput(initial.starts_at),
+      ends_at: toLocalInput(initial.ends_at),
       enabled: initial.enabled ?? true,
     })
   }, [initial])
@@ -44,6 +46,9 @@ export default function AnnouncementForm({
     setError(null)
     if (!form.message.trim()) return setError('Message is required')
     if (!form.starts_at) return setError('Start date is required')
+    if (form.ends_at && new Date(form.ends_at) <= new Date(form.starts_at)) {
+      return setError('End date must be after start date')
+    }
     const url = form.link_url.trim()
     const text = form.link_text.trim()
     if ((url && !text) || (!url && text)) {
@@ -55,6 +60,7 @@ export default function AnnouncementForm({
       link_url: url || null,
       link_text: text || null,
       starts_at: new Date(form.starts_at).toISOString(),
+      ends_at: form.ends_at ? new Date(form.ends_at).toISOString() : null,
       enabled: !!form.enabled,
     }
 
@@ -65,8 +71,11 @@ export default function AnnouncementForm({
     }
   }
 
+  const now = Date.now()
   const startsDate = form.starts_at ? new Date(form.starts_at) : null
-  const isFuture = startsDate && startsDate.getTime() > Date.now()
+  const endsDate = form.ends_at ? new Date(form.ends_at) : null
+  const isFuture = startsDate && startsDate.getTime() > now
+  const isExpired = endsDate && endsDate.getTime() <= now
   const previewAnnouncement = {
     message: form.message,
     link_url: form.link_url.trim() || null,
@@ -77,7 +86,13 @@ export default function AnnouncementForm({
   if (!form.enabled) {
     statusNote = 'Currently disabled — bar will not appear on the site.'
   } else if (isFuture) {
-    statusNote = `Will appear at ${startsDate.toLocaleString()}.`
+    statusNote = endsDate
+      ? `Will appear at ${startsDate.toLocaleString()} and hide at ${endsDate.toLocaleString()}.`
+      : `Will appear at ${startsDate.toLocaleString()}.`
+  } else if (isExpired) {
+    statusNote = `Expired at ${endsDate.toLocaleString()} — bar no longer shows.`
+  } else if (endsDate) {
+    statusNote = `Will hide at ${endsDate.toLocaleString()}.`
   }
 
   return (
@@ -170,26 +185,38 @@ export default function AnnouncementForm({
             required
           />
         </Field>
-        <Field label="Enabled" hint="Uncheck to hide this announcement without deleting it.">
-          <label
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.6rem 0',
-              fontSize: '0.9rem',
-              color: 'var(--color-ink)',
-            }}
-          >
-            <input
-              type="checkbox"
-              checked={form.enabled}
-              onChange={(e) => update('enabled', e.target.checked)}
-            />
-            <span>Enabled</span>
-          </label>
+        <Field
+          label="Ends at"
+          hint="Optional. Local time. Bar hides once this passes, even with no replacement scheduled."
+        >
+          <input
+            type="datetime-local"
+            value={form.ends_at}
+            onChange={(e) => update('ends_at', e.target.value)}
+            style={inputStyle}
+          />
         </Field>
       </Row>
+
+      <Field label="Enabled" hint="Uncheck to hide this announcement without deleting it.">
+        <label
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.6rem 0',
+            fontSize: '0.9rem',
+            color: 'var(--color-ink)',
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={form.enabled}
+            onChange={(e) => update('enabled', e.target.checked)}
+          />
+          <span>Enabled</span>
+        </label>
+      </Field>
 
       {error && (
         <p style={{ color: '#ff7d7d', fontSize: '0.85rem', margin: 0 }}>{error}</p>

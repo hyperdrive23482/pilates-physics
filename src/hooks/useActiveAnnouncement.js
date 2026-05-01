@@ -8,10 +8,12 @@ export function useActiveAnnouncement() {
   useEffect(() => {
     let cancelled = false
     async function fetchActive() {
+      const nowIso = new Date().toISOString()
       const { data, error } = await supabase
         .from('announcements')
-        .select('id, message, link_url, link_text, starts_at')
-        .lte('starts_at', new Date().toISOString())
+        .select('id, message, link_url, link_text, starts_at, ends_at')
+        .lte('starts_at', nowIso)
+        .or(`ends_at.is.null,ends_at.gt.${nowIso}`)
         .eq('enabled', true)
         .order('starts_at', { ascending: false })
         .limit(1)
