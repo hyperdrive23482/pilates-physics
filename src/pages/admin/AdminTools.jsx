@@ -1,16 +1,21 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Trash2, Edit3 } from 'lucide-react'
+import { Trash2, Edit3, UserPlus } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAllWebinars } from '../../hooks/admin/useAllWebinars'
 import { supabase } from '../../lib/supabase'
 import AdminNav from '../../components/admin/AdminNav'
+import BulkGrantModal from '../../components/admin/BulkGrantModal'
 
-export default function AdminWebinars() {
+export default function AdminTools() {
   const { user, signOut } = useEnrollment()
   const { webinars: allWebinars, loading, refetch } = useAllWebinars()
-  const webinars = allWebinars.filter((w) => w.kind !== 'tool')
+  const tools = allWebinars.filter((w) => w.kind === 'tool')
+  const sourceWebinars = allWebinars.filter((w) => w.kind !== 'tool' && w.status !== 'draft')
 
-  async function deleteWebinar(id, title) {
+  const [bulkOpen, setBulkOpen] = useState(false)
+
+  async function deleteTool(id, title) {
     if (!confirm(`Delete "${title}"? This cascades to its content and entitlements.`)) return
     const { error } = await supabase.from('webinars').delete().eq('id', id)
     if (error) {
@@ -26,18 +31,31 @@ export default function AdminWebinars() {
 
       <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <div className="pp-header-row" style={{ marginBottom: '2rem' }}>
-          <h1
-            style={{
-              fontFamily: '"DM Serif Display", serif',
-              fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-              color: 'var(--color-ink)',
-              margin: 0,
-            }}
-          >
-            Webinars
-          </h1>
-          <Link
-            to="/admin/webinars/new"
+          <div>
+            <h1
+              style={{
+                fontFamily: '"DM Serif Display", serif',
+                fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                color: 'var(--color-ink)',
+                margin: 0,
+              }}
+            >
+              Tools
+            </h1>
+            <p
+              style={{
+                color: 'var(--color-ink-muted)',
+                fontSize: '0.85rem',
+                marginTop: '0.35rem',
+              }}
+            >
+              Interactive tools assignable to members via entitlements.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setBulkOpen(true)}
+            disabled={tools.length === 0 || sourceWebinars.length === 0}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -45,20 +63,25 @@ export default function AdminWebinars() {
               padding: '0.7rem 1.1rem',
               background: 'var(--color-accent)',
               color: '#1C1A17',
-              textDecoration: 'none',
+              border: 'none',
               fontSize: '0.85rem',
               fontWeight: 500,
+              fontFamily: '"DM Sans", sans-serif',
+              cursor:
+                tools.length === 0 || sourceWebinars.length === 0 ? 'not-allowed' : 'pointer',
+              opacity: tools.length === 0 || sourceWebinars.length === 0 ? 0.5 : 1,
             }}
           >
-            <Plus size={14} /> New webinar
-          </Link>
+            <UserPlus size={14} /> Bulk grant access
+          </button>
         </div>
 
         {loading ? (
           <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>Loading…</p>
-        ) : webinars.length === 0 ? (
+        ) : tools.length === 0 ? (
           <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>
-            No webinars yet. Create your first one.
+            No tools yet. Tools are seeded via Supabase migrations and registered in
+            <code style={{ marginLeft: '0.4rem' }}>src/components/portal/ToolHost.jsx</code>.
           </p>
         ) : (
           <div
@@ -74,27 +97,16 @@ export default function AdminWebinars() {
                   <Th>Title</Th>
                   <Th>Slug</Th>
                   <Th>Status</Th>
-                  <Th>Scheduled</Th>
-                  <Th>Price</Th>
                   <Th align="right">Actions</Th>
                 </tr>
               </thead>
               <tbody>
-                {webinars.map((w) => (
-                  <tr
-                    key={w.id}
-                    style={{ borderBottom: '1px solid var(--color-rule)' }}
-                  >
+                {tools.map((w) => (
+                  <tr key={w.id} style={{ borderBottom: '1px solid var(--color-rule)' }}>
                     <Td>{w.title}</Td>
                     <Td mono>{w.slug}</Td>
                     <Td>
                       <StatusPill status={w.status} />
-                    </Td>
-                    <Td mono>
-                      {w.scheduled_at ? new Date(w.scheduled_at).toLocaleString() : '—'}
-                    </Td>
-                    <Td mono>
-                      {w.price_cents != null ? `$${(w.price_cents / 100).toFixed(2)}` : '—'}
                     </Td>
                     <Td align="right">
                       <div style={{ display: 'inline-flex', gap: '0.4rem' }}>
@@ -107,7 +119,7 @@ export default function AdminWebinars() {
                         </Link>
                         <button
                           type="button"
-                          onClick={() => deleteWebinar(w.id, w.title)}
+                          onClick={() => deleteTool(w.id, w.title)}
                           aria-label="Delete"
                           style={iconBtnStyle}
                         >
@@ -122,6 +134,14 @@ export default function AdminWebinars() {
           </div>
         )}
       </main>
+
+      {bulkOpen && (
+        <BulkGrantModal
+          tools={tools}
+          sourceWebinars={sourceWebinars}
+          onClose={() => setBulkOpen(false)}
+        />
+      )}
     </div>
   )
 }

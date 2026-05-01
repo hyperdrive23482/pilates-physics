@@ -36,6 +36,7 @@ import AdminGate from './components/admin/AdminGate'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminWebinars from './pages/admin/AdminWebinars'
 import AdminWebinarEdit from './pages/admin/AdminWebinarEdit'
+import AdminTools from './pages/admin/AdminTools'
 import AdminUsers from './pages/admin/AdminUsers'
 import AdminAnalytics from './pages/admin/AdminAnalytics'
 import AdminAnimations from './pages/admin/AdminAnimations'
@@ -208,6 +209,14 @@ export default function App() {
           element={
             <AdminGate>
               <AdminWebinarEdit />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/tools"
+          element={
+            <AdminGate>
+              <AdminTools />
             </AdminGate>
           }
         />
