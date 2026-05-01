@@ -21,6 +21,7 @@ const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2
 
 const COLOR_INK = '#1C1A17'
 const COLOR_MUTED = '#6B6B6B'
+const BORDER_INSET = 24 // ~1/3 in from each edge
 
 function formatDateTime(scheduledAt) {
   if (!scheduledAt) return null
@@ -66,6 +67,18 @@ export function buildCertificate({ webinar, participantName }) {
       Subject: 'Certificate of Completion',
     },
   })
+
+  // === Page border ===
+  doc
+    .lineWidth(1.25)
+    .strokeColor(COLOR_INK)
+    .rect(
+      BORDER_INSET,
+      BORDER_INSET,
+      PAGE_WIDTH - BORDER_INSET * 2,
+      PAGE_HEIGHT - BORDER_INSET * 2
+    )
+    .stroke()
 
   // === Logo at top, centered ===
   const logoHeight = 90 // ~1.25 in
@@ -179,13 +192,16 @@ export function buildCertificate({ webinar, participantName }) {
   }
 
   // === Footer ===
+  // Position above the bottom margin and disable line wrapping so pdfkit
+  // does not paginate when the line height nudges past the margin.
   doc
     .font('Helvetica')
     .fontSize(9)
     .fillColor(COLOR_MUTED)
-    .text('pilatesphysics.com', MARGIN, PAGE_HEIGHT - MARGIN - 10, {
+    .text('pilatesphysics.com', MARGIN, PAGE_HEIGHT - MARGIN - 20, {
       width: CONTENT_WIDTH,
       align: 'center',
+      lineBreak: false,
     })
 
   return doc
