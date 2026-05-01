@@ -11,6 +11,7 @@ import ZoomInfo from '../components/portal/ZoomInfo'
 import ContentItem from '../components/portal/ContentItem'
 import QuestionForm from '../components/portal/QuestionForm'
 import ToolHost from '../components/portal/ToolHost'
+import CertificateButton from '../components/portal/CertificateButton'
 
 export default function WebinarPortal() {
   const { slug } = useParams()
@@ -201,6 +202,25 @@ export default function WebinarPortal() {
 
           {/* Zoom info (pre-webinar only) */}
           {isPreWebinar && <ZoomInfo webinar={webinar} />}
+
+          {/* Certificate of completion (post-webinar) */}
+          {isPostWebinar && (
+            <section>
+              <h2
+                style={{
+                  fontSize: '0.7rem',
+                  fontWeight: '600',
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase',
+                  color: 'var(--color-ink-muted)',
+                  marginBottom: '1rem',
+                }}
+              >
+                Certificate
+              </h2>
+              <CertificateButton webinar={webinar} user={user} />
+            </section>
+          )}
 
           {/* Recordings (post-webinar) */}
           {isPostWebinar && recordings.length > 0 && (
