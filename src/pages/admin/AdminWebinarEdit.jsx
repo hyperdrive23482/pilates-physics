@@ -184,22 +184,36 @@ export default function AdminWebinarEdit() {
   )
 }
 
+function questionerName(q) {
+  const full = `${q.first_name ?? ''} ${q.last_name ?? ''}`.trim()
+  if (full) return full
+  return q.email || '(unknown)'
+}
+
 function QuestionsList({ webinarId }) {
+  const { request } = useAdminAPI()
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!webinarId) return
-    supabase
-      .from('webinar_questions')
-      .select('*')
-      .eq('webinar_id', webinarId)
-      .order('submitted_at', { ascending: false })
-      .then(({ data }) => {
-        setRows(data ?? [])
+    let cancelled = false
+    setLoading(true)
+    request(`/api/admin/webinar-questions?webinar_id=${encodeURIComponent(webinarId)}`)
+      .then((data) => {
+        if (cancelled) return
+        setRows(data?.questions ?? [])
         setLoading(false)
       })
-  }, [webinarId])
+      .catch(() => {
+        if (cancelled) return
+        setRows([])
+        setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [webinarId, request])
 
   if (loading) return <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>Loading…</p>
   if (rows.length === 0) {
@@ -219,7 +233,10 @@ function QuestionsList({ webinarId }) {
           }}
         >
           <p style={{ margin: 0 }}>{q.question}</p>
-          <p style={{ margin: '0.4rem 0 0', fontSize: '0.75rem', color: 'var(--color-ink-muted)' }}>
+          <p style={{ margin: '0.4rem 0 0', fontSize: '0.8rem', color: 'var(--color-ink)' }}>
+            {questionerName(q)}
+          </p>
+          <p style={{ margin: '0.2rem 0 0', fontSize: '0.75rem', color: 'var(--color-ink-muted)' }}>
             {new Date(q.submitted_at).toLocaleString()} · {q.is_answered ? 'answered' : 'unanswered'}
           </p>
         </div>
