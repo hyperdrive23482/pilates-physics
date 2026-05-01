@@ -389,6 +389,19 @@ h1, h2, h3, h4 {
   }
 }
 
+.pp-animation-tool {
+  background: var(--color-surface);
+  border: 1px solid var(--color-rule);
+}
+.pp-animation-tool iframe {
+  height: 900px;
+}
+@media (max-width: 900px) {
+  .pp-animation-tool iframe {
+    height: 95dvh;
+  }
+}
+
 .pp-header-row {
   display: flex;
   justify-content: space-between;

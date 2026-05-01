@@ -8,6 +8,9 @@
     },
     "api/admin/animation.js": {
       "includeFiles": "animations/**"
+    },
+    "api/portal/animation.js": {
+      "includeFiles": "animations/**"
     }
   },
   "rewrites": [

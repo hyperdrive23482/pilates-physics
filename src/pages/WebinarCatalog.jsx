@@ -117,7 +117,7 @@ function CatalogCard({ webinar }) {
 export default function WebinarCatalog() {
   const { webinars, loading } = useWebinars()
 
-  const published = webinars.filter((w) => w.status !== 'draft')
+  const published = webinars.filter((w) => w.status !== 'draft' && w.kind !== 'tool')
   const upcoming = published.filter((w) => w.status === 'upcoming' || w.status === 'live')
   const past = published.filter((w) => w.status === 'complete' || w.status === 'archived')
 
