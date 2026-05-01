@@ -3,12 +3,12 @@ import { Link, NavLink } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import Button from '../ui/Button'
 
-export default function Navbar() {
+export default function Navbar({ hasAnnouncement = true }) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
     <header
-      className="fixed top-10 left-0 right-0 z-50"
+      className={`fixed left-0 right-0 z-50 ${hasAnnouncement ? 'top-10' : 'top-0'}`}
       style={{
         backgroundColor: 'var(--color-bg)',
         borderBottom: '1px solid var(--color-rule)',

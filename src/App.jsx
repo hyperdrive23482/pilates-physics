@@ -40,6 +40,8 @@ import AdminUsers from './pages/admin/AdminUsers'
 import AdminAnalytics from './pages/admin/AdminAnalytics'
 import AdminAnimations from './pages/admin/AdminAnimations'
 import AdminPoseStudio from './pages/admin/AdminPoseStudio'
+import AdminAnnouncements from './pages/admin/AdminAnnouncements'
+import AdminAnnouncementEdit from './pages/admin/AdminAnnouncementEdit'
 
 export default function App() {
   return (
@@ -238,6 +240,30 @@ export default function App() {
           element={
             <AdminGate>
               <AdminPoseStudio />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/announcements"
+          element={
+            <AdminGate>
+              <AdminAnnouncements />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/announcements/new"
+          element={
+            <AdminGate>
+              <AdminAnnouncementEdit />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/announcements/:id/edit"
+          element={
+            <AdminGate>
+              <AdminAnnouncementEdit />
             </AdminGate>
           }
         />
