@@ -11,15 +11,29 @@ import { renderCertificateHtml } from './render-certificate-html.js'
  * @param {string} args.participantName - display name for the participant
  * @returns {Promise<Buffer>} the PDF bytes
  */
+// AWS_LAMBDA_FUNCTION_NAME is set in Vercel's serverless runtime (which is
+// AWS Lambda under the hood) but NOT during `vercel dev` locally. The
+// @sparticuz/chromium binary is Linux-only and won't run on a dev machine,
+// so locally we fall back to a Chrome installed on the host.
+const isServerless = !!process.env.AWS_LAMBDA_FUNCTION_NAME
+
 export async function buildCertificate({ webinar, participantName }) {
   const html = renderCertificateHtml({ webinar, participantName })
 
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: { width: 1056, height: 816, deviceScaleFactor: 2 },
-    executablePath: await chromium.executablePath(),
-    headless: chromium.headless,
-  })
+  const launchOpts = isServerless
+    ? {
+        args: chromium.args,
+        defaultViewport: { width: 1056, height: 816, deviceScaleFactor: 2 },
+        executablePath: await chromium.executablePath(),
+        headless: chromium.headless,
+      }
+    : {
+        channel: 'chrome',
+        defaultViewport: { width: 1056, height: 816, deviceScaleFactor: 2 },
+        headless: true,
+      }
+
+  const browser = await puppeteer.launch(launchOpts)
 
   try {
     const page = await browser.newPage()
