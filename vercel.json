@@ -11,6 +11,11 @@
     },
     "api/portal/animation.js": {
       "includeFiles": "animations/**"
+    },
+    "api/certificate/[webinarId].js": {
+      "memory": 1024,
+      "maxDuration": 30,
+      "includeFiles": "api/_assets/**"
     }
   },
   "rewrites": [

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Certificate of Completion — Pilates Physics</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ink: #1a1814;
+    --ink-soft: #4a4540;
+    --ink-faint: #8a8680;
+    --paper: #f5f1e8;
+    --paper-warm: #ede7d8;
+    --paper-bright: #faf7ee;
+    --grid: rgba(26, 24, 20, 0.07);
+    --rule: rgba(26, 24, 20, 0.22);
+    --clay: #b8563a;
+    --clay-soft: #d4836b;
+
+    --serif: 'Newsreader', 'Iowan Old Style', 'Charter', 'Georgia', serif;
+    --sans: 'IBM Plex Sans', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    --mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #d9d3c2;
+    font-family: var(--sans);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stage {
+    padding: 32px;
+    box-sizing: border-box;
+  }
+
+  /* US Letter landscape @ 96dpi: 1056 x 816 */
+  .cert {
+    position: relative;
+    width: 1056px;
+    height: 816px;
+    background: var(--paper);
+    color: var(--ink);
+    box-sizing: border-box;
+    overflow: hidden;
+    box-shadow: 0 18px 60px rgba(26, 24, 20, 0.18);
+  }
+
+  /* === Corner marks (engineering drawing) === */
+  .corner-marks::before,
+  .corner-marks::after,
+  .corner-marks > .cm-tl,
+  .corner-marks > .cm-tr {
+    content: '';
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-color: var(--ink);
+    border-style: solid;
+    border-width: 0;
+  }
+  .corner-marks::before { top: 36px; left: 36px;  border-top-width: 1.5px; border-left-width: 1.5px; }
+  .corner-marks::after  { bottom: 36px; right: 36px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+  .corner-marks > .cm-tr { top: 36px; right: 36px; border-top-width: 1.5px; border-right-width: 1.5px; }
+  .corner-marks > .cm-tl { bottom: 36px; left: 36px; border-bottom-width: 1.5px; border-left-width: 1.5px; }
+
+  /* === Type roles === */
+  .smallcaps {
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--ink-soft);
+  }
+  .display {
+    font-family: var(--serif);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1.02;
+  }
+
+  /* === Layout === */
+  .stack {
+    position: absolute;
+    inset: 90px 110px 80px 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .logo {
+    height: 64px;
+    width: auto;
+    display: block;
+  }
+
+  .smallcaps-title {
+    font-size: 14px;
+    margin-top: 36px;
+  }
+
+  .rule {
+    width: 80px;
+    border: 0;
+    border-top: 1.25px solid var(--ink);
+    margin: 14px 0 22px;
+  }
+
+  .lede {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-faint);
+  }
+
+  .name {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 84px;
+    line-height: 1;
+    margin-top: 14px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .has-completed {
+    margin-top: 26px;
+  }
+
+  .course-title {
+    font-family: var(--serif);
+    font-size: 30px;
+    line-height: 1.18;
+    max-width: 760px;
+    margin-top: 8px;
+    color: var(--ink);
+  }
+
+  .course-subtitle {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  .course-desc {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-style: italic;
+    color: var(--ink-soft);
+    max-width: 660px;
+    line-height: 1.55;
+    margin-top: 16px;
+  }
+
+  .meta-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    max-width: 760px;
+    margin-top: auto;
+    gap: 32px;
+    padding-top: 28px;
+  }
+  .meta-row .cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .meta-row .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-faint);
+  }
+  .meta-row .value {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--ink);
+  }
+
+  .footer-url {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: var(--ink-faint);
+    margin-top: 22px;
+  }
+
+  /* Print: render at exact size, no shadow, no background */
+  @page {
+    size: letter landscape;
+    margin: 0;
+  }
+  @media print {
+    html, body {
+      background: #fff;
+      display: block;
+    }
+    .stage { padding: 0; }
+    .cert {
+      box-shadow: none;
+      width: 11in;
+      height: 8.5in;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="cert corner-marks" id="cert">
+    <span class="cm-tr"></span>
+    <span class="cm-tl"></span>
+
+    <div class="stack">
+      <img class="logo" src="{{logoUrl}}" alt="Pilates Physics">
+
+      <div class="smallcaps smallcaps-title">Certificate of Completion</div>
+      <hr class="rule">
+
+      <div class="lede">This is to certify that</div>
+      <div class="name">{{participantName}}</div>
+
+      <div class="lede has-completed">Has successfully completed</div>
+      <div class="display course-title">{{workshopTitle}}</div>
+      {{workshopSubtitleHtml}}
+
+      {{workshopDescriptionHtml}}
+
+      <div class="meta-row">
+        <div class="cell">
+          <span class="label">Date</span>
+          <span class="value">{{workshopDate}}</span>
+        </div>
+        <div class="cell">
+          <span class="label">Duration</span>
+          <span class="value">{{workshopDuration}}</span>
+        </div>
+        <div class="cell">
+          <span class="label">Instructor</span>
+          <span class="value">{{instructorName}}</span>
+        </div>
+      </div>
+
+      <div class="footer-url">pilatesphysics.com</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
