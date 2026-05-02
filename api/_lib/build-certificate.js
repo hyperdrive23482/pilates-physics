@@ -1,37 +1,70 @@
+import { existsSync } from 'node:fs'
 import puppeteer from 'puppeteer-core'
 import chromium from '@sparticuz/chromium'
 import { renderCertificateHtml } from './render-certificate-html.js'
 
-/**
- * Build a Certificate of Completion PDF by rendering an HTML template
- * with headless Chromium.
- *
- * @param {object} args
- * @param {object} args.webinar  - { title, subtitle, description, scheduled_at, duration_min }
- * @param {string} args.participantName - display name for the participant
- * @returns {Promise<Buffer>} the PDF bytes
- */
-// AWS_LAMBDA_FUNCTION_NAME is set in Vercel's serverless runtime (which is
-// AWS Lambda under the hood) but NOT during `vercel dev` locally. The
-// @sparticuz/chromium binary is Linux-only and won't run on a dev machine,
-// so locally we fall back to a Chrome installed on the host.
+// AWS_LAMBDA_FUNCTION_NAME is set in Vercel's serverless runtime (AWS Lambda
+// under the hood) but NOT during `vercel dev`. The @sparticuz/chromium binary
+// is Linux-only, so locally we hunt for an installed Chrome or Edge.
 const isServerless = !!process.env.AWS_LAMBDA_FUNCTION_NAME
+
+function findLocalExecutable() {
+  if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+    return process.env.PUPPETEER_EXECUTABLE_PATH
+  }
+  // `vercel dev` on Windows often runs the function through a Linux layer
+  // (WSL interop), so we probe Linux paths AND Windows paths exposed via
+  // /mnt/c. Edge ships with Windows 11 and is a reliable last resort.
+  const candidates = {
+    win32: [
+      'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+      'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+    ],
+    linux: [
+      '/opt/google/chrome/chrome',
+      '/usr/bin/google-chrome',
+      '/usr/bin/chromium',
+      '/usr/bin/chromium-browser',
+      '/mnt/c/Program Files/Google/Chrome/Application/chrome.exe',
+      '/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe',
+      '/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
+      '/mnt/c/Program Files/Microsoft/Edge/Application/msedge.exe',
+    ],
+    darwin: [
+      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+    ],
+  }[process.platform] ?? []
+  return candidates.find((p) => existsSync(p))
+}
 
 export async function buildCertificate({ webinar, participantName }) {
   const html = renderCertificateHtml({ webinar, participantName })
 
-  const launchOpts = isServerless
-    ? {
-        args: chromium.args,
-        defaultViewport: { width: 1056, height: 816, deviceScaleFactor: 2 },
-        executablePath: await chromium.executablePath(),
-        headless: chromium.headless,
-      }
-    : {
-        channel: 'chrome',
-        defaultViewport: { width: 1056, height: 816, deviceScaleFactor: 2 },
-        headless: true,
-      }
+  let launchOpts
+  if (isServerless) {
+    launchOpts = {
+      args: chromium.args,
+      defaultViewport: { width: 1056, height: 816, deviceScaleFactor: 2 },
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
+    }
+  } else {
+    const executablePath = findLocalExecutable()
+    if (!executablePath) {
+      throw new Error(
+        'No local Chrome/Edge found for PDF rendering. Set PUPPETEER_EXECUTABLE_PATH ' +
+          'to a Chromium-based browser, or test via a Vercel preview deployment.'
+      )
+    }
+    launchOpts = {
+      executablePath,
+      defaultViewport: { width: 1056, height: 816, deviceScaleFactor: 2 },
+      headless: true,
+    }
+  }
 
   const browser = await puppeteer.launch(launchOpts)
 
