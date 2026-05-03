@@ -90,6 +90,8 @@ export default function AdminPoseStudio() {
       showJoints: true,
       showVideo: true,
       showAngles: true,
+      showCenterOfMass: false,
+      showComPlumb: false,
       lineWeight: 4,
       labelScale: 1,
       pose: null,
@@ -156,6 +158,8 @@ export default function AdminPoseStudio() {
         if (key === 'joints') state.showJoints = el.classList.contains('on')
         if (key === 'video') state.showVideo = el.classList.contains('on')
         if (key === 'angles') state.showAngles = el.classList.contains('on')
+        if (key === 'centerOfMass') state.showCenterOfMass = el.classList.contains('on')
+        if (key === 'comPlumb') state.showComPlumb = el.classList.contains('on')
       })
     })
 
@@ -482,6 +486,7 @@ export default function AdminPoseStudio() {
       }
 
       drawLengthLabels(lm, w, h)
+      if (state.showCenterOfMass) drawCenterOfMass(lm, w, h)
       drawCalibrationOverlay(w, h)
     }
 
@@ -519,6 +524,45 @@ export default function AdminPoseStudio() {
         ctx.fillStyle = '#FFB856'
         ctx.fillText(text, midX - m.width / 2, midY - fontSize / 2)
       }
+    }
+
+    function drawCenterOfMass(lm, w, h) {
+      const com = computeCenterOfMass(lm, w, h)
+      if (!com) return
+
+      if (state.showComPlumb) {
+        ctx.save()
+        ctx.strokeStyle = 'rgba(91, 182, 200, 0.6)'
+        ctx.lineWidth = Math.max(2, state.lineWeight - 1)
+        ctx.setLineDash([8, 6])
+        ctx.beginPath()
+        ctx.moveTo(com.x, com.y)
+        ctx.lineTo(com.x, h)
+        ctx.stroke()
+        ctx.restore()
+      }
+
+      const r = state.lineWeight + 4
+      ctx.save()
+      ctx.fillStyle = '#5BB6C8'
+      ctx.shadowColor = 'rgba(91, 182, 200, 0.6)'
+      ctx.shadowBlur = 10
+      ctx.beginPath()
+      ctx.arc(com.x, com.y, r, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.shadowBlur = 0
+
+      ctx.strokeStyle = '#FFFFFF'
+      ctx.lineWidth = Math.max(1, state.lineWeight - 2)
+      ctx.lineCap = 'round'
+      const cross = r * 0.7
+      ctx.beginPath()
+      ctx.moveTo(com.x - cross, com.y)
+      ctx.lineTo(com.x + cross, com.y)
+      ctx.moveTo(com.x, com.y - cross)
+      ctx.lineTo(com.x, com.y + cross)
+      ctx.stroke()
+      ctx.restore()
     }
 
     function angleDeg(a, b, c) {
@@ -618,6 +662,59 @@ export default function AdminPoseStudio() {
         out.torso = null
       }
       return out
+    }
+
+    function computeCenterOfMass(lm, w, h) {
+      const get = (i) =>
+        lm[i] && lm[i].visibility > 0.3
+          ? { x: lm[i].x * w, y: lm[i].y * h }
+          : null
+
+      const interp = (p, q, t) =>
+        p && q ? { x: p.x + (q.x - p.x) * t, y: p.y + (q.y - p.y) * t } : null
+
+      const nose = get(0)
+      const lS = get(11), rS = get(12)
+      const lE = get(13), rE = get(14)
+      const lW = get(15), rW = get(16)
+      const lH = get(23), rH = get(24)
+      const lK = get(25), rK = get(26)
+      const lA = get(27), rA = get(28)
+      const lFi = get(31), rFi = get(32)
+
+      const trunkSMid = lS && rS ? { x: (lS.x + rS.x) / 2, y: (lS.y + rS.y) / 2 } : null
+      const trunkHMid = lH && rH ? { x: (lH.x + rH.x) / 2, y: (lH.y + rH.y) / 2 } : null
+      const trunkPt = trunkSMid && trunkHMid
+        ? { x: (trunkSMid.x + trunkHMid.x) / 2, y: (trunkSMid.y + trunkHMid.y) / 2 }
+        : null
+
+      const segments = [
+        { mass: 0.081, pt: nose },
+        { mass: 0.497, pt: trunkPt },
+        { mass: 0.028, pt: interp(lS, lE, 0.436) },
+        { mass: 0.028, pt: interp(rS, rE, 0.436) },
+        { mass: 0.016, pt: interp(lE, lW, 0.430) },
+        { mass: 0.016, pt: interp(rE, rW, 0.430) },
+        { mass: 0.006, pt: lW },
+        { mass: 0.006, pt: rW },
+        { mass: 0.100, pt: interp(lH, lK, 0.433) },
+        { mass: 0.100, pt: interp(rH, rK, 0.433) },
+        { mass: 0.0465, pt: interp(lK, lA, 0.433) },
+        { mass: 0.0465, pt: interp(rK, rA, 0.433) },
+        { mass: 0.0145, pt: interp(lA, lFi, 0.5) || lA },
+        { mass: 0.0145, pt: interp(rA, rFi, 0.5) || rA },
+      ]
+
+      let totalMass = 0
+      let sx = 0, sy = 0
+      for (const { mass, pt } of segments) {
+        if (!pt) continue
+        sx += pt.x * mass
+        sy += pt.y * mass
+        totalMass += mass
+      }
+      if (totalMass < 0.5) return null
+      return { x: sx / totalMass, y: sy / totalMass }
     }
 
     function fmtLength(px) {
@@ -977,6 +1074,14 @@ export default function AdminPoseStudio() {
               <div className="row">
                 <label>Angles</label>
                 <div className="toggle on" data-toggle="angles"></div>
+              </div>
+              <div className="row">
+                <label>Center of Mass</label>
+                <div className="toggle" data-toggle="centerOfMass"></div>
+              </div>
+              <div className="row">
+                <label>COM plumb line</label>
+                <div className="toggle" data-toggle="comPlumb"></div>
               </div>
               <div className="row">
                 <label>Line weight</label>
