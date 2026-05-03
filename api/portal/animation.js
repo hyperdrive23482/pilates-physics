@@ -11,6 +11,7 @@ const SLUG_TO_FILE = {
   'animation-horizontal-spring-vertical-dumbbell': 'horizontal-spring-vertical-dumbbell-animation.html',
   'animation-tall-short': 'tall-short-animation.html',
   'animation-elastic-plastic': 'elastic-plastic-animation.html',
+  'animation-bridge-knee-torque': 'bridge-knee-torque.html',
 }
 
 // Returns the raw HTML for an animation tool, gated on user entitlement.
