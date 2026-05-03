@@ -55,8 +55,8 @@ export default async function handler(req, res) {
       .trim()
     const participantName = fullName || user.email || 'Participant'
 
-    // 5. Render PDF
-    const pdfBuffer = await buildCertificate({ webinar, participantName })
+    // 5. Stream PDF
+    const doc = buildCertificate({ webinar, participantName })
 
     res.setHeader('Content-Type', 'application/pdf')
     res.setHeader(
@@ -64,7 +64,9 @@ export default async function handler(req, res) {
       `attachment; filename="certificate-${webinar.slug}.pdf"`
     )
     res.setHeader('Cache-Control', 'private, no-store')
-    res.send(pdfBuffer)
+
+    doc.pipe(res)
+    doc.end()
   } catch (err) {
     console.error('certificate error:', err)
     return res.status(500).json({ error: err.message ?? 'Internal error' })
