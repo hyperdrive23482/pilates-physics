@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Knee Torque vs. Spring Tension — Bridge</title>
+<title>Knee Torque vs. Spring Tension in a Bridge Press Out</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap');
 
@@ -64,8 +64,17 @@
   .graph-wrap {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
     padding: 20px 48px 12px;
+  }
+
+  .reformer-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 16px 48px 16px;
   }
 
   canvas { width: 100%; height: auto; display: block; }
@@ -168,16 +177,73 @@
   }
 
   button.primary:hover { background: #d4b87a; }
+
+  .notes {
+    margin-top: 32px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    background: rgba(255,255,255,0.015);
+  }
+
+  .notes-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .notes ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .notes li {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text);
+    padding-left: 18px;
+    position: relative;
+  }
+
+  .notes li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 8px;
+    height: 1px;
+    background: var(--accent-spring);
+  }
+
+  .notes-caveat {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+    font-style: italic;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    margin: 0;
+  }
 </style>
 </head>
 <body>
 
-<h1>Knee Torque vs. <em>Spring Tension</em> — Bridge</h1>
-<p class="subtitle">How spring resistance and knee torque scale across the bridge range of motion (red, red, blue spring)</p>
+<h1>Knee Torque vs. <em>Spring Tension</em> in a Bridge Press Out</h1>
+<p class="subtitle">How spring resistance and knee torque scale across the bridge press out distance.</p>
 
 <div class="stage">
   <div class="graph-wrap">
     <canvas id="graph" width="780" height="380"></canvas>
+  </div>
+  <div class="reformer-wrap">
+    <canvas id="reformer" width="780" height="260"></canvas>
   </div>
 
   <div class="legend">
@@ -204,13 +270,44 @@
       <span class="work-value torque" id="val-torque">900 in·lb</span>
     </div>
   </div>
+
+  <div class="notes">
+    <div class="notes-title">Notes</div>
+    <ul>
+      <li>Assuming a 180&nbsp;lb person, with 90&nbsp;lbs supported in the air from knees to thorax.</li>
+      <li>Shin length approximately 18", with shin 37° from vertical in home position.</li>
+      <li>Balanced Body springs shown: red, red, blue.</li>
+    </ul>
+    <p class="notes-caveat">
+      These numbers are for illustration of the concept that as torque increases on the press out, spring load increases to offer support. Humans vary, and more precise and complicated equations do exist.
+    </p>
+  </div>
 </div>
 
 <script>
   const GC = document.getElementById('graph');
   const gc = GC.getContext('2d');
+  const RC = document.getElementById('reformer');
+  const rc = RC.getContext('2d');
 
   const GW = 780, GH = 380;
+  const RW = 780, RH = 260;
+
+  // Reformer geometry
+  const FR_X = 60, FR_Y = 195, FR_W = 660, FR_H = 22;
+  const LEG_H = 34, LEG_W = 9;
+  const FOOTBAR_X = FR_X + 16;          // 76
+  const CARR_W = 150;
+  const CARR_PX_PER_INCH = 14;
+  const CARR_STARTX = 123;              // carriage left edge at 0" extension
+
+  // Stick figure geometry
+  const FOOT_X = 62;
+  const FOOT_Y = FR_Y - 37;             // 158 — high on the footbar
+  const HIP_OFFSET_X = 12;              // hip is HIP_OFFSET_X in from carriage left edge
+  const HEAD_R = 9;
+  const THIGH = 92.5;
+  const SHIN  = 92.5;
 
   const SPRING_C = '#c8a96e';
   const TORQUE_C = '#6e9ec8';
@@ -244,11 +341,13 @@
   function tToGraph(tor)      { return gI.y + gI.h - (tor / T_MAX) * gI.h; }
 
   // Animation state
-  let progress = 0;          // 0..1, maps to x = progress * X_MAX
+  let progress = 0;          // 0..1, maps to position within the current phase
+  let phase = 0;             // 0..TOTAL_PHASES-1: out, in, out, in
   let animating = false;
   let rafId = null;
   let lastTime = null;
-  const DURATION = 2500;     // ms
+  const DURATION = 2500;     // ms per phase
+  const TOTAL_PHASES = 4;    // 2 full out-and-in cycles
 
   function drawGraphBase() {
     gc.clearRect(0, 0, GW, GH);
@@ -383,19 +482,22 @@
       gc.fillStyle = TORQUE_C;
       gc.beginPath(); gc.arc(tp1.x, tp1.y, 4, 0, Math.PI * 2); gc.fill();
 
-      // Endpoint labels
+      // Endpoint labels — yellow below the dot, blue above the dot;
+      // left-end labels right of the dot, right-end labels left of the dot
+      // (so they don't collide with the y-axis tick labels).
       gc.font = '12px DM Mono, monospace';
+
       gc.fillStyle = SPRING_C;
       gc.textAlign = 'left';
-      gc.fillText('22.0 lb',  sp0.x + 8, sp0.y - 8);
+      gc.fillText('22.0 lb', sp0.x + 8, sp0.y + 16);
       gc.textAlign = 'right';
-      gc.fillText('43.3 lb',  sp1.x - 8, sp1.y - 8);
+      gc.fillText('43.3 lb', sp1.x - 8, sp1.y + 26);
 
       gc.fillStyle = TORQUE_C;
       gc.textAlign = 'left';
-      gc.fillText('900',  tp0.x + 8, tp0.y + 16);
+      gc.fillText('900 in·lb',   tp0.x + 8, tp0.y - 18);
       gc.textAlign = 'right';
-      gc.fillText('1,620',  tp1.x - 8, tp1.y + 16);
+      gc.fillText('1,620 in·lb', tp1.x - 8, tp1.y - 8);
     }
   }
 
@@ -423,11 +525,162 @@
     gc.beginPath(); gc.arc(gx, ty, 6, 0, Math.PI * 2); gc.fill();
   }
 
-  function drawStatic() {
+  // ---- REFORMER + STICK FIGURE ----
+
+  // 2-segment IK: given foot F, hip H, shin & thigh lengths,
+  // returns knee position (above the foot-hip line).
+  function computeKnee(fx, fy, hx, hy, shin, thigh) {
+    const dx = hx - fx, dy = hy - fy;
+    let d = Math.sqrt(dx * dx + dy * dy);
+    if (d < 0.001) d = 0.001;
+    const dC = Math.min(d, shin + thigh);
+
+    const a = (shin * shin - thigh * thigh + dC * dC) / (2 * dC);
+    const b2 = Math.max(0, shin * shin - a * a);
+    const b = Math.sqrt(b2);
+
+    const ux = dx / dC, uy = dy / dC;
+    // Perpendicular pointing up in canvas (negative y)
+    const nx = uy, ny = -ux;
+    return { x: fx + a * ux + b * nx, y: fy + a * uy + b * ny };
+  }
+
+  function drawCoilSpring(x1, x2, y) {
+    const coils = 14, amp = 5, len = x2 - x1;
+    if (len <= 0) return;
+    rc.strokeStyle = SPRING_C; rc.lineWidth = 1.5; rc.lineJoin = 'round';
+    rc.beginPath(); rc.moveTo(x1, y);
+    const steps = coils * 2;
+    for (let i = 0; i <= steps; i++) {
+      rc.lineTo(x1 + (i / steps) * len, y + (i % 2 === 0 ? -amp : amp));
+    }
+    rc.lineTo(x2, y); rc.stroke();
+  }
+
+  function drawStickFigure(carriageX) {
+    const CARR_TOP = FR_Y - 10;
+    const hipX = carriageX + HIP_OFFSET_X;
+    const hipY = FOOT_Y;                 // hips in the air, level with the footbar
+    const headCx = carriageX + CARR_W - 28;
+    const headCy = CARR_TOP - HEAD_R - 1;
+    const shoulderX = headCx - HEAD_R + 1;
+    const shoulderY = CARR_TOP;          // shoulders rest on the carriage
+
+    const knee = computeKnee(FOOT_X, FOOT_Y, hipX, hipY, SHIN, THIGH);
+
+    // Body line: hip (in air) → shoulder (on carriage) — bridge diagonal
+    rc.strokeStyle = '#e8e4dc';
+    rc.lineWidth = 3;
+    rc.lineCap = 'round';
+    rc.lineJoin = 'round';
+
+    rc.beginPath();
+    rc.moveTo(hipX, hipY);
+    rc.lineTo(shoulderX, shoulderY);
+    rc.stroke();
+
+    // Thigh: hip → knee
+    rc.beginPath();
+    rc.moveTo(hipX, hipY);
+    rc.lineTo(knee.x, knee.y);
+    rc.stroke();
+
+    // Shin: knee → foot
+    rc.beginPath();
+    rc.moveTo(knee.x, knee.y);
+    rc.lineTo(FOOT_X, FOOT_Y);
+    rc.stroke();
+
+    // Joint dots
+    rc.fillStyle = '#e8e4dc';
+    rc.beginPath(); rc.arc(hipX, hipY, 3.5, 0, Math.PI * 2); rc.fill();
+    rc.beginPath(); rc.arc(knee.x, knee.y, 4, 0, Math.PI * 2); rc.fill();
+    rc.beginPath(); rc.arc(FOOT_X, FOOT_Y, 3.5, 0, Math.PI * 2); rc.fill();
+
+    // Head
+    rc.beginPath();
+    rc.arc(headCx, headCy, HEAD_R, 0, Math.PI * 2);
+    rc.fill();
+  }
+
+  function drawReformer(extensionInches) {
+    rc.clearRect(0, 0, RW, RH);
+
+    // Frame
+    rc.fillStyle = '#252525';
+    rc.strokeStyle = '#3a3a3a';
+    rc.lineWidth = 1.5;
+    rc.beginPath(); rc.rect(FR_X, FR_Y, FR_W, FR_H); rc.fill(); rc.stroke();
+
+    // Rails
+    rc.strokeStyle = '#323232'; rc.lineWidth = 1;
+    rc.beginPath();
+    rc.moveTo(FR_X + 8, FR_Y + 7);  rc.lineTo(FR_X + FR_W - 8, FR_Y + 7);
+    rc.moveTo(FR_X + 8, FR_Y + 15); rc.lineTo(FR_X + FR_W - 8, FR_Y + 15);
+    rc.stroke();
+
+    // Legs
+    const legXs = [FR_X + 12, FR_X + 30, FR_X + FR_W - 30, FR_X + FR_W - 12];
+    for (const lx of legXs) {
+      rc.fillStyle = '#222'; rc.strokeStyle = '#3d3d3d'; rc.lineWidth = 1.5;
+      rc.beginPath(); rc.rect(lx - LEG_W / 2, FR_Y + FR_H, LEG_W, LEG_H); rc.fill(); rc.stroke();
+      rc.fillStyle = '#2e2e2e'; rc.strokeStyle = '#404040'; rc.lineWidth = 1;
+      rc.beginPath(); rc.rect(lx - LEG_W / 2 - 4, FR_Y + FR_H + LEG_H, LEG_W + 8, 5); rc.fill(); rc.stroke();
+    }
+
+    // Footbar (slanted)
+    const fbBaseX = FOOTBAR_X;
+    const fbBaseY = FR_Y + FR_H + 2;
+    const fbTopX  = FOOTBAR_X - 18;
+    const fbTopY  = FR_Y - 48;
+
+    rc.strokeStyle = '#666'; rc.lineWidth = 6; rc.lineCap = 'round';
+    rc.beginPath();
+    rc.moveTo(fbBaseX, fbBaseY);
+    rc.lineTo(fbTopX, fbTopY);
+    rc.stroke();
+
+    rc.strokeStyle = '#555'; rc.lineWidth = 4; rc.lineCap = 'round';
+    rc.beginPath();
+    rc.moveTo(fbBaseX - 8, fbBaseY);
+    rc.lineTo(fbBaseX + 8, fbBaseY);
+    rc.stroke();
+
+    // Carriage
+    const carriageX = CARR_STARTX + extensionInches * CARR_PX_PER_INCH;
+    const CARR_TOP = FR_Y - 10;
+    const CARR_H   = FR_H + 10;
+
+    // Spring (footbar → carriage left edge)
+    const spStart = FOOTBAR_X + 10;
+    const spEnd   = carriageX - 2;
+    if (spEnd > spStart) drawCoilSpring(spStart, spEnd, FR_Y + FR_H / 2);
+
+    rc.fillStyle = '#1e1e1e'; rc.strokeStyle = '#484848'; rc.lineWidth = 1.5;
+    rc.beginPath(); rc.rect(carriageX, CARR_TOP, CARR_W, CARR_H); rc.fill(); rc.stroke();
+    rc.fillStyle = '#2e2e2e';
+    rc.beginPath(); rc.rect(carriageX + 4, CARR_TOP, CARR_W - 8, 7); rc.fill();
+
+    // Shoulder rests at far end of carriage (where head/shoulders go)
+    const srX = carriageX + CARR_W - 38;
+    const srY = CARR_TOP - 10;
+    const srW = 14, srH = 12;
+    rc.fillStyle = '#333'; rc.strokeStyle = '#555'; rc.lineWidth = 1.5;
+    rc.beginPath(); rc.rect(srX, srY, srW, srH + 2); rc.fill(); rc.stroke();
+    rc.beginPath(); rc.rect(srX + srW + 4, srY, srW, srH + 2); rc.fill(); rc.stroke();
+    rc.fillStyle = '#282828';
+    rc.beginPath(); rc.rect(srX - 2, srY + srH - 2, srW * 2 + 8, 6); rc.fill();
+
+    // Stick figure on top
+    drawStickFigure(carriageX);
+  }
+
+  function drawStatic(x) {
     drawGraphBase();
     drawSpringLine(X_MAX);
     drawTorqueLine(X_MAX);
     drawEndpointDots(true, X_MAX);
+    drawReformer(x);
   }
 
   function drawAnimating(x) {
@@ -442,6 +695,7 @@
     drawTorqueLine(x);
     drawEndpointDots(false, x);
     drawTracer(x);
+    drawReformer(x);
   }
 
   function updateReadout(x) {
@@ -453,22 +707,33 @@
       x.toFixed(1) + '"';
   }
 
+  // Even phases extend the carriage (0 → X_MAX); odd phases retract (X_MAX → 0).
+  function phaseToX(p, prog) {
+    return p % 2 === 0 ? prog * X_MAX : (1 - prog) * X_MAX;
+  }
+
   function animate(ts) {
     if (!lastTime) lastTime = ts;
     const dt = ts - lastTime;
     lastTime = ts;
 
     progress += dt / DURATION;
-    if (progress >= 1) {
-      progress = 1;
+
+    // Roll into next phase if we passed the end of the current one.
+    while (progress >= 1 && phase < TOTAL_PHASES - 1) {
+      progress -= 1;
+      phase += 1;
+    }
+
+    if (progress >= 1 && phase >= TOTAL_PHASES - 1) {
       animating = false;
-      const x = X_MAX;
-      drawStatic();
+      const x = phaseToX(TOTAL_PHASES - 1, 1);   // ends at carriage retracted
+      drawStatic(x);
       updateReadout(x);
       return;
     }
 
-    const x = progress * X_MAX;
+    const x = phaseToX(phase, progress);
     drawAnimating(x);
     updateReadout(x);
     rafId = requestAnimationFrame(animate);
@@ -477,6 +742,7 @@
   function startAnimation() {
     if (rafId) cancelAnimationFrame(rafId);
     progress = 0;
+    phase = 0;
     animating = true;
     lastTime = null;
     drawAnimating(0);
@@ -487,18 +753,19 @@
   function reset() {
     if (rafId) cancelAnimationFrame(rafId);
     animating = false;
-    progress = 1;
+    progress = 0;
+    phase = 0;
     lastTime = null;
-    drawStatic();
-    updateReadout(X_MAX);
+    drawStatic(0);
+    updateReadout(0);
   }
 
   document.getElementById('btn-play').addEventListener('click', startAnimation);
   document.getElementById('btn-reset').addEventListener('click', reset);
 
-  // Initial state — show full lines with both endpoints
-  drawStatic();
-  updateReadout(X_MAX);
+  // Initial state — graph fully drawn, carriage at 0" extension, readout at start
+  drawStatic(0);
+  updateReadout(0);
 </script>
 </body>
 </html>
