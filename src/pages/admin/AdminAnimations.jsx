@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { ExternalLink } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import AdminNav from '../../components/admin/AdminNav'
@@ -56,6 +57,15 @@ export default function AdminAnimations() {
       cancelled = true
     }
   }, [selected, request])
+
+  function openStandalone() {
+    if (!html) return
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener,noreferrer')
+    // Give the new tab a generous window to load before reclaiming the blob.
+    setTimeout(() => URL.revokeObjectURL(url), 60_000)
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
@@ -143,6 +153,36 @@ export default function AdminAnimations() {
                 position: 'relative',
               }}
             >
+              {html && !previewLoading && (
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    padding: '0.45rem 0.6rem',
+                    borderBottom: '1px solid var(--color-rule)',
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={openStandalone}
+                    title="Open as standalone full-screen page (no admin nav) — useful for mobile preview and screen recording"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      padding: '0.35rem 0.7rem',
+                      background: 'transparent',
+                      border: '1px solid var(--color-rule)',
+                      color: 'var(--color-ink)',
+                      fontFamily: 'inherit',
+                      fontSize: '0.75rem',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <ExternalLink size={12} /> Open standalone
+                  </button>
+                </div>
+              )}
               {previewLoading ? (
                 <p
                   style={{
