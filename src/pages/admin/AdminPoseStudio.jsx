@@ -64,6 +64,7 @@ export default function AdminPoseStudio() {
     const fileInput = q('#ps-fileInput')
     const playBtn = q('#ps-playBtn')
     const restartBtn = q('#ps-restartBtn')
+    const clearBtn = q('#ps-clearBtn')
     const recordBtn = q('#ps-recordBtn')
     const cancelRecordBtn = q('#ps-cancelRecordBtn')
     const progressBar = q('#ps-progressBar')
@@ -361,6 +362,7 @@ export default function AdminPoseStudio() {
         playBtn.disabled = false
         restartBtn.disabled = false
         recordBtn.disabled = false
+        clearBtn.disabled = false
         setStatus('ready to play', 'ready')
         video.currentTime = 0
         // Calibration depends on pixel scale, which is tied to this specific video
@@ -368,6 +370,51 @@ export default function AdminPoseStudio() {
         video.addEventListener('seeked', () => processCurrentFrame(), { once: true })
       }
     }
+
+    function clearVideo() {
+      if (state.recording) {
+        try { state.recorder.stop() } catch {}
+        state.recording = false
+        cancelRecordBtn.disabled = true
+        cancelRecordBtn.style.display = 'none'
+        progressBar.style.display = 'none'
+        progressFill.style.width = '0%'
+      }
+      video.pause()
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null }
+      video.onloadedmetadata = null
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl)
+        objectUrl = null
+      }
+      video.removeAttribute('src')
+      video.load()
+      fileInput.value = ''
+
+      state.lastLandmarks = null
+      state.frameCount = 0
+      state.fps = 0
+
+      canvas.width = 1280
+      canvas.height = 720
+      ctx.fillStyle = '#000'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+      dropzone.classList.remove('hidden')
+      playBtn.disabled = true
+      restartBtn.disabled = true
+      recordBtn.disabled = true
+      clearBtn.disabled = true
+
+      metaFrame.textContent = '—'
+      metaFps.textContent = '—'
+      metaTracked.textContent = 'no'
+
+      resetCalibration()
+      setStatus('ready — drop a video', 'ready')
+    }
+
+    addL(clearBtn, 'click', clearVideo)
 
     // Playback
     addL(playBtn, 'click', () => {
@@ -1030,6 +1077,7 @@ export default function AdminPoseStudio() {
               <div className="btn-group">
                 <button id="ps-playBtn" disabled>▶ Play / Pause</button>
                 <button id="ps-restartBtn" disabled>↺ Restart</button>
+                <button id="ps-clearBtn" className="danger" disabled>✕ Clear video</button>
               </div>
             </div>
 
