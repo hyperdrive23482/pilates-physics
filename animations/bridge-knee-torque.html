@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knee Torque vs. Spring Tension — Bridge</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --border: #2a2a2a;
+    --text: #e8e4dc;
+    --muted: #6b6660;
+    --accent-spring: #c8a96e;
+    --accent-torque: #6e9ec8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 400;
+    color: #EF9F27;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  h1 em { font-style: italic; color: var(--accent-spring); }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 28px;
+    max-width: 620px;
+    line-height: 1.65;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .graph-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 48px 12px;
+  }
+
+  canvas { width: 100%; height: auto; display: block; }
+
+  .work-row {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 28px;
+  }
+
+  .work-cell {
+    flex: 1;
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-right: 1px solid var(--border);
+  }
+
+  .work-cell:last-child { border-right: none; }
+
+  .work-cell.center {
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 200px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .work-cell.right { text-align: right; }
+
+  .work-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .work-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    line-height: 1.1;
+  }
+
+  .work-value.spring { color: var(--accent-spring); }
+  .work-value.torque { color: var(--accent-torque); }
+  .work-value.center-val { color: var(--text); font-size: 26px; }
+
+  .legend {
+    display: flex;
+    gap: 36px;
+    margin-top: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .legend-swatch { width: 32px; height: 2px; border-radius: 2px; }
+  .legend-swatch.spring { background: var(--accent-spring); }
+  .legend-swatch.torque { background: var(--accent-torque); }
+
+  .controls {
+    display: flex;
+    gap: 14px;
+    margin-top: 28px;
+    justify-content: center;
+  }
+
+  button {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 12px 32px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  button:hover { border-color: var(--accent-spring); color: var(--accent-spring); }
+
+  button.primary {
+    background: var(--accent-spring);
+    border-color: var(--accent-spring);
+    color: #0e0e0e;
+    font-weight: 500;
+  }
+
+  button.primary:hover { background: #d4b87a; }
+</style>
+</head>
+<body>
+
+<h1>Knee Torque vs. <em>Spring Tension</em> — Bridge</h1>
+<p class="subtitle">How spring resistance and knee torque scale across the bridge range of motion (red, red, blue spring)</p>
+
+<div class="stage">
+  <div class="graph-wrap">
+    <canvas id="graph" width="780" height="380"></canvas>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch spring"></span> Spring tension (lb)</div>
+    <div class="legend-item"><span class="legend-swatch torque"></span> Knee torque (in·lb)</div>
+  </div>
+
+  <div class="controls">
+    <button class="primary" id="btn-play">Play</button>
+    <button id="btn-reset">Reset</button>
+  </div>
+
+  <div class="work-row">
+    <div class="work-cell">
+      <span class="work-label">Spring tension</span>
+      <span class="work-value spring" id="val-spring">22.0 lb</span>
+    </div>
+    <div class="work-cell center">
+      <span class="work-label">Carriage extension</span>
+      <span class="work-value center-val" id="val-extension">0.0"</span>
+    </div>
+    <div class="work-cell right">
+      <span class="work-label">Knee torque</span>
+      <span class="work-value torque" id="val-torque">900 in·lb</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  const GC = document.getElementById('graph');
+  const gc = GC.getContext('2d');
+
+  const GW = 780, GH = 380;
+
+  const SPRING_C = '#c8a96e';
+  const TORQUE_C = '#6e9ec8';
+  const SPRING_F = 'rgba(200,169,110,0.18)';
+  const TORQUE_F = 'rgba(110,158,200,0.14)';
+  const GRID_C   = 'rgba(255,255,255,0.045)';
+  const MUTED    = '#6b6660';
+
+  // Physics — linear models from user's data points
+  const X_MAX = 8;          // inches
+  const F0 = 22.0,  F1 = 43.3;       // spring tension lb at 0" and 8"
+  const T0 = 900,   T1 = 1620;        // knee torque in·lb at 0" and 8"
+
+  function springF(x) { return F0 + (F1 - F0) * (x / X_MAX); }
+  function torqueT(x) { return T0 + (T1 - T0) * (x / X_MAX); }
+
+  // Graph layout — leave room on BOTH sides for two y-axes
+  const gP = { left: 78, right: 96, top: 30, bottom: 64 };
+  const gI = {
+    x: gP.left, y: gP.top,
+    w: GW - gP.left - gP.right,
+    h: GH - gP.top - gP.bottom
+  };
+
+  // Y-axis maxes (chosen so endpoints sit a bit below the top)
+  const F_MAX = 50;     // lb
+  const T_MAX = 1800;   // in·lb
+
+  function xToGraph(x)        { return gI.x + (x / X_MAX) * gI.w; }
+  function fToGraph(f)        { return gI.y + gI.h - (f / F_MAX) * gI.h; }
+  function tToGraph(tor)      { return gI.y + gI.h - (tor / T_MAX) * gI.h; }
+
+  // Animation state
+  let progress = 0;          // 0..1, maps to x = progress * X_MAX
+  let animating = false;
+  let rafId = null;
+  let lastTime = null;
+  const DURATION = 2500;     // ms
+
+  function drawGraphBase() {
+    gc.clearRect(0, 0, GW, GH);
+
+    // Horizontal grid lines (5 divisions)
+    gc.strokeStyle = GRID_C; gc.lineWidth = 1;
+    for (let i = 0; i <= 5; i++) {
+      const gy = gI.y + (i / 5) * gI.h;
+      gc.beginPath(); gc.moveTo(gI.x, gy); gc.lineTo(gI.x + gI.w, gy); gc.stroke();
+    }
+
+    // Left y-axis ticks (spring tension, lb)
+    gc.font = '12px DM Mono, monospace';
+    for (let lb = 0; lb <= F_MAX; lb += 10) {
+      const gy = fToGraph(lb);
+      gc.fillStyle = SPRING_C; gc.textAlign = 'right';
+      gc.fillText(lb + ' lb', gI.x - 8, gy + 4);
+    }
+
+    // Right y-axis ticks (knee torque, in·lb)
+    for (let inlb = 0; inlb <= T_MAX; inlb += 300) {
+      const gy = tToGraph(inlb);
+      gc.fillStyle = TORQUE_C; gc.textAlign = 'left';
+      gc.fillText(inlb.toLocaleString(), gI.x + gI.w + 8, gy + 4);
+    }
+
+    // X-axis ticks (every inch)
+    gc.fillStyle = MUTED;
+    gc.textAlign = 'center';
+    for (let inch = 0; inch <= X_MAX; inch++) {
+      const gx = xToGraph(inch);
+      gc.strokeStyle = GRID_C; gc.lineWidth = 1;
+      gc.beginPath(); gc.moveTo(gx, gI.y); gc.lineTo(gx, gI.y + gI.h); gc.stroke();
+      gc.fillText(inch + '"', gx, gI.y + gI.h + 18);
+    }
+
+    // Axis frame
+    gc.strokeStyle = '#333'; gc.lineWidth = 1.5;
+    gc.beginPath();
+    gc.moveTo(gI.x, gI.y);
+    gc.lineTo(gI.x, gI.y + gI.h);
+    gc.lineTo(gI.x + gI.w, gI.y + gI.h);
+    gc.lineTo(gI.x + gI.w, gI.y);
+    gc.stroke();
+
+    // Axis labels
+    gc.font = '13px DM Mono, monospace';
+
+    // X-axis label (bottom center)
+    gc.fillStyle = MUTED; gc.textAlign = 'center';
+    gc.fillText('Carriage extension (inches)', gI.x + gI.w / 2, gI.y + gI.h + 44);
+
+    // Left axis title (rotated)
+    gc.save();
+    gc.translate(20, gI.y + gI.h / 2);
+    gc.rotate(-Math.PI / 2);
+    gc.textAlign = 'center';
+    gc.fillStyle = SPRING_C;
+    gc.fillText('Spring tension (lb)', 0, 0);
+    gc.restore();
+
+    // Right axis title (rotated)
+    gc.save();
+    gc.translate(GW - 18, gI.y + gI.h / 2);
+    gc.rotate(Math.PI / 2);
+    gc.textAlign = 'center';
+    gc.fillStyle = TORQUE_C;
+    gc.fillText('Knee torque (in·lb)', 0, 0);
+    gc.restore();
+  }
+
+  function drawSpringLine(upToX) {
+    const x0 = 0;
+    const x1 = upToX;
+    const p0 = { x: xToGraph(x0), y: fToGraph(springF(x0)) };
+    const p1 = { x: xToGraph(x1), y: fToGraph(springF(x1)) };
+
+    // Filled area under spring line (only up to current x)
+    gc.fillStyle = SPRING_F;
+    gc.beginPath();
+    gc.moveTo(p0.x, gI.y + gI.h);
+    gc.lineTo(p0.x, p0.y);
+    gc.lineTo(p1.x, p1.y);
+    gc.lineTo(p1.x, gI.y + gI.h);
+    gc.closePath();
+    gc.fill();
+
+    // Line
+    gc.strokeStyle = SPRING_C; gc.lineWidth = 2.5; gc.lineJoin = 'round';
+    gc.beginPath();
+    gc.moveTo(p0.x, p0.y); gc.lineTo(p1.x, p1.y);
+    gc.stroke();
+  }
+
+  function drawTorqueLine(upToX) {
+    const x0 = 0;
+    const x1 = upToX;
+    const p0 = { x: xToGraph(x0), y: tToGraph(torqueT(x0)) };
+    const p1 = { x: xToGraph(x1), y: tToGraph(torqueT(x1)) };
+
+    gc.fillStyle = TORQUE_F;
+    gc.beginPath();
+    gc.moveTo(p0.x, gI.y + gI.h);
+    gc.lineTo(p0.x, p0.y);
+    gc.lineTo(p1.x, p1.y);
+    gc.lineTo(p1.x, gI.y + gI.h);
+    gc.closePath();
+    gc.fill();
+
+    gc.strokeStyle = TORQUE_C; gc.lineWidth = 2.5; gc.lineJoin = 'round';
+    gc.beginPath();
+    gc.moveTo(p0.x, p0.y); gc.lineTo(p1.x, p1.y);
+    gc.stroke();
+  }
+
+  function drawEndpointDots(showFull, currentX) {
+    // Endpoint dots — left-end always shown
+    const sp0 = { x: xToGraph(0), y: fToGraph(F0) };
+    const tp0 = { x: xToGraph(0), y: tToGraph(T0) };
+
+    gc.fillStyle = SPRING_C;
+    gc.beginPath(); gc.arc(sp0.x, sp0.y, 4, 0, Math.PI * 2); gc.fill();
+    gc.fillStyle = TORQUE_C;
+    gc.beginPath(); gc.arc(tp0.x, tp0.y, 4, 0, Math.PI * 2); gc.fill();
+
+    // Right-end dots — only when full
+    if (showFull) {
+      const sp1 = { x: xToGraph(X_MAX), y: fToGraph(F1) };
+      const tp1 = { x: xToGraph(X_MAX), y: tToGraph(T1) };
+      gc.fillStyle = SPRING_C;
+      gc.beginPath(); gc.arc(sp1.x, sp1.y, 4, 0, Math.PI * 2); gc.fill();
+      gc.fillStyle = TORQUE_C;
+      gc.beginPath(); gc.arc(tp1.x, tp1.y, 4, 0, Math.PI * 2); gc.fill();
+
+      // Endpoint labels
+      gc.font = '12px DM Mono, monospace';
+      gc.fillStyle = SPRING_C;
+      gc.textAlign = 'left';
+      gc.fillText('22.0 lb',  sp0.x + 8, sp0.y - 8);
+      gc.textAlign = 'right';
+      gc.fillText('43.3 lb',  sp1.x - 8, sp1.y - 8);
+
+      gc.fillStyle = TORQUE_C;
+      gc.textAlign = 'left';
+      gc.fillText('900',  tp0.x + 8, tp0.y + 16);
+      gc.textAlign = 'right';
+      gc.fillText('1,620',  tp1.x - 8, tp1.y + 16);
+    }
+  }
+
+  function drawTracer(x) {
+    const gx = xToGraph(x);
+
+    // Vertical tracer line
+    gc.strokeStyle = 'rgba(255,255,255,0.18)';
+    gc.lineWidth = 1;
+    gc.setLineDash([4, 5]);
+    gc.beginPath();
+    gc.moveTo(gx, gI.y);
+    gc.lineTo(gx, gI.y + gI.h);
+    gc.stroke();
+    gc.setLineDash([]);
+
+    // Spring dot
+    const sy = fToGraph(springF(x));
+    gc.fillStyle = SPRING_C;
+    gc.beginPath(); gc.arc(gx, sy, 6, 0, Math.PI * 2); gc.fill();
+
+    // Torque dot
+    const ty = tToGraph(torqueT(x));
+    gc.fillStyle = TORQUE_C;
+    gc.beginPath(); gc.arc(gx, ty, 6, 0, Math.PI * 2); gc.fill();
+  }
+
+  function drawStatic() {
+    drawGraphBase();
+    drawSpringLine(X_MAX);
+    drawTorqueLine(X_MAX);
+    drawEndpointDots(true, X_MAX);
+  }
+
+  function drawAnimating(x) {
+    drawGraphBase();
+    // Faded full lines (preview)
+    gc.globalAlpha = 0.22;
+    drawSpringLine(X_MAX);
+    drawTorqueLine(X_MAX);
+    gc.globalAlpha = 1;
+    // Solid progress lines up to current x
+    drawSpringLine(x);
+    drawTorqueLine(x);
+    drawEndpointDots(false, x);
+    drawTracer(x);
+  }
+
+  function updateReadout(x) {
+    document.getElementById('val-spring').textContent =
+      springF(x).toFixed(1) + ' lb';
+    document.getElementById('val-torque').textContent =
+      Math.round(torqueT(x)).toLocaleString() + ' in·lb';
+    document.getElementById('val-extension').textContent =
+      x.toFixed(1) + '"';
+  }
+
+  function animate(ts) {
+    if (!lastTime) lastTime = ts;
+    const dt = ts - lastTime;
+    lastTime = ts;
+
+    progress += dt / DURATION;
+    if (progress >= 1) {
+      progress = 1;
+      animating = false;
+      const x = X_MAX;
+      drawStatic();
+      updateReadout(x);
+      return;
+    }
+
+    const x = progress * X_MAX;
+    drawAnimating(x);
+    updateReadout(x);
+    rafId = requestAnimationFrame(animate);
+  }
+
+  function startAnimation() {
+    if (rafId) cancelAnimationFrame(rafId);
+    progress = 0;
+    animating = true;
+    lastTime = null;
+    drawAnimating(0);
+    updateReadout(0);
+    rafId = requestAnimationFrame(animate);
+  }
+
+  function reset() {
+    if (rafId) cancelAnimationFrame(rafId);
+    animating = false;
+    progress = 1;
+    lastTime = null;
+    drawStatic();
+    updateReadout(X_MAX);
+  }
+
+  document.getElementById('btn-play').addEventListener('click', startAnimation);
+  document.getElementById('btn-reset').addEventListener('click', reset);
+
+  // Initial state — show full lines with both endpoints
+  drawStatic();
+  updateReadout(X_MAX);
+</script>
+</body>
+</html>
