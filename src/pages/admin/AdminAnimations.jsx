@@ -1,33 +1,94 @@
 import { useEffect, useState } from 'react'
-import { ExternalLink, Smartphone } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import AdminNav from '../../components/admin/AdminNav'
 
-const MOBILE_SCALE_STYLE = `
-<style data-mobile-scale>
-  h1 { font-size: clamp(30px, 5vw, 44px) !important; }
-  .subtitle { font-size: 22px !important; line-height: 1.5 !important; }
-  .eyebrow, .panel-label, .work-label, .notes-title {
-    font-size: 18px !important;
-    letter-spacing: 0.1em !important;
+// Injected into <head> of every animation: scale-class CSS overrides + a
+// canvas font-setter monkey-patch that scales any `Npx ...` font string
+// when window.__ppLabelScale > 1. Patch lives in <head> so it's installed
+// before the animation's own <script> runs.
+const MOBILE_SCALE_HEAD = `
+<style data-pp-mobile-scale>
+  body.__pp-mobile-scale h1 { font-size: clamp(30px, 5vw, 44px) !important; }
+  body.__pp-mobile-scale .subtitle { font-size: 22px !important; line-height: 1.5 !important; }
+  body.__pp-mobile-scale .eyebrow,
+  body.__pp-mobile-scale .panel-label,
+  body.__pp-mobile-scale .work-label,
+  body.__pp-mobile-scale .notes-title { font-size: 18px !important; letter-spacing: 0.1em !important; }
+  body.__pp-mobile-scale .work-value { font-size: 36px !important; }
+  body.__pp-mobile-scale .work-value.center-val { font-size: 42px !important; }
+  body.__pp-mobile-scale .legend-item,
+  body.__pp-mobile-scale .notes li { font-size: 22px !important; }
+  body.__pp-mobile-scale .notes-caveat { font-size: 20px !important; }
+  body.__pp-mobile-scale button:not(#__pp_mobile_scale_btn) { font-size: 16px !important; padding: 14px 28px !important; }
+</style>
+<script data-pp-mobile-scale-patch>
+(function(){
+  var proto = window.CanvasRenderingContext2D && CanvasRenderingContext2D.prototype;
+  if (!proto) return;
+  var desc = Object.getOwnPropertyDescriptor(proto, 'font');
+  var p = proto;
+  while (!desc && (p = Object.getPrototypeOf(p))) {
+    desc = p && Object.getOwnPropertyDescriptor(p, 'font');
   }
-  .work-value { font-size: 36px !important; }
-  .work-value.center-val { font-size: 42px !important; }
-  .legend-item, .notes li { font-size: 22px !important; }
-  .notes-caveat { font-size: 20px !important; }
-  button { font-size: 16px !important; padding: 14px 28px !important; }
-</style>`
+  if (!desc || !desc.set || !desc.get) return;
+  window.__ppLabelScale = 1;
+  Object.defineProperty(proto, 'font', {
+    configurable: true,
+    get: function(){ return desc.get.call(this); },
+    set: function(v){
+      if (typeof v === 'string' && (window.__ppLabelScale || 1) !== 1) {
+        v = v.replace(/(\\d+(?:\\.\\d+)?)px /, function(_, n){
+          return Math.round(Number(n) * window.__ppLabelScale) + 'px ';
+        });
+      }
+      desc.set.call(this, v);
+    }
+  });
+})();
+</script>`
 
-function applyMobileScale(html) {
+// Injected before </body>: a fixed-position toggle button. Hidden when the
+// page is inside an iframe (admin preview) so the button only shows up on
+// the standalone tab where screen-recording happens.
+const MOBILE_SCALE_BODY = `
+<script data-pp-mobile-scale-controls>
+(function(){
+  if (window.top !== window.self) return;
+  function init(){
+    var btn = document.createElement('button');
+    btn.id = '__pp_mobile_scale_btn';
+    btn.type = 'button';
+    btn.textContent = 'Mobile scale';
+    btn.style.cssText = 'position:fixed;top:12px;right:12px;z-index:99999;padding:8px 14px;font-family:\\'DM Mono\\',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;background:rgba(20,20,20,0.85);color:#e8e4dc;border:1px solid #2a2a2a;border-radius:6px;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);';
+    btn.addEventListener('click', function(){
+      var on = !document.body.classList.contains('__pp-mobile-scale');
+      document.body.classList.toggle('__pp-mobile-scale', on);
+      window.__ppLabelScale = on ? 1.6 : 1;
+      btn.style.borderColor = on ? '#c8a96e' : '#2a2a2a';
+      btn.style.color = on ? '#c8a96e' : '#e8e4dc';
+      btn.textContent = on ? 'Mobile scale · on' : 'Mobile scale';
+      window.dispatchEvent(new Event('resize'));
+    });
+    document.body.appendChild(btn);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>`
+
+function injectMobileScaleControls(html) {
   if (!html) return html
-  const withCss = html.includes('</head>')
-    ? html.replace('</head>', `${MOBILE_SCALE_STYLE}</head>`)
-    : MOBILE_SCALE_STYLE + html
-  return withCss.replace(
-    /(\.font\s*=\s*['"`])(\d+)px /g,
-    (_, prefix, px) => `${prefix}${Math.round(Number(px) * 1.6)}px `
-  )
+  const withHead = html.includes('</head>')
+    ? html.replace('</head>', `${MOBILE_SCALE_HEAD}</head>`)
+    : MOBILE_SCALE_HEAD + html
+  return withHead.includes('</body>')
+    ? withHead.replace('</body>', `${MOBILE_SCALE_BODY}</body>`)
+    : withHead + MOBILE_SCALE_BODY
 }
 
 export default function AdminAnimations() {
@@ -40,7 +101,6 @@ export default function AdminAnimations() {
   const [listLoading, setListLoading] = useState(true)
   const [previewLoading, setPreviewLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [mobileScale, setMobileScale] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -85,7 +145,7 @@ export default function AdminAnimations() {
     }
   }, [selected, request])
 
-  const displayedHtml = mobileScale ? applyMobileScale(html) : html
+  const displayedHtml = injectMobileScaleControls(html)
 
   function openStandalone() {
     if (!displayedHtml) return
@@ -187,36 +247,14 @@ export default function AdminAnimations() {
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-end',
-                    gap: '0.5rem',
                     padding: '0.45rem 0.6rem',
                     borderBottom: '1px solid var(--color-rule)',
                   }}
                 >
                   <button
                     type="button"
-                    onClick={() => setMobileScale((v) => !v)}
-                    title="Scale up labels for screenshotting at narrow widths (social content). Carries through to standalone view."
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.35rem',
-                      padding: '0.35rem 0.7rem',
-                      background: mobileScale ? 'rgba(255,255,255,0.04)' : 'transparent',
-                      border: mobileScale
-                        ? '1px solid var(--color-accent)'
-                        : '1px solid var(--color-rule)',
-                      color: mobileScale ? 'var(--color-accent)' : 'var(--color-ink)',
-                      fontFamily: 'inherit',
-                      fontSize: '0.75rem',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    <Smartphone size={12} /> Mobile scale{mobileScale ? ' · on' : ''}
-                  </button>
-                  <button
-                    type="button"
                     onClick={openStandalone}
-                    title="Open as standalone full-screen page (no admin nav) — useful for mobile preview and screen recording"
+                    title="Open as standalone full-screen page (no admin nav). Includes a mobile-scale toggle in the top-right for screenshotting at narrow widths."
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
