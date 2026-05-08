@@ -226,6 +226,38 @@
   }
 
   .insight strong { color: var(--accent-spring); font-weight: 500; }
+
+  /* Mobile: recover canvas width by trimming wrapper padding, and stack
+     the work-row vertically so each stat gets full viewport width instead
+     of being squashed into a 3-column flex. */
+  @media (max-width: 600px) {
+    body { padding: 24px 12px; }
+    .graph-wrap    { padding: 14px 14px 8px; }
+    .reformer-wrap { padding: 10px 14px 14px; }
+
+    .work-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .work-cell {
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      padding: 14px 18px;
+    }
+    .work-cell:last-child { border-bottom: none; }
+    .work-cell.center {
+      flex: 0 0 auto;
+      align-items: flex-start;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 6px 12px;
+    }
+    .work-cell.right { text-align: left; }
+
+    .insight { padding: 18px 20px; margin-top: 24px; }
+    .insight p { font-size: 15px; line-height: 1.65; }
+  }
 </style>
 </head>
 <body>

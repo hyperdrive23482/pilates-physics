@@ -38,7 +38,8 @@ const MOBILE_SCALE_BODY = `
     btn.id = '__pp_mobile_scale_btn';
     btn.type = 'button';
     btn.textContent = 'Mobile scale';
-    btn.style.cssText = 'position:fixed;top:12px;right:12px;z-index:99999;padding:8px 14px;font-family:\\'DM Mono\\',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;background:rgba(20,20,20,0.85);color:#e8e4dc;border:1px solid #2a2a2a;border-radius:6px;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);';
+    var isNarrow = window.innerWidth <= 600;
+    btn.style.cssText = 'position:fixed;bottom:14px;right:14px;z-index:99999;padding:' + (isNarrow ? '6px 10px' : '8px 14px') + ';font-family:\\'DM Mono\\',monospace;font-size:' + (isNarrow ? '10px' : '11px') + ';letter-spacing:0.12em;text-transform:uppercase;background:rgba(20,20,20,0.92);color:#e8e4dc;border:1px solid #2a2a2a;border-radius:6px;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 4px 12px rgba(0,0,0,0.35);';
     btn.addEventListener('click', function(){
       var on = !document.body.classList.contains('__pp-mobile-scale');
       document.body.classList.toggle('__pp-mobile-scale', on);
