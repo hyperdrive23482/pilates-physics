@@ -200,7 +200,7 @@ export default function AdminContentPiece() {
 
       <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <Link
-          to="/admin/content/ideas"
+          to="/admin/content"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -211,7 +211,7 @@ export default function AdminContentPiece() {
             marginBottom: '1rem',
           }}
         >
-          <ChevronLeft size={14} /> Ideas
+          <ChevronLeft size={14} /> Content
         </Link>
 
         <div className="pp-header-row" style={{ marginBottom: '2rem' }}>

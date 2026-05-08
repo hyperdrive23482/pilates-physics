@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
+import { ChevronLeft } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import AdminNav from '../../components/admin/AdminNav'
@@ -43,6 +44,21 @@ export default function AdminContentCalendar() {
       <AdminNav user={user} onSignOut={signOut} />
 
       <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
+        <Link
+          to="/admin/content"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.3rem',
+            color: 'var(--color-ink-muted)',
+            textDecoration: 'none',
+            fontSize: '0.8rem',
+            marginBottom: '1rem',
+          }}
+        >
+          <ChevronLeft size={14} /> Content
+        </Link>
+
         <div className="pp-header-row" style={{ marginBottom: '2rem' }}>
           <h1
             style={{
