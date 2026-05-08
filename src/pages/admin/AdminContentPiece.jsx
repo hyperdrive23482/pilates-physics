@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import MDEditor from '@uiw/react-md-editor'
-import { Sparkles, Save, CalendarCheck, RotateCcw, ChevronLeft, History } from 'lucide-react'
+import { Sparkles, Save, CalendarCheck, RotateCcw, ChevronLeft, History, Send } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import AdminNav from '../../components/admin/AdminNav'
@@ -47,6 +47,8 @@ export default function AdminContentPiece() {
 
   const [scheduleAt, setScheduleAt] = useState(defaultScheduleLocal())
   const [approving, setApproving] = useState(false)
+  const [draftingInKit, setDraftingInKit] = useState(false)
+  const [kitSyncNote, setKitSyncNote] = useState(null)
 
   const refetch = useCallback(async () => {
     setLoading(true)
@@ -106,8 +108,9 @@ export default function AdminContentPiece() {
 
   async function saveEdits() {
     setSaving(true)
+    setKitSyncNote(null)
     try {
-      await request(`/api/admin/content/pieces?id=${id}`, {
+      const result = await request(`/api/admin/content/pieces?id=${id}`, {
         method: 'PATCH',
         body: {
           blog_markdown: blogMd,
@@ -117,11 +120,40 @@ export default function AdminContentPiece() {
       })
       dirtyRef.current = false
       setSavedAt(new Date())
+      if (result?.kit_sync === 'updated') {
+        setKitSyncNote('Synced to Kit draft')
+      } else if (typeof result?.kit_sync === 'string' && result.kit_sync.startsWith('failed')) {
+        setKitSyncNote(`Kit sync failed: ${result.kit_sync.replace(/^failed:\s*/, '')}`)
+      }
       await refetch()
     } catch (e) {
       alert(`Save failed: ${e.message}`)
     }
     setSaving(false)
+  }
+
+  async function draftInKit() {
+    setDraftingInKit(true)
+    setKitSyncNote(null)
+    try {
+      // Save first if dirty so Kit gets the latest content
+      if (dirtyRef.current) {
+        await saveEdits()
+      }
+      const result = await request('/api/admin/content/draft-in-kit', {
+        method: 'POST',
+        body: { piece_id: id },
+      })
+      setKitSyncNote(
+        result.action === 'created'
+          ? `Created draft in Kit (broadcast #${result.kit_broadcast_id})`
+          : `Updated existing Kit draft (broadcast #${result.kit_broadcast_id})`,
+      )
+      await refetch()
+    } catch (e) {
+      alert(`Draft in Kit failed: ${e.message}`)
+    }
+    setDraftingInKit(false)
   }
 
   async function approveAndSchedule() {
@@ -350,7 +382,7 @@ export default function AdminContentPiece() {
                 visibleDragbar={false}
               />
             </div>
-            <div style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
               <button
                 type="button"
                 onClick={saveEdits}
@@ -362,6 +394,11 @@ export default function AdminContentPiece() {
               {savedAt && (
                 <span style={{ fontSize: '0.75rem', color: 'var(--color-ink-muted)' }}>
                   Saved at {savedAt.toLocaleTimeString()}
+                </span>
+              )}
+              {kitSyncNote && (
+                <span style={{ fontSize: '0.75rem', color: 'var(--color-accent)' }}>
+                  · {kitSyncNote}
                 </span>
               )}
             </div>
@@ -407,16 +444,41 @@ export default function AdminContentPiece() {
                   onChange={(e) => setScheduleAt(e.target.value)}
                   style={{ ...inputStyle, maxWidth: '260px' }}
                 />
-                <div style={{ marginTop: '1rem' }}>
+                <div style={{ marginTop: '1rem', display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
                   <button
                     type="button"
                     onClick={approveAndSchedule}
-                    disabled={approving}
-                    style={primaryBtn(approving)}
+                    disabled={approving || draftingInKit}
+                    style={primaryBtn(approving || draftingInKit)}
                   >
                     <CalendarCheck size={14} /> {approving ? 'Scheduling…' : 'Approve & schedule'}
                   </button>
+                  <button
+                    type="button"
+                    onClick={draftInKit}
+                    disabled={approving || draftingInKit}
+                    style={secondaryBtn}
+                  >
+                    <Send size={14} />{' '}
+                    {draftingInKit
+                      ? piece.kit_broadcast_id
+                        ? 'Updating Kit…'
+                        : 'Drafting in Kit…'
+                      : piece.kit_broadcast_id
+                        ? 'Update Kit draft'
+                        : 'Draft in Kit'}
+                  </button>
                 </div>
+                {piece.kit_broadcast_id && (
+                  <p style={{ fontSize: '0.75rem', color: 'var(--color-ink-muted)', marginTop: '0.6rem' }}>
+                    Linked to Kit broadcast #{piece.kit_broadcast_id}. Edits saved here will auto-sync to it.
+                  </p>
+                )}
+                {kitSyncNote && (
+                  <p style={{ fontSize: '0.75rem', color: 'var(--color-accent)', marginTop: '0.4rem' }}>
+                    {kitSyncNote}
+                  </p>
+                )}
               </>
             )}
           </Step>

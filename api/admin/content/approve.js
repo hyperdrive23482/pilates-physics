@@ -1,25 +1,21 @@
 import { supabaseAdmin } from '../../_lib/supabase-admin.js'
 import { requireAdmin } from '../../_lib/require-admin.js'
 import { renderMarkdown } from '../../_lib/markdown.js'
-import { createBroadcast } from '../../_lib/kit.js'
+import { createBroadcast, updateBroadcast } from '../../_lib/kit.js'
+import { buildEmailHtml } from '../../_lib/content-email.js'
 
-const SITE_BASE = process.env.SITE_BASE_URL ?? 'https://pilatesphysics.com'
-
-function ensureSlugUniqueOnBlog(baseSlug) {
-  // Caller is expected to call this and use the returned slug.
-  return async () => {
-    let slug = baseSlug
-    let n = 2
-    while (true) {
-      const { data: existing } = await supabaseAdmin
-        .from('blog_posts')
-        .select('id')
-        .eq('slug', slug)
-        .maybeSingle()
-      if (!existing) return slug
-      slug = `${baseSlug}-${n++}`
-      if (n > 200) return slug
-    }
+async function reserveUniqueBlogSlug(baseSlug) {
+  let slug = baseSlug
+  let n = 2
+  while (true) {
+    const { data: existing } = await supabaseAdmin
+      .from('blog_posts')
+      .select('id')
+      .eq('slug', slug)
+      .maybeSingle()
+    if (!existing) return slug
+    slug = `${baseSlug}-${n++}`
+    if (n > 200) return slug
   }
 }
 
@@ -57,59 +53,91 @@ export default async function handler(req, res) {
       return res.status(409).json({ error: 'piece already published' })
     }
 
-    // 1. Reserve a unique blog slug
-    const baseSlug = piece.slug || 'untitled'
-    const reserveSlug = ensureSlugUniqueOnBlog(baseSlug)
-    const blogSlug = await reserveSlug()
+    // 1. Resolve a blog slug + create a blog_posts row in scheduled state (or
+    //    reuse the one we created on a previous approve that we're re-approving).
+    let blogSlug
+    let blogPostId = piece.blog_post_id
+    if (blogPostId) {
+      const { data: existingBlog } = await supabaseAdmin
+        .from('blog_posts')
+        .select('id, slug')
+        .eq('id', blogPostId)
+        .maybeSingle()
+      if (existingBlog) {
+        blogSlug = existingBlog.slug
+        // Update body in case content changed, plus reset to scheduled
+        await supabaseAdmin
+          .from('blog_posts')
+          .update({
+            title: piece.title,
+            body_markdown: piece.blog_markdown,
+            body_html: renderMarkdown(piece.blog_markdown),
+            status: 'scheduled',
+            scheduled_for: sendAt.toISOString(),
+            published_at: null,
+          })
+          .eq('id', blogPostId)
+      } else {
+        blogPostId = null
+      }
+    }
+    if (!blogPostId) {
+      const baseSlug = piece.slug || 'untitled'
+      blogSlug = await reserveUniqueBlogSlug(baseSlug)
+      const { data: blogPost, error: blogErr } = await supabaseAdmin
+        .from('blog_posts')
+        .insert({
+          slug: blogSlug,
+          title: piece.title,
+          excerpt: null,
+          body_markdown: piece.blog_markdown,
+          body_html: renderMarkdown(piece.blog_markdown),
+          status: 'scheduled',
+          scheduled_for: sendAt.toISOString(),
+        })
+        .select()
+        .single()
+      if (blogErr) throw blogErr
+      blogPostId = blogPost.id
+    }
 
-    // 2. Insert blog_posts row in scheduled state
-    const bodyHtml = renderMarkdown(piece.blog_markdown)
-    const { data: blogPost, error: blogErr } = await supabaseAdmin
-      .from('blog_posts')
-      .insert({
-        slug: blogSlug,
-        title: piece.title,
-        excerpt: null,
-        body_markdown: piece.blog_markdown,
-        body_html: bodyHtml,
-        status: 'scheduled',
-        scheduled_for: sendAt.toISOString(),
-      })
-      .select()
-      .single()
-    if (blogErr) throw blogErr
+    // 2. Build email HTML with the canonical blog link
+    const emailHtml = buildEmailHtml({ emailMarkdown: piece.email_markdown, slug: blogSlug })
 
-    // 3. Build email HTML (markdown body + auto-appended link to blog)
-    const blogUrl = `${SITE_BASE}/blog/${blogSlug}`
-    const emailMarkdownWithLink = piece.email_markdown.includes(blogUrl)
-      ? piece.email_markdown
-      : `${piece.email_markdown}\n\n[Read the full post →](${blogUrl})`
-    const emailHtml = renderMarkdown(emailMarkdownWithLink)
-
-    // 4. Create Kit broadcast (Kit handles native scheduled send)
-    let kitBroadcastId = null
+    // 3. Create OR update the Kit broadcast and add the send_at
+    let kitBroadcastId = piece.kit_broadcast_id
     try {
-      const broadcast = await createBroadcast({
-        subject: piece.email_subject,
-        contentHtml: emailHtml,
-        sendAt: sendAt.toISOString(),
-      })
-      kitBroadcastId = broadcast?.id ?? null
+      if (kitBroadcastId) {
+        await updateBroadcast(kitBroadcastId, {
+          subject: piece.email_subject,
+          contentHtml: emailHtml,
+          sendAt: sendAt.toISOString(),
+        })
+      } else {
+        const broadcast = await createBroadcast({
+          subject: piece.email_subject,
+          contentHtml: emailHtml,
+          sendAt: sendAt.toISOString(),
+        })
+        kitBroadcastId = broadcast?.id ? String(broadcast.id) : null
+      }
     } catch (kitErr) {
-      // If Kit fails, roll back the blog_posts insert so we don't end up half-scheduled
-      console.error('Kit broadcast creation failed:', kitErr)
-      await supabaseAdmin.from('blog_posts').delete().eq('id', blogPost.id)
+      console.error('Kit broadcast operation failed:', kitErr)
+      // If we just created a fresh blog_posts row in this call, roll it back.
+      if (!piece.blog_post_id && blogPostId) {
+        await supabaseAdmin.from('blog_posts').delete().eq('id', blogPostId)
+      }
       throw kitErr
     }
 
-    // 5. Update content_pieces to scheduled
+    // 4. Update content_pieces to scheduled
     const { data: updatedPiece, error: updateErr } = await supabaseAdmin
       .from('content_pieces')
       .update({
         status: 'scheduled',
         scheduled_for: sendAt.toISOString(),
         kit_broadcast_id: kitBroadcastId ? String(kitBroadcastId) : null,
-        blog_post_id: blogPost.id,
+        blog_post_id: blogPostId,
         slug: blogSlug,
       })
       .eq('id', piece_id)
@@ -119,7 +147,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       piece: updatedPiece,
-      blog_post: blogPost,
+      blog_post_id: blogPostId,
       kit_broadcast_id: kitBroadcastId,
     })
   } catch (err) {

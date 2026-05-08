@@ -1,5 +1,7 @@
 import { supabaseAdmin } from '../../_lib/supabase-admin.js'
 import { requireAdmin } from '../../_lib/require-admin.js'
+import { updateBroadcast } from '../../_lib/kit.js'
+import { buildEmailHtml } from '../../_lib/content-email.js'
 
 const VALID_STATUS = new Set([
   'drafting',
@@ -160,7 +162,32 @@ export default async function handler(req, res) {
         .select()
         .single()
       if (error) throw error
-      return res.status(200).json({ piece: data })
+
+      // Best-effort: sync the latest content to the Kit broadcast if one
+      // already exists for this piece. Failures are logged but don't fail
+      // the save — the user can re-sync via the "Draft in Kit" button.
+      let kitSync = null
+      if (
+        editedContent &&
+        data.kit_broadcast_id &&
+        data.status !== 'published'
+      ) {
+        try {
+          await updateBroadcast(data.kit_broadcast_id, {
+            subject: data.email_subject,
+            contentHtml: buildEmailHtml({
+              emailMarkdown: data.email_markdown,
+              slug: data.slug,
+            }),
+          })
+          kitSync = 'updated'
+        } catch (kitErr) {
+          console.warn('Kit auto-sync on edit failed:', kitErr.message)
+          kitSync = `failed: ${kitErr.message}`
+        }
+      }
+
+      return res.status(200).json({ piece: data, kit_sync: kitSync })
     }
 
     if (req.method === 'DELETE') {

@@ -106,6 +106,18 @@ async function resolveTemplateId(templateName) {
   return id
 }
 
+async function resolveTemplateForBroadcast(templateName) {
+  const resolvedName = templateName ?? process.env.KIT_BROADCAST_TEMPLATE ?? 'Newsletter Template'
+  try {
+    return await resolveTemplateId(resolvedName)
+  } catch (err) {
+    // If the named template doesn't exist, fall through to Kit's default
+    // rather than failing the whole publish flow.
+    console.warn(`Kit template resolution failed: ${err.message}`)
+    return null
+  }
+}
+
 // Create a broadcast in Kit. If `sendAt` is provided, the broadcast is scheduled
 // for that time; otherwise it is created as a draft (no automatic send).
 //
@@ -122,16 +134,7 @@ export async function createBroadcast({ subject, contentHtml, contentText, sendA
     throw new Error('createBroadcast: contentHtml or contentText is required')
   }
 
-  const resolvedName = templateName ?? process.env.KIT_BROADCAST_TEMPLATE ?? 'Newsletter Template'
-
-  let templateId = null
-  try {
-    templateId = await resolveTemplateId(resolvedName)
-  } catch (err) {
-    // If the named template doesn't exist, fall through to Kit's default
-    // rather than failing the whole publish flow.
-    console.warn(`Kit template resolution failed: ${err.message}`)
-  }
+  const templateId = await resolveTemplateForBroadcast(templateName)
 
   const body = {
     subject,
@@ -150,6 +153,37 @@ export async function createBroadcast({ subject, contentHtml, contentText, sendA
   if (!res.ok) {
     const text = await res.text()
     throw new Error(`Kit createBroadcast ${res.status}: ${text}`)
+  }
+  const data = await res.json()
+  return data.broadcast ?? data
+}
+
+// Update an existing broadcast in Kit by id. Pass only the fields you want
+// changed. To clear scheduling and revert to draft, pass `sendAt: null`.
+export async function updateBroadcast(id, { subject, contentHtml, contentText, sendAt, templateName } = {}) {
+  if (!id) throw new Error('updateBroadcast: id is required')
+
+  const body = {}
+  if (subject !== undefined) body.subject = subject
+  if (contentHtml !== undefined || contentText !== undefined) {
+    body.content = contentHtml ?? contentText
+  }
+  if (templateName !== undefined) {
+    const tid = await resolveTemplateForBroadcast(templateName)
+    if (tid) body.email_template_id = tid
+  }
+  if (sendAt !== undefined) {
+    body.send_at = sendAt === null ? null : new Date(sendAt).toISOString()
+  }
+
+  const res = await fetch(`${KIT_BASE}/broadcasts/${id}`, {
+    method: 'PUT',
+    headers: headers(),
+    body: JSON.stringify(body),
+  })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`Kit updateBroadcast ${res.status}: ${text}`)
   }
   const data = await res.json()
   return data.broadcast ?? data
