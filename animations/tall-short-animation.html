@@ -63,6 +63,15 @@
 
   canvas { display: block; width: 100%; }
 
+  /* On narrow viewports the natural aspect ratio (660:180 / 660:200) makes
+     the canvases very short — springs and the chart get vertically squished.
+     Force taller heights so layout has breathing room; setupCanvas() reads
+     offsetHeight and the resize handler triggers a redraw at the new size. */
+  @media (max-width: 600px) {
+    #reformer { height: 240px; }
+    #graph    { height: 260px; }
+  }
+
   .legend {
     display: flex;
     justify-content: center;

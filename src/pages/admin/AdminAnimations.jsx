@@ -4,10 +4,12 @@ import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import AdminNav from '../../components/admin/AdminNav'
 
-// Injected into <head> of every animation: scale-class CSS overrides + a
-// canvas font-setter monkey-patch that scales any `Npx ...` font string
-// when window.__ppLabelScale > 1. Patch lives in <head> so it's installed
-// before the animation's own <script> runs.
+// Injected into <head> of every animation. Only DOM labels (h1, subtitle,
+// work-row, legend, notes, etc.) scale via this body class. Canvas-internal
+// labels are NOT scaled because each animation owns its own draw loop —
+// some redraw continuously (would overflow when scaled) and some only
+// redraw on user interaction (wouldn't update on toggle), so attempting
+// to monkey-patch the canvas font setter produced inconsistent behavior.
 const MOBILE_SCALE_HEAD = `
 <style data-pp-mobile-scale>
   body.__pp-mobile-scale h1 { font-size: clamp(30px, 5vw, 44px) !important; }
@@ -22,32 +24,7 @@ const MOBILE_SCALE_HEAD = `
   body.__pp-mobile-scale .notes li { font-size: 22px !important; }
   body.__pp-mobile-scale .notes-caveat { font-size: 20px !important; }
   body.__pp-mobile-scale button:not(#__pp_mobile_scale_btn) { font-size: 16px !important; padding: 14px 28px !important; }
-</style>
-<script data-pp-mobile-scale-patch>
-(function(){
-  var proto = window.CanvasRenderingContext2D && CanvasRenderingContext2D.prototype;
-  if (!proto) return;
-  var desc = Object.getOwnPropertyDescriptor(proto, 'font');
-  var p = proto;
-  while (!desc && (p = Object.getPrototypeOf(p))) {
-    desc = p && Object.getOwnPropertyDescriptor(p, 'font');
-  }
-  if (!desc || !desc.set || !desc.get) return;
-  window.__ppLabelScale = 1;
-  Object.defineProperty(proto, 'font', {
-    configurable: true,
-    get: function(){ return desc.get.call(this); },
-    set: function(v){
-      if (typeof v === 'string' && (window.__ppLabelScale || 1) !== 1) {
-        v = v.replace(/(\\d+(?:\\.\\d+)?)px /, function(_, n){
-          return Math.round(Number(n) * window.__ppLabelScale) + 'px ';
-        });
-      }
-      desc.set.call(this, v);
-    }
-  });
-})();
-</script>`
+</style>`
 
 // Injected before </body>: a fixed-position toggle button. Hidden when the
 // page is inside an iframe (admin preview) so the button only shows up on
@@ -65,11 +42,9 @@ const MOBILE_SCALE_BODY = `
     btn.addEventListener('click', function(){
       var on = !document.body.classList.contains('__pp-mobile-scale');
       document.body.classList.toggle('__pp-mobile-scale', on);
-      window.__ppLabelScale = on ? 1.6 : 1;
       btn.style.borderColor = on ? '#c8a96e' : '#2a2a2a';
       btn.style.color = on ? '#c8a96e' : '#e8e4dc';
       btn.textContent = on ? 'Mobile scale · on' : 'Mobile scale';
-      window.dispatchEvent(new Event('resize'));
     });
     document.body.appendChild(btn);
   }
