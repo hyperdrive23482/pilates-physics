@@ -40,6 +40,7 @@ export default function AdminContentPiece() {
 
   const [blogMd, setBlogMd] = useState('')
   const [emailSubject, setEmailSubject] = useState('')
+  const [emailPreviewText, setEmailPreviewText] = useState('')
   const [emailMd, setEmailMd] = useState('')
   const [saving, setSaving] = useState(false)
   const [savedAt, setSavedAt] = useState(null)
@@ -59,6 +60,7 @@ export default function AdminContentPiece() {
       if (!dirtyRef.current) {
         setBlogMd(data.piece.blog_markdown ?? '')
         setEmailSubject(data.piece.email_subject ?? '')
+        setEmailPreviewText(data.piece.email_preview_text ?? '')
         setEmailMd(data.piece.email_markdown ?? '')
       }
       setError(null)
@@ -115,6 +117,7 @@ export default function AdminContentPiece() {
         body: {
           blog_markdown: blogMd,
           email_subject: emailSubject,
+          email_preview_text: emailPreviewText,
           email_markdown: emailMd,
         },
       })
@@ -371,6 +374,25 @@ export default function AdminContentPiece() {
               style={inputStyle}
               disabled={isLocked}
             />
+            <div style={{ height: '0.75rem' }} />
+            <FieldLabel>
+              Email preview text{' '}
+              <span style={{ color: 'var(--color-ink-muted)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>
+                — inbox preheader, ~60–110 chars
+              </span>
+            </FieldLabel>
+            <input
+              type="text"
+              value={emailPreviewText}
+              onChange={(e) => markDirty(setEmailPreviewText)(e.target.value)}
+              maxLength={150}
+              placeholder="The snippet that appears next to the subject line in the inbox"
+              style={inputStyle}
+              disabled={isLocked}
+            />
+            <div style={{ fontSize: '0.7rem', color: 'var(--color-ink-muted)', marginTop: '0.3rem' }}>
+              {emailPreviewText.length} chars
+            </div>
             <div style={{ height: '0.75rem' }} />
             <FieldLabel>Email body</FieldLabel>
             <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-rule)' }}>

@@ -18,6 +18,7 @@ Guidelines:
 - Don't pad. No filler intros. Open with the idea.
 - Headings in the blog post use sentence case.
 - Email is short (under ~250 words), warm, and ends with a single clear CTA linking to the blog.
+- Email preview text: 60-110 chars, complements the subject (don't repeat it), gives a reason to open. No emojis.
 - Slug: kebab-case, max 60 chars, no stop words.
 - Excerpt: 1-2 sentences, no marketing fluff, summarizes the post's payoff.
 - Use Markdown only. No HTML tags.
@@ -39,6 +40,11 @@ const SUBMIT_TOOL = {
       blog_excerpt: { type: 'string', description: '1-2 sentence summary used in listings.' },
       blog_markdown: { type: 'string', description: 'Full blog post body in Markdown.' },
       email_subject: { type: 'string', description: 'Email subject line.' },
+      email_preview_text: {
+        type: 'string',
+        description:
+          'Inbox preview snippet (preheader). 60-110 chars. Complements the subject without repeating it. No emojis.',
+      },
       email_markdown: {
         type: 'string',
         description:
@@ -51,6 +57,7 @@ const SUBMIT_TOOL = {
       'blog_excerpt',
       'blog_markdown',
       'email_subject',
+      'email_preview_text',
       'email_markdown',
     ],
   },
@@ -102,6 +109,7 @@ function buildUserMessage({ idea, notes, feedback, previousDraft }) {
     lines.push(`\nBLOG TITLE: ${previousDraft.blog_title ?? ''}`)
     lines.push(`BLOG MARKDOWN:\n${previousDraft.blog_markdown ?? ''}`)
     lines.push(`\nEMAIL SUBJECT: ${previousDraft.email_subject ?? ''}`)
+    lines.push(`EMAIL PREVIEW TEXT: ${previousDraft.email_preview_text ?? ''}`)
     lines.push(`EMAIL MARKDOWN:\n${previousDraft.email_markdown ?? ''}`)
     lines.push(`\nFeedback:\n${feedback}`)
   }
@@ -149,6 +157,7 @@ export async function generateContentDraft({
     'blog_excerpt',
     'blog_markdown',
     'email_subject',
+    'email_preview_text',
     'email_markdown',
   ]
   for (const key of required) {

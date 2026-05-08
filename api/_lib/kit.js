@@ -128,7 +128,7 @@ async function resolveTemplateForBroadcast(templateName) {
 //   4. if none of those resolve, send without a template_id (Kit uses its default)
 //
 // Returns the broadcast object so the caller can persist its id.
-export async function createBroadcast({ subject, contentHtml, contentText, sendAt, templateName }) {
+export async function createBroadcast({ subject, previewText, contentHtml, contentText, sendAt, templateName }) {
   if (!subject) throw new Error('createBroadcast: subject is required')
   if (!contentHtml && !contentText) {
     throw new Error('createBroadcast: contentHtml or contentText is required')
@@ -142,6 +142,7 @@ export async function createBroadcast({ subject, contentHtml, contentText, sendA
     public: false,
     description: 'Pilates Physics — Content Management',
   }
+  if (previewText) body.preview_text = previewText
   if (templateId) body.email_template_id = templateId
   if (sendAt) body.send_at = new Date(sendAt).toISOString()
 
@@ -160,11 +161,12 @@ export async function createBroadcast({ subject, contentHtml, contentText, sendA
 
 // Update an existing broadcast in Kit by id. Pass only the fields you want
 // changed. To clear scheduling and revert to draft, pass `sendAt: null`.
-export async function updateBroadcast(id, { subject, contentHtml, contentText, sendAt, templateName } = {}) {
+export async function updateBroadcast(id, { subject, previewText, contentHtml, contentText, sendAt, templateName } = {}) {
   if (!id) throw new Error('updateBroadcast: id is required')
 
   const body = {}
   if (subject !== undefined) body.subject = subject
+  if (previewText !== undefined) body.preview_text = previewText ?? null
   if (contentHtml !== undefined || contentText !== undefined) {
     body.content = contentHtml ?? contentText
   }

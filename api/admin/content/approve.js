@@ -110,12 +110,14 @@ export default async function handler(req, res) {
       if (kitBroadcastId) {
         await updateBroadcast(kitBroadcastId, {
           subject: piece.email_subject,
+          previewText: piece.email_preview_text ?? null,
           contentHtml: emailHtml,
           sendAt: sendAt.toISOString(),
         })
       } else {
         const broadcast = await createBroadcast({
           subject: piece.email_subject,
+          previewText: piece.email_preview_text ?? null,
           contentHtml: emailHtml,
           sendAt: sendAt.toISOString(),
         })

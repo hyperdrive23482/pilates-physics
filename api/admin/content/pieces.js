@@ -12,7 +12,7 @@ const VALID_STATUS = new Set([
   'archived',
 ])
 
-const EDITABLE_CONTENT_KEYS = ['blog_markdown', 'email_subject', 'email_markdown']
+const EDITABLE_CONTENT_KEYS = ['blog_markdown', 'email_subject', 'email_preview_text', 'email_markdown']
 
 function slugify(s) {
   return (s || '')
@@ -141,7 +141,7 @@ export default async function handler(req, res) {
         // Read current to fill omitted fields
         const { data: current } = await supabaseAdmin
           .from('content_pieces')
-          .select('blog_markdown, email_subject, email_markdown')
+          .select('blog_markdown, email_subject, email_preview_text, email_markdown')
           .eq('id', id)
           .maybeSingle()
         await supabaseAdmin.from('content_drafts').insert({
@@ -150,6 +150,7 @@ export default async function handler(req, res) {
           source: 'kaleen_edit',
           blog_markdown: updates.blog_markdown ?? current?.blog_markdown ?? null,
           email_subject: updates.email_subject ?? current?.email_subject ?? null,
+          email_preview_text: updates.email_preview_text ?? current?.email_preview_text ?? null,
           email_markdown: updates.email_markdown ?? current?.email_markdown ?? null,
           created_by: admin.user.id,
         })
@@ -175,6 +176,7 @@ export default async function handler(req, res) {
         try {
           await updateBroadcast(data.kit_broadcast_id, {
             subject: data.email_subject,
+            previewText: data.email_preview_text ?? null,
             contentHtml: buildEmailHtml({
               emailMarkdown: data.email_markdown,
               slug: data.slug,

@@ -53,6 +53,7 @@ export default async function handler(req, res) {
       // Update existing Kit draft in place
       await updateBroadcast(broadcastId, {
         subject: piece.email_subject,
+        previewText: piece.email_preview_text ?? null,
         contentHtml: emailHtml,
         // explicitly leave send_at unchanged — don't pass it
       })
@@ -60,6 +61,7 @@ export default async function handler(req, res) {
     } else {
       const broadcast = await createBroadcast({
         subject: piece.email_subject,
+        previewText: piece.email_preview_text ?? null,
         contentHtml: emailHtml,
         // no sendAt → Kit treats it as a draft
       })

@@ -29,7 +29,7 @@ export default async function handler(req, res) {
         .order('created_at', { ascending: true }),
       supabaseAdmin
         .from('content_drafts')
-        .select('version, blog_markdown, email_subject, email_markdown')
+        .select('version, blog_markdown, email_subject, email_preview_text, email_markdown')
         .eq('piece_id', piece_id)
         .order('version', { ascending: false })
         .limit(1)
@@ -58,6 +58,7 @@ export default async function handler(req, res) {
           blog_title: piece.title,
           blog_markdown: lastDraftRes.data.blog_markdown,
           email_subject: lastDraftRes.data.email_subject,
+          email_preview_text: lastDraftRes.data.email_preview_text,
           email_markdown: lastDraftRes.data.email_markdown,
         }
       : undefined
@@ -83,6 +84,7 @@ export default async function handler(req, res) {
         feedback: isRevision ? feedback : null,
         blog_markdown: generated.blog_markdown,
         email_subject: generated.email_subject,
+        email_preview_text: generated.email_preview_text,
         email_markdown: generated.email_markdown,
         created_by: admin.user.id,
       })
@@ -96,6 +98,7 @@ export default async function handler(req, res) {
       slug: generated.blog_slug,
       blog_markdown: generated.blog_markdown,
       email_subject: generated.email_subject,
+      email_preview_text: generated.email_preview_text,
       email_markdown: generated.email_markdown,
     }
     if (piece.status === 'drafting') pieceUpdates.status = 'in_review'
