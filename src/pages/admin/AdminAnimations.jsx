@@ -1,8 +1,34 @@
 import { useEffect, useState } from 'react'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, Smartphone } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import AdminNav from '../../components/admin/AdminNav'
+
+const MOBILE_SCALE_STYLE = `
+<style data-mobile-scale>
+  h1 { font-size: clamp(30px, 5vw, 44px) !important; }
+  .subtitle { font-size: 22px !important; line-height: 1.5 !important; }
+  .eyebrow, .panel-label, .work-label, .notes-title {
+    font-size: 18px !important;
+    letter-spacing: 0.1em !important;
+  }
+  .work-value { font-size: 36px !important; }
+  .work-value.center-val { font-size: 42px !important; }
+  .legend-item, .notes li { font-size: 22px !important; }
+  .notes-caveat { font-size: 20px !important; }
+  button { font-size: 16px !important; padding: 14px 28px !important; }
+</style>`
+
+function applyMobileScale(html) {
+  if (!html) return html
+  const withCss = html.includes('</head>')
+    ? html.replace('</head>', `${MOBILE_SCALE_STYLE}</head>`)
+    : MOBILE_SCALE_STYLE + html
+  return withCss.replace(
+    /(\.font\s*=\s*['"`])(\d+)px /g,
+    (_, prefix, px) => `${prefix}${Math.round(Number(px) * 1.6)}px `
+  )
+}
 
 export default function AdminAnimations() {
   const { user, signOut } = useEnrollment()
@@ -14,6 +40,7 @@ export default function AdminAnimations() {
   const [listLoading, setListLoading] = useState(true)
   const [previewLoading, setPreviewLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [mobileScale, setMobileScale] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -58,9 +85,11 @@ export default function AdminAnimations() {
     }
   }, [selected, request])
 
+  const displayedHtml = mobileScale ? applyMobileScale(html) : html
+
   function openStandalone() {
-    if (!html) return
-    const blob = new Blob([html], { type: 'text/html;charset=utf-8' })
+    if (!displayedHtml) return
+    const blob = new Blob([displayedHtml], { type: 'text/html;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     window.open(url, '_blank', 'noopener,noreferrer')
     // Give the new tab a generous window to load before reclaiming the blob.
@@ -158,10 +187,32 @@ export default function AdminAnimations() {
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-end',
+                    gap: '0.5rem',
                     padding: '0.45rem 0.6rem',
                     borderBottom: '1px solid var(--color-rule)',
                   }}
                 >
+                  <button
+                    type="button"
+                    onClick={() => setMobileScale((v) => !v)}
+                    title="Scale up labels for screenshotting at narrow widths (social content). Carries through to standalone view."
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      padding: '0.35rem 0.7rem',
+                      background: mobileScale ? 'rgba(255,255,255,0.04)' : 'transparent',
+                      border: mobileScale
+                        ? '1px solid var(--color-accent)'
+                        : '1px solid var(--color-rule)',
+                      color: mobileScale ? 'var(--color-accent)' : 'var(--color-ink)',
+                      fontFamily: 'inherit',
+                      fontSize: '0.75rem',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <Smartphone size={12} /> Mobile scale{mobileScale ? ' · on' : ''}
+                  </button>
                   <button
                     type="button"
                     onClick={openStandalone}
@@ -195,7 +246,7 @@ export default function AdminAnimations() {
                 </p>
               ) : html ? (
                 <iframe
-                  srcDoc={html}
+                  srcDoc={displayedHtml}
                   title={selected ?? 'Animation preview'}
                   style={{
                     width: '100%',
