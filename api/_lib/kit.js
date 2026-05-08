@@ -71,3 +71,33 @@ export async function tagSubscriber(email, firstName, lastName, tagName) {
   const tagId = await resolveTagId(tagName)
   await applyTag(tagId, email)
 }
+
+// Create a broadcast in Kit. If `sendAt` is provided, the broadcast is scheduled
+// for that time; otherwise it is created as a draft (no automatic send).
+// Returns the broadcast object so the caller can persist its id.
+export async function createBroadcast({ subject, contentHtml, contentText, sendAt }) {
+  if (!subject) throw new Error('createBroadcast: subject is required')
+  if (!contentHtml && !contentText) {
+    throw new Error('createBroadcast: contentHtml or contentText is required')
+  }
+  const body = {
+    subject,
+    content: contentHtml ?? contentText,
+    public: false,
+    description: 'Pilates Physics — Content Management',
+  }
+  if (contentText) body.email_template_id = undefined
+  if (sendAt) body.send_at = new Date(sendAt).toISOString()
+
+  const res = await fetch(`${KIT_BASE}/broadcasts`, {
+    method: 'POST',
+    headers: headers(),
+    body: JSON.stringify(body),
+  })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`Kit createBroadcast ${res.status}: ${text}`)
+  }
+  const data = await res.json()
+  return data.broadcast ?? data
+}

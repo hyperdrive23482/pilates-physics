@@ -13,6 +13,12 @@
       "includeFiles": "animations/**"
     }
   },
+  "crons": [
+    {
+      "path": "/api/cron/publish-scheduled",
+      "schedule": "*/15 * * * *"
+    }
+  ],
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]

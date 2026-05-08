@@ -322,6 +322,89 @@ h1, h2, h3, h4 {
   }
 }
 
+/* ─── Blog body (rendered from markdown) ─────────────────────────────── */
+
+.pp-blog-body h1,
+.pp-blog-body h2,
+.pp-blog-body h3,
+.pp-blog-body h4 {
+  font-family: "DM Serif Display", serif;
+  color: var(--color-ink);
+  line-height: 1.25;
+  margin: 2rem 0 1rem;
+}
+.pp-blog-body h2 {
+  font-size: 1.6rem;
+}
+.pp-blog-body h3 {
+  font-size: 1.25rem;
+}
+.pp-blog-body h4 {
+  font-size: 1.05rem;
+}
+.pp-blog-body p {
+  margin: 0 0 1.25rem;
+  color: var(--color-ink);
+}
+.pp-blog-body a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.pp-blog-body strong {
+  color: var(--color-ink);
+}
+.pp-blog-body em {
+  color: var(--color-ink);
+  font-style: italic;
+}
+.pp-blog-body ul,
+.pp-blog-body ol {
+  margin: 0 0 1.25rem;
+  padding-left: 1.5rem;
+}
+.pp-blog-body li {
+  margin-bottom: 0.5rem;
+}
+.pp-blog-body blockquote {
+  border-left: 3px solid var(--color-accent);
+  margin: 1.5rem 0;
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  color: var(--color-ink-muted);
+  font-style: italic;
+}
+.pp-blog-body code {
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.9em;
+  background: var(--color-surface);
+  padding: 0.1em 0.35em;
+  border-radius: 2px;
+}
+.pp-blog-body pre {
+  background: var(--color-surface);
+  border: 1px solid var(--color-rule);
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0 0 1.25rem;
+}
+.pp-blog-body pre code {
+  background: transparent;
+  padding: 0;
+}
+.pp-blog-body hr {
+  border: none;
+  border-top: 1px solid var(--color-rule);
+  margin: 2rem 0;
+}
+.pp-blog-body img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5rem 0;
+}
+
 .pp-grid-content-editor {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr auto;

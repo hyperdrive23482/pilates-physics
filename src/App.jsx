@@ -43,6 +43,13 @@ import AdminAnimations from './pages/admin/AdminAnimations'
 import AdminPoseStudio from './pages/admin/AdminPoseStudio'
 import AdminAnnouncements from './pages/admin/AdminAnnouncements'
 import AdminAnnouncementEdit from './pages/admin/AdminAnnouncementEdit'
+import AdminContentDashboard from './pages/admin/AdminContentDashboard'
+import AdminContentIdeas from './pages/admin/AdminContentIdeas'
+import AdminContentPiece from './pages/admin/AdminContentPiece'
+import AdminContentCalendar from './pages/admin/AdminContentCalendar'
+import AdminContentBrain from './pages/admin/AdminContentBrain'
+import Blog from './pages/Blog'
+import BlogPost from './pages/BlogPost'
 
 export default function App() {
   return (
@@ -274,6 +281,62 @@ export default function App() {
             <AdminGate>
               <AdminAnnouncementEdit />
             </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/content"
+          element={
+            <AdminGate>
+              <AdminContentDashboard />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/content/ideas"
+          element={
+            <AdminGate>
+              <AdminContentIdeas />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/content/pieces/:id"
+          element={
+            <AdminGate>
+              <AdminContentPiece />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/content/calendar"
+          element={
+            <AdminGate>
+              <AdminContentCalendar />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/content/brain"
+          element={
+            <AdminGate>
+              <AdminContentBrain />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/blog"
+          element={
+            <PageWrapper>
+              <Blog />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/blog/:slug"
+          element={
+            <PageWrapper>
+              <BlogPost />
+            </PageWrapper>
           }
         />
       </Routes>
