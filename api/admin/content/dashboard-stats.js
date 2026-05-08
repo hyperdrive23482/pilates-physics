@@ -60,11 +60,18 @@ export default async function handler(req, res) {
   if (!admin) return
 
   try {
-    const [pieces, ideas, brain, recentBroadcasts] = await Promise.all([
+    const [pieces, ideas, brain, recentBroadcasts, webinars] = await Promise.all([
       supabaseAdmin.from('content_pieces').select('status'),
       supabaseAdmin.from('content_ideas').select('status'),
       supabaseAdmin.from('brain_entries').select('is_active, token_estimate'),
       fetchRecentBroadcastStats(5),
+      supabaseAdmin
+        .from('webinars')
+        .select('id, slug, title, status, scheduled_at')
+        .not('scheduled_at', 'is', null)
+        .neq('status', 'draft')
+        .neq('status', 'archived')
+        .order('scheduled_at', { ascending: true }),
     ])
 
     const pipelineCounts = { drafting: 0, in_review: 0, approved: 0, scheduled: 0, published: 0, archived: 0 }
@@ -93,12 +100,26 @@ export default async function handler(req, res) {
       .order('scheduled_for', { ascending: true })
       .limit(10)
 
+    // Split workshops into upcoming and past
+    const now = Date.now()
+    const upcomingWorkshops = []
+    const pastWorkshops = []
+    for (const w of webinars.data ?? []) {
+      const t = w.scheduled_at ? new Date(w.scheduled_at).getTime() : null
+      if (t === null) continue
+      if (t >= now) upcomingWorkshops.push(w)
+      else pastWorkshops.push(w)
+    }
+    pastWorkshops.reverse() // most recent past first
+
     return res.status(200).json({
       pipeline_counts: pipelineCounts,
       idea_counts: ideaCounts,
       brain_summary: brainSummary,
       upcoming: upcoming ?? [],
       recent_broadcasts: recentBroadcasts,
+      upcoming_workshops: upcomingWorkshops.slice(0, 5),
+      past_workshops: pastWorkshops.slice(0, 5),
     })
   } catch (err) {
     console.error('dashboard-stats error:', err)

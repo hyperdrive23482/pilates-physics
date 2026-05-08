@@ -11,6 +11,22 @@ function formatPercent(n) {
   return `${(Number(n) * (Number(n) > 1 ? 1 : 100)).toFixed(1)}%`
 }
 
+// Whole-day delta from today, anchored to local midnight so a workshop
+// scheduled for 10pm tonight reads as "today" (not "in 0 days").
+function relativeDays(iso) {
+  if (!iso) return null
+  const target = new Date(iso)
+  const now = new Date()
+  const startOfTarget = new Date(target.getFullYear(), target.getMonth(), target.getDate())
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const diff = Math.round((startOfTarget - startOfToday) / 86400000)
+  if (diff === 0) return 'today'
+  if (diff === 1) return 'tomorrow'
+  if (diff === -1) return 'yesterday'
+  if (diff > 1) return `in ${diff} days`
+  return `${Math.abs(diff)} days ago`
+}
+
 export default function AdminContentDashboard() {
   const { user, signOut } = useEnrollment()
   const { request } = useAdminAPI()
@@ -28,6 +44,8 @@ export default function AdminContentDashboard() {
   const brain = stats?.brain_summary ?? {}
   const upcoming = stats?.upcoming ?? []
   const recent = stats?.recent_broadcasts ?? []
+  const upcomingWorkshops = stats?.upcoming_workshops ?? []
+  const pastWorkshops = stats?.past_workshops ?? []
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
@@ -94,6 +112,28 @@ export default function AdminContentDashboard() {
               />
             </div>
 
+            <SectionLabel>Workshops</SectionLabel>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '1rem',
+                marginBottom: '2.5rem',
+              }}
+              className="pp-grid-2"
+            >
+              <WorkshopColumn
+                heading="Upcoming"
+                rows={upcomingWorkshops}
+                emptyText="None scheduled."
+              />
+              <WorkshopColumn
+                heading="Recent past"
+                rows={pastWorkshops}
+                emptyText="None yet."
+              />
+            </div>
+
             <SectionLabel>Upcoming scheduled</SectionLabel>
             {upcoming.length === 0 ? (
               <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem', marginBottom: '2.5rem' }}>
@@ -142,6 +182,69 @@ export default function AdminContentDashboard() {
           </>
         )}
       </main>
+    </div>
+  )
+}
+
+function WorkshopColumn({ heading, rows, emptyText }) {
+  return (
+    <div
+      style={{
+        background: 'var(--color-surface)',
+        border: '1px solid var(--color-rule)',
+        padding: '1rem 1.1rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.75rem',
+      }}
+    >
+      <div
+        style={{
+          fontSize: '0.65rem',
+          fontWeight: 600,
+          letterSpacing: '0.15em',
+          textTransform: 'uppercase',
+          color: 'var(--color-ink-muted)',
+        }}
+      >
+        {heading}
+      </div>
+      {rows.length === 0 ? (
+        <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.85rem', margin: 0 }}>{emptyText}</p>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          {rows.map((w) => (
+            <Link
+              key={w.id}
+              to={`/admin/webinars/${w.slug}/edit`}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+                gap: '0.75rem',
+                padding: '0.5rem 0',
+                textDecoration: 'none',
+                color: 'var(--color-ink)',
+                borderBottom: '1px solid var(--color-rule)',
+              }}
+            >
+              <span style={{ fontSize: '0.9rem', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {w.title}
+              </span>
+              <span
+                style={{
+                  fontSize: '0.75rem',
+                  color: 'var(--color-accent)',
+                  whiteSpace: 'nowrap',
+                  fontWeight: 600,
+                }}
+              >
+                {relativeDays(w.scheduled_at)}
+              </span>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
