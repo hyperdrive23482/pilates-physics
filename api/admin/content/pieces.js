@@ -2,6 +2,7 @@ import { supabaseAdmin } from '../../_lib/supabase-admin.js'
 import { requireAdmin } from '../../_lib/require-admin.js'
 import { updateBroadcast } from '../../_lib/kit.js'
 import { buildEmailHtml } from '../../_lib/content-email.js'
+import { renderMarkdown } from '../../_lib/markdown.js'
 
 const VALID_STATUS = new Set([
   'drafting',
@@ -164,6 +165,31 @@ export default async function handler(req, res) {
         .single()
       if (error) throw error
 
+      // If the piece already has a linked blog_posts row (any status), keep its
+      // body in sync so edits made after publish appear on the live blog page.
+      let blogSync = null
+      if (
+        editedContent &&
+        body.blog_markdown !== undefined &&
+        data.blog_post_id
+      ) {
+        try {
+          const { error: blogErr } = await supabaseAdmin
+            .from('blog_posts')
+            .update({
+              title: data.title,
+              body_markdown: data.blog_markdown,
+              body_html: renderMarkdown(data.blog_markdown),
+            })
+            .eq('id', data.blog_post_id)
+          if (blogErr) throw blogErr
+          blogSync = 'updated'
+        } catch (blogErr) {
+          console.warn('blog_posts sync on edit failed:', blogErr.message)
+          blogSync = `failed: ${blogErr.message}`
+        }
+      }
+
       // Best-effort: sync the latest content to the Kit broadcast if one
       // already exists for this piece. Failures are logged but don't fail
       // the save — the user can re-sync via the "Draft in Kit" button.
@@ -189,7 +215,7 @@ export default async function handler(req, res) {
         }
       }
 
-      return res.status(200).json({ piece: data, kit_sync: kitSync })
+      return res.status(200).json({ piece: data, kit_sync: kitSync, blog_sync: blogSync })
     }
 
     if (req.method === 'DELETE') {

@@ -123,11 +123,18 @@ export default function AdminContentPiece() {
       })
       dirtyRef.current = false
       setSavedAt(new Date())
+      const notes = []
       if (result?.kit_sync === 'updated') {
-        setKitSyncNote('Synced to Kit draft')
+        notes.push('Synced to Kit draft')
       } else if (typeof result?.kit_sync === 'string' && result.kit_sync.startsWith('failed')) {
-        setKitSyncNote(`Kit sync failed: ${result.kit_sync.replace(/^failed:\s*/, '')}`)
+        notes.push(`Kit sync failed: ${result.kit_sync.replace(/^failed:\s*/, '')}`)
       }
+      if (result?.blog_sync === 'updated') {
+        notes.push('Live blog updated')
+      } else if (typeof result?.blog_sync === 'string' && result.blog_sync.startsWith('failed')) {
+        notes.push(`Blog sync failed: ${result.blog_sync.replace(/^failed:\s*/, '')}`)
+      }
+      if (notes.length) setKitSyncNote(notes.join(' · '))
       await refetch()
     } catch (e) {
       alert(`Save failed: ${e.message}`)
@@ -228,6 +235,9 @@ export default function AdminContentPiece() {
   const editable = piece.status === 'drafting' || piece.status === 'in_review'
   const hasContent = !!piece.blog_markdown
   const isLocked = piece.status === 'scheduled' || piece.status === 'published'
+  // Blog stays editable after publish so edits propagate to the live blog_posts
+  // row. Email is still locked once published since the broadcast already sent.
+  const blogLocked = piece.status === 'scheduled'
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }} data-color-mode="dark">
@@ -352,8 +362,12 @@ export default function AdminContentPiece() {
           <Step
             number={3}
             title="Edit"
-            subtitle="Tweak the markdown directly. Saving snapshots a version under your name."
-            locked={isLocked}
+            subtitle={
+              piece.status === 'published'
+                ? 'Edits to the blog publish to the live post immediately. Email is locked since the broadcast already sent.'
+                : 'Tweak the markdown directly. Saving snapshots a version under your name.'
+            }
+            locked={blogLocked}
           >
             <FieldLabel>Blog post</FieldLabel>
             <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-rule)' }}>
@@ -361,7 +375,7 @@ export default function AdminContentPiece() {
                 value={blogMd}
                 onChange={markDirty(setBlogMd)}
                 height={500}
-                preview={isLocked ? 'preview' : 'live'}
+                preview={blogLocked ? 'preview' : 'live'}
                 visibleDragbar={false}
               />
             </div>
@@ -408,8 +422,8 @@ export default function AdminContentPiece() {
               <button
                 type="button"
                 onClick={saveEdits}
-                disabled={saving || isLocked}
-                style={primaryBtn(saving || isLocked)}
+                disabled={saving || blogLocked}
+                style={primaryBtn(saving || blogLocked)}
               >
                 <Save size={14} /> {saving ? 'Saving…' : 'Save edits'}
               </button>
