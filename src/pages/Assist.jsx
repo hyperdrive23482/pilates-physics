@@ -164,6 +164,10 @@ export default function Assist() {
       >
         1 spot available.
       </p>
+      <p style={{ ...pStyle, fontStyle: 'italic', margin: 0 }}>
+        This is a barter, not a paid role: you attend the workshop free ($99 value) in
+        exchange for light assistance.
+      </p>
       <h2 style={h2Style}>Date and Time</h2>
       <p style={pStyle}>Wednesday May 20th, 10:40am–1:20pm Pacific Time (GMT-7)</p>
       <p style={{ ...pStyle, fontStyle: 'italic' }}>
