@@ -140,6 +140,99 @@ export async function sendPurchaseNotification({
   return data
 }
 
+export async function sendAssistApplicationEmail({
+  name,
+  email,
+  location,
+  hasComputer,
+  certifiedWhen,
+  teachingLoad,
+  zoomExperience,
+  whyInterested,
+}) {
+  const to = process.env.CONTACT_TO_EMAIL || 'kaleen@pilatesphysics.com'
+  const safeName = escapeHtml(name)
+  const safeEmail = escapeHtml(email)
+  const safeLocation = escapeHtml(location)
+  const safeHasComputer = escapeHtml(hasComputer === 'yes' ? 'Yes' : 'No')
+  const safeCertifiedWhen = escapeHtml(certifiedWhen)
+  const safeTeachingLoad = escapeHtml(teachingLoad).replace(/\n/g, '<br>')
+  const safeZoomExperience = escapeHtml(zoomExperience).replace(/\n/g, '<br>')
+  const safeWhyInterested = escapeHtml(whyInterested).replace(/\n/g, '<br>')
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1C1A17; line-height: 1.6;">
+      <p style="margin: 0 0 1rem; font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 0.08em;">New workshop assist application</p>
+      <p style="margin: 0 0 0.5rem;"><strong>Name:</strong> ${safeName}</p>
+      <p style="margin: 0 0 0.5rem;"><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
+      <p style="margin: 0 0 0.5rem;"><strong>Location:</strong> ${safeLocation}</p>
+      <p style="margin: 0 0 0.5rem;"><strong>Has laptop/desktop access:</strong> ${safeHasComputer}</p>
+      <p style="margin: 0 0 0.5rem;"><strong>Fully certified since:</strong> ${safeCertifiedWhen}</p>
+      <p style="margin: 1.5rem 0 0.5rem;"><strong>Current teaching load:</strong></p>
+      <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeTeachingLoad}</div>
+      <p style="margin: 1.5rem 0 0.5rem;"><strong>Zoom experience:</strong></p>
+      <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeZoomExperience}</div>
+      <p style="margin: 1.5rem 0 0.5rem;"><strong>Why interested in Pilates Physics:</strong></p>
+      <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeWhyInterested}</div>
+      <p style="margin: 1.5rem 0 0; font-size: 0.85rem; color: #666;">Reply directly to this email to respond to ${safeName}.</p>
+    </div>
+  `.trim()
+
+  const text = `New workshop assist application
+
+Name: ${name}
+Email: ${email}
+Location: ${location}
+Has laptop/desktop access: ${hasComputer === 'yes' ? 'Yes' : 'No'}
+Fully certified since: ${certifiedWhen}
+
+Current teaching load:
+${teachingLoad}
+
+Zoom experience:
+${zoomExperience}
+
+Why interested in Pilates Physics:
+${whyInterested}
+
+Reply directly to this email to respond.`
+
+  const { data, error } = await getResend().emails.send({
+    from: FROM,
+    to,
+    subject: `Workshop assist application: ${name}`,
+    html,
+    text,
+    replyTo: email,
+  })
+  if (error) throw new Error(`Resend send failed: ${error.message ?? JSON.stringify(error)}`)
+  return data
+}
+
+export async function sendAssistAcknowledgement({ to, name }) {
+  const safeName = escapeHtml(name)
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1C1A17; line-height: 1.6; max-width: 560px;">
+      <p>Hi ${safeName},</p>
+      <p>Thanks for applying to assist the workshop. Applications close 5/14/26 and I'll let you know either way on 5/15/26.</p>
+      <p style="margin-top: 1.5rem;">— Kaleen</p>
+    </div>
+  `.trim()
+
+  const text = `Hi ${name},\n\nThanks for applying to assist the workshop. Applications close 5/14/26 and I'll let you know either way on 5/15/26.\n\n— Kaleen`
+
+  const { data, error } = await getResend().emails.send({
+    from: FROM,
+    to,
+    subject: 'We got your application — Pilates Physics',
+    html,
+    text,
+  })
+  if (error) throw new Error(`Resend send failed: ${error.message ?? JSON.stringify(error)}`)
+  return data
+}
+
 export async function sendContactAcknowledgement({ to, name, message }) {
   const safeName = escapeHtml(name)
   const safeMessage = escapeHtml(message).replace(/\n/g, '<br>')

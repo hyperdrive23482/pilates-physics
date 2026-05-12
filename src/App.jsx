@@ -30,6 +30,7 @@ import Profile from './pages/Profile'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
 import Help from './pages/Help'
+import Assist from './pages/Assist'
 import SubscriptionConfirmed from './pages/SubscriptionConfirmed'
 import RegistrationSuccess from './pages/RegistrationSuccess'
 import AdminGate from './components/admin/AdminGate'
@@ -172,6 +173,14 @@ export default function App() {
           element={
             <PageWrapper>
               <Help />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/assist"
+          element={
+            <PageWrapper>
+              <Assist />
             </PageWrapper>
           }
         />
