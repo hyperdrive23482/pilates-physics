@@ -60,7 +60,22 @@ export default async function handler(req, res) {
 
     if (req.method === 'PATCH') {
       const id = req.query.id
-      if (!id) return res.status(400).json({ error: 'id required' })
+      if (!id) {
+        const ids = Array.isArray(req.body?.ids) ? req.body.ids : null
+        if (!ids || ids.length === 0) {
+          return res.status(400).json({ error: 'id or ids[] required' })
+        }
+        if (typeof req.body?.is_active !== 'boolean') {
+          return res.status(400).json({ error: 'is_active boolean required for bulk update' })
+        }
+        const { data, error } = await supabaseAdmin
+          .from('brain_entries')
+          .update({ is_active: req.body.is_active })
+          .in('id', ids)
+          .select('id, is_active')
+        if (error) throw error
+        return res.status(200).json({ updated: data ?? [] })
+      }
       const body = req.body ?? {}
       const updates = {}
       if (body.type !== undefined) {

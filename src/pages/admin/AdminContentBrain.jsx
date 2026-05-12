@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Plus, Trash2, Eye, EyeOff, Edit3, Save, X, ChevronLeft } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
@@ -31,6 +31,9 @@ export default function AdminContentBrain() {
   const [editTitle, setEditTitle] = useState('')
   const [editContent, setEditContent] = useState('')
 
+  const [selectedIds, setSelectedIds] = useState(() => new Set())
+  const selectAllRef = useRef(null)
+
   const refetch = useCallback(async () => {
     setLoading(true)
     try {
@@ -47,6 +50,13 @@ export default function AdminContentBrain() {
   useEffect(() => {
     refetch()
   }, [refetch])
+
+  useEffect(() => {
+    if (selectAllRef.current) {
+      selectAllRef.current.indeterminate =
+        selectedIds.size > 0 && selectedIds.size < entries.length
+    }
+  }, [selectedIds, entries.length])
 
   function resetForm() {
     setFormTitle('')
@@ -92,10 +102,51 @@ export default function AdminContentBrain() {
     }
   }
 
+  function toggleSelected(id) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  function clearSelection() {
+    setSelectedIds(new Set())
+  }
+
+  function toggleSelectAll() {
+    setSelectedIds((prev) =>
+      prev.size === entries.length && entries.length > 0
+        ? new Set()
+        : new Set(entries.map((e) => e.id)),
+    )
+  }
+
+  async function bulkSetActive(isActive) {
+    if (selectedIds.size === 0) return
+    try {
+      await request('/api/admin/content/brain', {
+        method: 'PATCH',
+        body: { ids: [...selectedIds], is_active: isActive },
+      })
+      clearSelection()
+      await refetch()
+    } catch (e) {
+      alert(`Bulk update failed: ${e.message}`)
+    }
+  }
+
   async function deleteEntry(id) {
     if (!confirm('Delete this brain entry permanently?')) return
     try {
       await request(`/api/admin/content/brain?id=${id}`, { method: 'DELETE' })
+      setSelectedIds((prev) => {
+        if (!prev.has(id)) return prev
+        const next = new Set(prev)
+        next.delete(id)
+        return next
+      })
       await refetch()
     } catch (e) {
       alert(`Delete failed: ${e.message}`)
@@ -185,6 +236,69 @@ export default function AdminContentBrain() {
           <strong style={{ color: 'var(--color-ink)' }}>{totalActive.toLocaleString()}</strong> active
           tokens. Stay below ~150,000 to avoid context overruns.
         </p>
+
+        {entries.length > 0 && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '1rem',
+              padding: '0.6rem 0.75rem',
+              marginBottom: '1rem',
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-rule)',
+            }}
+          >
+            <label
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontSize: '0.8rem',
+                color: 'var(--color-ink-muted)',
+                cursor: 'pointer',
+                userSelect: 'none',
+              }}
+            >
+              <input
+                ref={selectAllRef}
+                type="checkbox"
+                checked={selectedIds.size === entries.length && entries.length > 0}
+                onChange={toggleSelectAll}
+              />
+              {selectedIds.size > 0
+                ? `${selectedIds.size} selected`
+                : `${entries.length} entries · ${entries.filter((e) => e.is_active).length} active`}
+            </label>
+            {selectedIds.size > 0 && (
+              <div style={{ display: 'flex', gap: '0.4rem' }}>
+                <button
+                  type="button"
+                  onClick={() => bulkSetActive(true)}
+                  style={bulkBtnStyle}
+                >
+                  <Eye size={14} /> Activate
+                </button>
+                <button
+                  type="button"
+                  onClick={() => bulkSetActive(false)}
+                  style={bulkBtnStyle}
+                >
+                  <EyeOff size={14} /> Deactivate
+                </button>
+                <button
+                  type="button"
+                  onClick={clearSelection}
+                  style={bulkBtnStyle}
+                  aria-label="Clear selection"
+                >
+                  <X size={14} /> Clear
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         {showForm && (
           <form
@@ -293,6 +407,13 @@ export default function AdminContentBrain() {
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.has(entry.id)}
+                    onChange={() => toggleSelected(entry.id)}
+                    aria-label={`Select ${entry.title}`}
+                    style={{ marginTop: '0.25rem', cursor: 'pointer', flexShrink: 0 }}
+                  />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div
                       style={{
@@ -409,4 +530,17 @@ const iconBtnStyle = {
   color: 'var(--color-ink-muted)',
   cursor: 'pointer',
   flexShrink: 0,
+}
+
+const bulkBtnStyle = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '0.3rem',
+  padding: '0.4rem 0.7rem',
+  border: '1px solid var(--color-rule)',
+  background: 'transparent',
+  color: 'var(--color-ink)',
+  fontSize: '0.75rem',
+  fontWeight: 500,
+  cursor: 'pointer',
 }
