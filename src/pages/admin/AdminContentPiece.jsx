@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import MDEditor from '@uiw/react-md-editor'
-import { Sparkles, Save, CalendarCheck, RotateCcw, ChevronLeft, History, Send } from 'lucide-react'
+import { Sparkles, Save, CalendarCheck, RotateCcw, ChevronLeft, History, Send, Trash2 } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import AdminNav from '../../components/admin/AdminNav'
@@ -25,6 +25,7 @@ function defaultScheduleLocal() {
 
 export default function AdminContentPiece() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const { user, signOut } = useEnrollment()
   const { request } = useAdminAPI()
 
@@ -193,17 +194,29 @@ export default function AdminContentPiece() {
   }
 
   async function unschedule() {
-    if (!confirm('Move back to in-review? You will need to re-approve and re-schedule.\n\nNote: this does NOT cancel a Kit broadcast that is already scheduled — cancel it manually in Kit if needed.')) {
+    if (!confirm("Unschedule this piece? The Kit broadcast and blog post will be reverted to draft. You'll be able to re-approve and reschedule later.")) {
       return
     }
     try {
-      await request(`/api/admin/content/pieces?id=${id}`, {
-        method: 'PATCH',
-        body: { status: 'in_review' },
+      await request('/api/admin/content/unschedule', {
+        method: 'POST',
+        body: { piece_id: id },
       })
       await refetch()
     } catch (e) {
       alert(`Failed: ${e.message}`)
+    }
+  }
+
+  async function deletePiece() {
+    if (!confirm('Permanently delete this piece? The blog draft will be removed and the Kit broadcast will be reverted to draft (delete it manually in Kit if you want it fully gone). This cannot be undone.')) {
+      return
+    }
+    try {
+      await request(`/api/admin/content/pieces?id=${id}`, { method: 'DELETE' })
+      navigate('/admin/content')
+    } catch (e) {
+      alert(`Delete failed: ${e.message}`)
     }
   }
 
@@ -458,9 +471,14 @@ export default function AdminContentPiece() {
                   Status: <StatusPill status={piece.status} />
                 </p>
                 {piece.status === 'scheduled' && (
-                  <button type="button" onClick={unschedule} style={secondaryBtn}>
-                    Unschedule
-                  </button>
+                  <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+                    <button type="button" onClick={unschedule} style={secondaryBtn}>
+                      Unschedule
+                    </button>
+                    <button type="button" onClick={deletePiece} style={dangerBtn}>
+                      <Trash2 size={14} /> Delete
+                    </button>
+                  </div>
                 )}
                 {piece.status === 'published' && piece.slug && (
                   <Link
@@ -515,6 +533,11 @@ export default function AdminContentPiece() {
                     {kitSyncNote}
                   </p>
                 )}
+                <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid var(--color-rule)' }}>
+                  <button type="button" onClick={deletePiece} style={dangerBtn}>
+                    <Trash2 size={14} /> Delete piece
+                  </button>
+                </div>
               </>
             )}
           </Step>
@@ -700,6 +723,19 @@ const secondaryBtn = {
   background: 'transparent',
   color: 'var(--color-ink)',
   border: '1px solid var(--color-rule)',
+  fontSize: '0.85rem',
+  fontWeight: 500,
+  cursor: 'pointer',
+}
+
+const dangerBtn = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '0.4rem',
+  padding: '0.7rem 1.1rem',
+  background: 'transparent',
+  color: '#ff7d7d',
+  border: '1px solid rgba(255,125,125,0.4)',
   fontSize: '0.85rem',
   fontWeight: 500,
   cursor: 'pointer',

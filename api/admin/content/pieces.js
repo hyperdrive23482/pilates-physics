@@ -221,6 +221,37 @@ export default async function handler(req, res) {
     if (req.method === 'DELETE') {
       const id = req.query.id
       if (!id) return res.status(400).json({ error: 'id required' })
+
+      const { data: piece, error: loadErr } = await supabaseAdmin
+        .from('content_pieces')
+        .select('id, status, kit_broadcast_id, blog_post_id')
+        .eq('id', id)
+        .maybeSingle()
+      if (loadErr) throw loadErr
+      if (!piece) return res.status(404).json({ error: 'piece not found' })
+      if (piece.status === 'published') {
+        return res.status(409).json({ error: 'cannot delete a published piece' })
+      }
+
+      // Kit v4 has no DELETE for broadcasts — revert to draft (send_at: null)
+      // so the email can't send, then leave the orphan draft in Kit for manual
+      // cleanup in the Kit dashboard.
+      if (piece.kit_broadcast_id) {
+        try {
+          await updateBroadcast(piece.kit_broadcast_id, { sendAt: null })
+        } catch (kitErr) {
+          console.warn('Kit broadcast cancel-on-delete failed:', kitErr.message)
+        }
+      }
+
+      if (piece.blog_post_id) {
+        const { error: blogErr } = await supabaseAdmin
+          .from('blog_posts')
+          .delete()
+          .eq('id', piece.blog_post_id)
+        if (blogErr) console.warn('blog_posts delete failed:', blogErr.message)
+      }
+
       const { error } = await supabaseAdmin.from('content_pieces').delete().eq('id', id)
       if (error) throw error
       return res.status(204).end()
