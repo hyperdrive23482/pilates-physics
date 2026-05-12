@@ -15,7 +15,7 @@ export default function BlogPost() {
       setLoading(true)
       const { data, error } = await supabase
         .from('blog_posts')
-        .select('id, slug, title, body_html, body_markdown, published_at')
+        .select('id, slug, title, body_html, body_markdown, published_at, featured_image_url, featured_image_alt')
         .eq('slug', slug)
         .eq('status', 'published')
         .maybeSingle()
@@ -100,6 +100,25 @@ export default function BlogPost() {
           </p>
         </div>
       </header>
+
+      {post.featured_image_url && (
+        <div style={{ maxWidth: '760px', margin: '0 auto', padding: '2rem 2rem 0' }}>
+          <div
+            style={{
+              width: '100%',
+              aspectRatio: '16 / 9',
+              overflow: 'hidden',
+              background: 'var(--color-surface)',
+            }}
+          >
+            <img
+              src={post.featured_image_url}
+              alt={post.featured_image_alt || ''}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+          </div>
+        </div>
+      )}
 
       <section style={{ maxWidth: '720px', margin: '0 auto', padding: '3rem 2rem 6rem' }}>
         <div

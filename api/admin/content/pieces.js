@@ -13,7 +13,14 @@ const VALID_STATUS = new Set([
   'archived',
 ])
 
-const EDITABLE_CONTENT_KEYS = ['blog_markdown', 'email_subject', 'email_preview_text', 'email_markdown']
+const EDITABLE_CONTENT_KEYS = [
+  'blog_markdown',
+  'email_subject',
+  'email_preview_text',
+  'email_markdown',
+  'featured_image_url',
+  'featured_image_alt',
+]
 
 function slugify(s) {
   return (s || '')
@@ -167,20 +174,23 @@ export default async function handler(req, res) {
 
       // If the piece already has a linked blog_posts row (any status), keep its
       // body in sync so edits made after publish appear on the live blog page.
+      const syncFields = ['blog_markdown', 'featured_image_url', 'featured_image_alt']
+      const hasSyncableEdit = syncFields.some((k) => body[k] !== undefined)
       let blogSync = null
-      if (
-        editedContent &&
-        body.blog_markdown !== undefined &&
-        data.blog_post_id
-      ) {
+      if (editedContent && hasSyncableEdit && data.blog_post_id) {
         try {
+          const blogUpdate = {
+            title: data.title,
+            featured_image_url: data.featured_image_url,
+            featured_image_alt: data.featured_image_alt,
+          }
+          if (body.blog_markdown !== undefined) {
+            blogUpdate.body_markdown = data.blog_markdown
+            blogUpdate.body_html = renderMarkdown(data.blog_markdown)
+          }
           const { error: blogErr } = await supabaseAdmin
             .from('blog_posts')
-            .update({
-              title: data.title,
-              body_markdown: data.blog_markdown,
-              body_html: renderMarkdown(data.blog_markdown),
-            })
+            .update(blogUpdate)
             .eq('id', data.blog_post_id)
           if (blogErr) throw blogErr
           blogSync = 'updated'

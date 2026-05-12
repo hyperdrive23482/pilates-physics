@@ -5,6 +5,8 @@ import { Sparkles, Save, CalendarCheck, RotateCcw, ChevronLeft, History, Send, T
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import AdminNav from '../../components/admin/AdminNav'
+import FileUpload from '../../components/admin/FileUpload'
+import InlineImageUpload from '../../components/admin/InlineImageUpload'
 
 const STATUS_LABELS = {
   drafting: 'Drafting',
@@ -43,6 +45,8 @@ export default function AdminContentPiece() {
   const [emailSubject, setEmailSubject] = useState('')
   const [emailPreviewText, setEmailPreviewText] = useState('')
   const [emailMd, setEmailMd] = useState('')
+  const [featuredImageUrl, setFeaturedImageUrl] = useState('')
+  const [featuredImageAlt, setFeaturedImageAlt] = useState('')
   const [saving, setSaving] = useState(false)
   const [savedAt, setSavedAt] = useState(null)
   const dirtyRef = useRef(false)
@@ -63,6 +67,8 @@ export default function AdminContentPiece() {
         setEmailSubject(data.piece.email_subject ?? '')
         setEmailPreviewText(data.piece.email_preview_text ?? '')
         setEmailMd(data.piece.email_markdown ?? '')
+        setFeaturedImageUrl(data.piece.featured_image_url ?? '')
+        setFeaturedImageAlt(data.piece.featured_image_alt ?? '')
       }
       setError(null)
     } catch (e) {
@@ -120,6 +126,8 @@ export default function AdminContentPiece() {
           email_subject: emailSubject,
           email_preview_text: emailPreviewText,
           email_markdown: emailMd,
+          featured_image_url: featuredImageUrl || null,
+          featured_image_alt: featuredImageAlt || null,
         },
       })
       dirtyRef.current = false
@@ -382,7 +390,50 @@ export default function AdminContentPiece() {
             }
             locked={blogLocked}
           >
+            <FieldLabel>Featured image</FieldLabel>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <FileUpload
+                bucket="blog-images"
+                pathPrefix={`blog/${id}`}
+                returnUrl
+                accept="image/*"
+                value={featuredImageUrl}
+                onChange={markDirty(setFeaturedImageUrl)}
+              />
+              {featuredImageUrl && (
+                <div
+                  style={{
+                    width: '100%',
+                    maxWidth: '320px',
+                    aspectRatio: '16 / 9',
+                    border: '1px solid var(--color-rule)',
+                    background: 'var(--color-bg)',
+                  }}
+                >
+                  <img
+                    src={featuredImageUrl}
+                    alt={featuredImageAlt || ''}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                </div>
+              )}
+              <input
+                type="text"
+                value={featuredImageAlt}
+                onChange={(e) => markDirty(setFeaturedImageAlt)(e.target.value)}
+                placeholder="Alt text (describe the image for screen readers)"
+                style={inputStyle}
+                disabled={blogLocked}
+              />
+              <p style={{ fontSize: '0.7rem', color: 'var(--color-ink-muted)', margin: 0 }}>
+                Recommended ~1600×900, JPEG/WebP, under 500 KB.
+              </p>
+            </div>
+            <div style={{ height: '1.25rem' }} />
             <FieldLabel>Blog post</FieldLabel>
+            <div style={{ marginBottom: '0.5rem' }}>
+              <InlineImageUpload pathPrefix={`blog/${id}`} label="Upload image for blog body" />
+            </div>
             <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-rule)' }}>
               <MDEditor
                 value={blogMd}
@@ -422,6 +473,9 @@ export default function AdminContentPiece() {
             </div>
             <div style={{ height: '0.75rem' }} />
             <FieldLabel>Email body</FieldLabel>
+            <div style={{ marginBottom: '0.5rem' }}>
+              <InlineImageUpload pathPrefix={`blog/${id}`} label="Upload image for email body" />
+            </div>
             <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-rule)' }}>
               <MDEditor
                 value={emailMd}

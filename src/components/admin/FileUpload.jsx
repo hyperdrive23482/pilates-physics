@@ -2,30 +2,51 @@ import { useState, useRef } from 'react'
 import { Upload, X } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 
-// Upload a file to the webinar-content bucket under {webinarId}/{timestamp}-{filename}.
-// On success, returns the stored path. Caller resolves to a signed URL or persists the path.
-export default function FileUpload({ webinarId, value, onChange, accept }) {
+// Upload a file to a Supabase storage bucket.
+// Defaults preserve the original webinar-content private-bucket behavior:
+//   - bucket: 'webinar-content'
+//   - pathPrefix: webinarId (so path becomes {webinarId}/{ts}-{filename})
+//   - returnUrl: false (onChange receives the storage path, caller signs it)
+// For public buckets, pass returnUrl so onChange receives the public URL directly.
+export default function FileUpload({
+  webinarId,
+  bucket = 'webinar-content',
+  pathPrefix,
+  returnUrl = false,
+  value,
+  onChange,
+  accept,
+}) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState(null)
   const inputRef = useRef(null)
 
+  // Back-compat: if pathPrefix isn't supplied, fall back to webinarId.
+  const resolvedPrefix = pathPrefix ?? webinarId ?? ''
+  const disabled = !resolvedPrefix
+
   async function handleFile(e) {
     const file = e.target.files?.[0]
     if (!file) return
-    if (!webinarId) {
-      setError('Save the webinar first before uploading files')
+    if (!resolvedPrefix) {
+      setError('Save first before uploading files')
       return
     }
     setBusy(true)
     setError(null)
     try {
       const safeName = file.name.replace(/[^\w.\-]+/g, '_')
-      const path = `${webinarId}/${Date.now()}-${safeName}`
+      const path = `${resolvedPrefix}/${Date.now()}-${safeName}`
       const { error: upErr } = await supabase.storage
-        .from('webinar-content')
+        .from(bucket)
         .upload(path, file, { cacheControl: '3600', upsert: false })
       if (upErr) throw upErr
-      onChange(path)
+      if (returnUrl) {
+        const { data } = supabase.storage.from(bucket).getPublicUrl(path)
+        onChange(data.publicUrl)
+      } else {
+        onChange(path)
+      }
     } catch (err) {
       setError(err.message ?? 'Upload failed')
     } finally {
@@ -40,7 +61,7 @@ export default function FileUpload({ webinarId, value, onChange, accept }) {
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          disabled={busy || !webinarId}
+          disabled={busy || disabled}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -49,10 +70,10 @@ export default function FileUpload({ webinarId, value, onChange, accept }) {
             background: 'var(--color-bg)',
             color: 'var(--color-ink)',
             border: '1px solid var(--color-rule)',
-            cursor: busy || !webinarId ? 'not-allowed' : 'pointer',
+            cursor: busy || disabled ? 'not-allowed' : 'pointer',
             fontSize: '0.8rem',
             fontFamily: '"DM Sans", sans-serif',
-            opacity: busy || !webinarId ? 0.6 : 1,
+            opacity: busy || disabled ? 0.6 : 1,
           }}
         >
           <Upload size={14} />
@@ -100,9 +121,9 @@ export default function FileUpload({ webinarId, value, onChange, accept }) {
         style={{ display: 'none' }}
       />
 
-      {!webinarId && (
+      {disabled && (
         <span style={{ fontSize: '0.72rem', color: 'var(--color-ink-muted)' }}>
-          Save the webinar first to enable uploads.
+          Save first to enable uploads.
         </span>
       )}
       {error && <span style={{ fontSize: '0.75rem', color: '#ff7d7d' }}>{error}</span>}

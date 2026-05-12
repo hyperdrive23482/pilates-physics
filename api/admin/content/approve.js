@@ -72,6 +72,8 @@ export default async function handler(req, res) {
             title: piece.title,
             body_markdown: piece.blog_markdown,
             body_html: renderMarkdown(piece.blog_markdown),
+            featured_image_url: piece.featured_image_url,
+            featured_image_alt: piece.featured_image_alt,
             status: 'scheduled',
             scheduled_for: sendAt.toISOString(),
             published_at: null,
@@ -92,6 +94,8 @@ export default async function handler(req, res) {
           excerpt: null,
           body_markdown: piece.blog_markdown,
           body_html: renderMarkdown(piece.blog_markdown),
+          featured_image_url: piece.featured_image_url,
+          featured_image_alt: piece.featured_image_alt,
           status: 'scheduled',
           scheduled_for: sendAt.toISOString(),
         })
