@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { renderMarkdown } from '../lib/markdown'
 
 export default function BlogPost() {
   const { slug } = useParams()
@@ -14,7 +15,7 @@ export default function BlogPost() {
       setLoading(true)
       const { data, error } = await supabase
         .from('blog_posts')
-        .select('id, slug, title, body_html, published_at')
+        .select('id, slug, title, body_html, body_markdown, published_at')
         .eq('slug', slug)
         .eq('status', 'published')
         .maybeSingle()
@@ -108,7 +109,9 @@ export default function BlogPost() {
             fontSize: '1.05rem',
             lineHeight: 1.7,
           }}
-          dangerouslySetInnerHTML={{ __html: post.body_html ?? '' }}
+          dangerouslySetInnerHTML={{
+            __html: post.body_html || renderMarkdown(post.body_markdown),
+          }}
         />
       </section>
     </article>
