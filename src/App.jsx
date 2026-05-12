@@ -48,6 +48,8 @@ import AdminContentIdeas from './pages/admin/AdminContentIdeas'
 import AdminContentPiece from './pages/admin/AdminContentPiece'
 import AdminContentCalendar from './pages/admin/AdminContentCalendar'
 import AdminContentBrain from './pages/admin/AdminContentBrain'
+import AdminBlogPosts from './pages/admin/AdminBlogPosts'
+import AdminBlogPostEdit from './pages/admin/AdminBlogPostEdit'
 import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
 
@@ -320,6 +322,22 @@ export default function App() {
           element={
             <AdminGate>
               <AdminContentBrain />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/content/blog-posts"
+          element={
+            <AdminGate>
+              <AdminBlogPosts />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/content/blog-posts/:id"
+          element={
+            <AdminGate>
+              <AdminBlogPostEdit />
             </AdminGate>
           }
         />

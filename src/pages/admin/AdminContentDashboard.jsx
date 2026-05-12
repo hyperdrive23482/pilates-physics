@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Lightbulb, Calendar, Brain, ArrowRight } from 'lucide-react'
+import { Lightbulb, Calendar, Brain, ArrowRight, FileText } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import AdminNav from '../../components/admin/AdminNav'
@@ -77,8 +77,9 @@ export default function AdminContentDashboard() {
               Pipeline overview
             </h1>
           </div>
-          <div style={{ display: 'flex', gap: '0.6rem' }}>
+          <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
             <SecondaryLink to="/admin/content/brain" icon={<Brain size={14} />} label="Brain" />
+            <SecondaryLink to="/admin/content/blog-posts" icon={<FileText size={14} />} label="Blog posts" />
             <SecondaryLink to="/admin/content/calendar" icon={<Calendar size={14} />} label="Calendar" />
             <PrimaryLink to="/admin/content/ideas" icon={<Lightbulb size={14} />} label="Ideas" />
           </div>
