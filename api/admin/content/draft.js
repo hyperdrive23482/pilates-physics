@@ -82,6 +82,7 @@ export default async function handler(req, res) {
         version,
         source,
         feedback: isRevision ? feedback : null,
+        excerpt: generated.blog_excerpt,
         blog_markdown: generated.blog_markdown,
         email_subject: generated.email_subject,
         email_preview_text: generated.email_preview_text,
@@ -96,6 +97,7 @@ export default async function handler(req, res) {
     const pieceUpdates = {
       title: generated.blog_title,
       slug: generated.blog_slug,
+      excerpt: generated.blog_excerpt,
       blog_markdown: generated.blog_markdown,
       email_subject: generated.email_subject,
       email_preview_text: generated.email_preview_text,

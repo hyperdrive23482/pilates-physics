@@ -70,6 +70,7 @@ export default async function handler(req, res) {
           .from('blog_posts')
           .update({
             title: piece.title,
+            excerpt: piece.excerpt ?? null,
             body_markdown: piece.blog_markdown,
             body_html: renderMarkdown(piece.blog_markdown),
             featured_image_url: piece.featured_image_url,
@@ -91,7 +92,7 @@ export default async function handler(req, res) {
         .insert({
           slug: blogSlug,
           title: piece.title,
-          excerpt: null,
+          excerpt: piece.excerpt ?? null,
           body_markdown: piece.blog_markdown,
           body_html: renderMarkdown(piece.blog_markdown),
           featured_image_url: piece.featured_image_url,
