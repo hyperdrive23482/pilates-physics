@@ -9,6 +9,7 @@ const TYPE_LABELS = {
   blog_post: 'Blog post',
   transcript: 'Transcript',
   style_guide: 'Style guide',
+  persona: 'Persona',
 }
 
 export default function AdminContentBrain() {

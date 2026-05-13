@@ -1,7 +1,7 @@
 import { supabaseAdmin } from '../../_lib/supabase-admin.js'
 import { requireAdmin } from '../../_lib/require-admin.js'
 
-const VALID_TYPE = new Set(['blog_post', 'transcript', 'style_guide'])
+const VALID_TYPE = new Set(['blog_post', 'transcript', 'style_guide', 'persona'])
 
 // Rough token estimate (chars / 4). Used to warn about brain size.
 function estimateTokens(content) {

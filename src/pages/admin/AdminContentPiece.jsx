@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import MDEditor from '@uiw/react-md-editor'
-import { Sparkles, Save, CalendarCheck, RotateCcw, ChevronLeft, History, Send, Trash2 } from 'lucide-react'
+import { Sparkles, Save, CalendarCheck, RotateCcw, ChevronLeft, History, Send, Trash2, SpellCheck, Users, X } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import AdminNav from '../../components/admin/AdminNav'
@@ -55,6 +55,11 @@ export default function AdminContentPiece() {
   const [approving, setApproving] = useState(false)
   const [draftingInKit, setDraftingInKit] = useState(false)
   const [kitSyncNote, setKitSyncNote] = useState(null)
+
+  const [proofreadResult, setProofreadResult] = useState(null)
+  const [audienceResult, setAudienceResult] = useState(null)
+  const [reviewing, setReviewing] = useState(null)
+  const [reviewTab, setReviewTab] = useState('proofread')
 
   const refetch = useCallback(async () => {
     setLoading(true)
@@ -235,6 +240,46 @@ export default function AdminContentPiece() {
     } catch (e) {
       alert(`Failed: ${e.message}`)
     }
+  }
+
+  async function runProofread() {
+    setReviewing('proofread')
+    setReviewTab('proofread')
+    try {
+      const result = await request('/api/admin/content/proofread', {
+        method: 'POST',
+        body: {
+          blog_markdown: blogMd,
+          email_subject: emailSubject,
+          email_preview_text: emailPreviewText,
+          email_markdown: emailMd,
+        },
+      })
+      setProofreadResult(result)
+    } catch (e) {
+      alert(`Proofread failed: ${e.message}`)
+    }
+    setReviewing(null)
+  }
+
+  async function runAudienceRead() {
+    setReviewing('audience')
+    setReviewTab('audience')
+    try {
+      const result = await request('/api/admin/content/audience-read', {
+        method: 'POST',
+        body: {
+          blog_markdown: blogMd,
+          email_subject: emailSubject,
+          email_preview_text: emailPreviewText,
+          email_markdown: emailMd,
+        },
+      })
+      setAudienceResult(result)
+    } catch (e) {
+      alert(`Audience read failed: ${e.message}`)
+    }
+    setReviewing(null)
   }
 
   async function deletePiece() {
@@ -515,6 +560,22 @@ export default function AdminContentPiece() {
               >
                 <Save size={14} /> {saving ? 'Saving…' : 'Save edits'}
               </button>
+              <button
+                type="button"
+                onClick={runProofread}
+                disabled={reviewing !== null}
+                style={secondaryBtn}
+              >
+                <SpellCheck size={14} /> {reviewing === 'proofread' ? 'Proofreading…' : 'Proofread'}
+              </button>
+              <button
+                type="button"
+                onClick={runAudienceRead}
+                disabled={reviewing !== null}
+                style={secondaryBtn}
+              >
+                <Users size={14} /> {reviewing === 'audience' ? 'Reading…' : 'Audience read'}
+              </button>
               {savedAt && (
                 <span style={{ fontSize: '0.75rem', color: 'var(--color-ink-muted)' }}>
                   Saved at {savedAt.toLocaleTimeString()}
@@ -526,6 +587,19 @@ export default function AdminContentPiece() {
                 </span>
               )}
             </div>
+
+            {(proofreadResult || audienceResult) && (
+              <ReviewPanel
+                tab={reviewTab}
+                onTabChange={setReviewTab}
+                proofreadResult={proofreadResult}
+                audienceResult={audienceResult}
+                onClear={() => {
+                  setProofreadResult(null)
+                  setAudienceResult(null)
+                }}
+              />
+            )}
           </Step>
         )}
 
@@ -757,6 +831,319 @@ function FieldLabel({ children }) {
     >
       {children}
     </label>
+  )
+}
+
+const WHERE_LABEL = {
+  blog: 'Blog',
+  email_subject: 'Email subject',
+  email_preview: 'Email preview',
+  email_body: 'Email body',
+}
+
+const KIND_COLOR = {
+  spelling: 'rgba(255,180,100,0.18)',
+  grammar: 'rgba(100,180,255,0.18)',
+  voice: 'rgba(180,255,150,0.18)',
+  inconsistency: 'rgba(255,125,125,0.18)',
+}
+
+function ReviewPanel({ tab, onTabChange, proofreadResult, audienceResult, onClear }) {
+  const proofreadCount = proofreadResult?.issues?.length ?? 0
+  const audienceCount = audienceResult?.reactions?.length ?? 0
+
+  return (
+    <div
+      style={{
+        marginTop: '1.25rem',
+        border: '1px solid var(--color-rule)',
+        background: 'var(--color-bg)',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'stretch',
+          borderBottom: '1px solid var(--color-rule)',
+        }}
+      >
+        <TabBtn
+          active={tab === 'proofread'}
+          disabled={!proofreadResult}
+          onClick={() => onTabChange('proofread')}
+        >
+          Proofread {proofreadResult ? `(${proofreadCount})` : ''}
+        </TabBtn>
+        <TabBtn
+          active={tab === 'audience'}
+          disabled={!audienceResult}
+          onClick={() => onTabChange('audience')}
+        >
+          Audience {audienceResult ? `(${audienceCount})` : ''}
+        </TabBtn>
+        <button
+          type="button"
+          onClick={onClear}
+          aria-label="Clear review results"
+          style={{
+            marginLeft: 'auto',
+            background: 'transparent',
+            border: 'none',
+            color: 'var(--color-ink-muted)',
+            padding: '0.6rem 0.9rem',
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.3rem',
+            fontSize: '0.75rem',
+          }}
+        >
+          <X size={14} /> Clear
+        </button>
+      </div>
+
+      <div style={{ padding: '1rem 1.1rem' }}>
+        {tab === 'proofread' && proofreadResult && (
+          <ProofreadView issues={proofreadResult.issues ?? []} />
+        )}
+        {tab === 'audience' && audienceResult && (
+          <AudienceView reactions={audienceResult.reactions ?? []} />
+        )}
+      </div>
+    </div>
+  )
+}
+
+function TabBtn({ active, disabled, onClick, children }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      style={{
+        padding: '0.6rem 1rem',
+        background: active ? 'var(--color-surface)' : 'transparent',
+        border: 'none',
+        borderRight: '1px solid var(--color-rule)',
+        color: active ? 'var(--color-ink)' : 'var(--color-ink-muted)',
+        fontSize: '0.8rem',
+        fontWeight: active ? 600 : 500,
+        cursor: disabled ? 'not-allowed' : 'pointer',
+        opacity: disabled ? 0.4 : 1,
+        fontFamily: '"DM Sans", sans-serif',
+      }}
+    >
+      {children}
+    </button>
+  )
+}
+
+function ProofreadView({ issues }) {
+  if (issues.length === 0) {
+    return (
+      <p style={{ fontSize: '0.85rem', color: 'var(--color-ink-muted)', margin: 0 }}>
+        No issues found. Looks clean.
+      </p>
+    )
+  }
+
+  const grouped = {}
+  for (const issue of issues) {
+    const key = issue.where ?? 'blog'
+    if (!grouped[key]) grouped[key] = []
+    grouped[key].push(issue)
+  }
+  const order = ['blog', 'email_subject', 'email_preview', 'email_body']
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      {order
+        .filter((k) => grouped[k]?.length)
+        .map((k) => (
+          <div key={k}>
+            <div
+              style={{
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: 'var(--color-ink-muted)',
+                marginBottom: '0.5rem',
+              }}
+            >
+              {WHERE_LABEL[k] ?? k} · {grouped[k].length}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {grouped[k].map((issue, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    border: '1px solid var(--color-rule)',
+                    padding: '0.7rem 0.9rem',
+                    background: 'var(--color-surface)',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'inline-block',
+                      fontSize: '0.65rem',
+                      padding: '0.15rem 0.45rem',
+                      background: KIND_COLOR[issue.kind] ?? 'rgba(255,255,255,0.06)',
+                      color: 'var(--color-ink)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em',
+                      fontWeight: 600,
+                      marginBottom: '0.5rem',
+                    }}
+                  >
+                    {issue.kind}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '0.85rem',
+                      color: 'var(--color-ink)',
+                      marginBottom: '0.3rem',
+                      fontFamily: 'ui-monospace, SFMono-Regular, monospace',
+                    }}
+                  >
+                    <span style={{ color: 'var(--color-ink-muted)' }}>“</span>
+                    {issue.quote}
+                    <span style={{ color: 'var(--color-ink-muted)' }}>”</span>
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--color-ink)', marginBottom: '0.3rem' }}>
+                    → <span style={{ color: 'var(--color-accent)' }}>{issue.suggestion}</span>
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--color-ink-muted)', lineHeight: 1.5 }}>
+                    {issue.reason}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+    </div>
+  )
+}
+
+function AudienceView({ reactions }) {
+  if (reactions.length === 0) {
+    return (
+      <p style={{ fontSize: '0.85rem', color: 'var(--color-ink-muted)', margin: 0 }}>
+        No reactions returned.
+      </p>
+    )
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+      {reactions.map((r) => (
+        <div
+          key={r.persona_id}
+          style={{
+            border: '1px solid var(--color-rule)',
+            padding: '0.9rem 1rem',
+            background: 'var(--color-surface)',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              justifyContent: 'space-between',
+              gap: '0.75rem',
+              marginBottom: '0.6rem',
+              flexWrap: 'wrap',
+            }}
+          >
+            <div
+              style={{
+                fontFamily: '"DM Serif Display", serif',
+                fontSize: '1.05rem',
+                color: 'var(--color-ink)',
+              }}
+            >
+              {r.persona_name}
+            </div>
+            <ForwardScore score={r.would_forward} />
+          </div>
+          <p style={{ fontSize: '0.9rem', color: 'var(--color-ink)', margin: '0 0 0.6rem', lineHeight: 1.5 }}>
+            {r.gut}
+          </p>
+          {r.what_landed && (
+            <div style={{ marginBottom: '0.4rem' }}>
+              <span
+                style={{
+                  fontSize: '0.7rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color: 'rgba(180,255,150,0.9)',
+                  marginRight: '0.5rem',
+                }}
+              >
+                ✓ Landed
+              </span>
+              <span style={{ fontSize: '0.85rem', color: 'var(--color-ink)', lineHeight: 1.5 }}>
+                {r.what_landed}
+              </span>
+            </div>
+          )}
+          {r.what_didnt && (
+            <div>
+              <span
+                style={{
+                  fontSize: '0.7rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color: 'rgba(255,170,130,0.9)',
+                  marginRight: '0.5rem',
+                }}
+              >
+                ✗ Didn't
+              </span>
+              <span style={{ fontSize: '0.85rem', color: 'var(--color-ink)', lineHeight: 1.5 }}>
+                {r.what_didnt}
+              </span>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function ForwardScore({ score }) {
+  const n = Math.max(1, Math.min(5, Number(score) || 1))
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '0.3rem',
+        fontSize: '0.7rem',
+        color: 'var(--color-ink-muted)',
+        textTransform: 'uppercase',
+        letterSpacing: '0.1em',
+        fontWeight: 600,
+      }}
+      title={`Would forward: ${n} / 5`}
+    >
+      Forward
+      <span style={{ display: 'inline-flex', gap: '2px' }}>
+        {[1, 2, 3, 4, 5].map((i) => (
+          <span
+            key={i}
+            style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              background: i <= n ? 'var(--color-accent)' : 'rgba(255,255,255,0.12)',
+            }}
+          />
+        ))}
+      </span>
+    </span>
   )
 }
 
