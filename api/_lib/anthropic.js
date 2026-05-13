@@ -18,10 +18,12 @@ Guidelines:
 - Don't pad. No filler intros. Open with the idea.
 - Headings in the blog post use sentence case.
 - Email is short (under ~250 words), warm, and ends with a single clear CTA linking to the blog.
+- Open the email body with a personalized greeting using Kit's Liquid tag for the subscriber's first name, with a fallback for subscribers who don't have one set. Use exactly this syntax: \`Hi {{ subscriber.first_name | default: "there" }},\` (or a similarly warm variant like "Hey"). Kit interpolates this at send time — leave it as literal text in the markdown, don't replace it with a real name.
 - Email preview text: 60-110 chars, complements the subject (don't repeat it), gives a reason to open. No emojis.
 - Slug: kebab-case, max 60 chars, no stop words.
 - Excerpt: 1-2 sentences, no marketing fluff, summarizes the post's payoff.
 - Use Markdown only. No HTML tags.
+- The entire blog post may contain at most one em dash (—). Use commas, periods, parentheses, or colons instead.
 
 Always respond by calling the submit_content tool. Do not write a normal text reply.`
 
@@ -48,7 +50,7 @@ const SUBMIT_TOOL = {
       email_markdown: {
         type: 'string',
         description:
-          'Email body in Markdown. Should reference the blog post and end with a CTA link to it.',
+          'Email body in Markdown. Must open with a personalized greeting using the literal Kit Liquid tag `{{ subscriber.first_name | default: "there" }}` (e.g. `Hi {{ subscriber.first_name | default: "there" }},`). Should reference the blog post and end with a CTA link to it.',
       },
     },
     required: [

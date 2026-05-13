@@ -175,6 +175,27 @@ export default function AdminContentPiece() {
     setDraftingInKit(false)
   }
 
+  async function resetKitId() {
+    if (
+      !confirm(
+        "Clear the stored Kit broadcast ID? Use this after manually deleting the draft in Kit. The next 'Draft in Kit' click will create a fresh broadcast.",
+      )
+    ) {
+      return
+    }
+    setKitSyncNote(null)
+    try {
+      await request('/api/admin/content/reset-kit-id', {
+        method: 'POST',
+        body: { piece_id: id },
+      })
+      setKitSyncNote('Kit broadcast link cleared — next Draft in Kit will create a new one')
+      await refetch()
+    } catch (e) {
+      alert(`Reset failed: ${e.message}`)
+    }
+  }
+
   async function approveAndSchedule() {
     if (dirtyRef.current) {
       if (!confirm('You have unsaved edits. Save them first?')) return
@@ -580,6 +601,23 @@ export default function AdminContentPiece() {
                 {piece.kit_broadcast_id && (
                   <p style={{ fontSize: '0.75rem', color: 'var(--color-ink-muted)', marginTop: '0.6rem' }}>
                     Linked to Kit broadcast #{piece.kit_broadcast_id}. Edits saved here will auto-sync to it.
+                    {' · '}
+                    <button
+                      type="button"
+                      onClick={resetKitId}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        padding: 0,
+                        color: 'var(--color-accent)',
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                        fontSize: 'inherit',
+                        fontFamily: 'inherit',
+                      }}
+                    >
+                      Reset Kit post ID
+                    </button>
                   </p>
                 )}
                 {kitSyncNote && (
