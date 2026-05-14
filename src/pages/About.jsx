@@ -488,7 +488,7 @@ export default function About() {
             </p>
           </div>
           <Link
-            to="/workshops"
+            to="/pilates-physics-101"
             style={{
               display: 'inline-block',
               padding: '0.875rem 2rem',

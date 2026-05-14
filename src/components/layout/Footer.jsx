@@ -81,7 +81,7 @@ export default function Footer() {
             </p>
             <nav className="flex flex-col gap-2">
               <Link to="/about" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>About Kaleen</Link>
-              <Link to="/workshops" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Workshops</Link>
+              <Link to="/education" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Education</Link>
               <Link to="/help" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Help</Link>
               {/* <Link to="/contact" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Contact</Link> */}
             </nav>

@@ -126,7 +126,7 @@ export default function Landing() {
             </p>
 
             <Link
-              to="/workshops"
+              to="/pilates-physics-101"
               style={{
                 ...primaryButtonStyle,
                 alignSelf: 'flex-start',
@@ -456,7 +456,7 @@ export default function Landing() {
             </p>
           </div>
 
-          <Link to="/workshops" style={primaryButtonStyle}>Register Now</Link>
+          <Link to="/pilates-physics-101" style={primaryButtonStyle}>Register Now</Link>
         </div>
       </section>
 

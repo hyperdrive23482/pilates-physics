@@ -62,10 +62,10 @@ export default function WebinarSalesPage() {
           Webinar not found
         </h1>
         <Link
-          to="/workshops"
+          to="/education"
           style={{ color: 'var(--color-accent)', textDecoration: 'none', fontSize: '0.9rem' }}
         >
-          Browse all workshops
+          Browse all programs
         </Link>
       </div>
     )

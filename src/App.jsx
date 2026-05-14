@@ -16,8 +16,9 @@ function RedirectWithSlug({ to }) {
 }
 import Landing from './pages/Landing'
 import About from './pages/About'
-import WebinarCatalog from './pages/WebinarCatalog'
-import Courses from './pages/Courses'
+import Education from './pages/Education'
+import PilatesPhysics101 from './pages/PilatesPhysics101'
+import PilatesPhysics201 from './pages/PilatesPhysics201'
 import WebinarSalesPage from './pages/WebinarSalesPage'
 import PortalDashboard from './pages/PortalDashboard'
 import WebinarPortal from './pages/WebinarPortal'
@@ -74,19 +75,39 @@ export default function App() {
             </PageWrapper>
           }
         />
-        {/* Hide the PP-101 standalone sales page — must come BEFORE the dynamic route */}
+        {/* Static program redirect must come BEFORE the dynamic /workshops/:slug route */}
         <Route
           path="/workshops/PP-101-May-2026"
-          element={<Navigate to="/workshops" replace />}
+          element={<Navigate to="/pilates-physics-101" replace />}
         />
+
+        {/* New top-level pages */}
         <Route
-          path="/workshops"
+          path="/education"
           element={
             <PageWrapper>
-              <Courses />
+              <Education />
             </PageWrapper>
           }
         />
+        <Route
+          path="/pilates-physics-101"
+          element={
+            <PageWrapper>
+              <PilatesPhysics101 />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/pilates-physics-201"
+          element={
+            <PageWrapper>
+              <PilatesPhysics201 />
+            </PageWrapper>
+          }
+        />
+
+        {/* Keep the dynamic webinar surface for any non-PP-101 webinar admin creates */}
         <Route
           path="/workshops/:slug"
           element={
@@ -103,14 +124,19 @@ export default function App() {
             </PageWrapper>
           }
         />
+
         {/* Backward-compat redirects */}
         <Route
+          path="/workshops"
+          element={<Navigate to="/education" replace />}
+        />
+        <Route
           path="/courses/PP-101-May-2026"
-          element={<Navigate to="/workshops" replace />}
+          element={<Navigate to="/pilates-physics-101" replace />}
         />
         <Route
           path="/courses"
-          element={<Navigate to="/workshops" replace />}
+          element={<Navigate to="/education" replace />}
         />
         <Route
           path="/courses/:slug"

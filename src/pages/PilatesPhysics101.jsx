@@ -37,7 +37,7 @@ function Rule() {
   )
 }
 
-export default function Courses() {
+export default function PilatesPhysics101() {
   const { webinar } = useWebinar('PP-101-May-2026')
 
   return (
@@ -145,7 +145,7 @@ export default function Courses() {
           {[
             {
               number: '1',
-              text: 'Have been teaching long enough to notice that the same setup doesn\u2019t work the same way on every body',
+              text: 'Have been teaching long enough to notice that the same setup doesn’t work the same way on every body',
             },
             {
               number: '2',
