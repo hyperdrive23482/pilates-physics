@@ -49,12 +49,17 @@ export default async function handler(req, res) {
     let broadcastId = piece.kit_broadcast_id
     let action
 
+    const tagIds = Array.isArray(piece.kit_tag_ids) ? piece.kit_tag_ids : []
+    const tagMatch = piece.kit_tag_match ?? 'any'
+
     if (broadcastId) {
       // Update existing Kit draft in place
       await updateBroadcast(broadcastId, {
         subject: piece.email_subject,
         previewText: piece.email_preview_text ?? null,
         contentHtml: emailHtml,
+        tagIds,
+        tagMatch,
         // explicitly leave send_at unchanged — don't pass it
       })
       action = 'updated'
@@ -63,6 +68,8 @@ export default async function handler(req, res) {
         subject: piece.email_subject,
         previewText: piece.email_preview_text ?? null,
         contentHtml: emailHtml,
+        tagIds,
+        tagMatch,
         // no sendAt → Kit treats it as a draft
       })
       broadcastId = broadcast?.id ?? null

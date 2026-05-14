@@ -22,6 +22,17 @@ const EDITABLE_CONTENT_KEYS = [
   'featured_image_alt',
 ]
 
+function normalizeKitTagIds(raw) {
+  if (!Array.isArray(raw)) return null
+  const out = []
+  for (const v of raw) {
+    const n = Number(v)
+    if (!Number.isInteger(n) || n <= 0) return null
+    out.push(n)
+  }
+  return [...new Set(out)]
+}
+
 function slugify(s) {
   return (s || '')
     .toLowerCase()
@@ -143,6 +154,23 @@ export default async function handler(req, res) {
         }
       }
 
+      let editedTargeting = false
+      if (body.kit_tag_ids !== undefined) {
+        const ids = normalizeKitTagIds(body.kit_tag_ids)
+        if (ids === null) {
+          return res.status(400).json({ error: 'kit_tag_ids must be an array of positive integers' })
+        }
+        updates.kit_tag_ids = ids
+        editedTargeting = true
+      }
+      if (body.kit_tag_match !== undefined) {
+        if (body.kit_tag_match !== 'any' && body.kit_tag_match !== 'all') {
+          return res.status(400).json({ error: "kit_tag_match must be 'any' or 'all'" })
+        }
+        updates.kit_tag_match = body.kit_tag_match
+        editedTargeting = true
+      }
+
       // If saving content edits, snapshot a kaleen_edit draft row first
       if (editedContent && body.save_as_edit !== false) {
         const version = await nextVersion(id)
@@ -200,12 +228,12 @@ export default async function handler(req, res) {
         }
       }
 
-      // Best-effort: sync the latest content to the Kit broadcast if one
-      // already exists for this piece. Failures are logged but don't fail
-      // the save — the user can re-sync via the "Draft in Kit" button.
+      // Best-effort: sync the latest content + targeting to the Kit broadcast
+      // if one already exists for this piece. Failures are logged but don't
+      // fail the save — the user can re-sync via the "Draft in Kit" button.
       let kitSync = null
       if (
-        editedContent &&
+        (editedContent || editedTargeting) &&
         data.kit_broadcast_id &&
         data.status !== 'published'
       ) {
@@ -217,6 +245,8 @@ export default async function handler(req, res) {
               emailMarkdown: data.email_markdown,
               slug: data.slug,
             }),
+            tagIds: Array.isArray(data.kit_tag_ids) ? data.kit_tag_ids : [],
+            tagMatch: data.kit_tag_match ?? 'any',
           })
           kitSync = 'updated'
         } catch (kitErr) {

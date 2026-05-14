@@ -110,6 +110,8 @@ export default async function handler(req, res) {
     const emailHtml = buildEmailHtml({ emailMarkdown: piece.email_markdown, slug: blogSlug })
 
     // 3. Create OR update the Kit broadcast and add the send_at
+    const tagIds = Array.isArray(piece.kit_tag_ids) ? piece.kit_tag_ids : []
+    const tagMatch = piece.kit_tag_match ?? 'any'
     let kitBroadcastId = piece.kit_broadcast_id
     try {
       if (kitBroadcastId) {
@@ -118,6 +120,8 @@ export default async function handler(req, res) {
           previewText: piece.email_preview_text ?? null,
           contentHtml: emailHtml,
           sendAt: sendAt.toISOString(),
+          tagIds,
+          tagMatch,
         })
       } else {
         const broadcast = await createBroadcast({
@@ -125,6 +129,8 @@ export default async function handler(req, res) {
           previewText: piece.email_preview_text ?? null,
           contentHtml: emailHtml,
           sendAt: sendAt.toISOString(),
+          tagIds,
+          tagMatch,
         })
         kitBroadcastId = broadcast?.id ? String(broadcast.id) : null
       }

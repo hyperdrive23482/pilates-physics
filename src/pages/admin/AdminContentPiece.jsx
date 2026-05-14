@@ -61,6 +61,11 @@ export default function AdminContentPiece() {
   const [reviewing, setReviewing] = useState(null)
   const [reviewTab, setReviewTab] = useState('proofread')
 
+  const [kitTagIds, setKitTagIds] = useState([])
+  const [kitTagMatch, setKitTagMatch] = useState('any')
+  const [availableTags, setAvailableTags] = useState(null)
+  const [tagsError, setTagsError] = useState(null)
+
   const refetch = useCallback(async () => {
     setLoading(true)
     try {
@@ -74,6 +79,8 @@ export default function AdminContentPiece() {
         setEmailMd(data.piece.email_markdown ?? '')
         setFeaturedImageUrl(data.piece.featured_image_url ?? '')
         setFeaturedImageAlt(data.piece.featured_image_alt ?? '')
+        setKitTagIds(Array.isArray(data.piece.kit_tag_ids) ? data.piece.kit_tag_ids : [])
+        setKitTagMatch(data.piece.kit_tag_match ?? 'any')
       }
       setError(null)
     } catch (e) {
@@ -85,6 +92,35 @@ export default function AdminContentPiece() {
   useEffect(() => {
     refetch()
   }, [refetch])
+
+  useEffect(() => {
+    let cancelled = false
+    request('/api/admin/kit/tags')
+      .then((data) => {
+        if (cancelled) return
+        setAvailableTags(Array.isArray(data?.tags) ? data.tags : [])
+      })
+      .catch((e) => {
+        if (cancelled) return
+        setTagsError(e.message)
+        setAvailableTags([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [request])
+
+  function toggleTag(id) {
+    dirtyRef.current = true
+    setKitTagIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    )
+  }
+
+  function changeTagMatch(mode) {
+    dirtyRef.current = true
+    setKitTagMatch(mode)
+  }
 
   async function generate(isRevision) {
     setGenerating(true)
@@ -133,6 +169,8 @@ export default function AdminContentPiece() {
           email_markdown: emailMd,
           featured_image_url: featuredImageUrl || null,
           featured_image_alt: featuredImageAlt || null,
+          kit_tag_ids: kitTagIds,
+          kit_tag_match: kitTagMatch,
         },
       })
       dirtyRef.current = false
@@ -603,10 +641,33 @@ export default function AdminContentPiece() {
           </Step>
         )}
 
-        {/* STEP — Approve & schedule */}
+        {/* STEP — Audience targeting */}
         {hasContent && (
           <Step
             number={4}
+            title="Audience"
+            subtitle={
+              piece.status === 'published'
+                ? 'The broadcast already sent. Audience shown for reference only.'
+                : 'Choose which Kit subscribers receive this email. No tags selected = everyone.'
+            }
+          >
+            <AudienceSelector
+              tags={availableTags}
+              tagsError={tagsError}
+              selectedIds={kitTagIds}
+              matchMode={kitTagMatch}
+              onToggleTag={toggleTag}
+              onChangeMatch={changeTagMatch}
+              disabled={piece.status === 'published'}
+            />
+          </Step>
+        )}
+
+        {/* STEP — Approve & schedule */}
+        {hasContent && (
+          <Step
+            number={5}
             title="Approve & schedule"
             subtitle={
               isLocked
@@ -813,6 +874,135 @@ function StatusPill({ status }) {
     >
       {STATUS_LABELS[status] ?? status}
     </span>
+  )
+}
+
+function AudienceSelector({
+  tags,
+  tagsError,
+  selectedIds,
+  matchMode,
+  onToggleTag,
+  onChangeMatch,
+  disabled,
+}) {
+  if (tagsError) {
+    return (
+      <p style={{ fontSize: '0.85rem', color: '#ff7d7d', margin: 0 }}>
+        Failed to load Kit tags: {tagsError}
+      </p>
+    )
+  }
+  if (tags === null) {
+    return (
+      <p style={{ fontSize: '0.85rem', color: 'var(--color-ink-muted)', margin: 0 }}>
+        Loading tags from Kit…
+      </p>
+    )
+  }
+  if (tags.length === 0) {
+    return (
+      <p style={{ fontSize: '0.85rem', color: 'var(--color-ink-muted)', margin: 0 }}>
+        No tags found in your Kit account. Create tags in Kit to enable targeting.
+      </p>
+    )
+  }
+
+  const selectedSet = new Set(selectedIds)
+  const selectedNames = tags
+    .filter((t) => selectedSet.has(t.id))
+    .map((t) => t.name)
+
+  let summary
+  if (selectedNames.length === 0) {
+    summary = 'Sends to all active subscribers.'
+  } else if (selectedNames.length === 1) {
+    summary = `Sends to subscribers tagged "${selectedNames[0]}".`
+  } else {
+    summary =
+      matchMode === 'all'
+        ? `Sends to subscribers with ALL of: ${selectedNames.join(', ')}.`
+        : `Sends to subscribers with ANY of: ${selectedNames.join(', ')}.`
+  }
+
+  return (
+    <>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '0.4rem',
+          marginBottom: '0.75rem',
+        }}
+      >
+        {tags.map((t) => {
+          const active = selectedSet.has(t.id)
+          return (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => onToggleTag(t.id)}
+              disabled={disabled}
+              style={{
+                padding: '0.4rem 0.75rem',
+                background: active ? 'var(--color-accent)' : 'transparent',
+                color: active ? '#1C1A17' : 'var(--color-ink)',
+                border: '1px solid',
+                borderColor: active ? 'var(--color-accent)' : 'var(--color-rule)',
+                fontSize: '0.8rem',
+                fontWeight: active ? 600 : 500,
+                cursor: disabled ? 'not-allowed' : 'pointer',
+                opacity: disabled ? 0.5 : 1,
+                fontFamily: '"DM Sans", sans-serif',
+              }}
+            >
+              {t.name}
+            </button>
+          )
+        })}
+      </div>
+
+      {selectedIds.length >= 2 && (
+        <div
+          style={{
+            display: 'flex',
+            gap: '1rem',
+            alignItems: 'center',
+            marginBottom: '0.75rem',
+            fontSize: '0.85rem',
+            color: 'var(--color-ink)',
+          }}
+        >
+          <span style={{ color: 'var(--color-ink-muted)' }}>Match:</span>
+          <label style={{ display: 'inline-flex', gap: '0.35rem', alignItems: 'center', cursor: disabled ? 'not-allowed' : 'pointer' }}>
+            <input
+              type="radio"
+              name="kit-tag-match"
+              value="any"
+              checked={matchMode === 'any'}
+              onChange={() => onChangeMatch('any')}
+              disabled={disabled}
+            />
+            any of these tags
+          </label>
+          <label style={{ display: 'inline-flex', gap: '0.35rem', alignItems: 'center', cursor: disabled ? 'not-allowed' : 'pointer' }}>
+            <input
+              type="radio"
+              name="kit-tag-match"
+              value="all"
+              checked={matchMode === 'all'}
+              onChange={() => onChangeMatch('all')}
+              disabled={disabled}
+            />
+            all of these tags
+          </label>
+        </div>
+      )}
+
+      <p style={{ fontSize: '0.8rem', color: 'var(--color-ink-muted)', margin: 0 }}>
+        {summary}
+      </p>
+    </>
   )
 }
 

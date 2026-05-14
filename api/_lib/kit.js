@@ -33,6 +33,8 @@ async function upsertSubscriber(email, firstName, lastName) {
   return res.json()
 }
 
+let allTagsCache = []
+
 async function loadTagsIntoCache() {
   const res = await fetch(`${KIT_BASE}/tags`, { headers: headers() })
   if (!res.ok) {
@@ -41,8 +43,10 @@ async function loadTagsIntoCache() {
   }
   const data = await res.json()
   tagCache.clear()
+  allTagsCache = []
   for (const tag of data.tags || []) {
     tagCache.set(tag.name, tag.id)
+    allTagsCache.push({ id: tag.id, name: tag.name })
   }
   tagCacheFetchedAt = Date.now()
 }
@@ -55,6 +59,28 @@ async function resolveTagId(tagName) {
   const id = tagCache.get(tagName)
   if (!id) throw new Error(`Kit tag not found: "${tagName}". Create it in the Kit dashboard first.`)
   return id
+}
+
+// Returns [{ id, name }] for every tag in the Kit account, sorted by name.
+// Used by the admin UI to populate the audience selector.
+export async function listTags() {
+  const stale = Date.now() - tagCacheFetchedAt > TAG_CACHE_TTL_MS
+  if (stale || allTagsCache.length === 0) {
+    await loadTagsIntoCache()
+  }
+  return [...allTagsCache].sort((a, b) => a.name.localeCompare(b.name))
+}
+
+// Build the Kit v4 `subscriber_filter` body shape from a tag-id list + match mode.
+// Returns `[]` when no tags (Kit interprets that as "all subscribers"), otherwise
+// a single filter group with `any` or `all` populated per the docs.
+function buildSubscriberFilter(tagIds, tagMatch) {
+  if (!Array.isArray(tagIds) || tagIds.length === 0) return []
+  const rule = { type: 'tag', ids: tagIds.map(Number) }
+  if (tagMatch === 'all') {
+    return [{ all: [rule], any: null, none: null }]
+  }
+  return [{ all: [], any: [rule], none: null }]
 }
 
 async function applyTag(tagId, email) {
@@ -127,8 +153,12 @@ async function resolveTemplateForBroadcast(templateName) {
 //   3. "Newsletter Template" fallback
 //   4. if none of those resolve, send without a template_id (Kit uses its default)
 //
+// `tagIds` (array of numeric Kit tag IDs) plus `tagMatch` ('any' | 'all')
+// produce a Kit v4 subscriber_filter. Empty/omitted tagIds = send to all
+// active subscribers.
+//
 // Returns the broadcast object so the caller can persist its id.
-export async function createBroadcast({ subject, previewText, contentHtml, contentText, sendAt, templateName }) {
+export async function createBroadcast({ subject, previewText, contentHtml, contentText, sendAt, templateName, tagIds, tagMatch }) {
   if (!subject) throw new Error('createBroadcast: subject is required')
   if (!contentHtml && !contentText) {
     throw new Error('createBroadcast: contentHtml or contentText is required')
@@ -145,6 +175,9 @@ export async function createBroadcast({ subject, previewText, contentHtml, conte
   if (previewText) body.preview_text = previewText
   if (templateId) body.email_template_id = templateId
   if (sendAt) body.send_at = new Date(sendAt).toISOString()
+  if (tagIds !== undefined) {
+    body.subscriber_filter = buildSubscriberFilter(tagIds, tagMatch)
+  }
 
   const res = await fetch(`${KIT_BASE}/broadcasts`, {
     method: 'POST',
@@ -161,7 +194,8 @@ export async function createBroadcast({ subject, previewText, contentHtml, conte
 
 // Update an existing broadcast in Kit by id. Pass only the fields you want
 // changed. To clear scheduling and revert to draft, pass `sendAt: null`.
-export async function updateBroadcast(id, { subject, previewText, contentHtml, contentText, sendAt, templateName } = {}) {
+// Pass `tagIds: []` to clear an existing audience filter (revert to all subs).
+export async function updateBroadcast(id, { subject, previewText, contentHtml, contentText, sendAt, templateName, tagIds, tagMatch } = {}) {
   if (!id) throw new Error('updateBroadcast: id is required')
 
   const body = {}
@@ -176,6 +210,9 @@ export async function updateBroadcast(id, { subject, previewText, contentHtml, c
   }
   if (sendAt !== undefined) {
     body.send_at = sendAt === null ? null : new Date(sendAt).toISOString()
+  }
+  if (tagIds !== undefined) {
+    body.subscriber_filter = buildSubscriberFilter(tagIds, tagMatch)
   }
 
   const res = await fetch(`${KIT_BASE}/broadcasts/${id}`, {
