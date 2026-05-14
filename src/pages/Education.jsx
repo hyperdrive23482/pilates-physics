@@ -136,9 +136,26 @@ export default function Education() {
   return (
     <div>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <section style={{ background: 'var(--color-bg)' }}>
+      <section
+        style={{
+          backgroundImage: 'url(/images/homepage/hero-image-2.JPG)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          position: 'relative',
+        }}
+      >
         <div
           style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(28, 26, 23, 0.7)',
+          }}
+        />
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 1,
             maxWidth: '1100px',
             margin: '0 auto',
             padding: '7rem 2rem 5rem',
