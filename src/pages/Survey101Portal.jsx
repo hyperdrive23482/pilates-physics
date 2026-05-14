@@ -128,7 +128,6 @@ export default function Survey101Portal() {
   }
 
   const isClosed = new Date() >= SURVEY_CUTOFF
-  const firstName = user.user_metadata?.first_name || ''
 
   if (isClosed) {
     return (
@@ -207,12 +206,11 @@ export default function Survey101Portal() {
   return (
     <PortalShell user={user} onSignOut={signOut}>
       <Eyebrow />
-      <PageTitle>{WORKSHOP_TITLE} — your feedback</PageTitle>
+      <PageTitle>{WORKSHOP_TITLE} Feedback</PageTitle>
       <MutedParagraph style={{ marginBottom: '3rem' }}>
-        {firstName ? `Hey ${firstName} — ` : 'Hey! '}
-        quick favor: would you fill this out to help me make {WORKSHOP_TITLE} even better next
-        time? Takes about 5 minutes. Honest feedback is the most useful kind, even if it stings a
-        little. Thank you for being part of this.
+        Hey there! I have a quick favor to ask.  Would you fill this out to help me make{' '}
+        {WORKSHOP_TITLE} even better next time? Takes about 5 minutes. Honest feedback is the most
+        useful kind, even if it stings a little. Thank you!
       </MutedParagraph>
 
       <WorkshopFeedbackForm

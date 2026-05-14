@@ -148,8 +148,8 @@ function OpenSurvey() {
     <div>
       <Hero
         eyebrow="Workshop Feedback"
-        title={`${WORKSHOP_TITLE} — your feedback`}
-        intro="Hey! Quick favor — would you fill this out to help me make Pilates Physics 101 even better next time? Takes about 5 minutes. Honest feedback is the most useful kind, even if it stings a little. Thank you for being part of this."
+        title={`${WORKSHOP_TITLE} Feedback`}
+        intro="Hey there! I have a quick favor to ask.  Would you fill this out to help me make Pilates Physics 101 even better next time? Takes about 5 minutes. Honest feedback is the most useful kind, even if it stings a little. Thank you!"
       />
 
       <Rule />
