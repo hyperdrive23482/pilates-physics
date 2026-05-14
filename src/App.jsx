@@ -20,6 +20,7 @@ import Education from './pages/Education'
 import PilatesPhysics101 from './pages/PilatesPhysics101'
 import PilatesPhysics201 from './pages/PilatesPhysics201'
 import Survey101 from './pages/Survey101'
+import Survey101Portal from './pages/Survey101Portal'
 import WebinarSalesPage from './pages/WebinarSalesPage'
 import PortalDashboard from './pages/PortalDashboard'
 import WebinarPortal from './pages/WebinarPortal'
@@ -158,6 +159,11 @@ export default function App() {
         <Route
           path="/portal"
           element={<PortalDashboard />}
+        />
+        {/* Static portal routes must come BEFORE the dynamic /portal/:slug route */}
+        <Route
+          path="/portal/survey-101"
+          element={<Survey101Portal />}
         />
         <Route
           path="/portal/:slug"

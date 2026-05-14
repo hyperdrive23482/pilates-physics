@@ -11,7 +11,7 @@ create table public.workshop_feedback (
   name text not null,
   email text not null,
   years_teaching text not null check (years_teaching in (
-    '<1 year','1-3 years','4-7 years','8-15 years','15+ years'
+    'I''m not an instructor','I am in teacher training','<1 year','1-3 years','4-9 years','10+ years'
   )),
   nps_score smallint not null check (nps_score between 1 and 10),
   change_this_week text not null,

@@ -11,7 +11,14 @@ const WORKSHOP_DATE = '2026-05-20'
 // well past the window do not.
 const SURVEY_CUTOFF_ISO = '2026-06-01T00:00:00-07:00'
 
-const YEARS_OPTIONS = new Set(['<1 year', '1-3 years', '4-7 years', '8-15 years', '15+ years'])
+const YEARS_OPTIONS = new Set([
+  "I'm not an instructor",
+  'I am in teacher training',
+  '<1 year',
+  '1-3 years',
+  '4-9 years',
+  '10+ years',
+])
 const VALUABLE_OPTIONS = new Set([
   'Framework',
   'Background Physics',
@@ -36,9 +43,20 @@ function trimString(value) {
   return typeof value === 'string' ? value.trim() : ''
 }
 
-function validateSurvey(body) {
+function validateNameEmail(body) {
   const name = trimString(body.name)
   const email = trimString(body.email)
+
+  if (!name) return { error: 'Name is required' }
+  if (!email) return { error: 'Email is required' }
+  if (name.length > 200) return { error: 'Name is too long' }
+  if (email.length > 320) return { error: 'Email is too long' }
+  if (!EMAIL_RE.test(email)) return { error: 'Please enter a valid email address' }
+
+  return { payload: { name, email } }
+}
+
+function validateSurveyBody(body) {
   const yearsTeaching = trimString(body.years_teaching)
   const npsRaw = body.nps_score
   const changeThisWeek = trimString(body.change_this_week)
@@ -50,12 +68,6 @@ function validateSurvey(body) {
   const sharePermission = trimString(body.share_permission)
   const nextWorkshopTopic = trimString(body.next_workshop_topic)
   const anythingElse = trimString(body.anything_else)
-
-  if (!name) return { error: 'Name is required' }
-  if (!email) return { error: 'Email is required' }
-  if (name.length > 200) return { error: 'Name is too long' }
-  if (email.length > 320) return { error: 'Email is too long' }
-  if (!EMAIL_RE.test(email)) return { error: 'Please enter a valid email address' }
 
   if (!yearsTeaching) return { error: 'Years teaching is required' }
   if (!YEARS_OPTIONS.has(yearsTeaching)) return { error: 'Please select a valid years-teaching option' }
@@ -92,8 +104,6 @@ function validateSurvey(body) {
 
   return {
     payload: {
-      name,
-      email,
       years_teaching: yearsTeaching,
       nps_score: npsRaw,
       change_this_week: changeThisWeek,
@@ -107,6 +117,23 @@ function validateSurvey(body) {
       anything_else: anythingElse || null,
     },
   }
+}
+
+async function getAuthedUser(req) {
+  const authHeader = req.headers.authorization || req.headers.Authorization
+  if (!authHeader || !authHeader.startsWith('Bearer ')) return null
+  const token = authHeader.slice(7).trim()
+  if (!token) return null
+  const { data, error } = await supabaseAdmin.auth.getUser(token)
+  if (error || !data?.user) return { error: 'Invalid authentication token' }
+  return { user: data.user }
+}
+
+function nameFromUser(user) {
+  const first = trimString(user.user_metadata?.first_name)
+  const last = trimString(user.user_metadata?.last_name)
+  const combined = `${first} ${last}`.trim()
+  return combined || user.email
 }
 
 export default async function handler(req, res) {
@@ -127,13 +154,46 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'The survey period is closed.' })
     }
 
-    const result = validateSurvey(body)
-    if (result.error) return res.status(400).json({ error: result.error })
+    const authResult = await getAuthedUser(req)
+    if (authResult?.error) return res.status(401).json({ error: authResult.error })
+    const authUser = authResult?.user ?? null
+
+    const surveyResult = validateSurveyBody(body)
+    if (surveyResult.error) return res.status(400).json({ error: surveyResult.error })
+
+    let identity
+    if (authUser) {
+      identity = {
+        name: nameFromUser(authUser),
+        email: authUser.email,
+        user_id: authUser.id,
+      }
+
+      const { data: existing, error: existingErr } = await supabaseAdmin
+        .from('workshop_feedback')
+        .select('id')
+        .eq('user_id', authUser.id)
+        .eq('workshop_title', WORKSHOP_TITLE)
+        .eq('workshop_date', WORKSHOP_DATE)
+        .maybeSingle()
+      if (existingErr) {
+        console.error('survey-feedback dedup check error:', existingErr)
+        return res.status(500).json({ error: 'Could not save your feedback. Please try again.' })
+      }
+      if (existing) {
+        return res.status(409).json({ error: 'You have already submitted feedback for this workshop.' })
+      }
+    } else {
+      const nameEmail = validateNameEmail(body)
+      if (nameEmail.error) return res.status(400).json({ error: nameEmail.error })
+      identity = { ...nameEmail.payload, user_id: null }
+    }
 
     const insertPayload = {
       workshop_title: WORKSHOP_TITLE,
       workshop_date: WORKSHOP_DATE,
-      ...result.payload,
+      ...identity,
+      ...surveyResult.payload,
     }
 
     const { error: insertErr } = await supabaseAdmin
@@ -149,7 +209,9 @@ export default async function handler(req, res) {
       await sendSurveyFeedbackEmail({
         workshopTitle: WORKSHOP_TITLE,
         workshopDate: WORKSHOP_DATE,
-        ...result.payload,
+        name: identity.name,
+        email: identity.email,
+        ...surveyResult.payload,
       })
     } catch (emailErr) {
       console.error('survey-feedback email failed:', emailErr)
