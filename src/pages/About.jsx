@@ -349,7 +349,7 @@ export default function About() {
                 margin: 0,
               }}
             >
-              Follow along on Substack for writing on Pilates mechanics, or on Instagram for
+              Read the blog for writing on Pilates mechanics, or follow on Instagram for
               shorter-form content and behind-the-scenes.
             </p>
           </div>
@@ -358,10 +358,8 @@ export default function About() {
             style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}
             className="connect-links"
           >
-            <a
-              href="https://kaleenc.substack.com"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              to="/blog"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -385,7 +383,7 @@ export default function About() {
                     margin: '0 0 0.2rem',
                   }}
                 >
-                  Substack
+                  Blog
                 </p>
                 <p
                   style={{
@@ -395,10 +393,10 @@ export default function About() {
                     fontWeight: '500',
                   }}
                 >
-                  kaleenc.substack.com →
+                  Read the blog →
                 </p>
               </div>
-            </a>
+            </Link>
 
             <a
               href="https://www.instagram.com/kaleenc_"

@@ -30,11 +30,30 @@ export default function Blog() {
     <div>
       <section
         style={{
+          backgroundImage: 'url(/images/homepage/blog-hero.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          position: 'relative',
           borderBottom: '1px solid var(--color-rule)',
-          background: 'var(--color-surface)',
         }}
       >
-        <div style={{ maxWidth: '900px', margin: '0 auto', padding: '6rem 2rem 4rem' }}>
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(28, 26, 23, 0.7)',
+          }}
+        />
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 1,
+            maxWidth: '900px',
+            margin: '0 auto',
+            padding: '7rem 2rem 5rem',
+          }}
+        >
           <p
             style={{
               fontSize: '0.85rem',
@@ -45,7 +64,7 @@ export default function Blog() {
               margin: '0 0 0.75rem',
             }}
           >
-            The Pilates Physics Blog
+            Blog
           </p>
           <h1
             style={{
@@ -53,11 +72,21 @@ export default function Blog() {
               fontSize: 'clamp(2rem, 4vw, 3rem)',
               lineHeight: 1.1,
               color: 'var(--color-ink)',
-              margin: 0,
+              margin: '0 0 1.5rem',
             }}
           >
             Notes on the physics of Pilates
           </h1>
+          <p
+            style={{
+              fontSize: '1.1rem',
+              lineHeight: 1.65,
+              color: 'var(--color-ink-muted)',
+              margin: 0,
+            }}
+          >
+            Short essays on mechanics, teaching, and the forces in the Pilates environment.
+          </p>
         </div>
       </section>
 
