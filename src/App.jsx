@@ -19,6 +19,7 @@ import About from './pages/About'
 import Education from './pages/Education'
 import PilatesPhysics101 from './pages/PilatesPhysics101'
 import PilatesPhysics201 from './pages/PilatesPhysics201'
+import PilatesPhysics201Apply from './pages/PilatesPhysics201Apply'
 import Survey101 from './pages/Survey101'
 import Survey101Portal from './pages/Survey101Portal'
 import WebinarSalesPage from './pages/WebinarSalesPage'
@@ -105,6 +106,14 @@ export default function App() {
           element={
             <PageWrapper>
               <PilatesPhysics201 />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/pilates-physics-201/apply"
+          element={
+            <PageWrapper>
+              <PilatesPhysics201Apply />
             </PageWrapper>
           }
         />

@@ -168,16 +168,25 @@ export async function sendContactAcknowledgement({ to, name, message }) {
 }
 
 const YEARS_LABEL = {
-  '<1': 'Less than 1 year',
-  '1-3': '1–3 years',
-  '3-7': '3–7 years',
-  '7+': '7+ years',
+  '<1': '<1 year',
+  '1-3': '1-3 years',
+  '4-7': '4-7 years',
+  '8+': '8+ years',
 }
 
 const PP101_LABEL = {
   yes: 'Yes',
-  equivalent: 'No, but has equivalent background',
+  'add-to-purchase': 'No — wants to add PP-101 to purchase',
+}
+
+const MAIN_CAREER_LABEL = {
+  yes: 'Yes',
   no: 'No',
+}
+
+const PAYMENT_PLAN_LABEL = {
+  upfront: '$1,500 single up-front payment',
+  monthly: '$600/mo for 3 months',
 }
 
 export async function sendInquiryEmail({ kind, ...payload }) {
@@ -222,19 +231,31 @@ export async function sendInquiryEmail({ kind, ...payload }) {
       email,
       city,
       yearsTeaching,
+      mainCareer,
+      privatesPerWeek,
+      groupsPerWeek,
       equipment,
+      trainingBackground,
+      physicsBackground,
       completedPP101,
-      whyInterested,
-      whatHope,
+      goalsAndInterest,
+      paymentPlan,
     } = payload
     const safeName = escapeHtml(name)
     const safeEmail = escapeHtml(email)
     const safeCity = escapeHtml(city || '(not provided)')
     const safeYears = escapeHtml(YEARS_LABEL[yearsTeaching] || yearsTeaching)
+    const safeMainCareer = escapeHtml(MAIN_CAREER_LABEL[mainCareer] || mainCareer)
+    const safePrivates = escapeHtml(String(privatesPerWeek))
+    const safeGroups = escapeHtml(String(groupsPerWeek))
     const safeEquipment = escapeHtml((equipment || []).join(', '))
+    const safeTraining = escapeHtml(trainingBackground).replace(/\n/g, '<br>')
+    const safePhysics = physicsBackground
+      ? escapeHtml(physicsBackground).replace(/\n/g, '<br>')
+      : '<em style="color:#888;">(none provided)</em>'
     const safePP101 = escapeHtml(PP101_LABEL[completedPP101] || completedPP101)
-    const safeWhy = escapeHtml(whyInterested).replace(/\n/g, '<br>')
-    const safeHope = escapeHtml(whatHope).replace(/\n/g, '<br>')
+    const safeGoals = escapeHtml(goalsAndInterest).replace(/\n/g, '<br>')
+    const safePaymentPlan = escapeHtml(PAYMENT_PLAN_LABEL[paymentPlan] || paymentPlan)
 
     const html = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1C1A17; line-height: 1.6;">
@@ -243,17 +264,23 @@ export async function sendInquiryEmail({ kind, ...payload }) {
         <p style="margin: 0 0 0.5rem;"><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
         <p style="margin: 0 0 0.5rem;"><strong>City / region:</strong> ${safeCity}</p>
         <p style="margin: 0 0 0.5rem;"><strong>Years teaching:</strong> ${safeYears}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Pilates as main career:</strong> ${safeMainCareer}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Privates per week (avg):</strong> ${safePrivates}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Group classes per week (avg):</strong> ${safeGroups}</p>
         <p style="margin: 0 0 0.5rem;"><strong>Equipment access:</strong> ${safeEquipment}</p>
-        <p style="margin: 0 0 0.5rem;"><strong>Completed PP-101:</strong> ${safePP101}</p>
-        <p style="margin: 1.5rem 0 0.5rem;"><strong>Why interested in PP-201:</strong></p>
-        <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeWhy}</div>
-        <p style="margin: 1.5rem 0 0.5rem;"><strong>What they hope to get out of it:</strong></p>
-        <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeHope}</div>
-        <p style="margin: 1.5rem 0 0; font-size: 0.85rem; color: #666;">Reply directly to this email to respond to ${safeName}.</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Completed Pilates Physics 101:</strong> ${safePP101}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Payment plan preference:</strong> ${safePaymentPlan}</p>
+        <p style="margin: 1.5rem 0 0.5rem;"><strong>Training, certifications, workshops:</strong></p>
+        <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeTraining}</div>
+        <p style="margin: 1.5rem 0 0.5rem;"><strong>Physics, math, or engineering background:</strong></p>
+        <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safePhysics}</div>
+        <p style="margin: 1.5rem 0 0.5rem;"><strong>Why interested in PP-201 and what they hope to get out of it:</strong></p>
+        <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeGoals}</div>
+        <p style="margin: 1.5rem 0 0; font-size: 0.85rem; color: #666;">Applicant acknowledged participation expectations. Reply directly to this email to respond to ${safeName}.</p>
       </div>
     `.trim()
 
-    const text = `New PP-201 application\n\nName: ${name}\nEmail: ${email}\nCity / region: ${city || '(not provided)'}\nYears teaching: ${YEARS_LABEL[yearsTeaching] || yearsTeaching}\nEquipment access: ${(equipment || []).join(', ')}\nCompleted PP-101: ${PP101_LABEL[completedPP101] || completedPP101}\n\nWhy interested:\n${whyInterested}\n\nWhat they hope to get out of it:\n${whatHope}\n\nReply directly to this email to respond.`
+    const text = `New PP-201 application\n\nName: ${name}\nEmail: ${email}\nCity / region: ${city || '(not provided)'}\nYears teaching: ${YEARS_LABEL[yearsTeaching] || yearsTeaching}\nPilates as main career: ${MAIN_CAREER_LABEL[mainCareer] || mainCareer}\nPrivates per week (avg): ${privatesPerWeek}\nGroup classes per week (avg): ${groupsPerWeek}\nEquipment access: ${(equipment || []).join(', ')}\nCompleted Pilates Physics 101: ${PP101_LABEL[completedPP101] || completedPP101}\nPayment plan preference: ${PAYMENT_PLAN_LABEL[paymentPlan] || paymentPlan}\n\nTraining, certifications, workshops:\n${trainingBackground}\n\nPhysics, math, or engineering background:\n${physicsBackground || '(none provided)'}\n\nWhy interested in PP-201 and what they hope to get out of it:\n${goalsAndInterest}\n\nApplicant acknowledged participation expectations.\nReply directly to this email to respond.`
 
     const { data, error } = await getResend().emails.send({
       from: FROM,
