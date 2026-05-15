@@ -36,7 +36,7 @@ const inputStyle = {
 
 const EQUIPMENT_OPTIONS = ['Reformer', 'Tower', 'Chair', 'Cadillac', 'Other']
 
-export default function PilatesPhysics201Apply() {
+export default function PilatesPhysics301Apply() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [city, setCity] = useState('')
@@ -117,7 +117,7 @@ export default function PilatesPhysics201Apply() {
       }}
     >
       <Link
-        to="/pilates-physics-201"
+        to="/pilates-physics-301"
         style={{
           color: 'var(--color-accent)',
           fontSize: '0.9rem',
@@ -127,7 +127,7 @@ export default function PilatesPhysics201Apply() {
           marginBottom: '2.5rem',
         }}
       >
-        ← Back to PP-201 details
+        ← Back to PP-301 details
       </Link>
 
       <p
@@ -140,7 +140,7 @@ export default function PilatesPhysics201Apply() {
           marginBottom: '1rem',
         }}
       >
-        Pilates Physics 201
+        Pilates Physics 301
       </p>
       <h1
         style={{
@@ -379,7 +379,7 @@ export default function PilatesPhysics201Apply() {
 
             <div>
               <label style={labelStyle}>
-                Why are you interested in PP-201, and what do you hope to get out of it?
+                Why are you interested in PP-301, and what do you hope to get out of it?
               </label>
               <textarea
                 required

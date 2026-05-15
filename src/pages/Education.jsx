@@ -80,11 +80,11 @@ const PATHS = [
   },
   {
     eyebrow: '3-Month Intensive',
-    title: 'Pilates Physics 201',
+    title: 'Pilates Physics 301',
     body: 'A small-cohort deep dive: free-body diagrams, chair and tower physics, and physics-based progression planning. Group lectures, homework, and monthly 1:1 calls. By application.',
     meta: 'Apply by July 19th.',
     ctaLabel: 'Learn more',
-    to: '/pilates-physics-201',
+    to: '/pilates-physics-301',
   },
   {
     eyebrow: 'Private',

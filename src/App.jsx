@@ -18,8 +18,8 @@ import Landing from './pages/Landing'
 import About from './pages/About'
 import Education from './pages/Education'
 import PilatesPhysics101 from './pages/PilatesPhysics101'
-import PilatesPhysics201 from './pages/PilatesPhysics201'
-import PilatesPhysics201Apply from './pages/PilatesPhysics201Apply'
+import PilatesPhysics301 from './pages/PilatesPhysics301'
+import PilatesPhysics301Apply from './pages/PilatesPhysics301Apply'
 import Survey101 from './pages/Survey101'
 import Survey101Portal from './pages/Survey101Portal'
 import WebinarSalesPage from './pages/WebinarSalesPage'
@@ -102,18 +102,18 @@ export default function App() {
           }
         />
         <Route
-          path="/pilates-physics-201"
+          path="/pilates-physics-301"
           element={
             <PageWrapper>
-              <PilatesPhysics201 />
+              <PilatesPhysics301 />
             </PageWrapper>
           }
         />
         <Route
-          path="/pilates-physics-201/apply"
+          path="/pilates-physics-301/apply"
           element={
             <PageWrapper>
-              <PilatesPhysics201Apply />
+              <PilatesPhysics301Apply />
             </PageWrapper>
           }
         />

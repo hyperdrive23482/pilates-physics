@@ -259,7 +259,7 @@ export async function sendInquiryEmail({ kind, ...payload }) {
 
     const html = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1C1A17; line-height: 1.6;">
-        <p style="margin: 0 0 1rem; font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 0.08em;">New PP-201 application</p>
+        <p style="margin: 0 0 1rem; font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 0.08em;">New PP-301 application</p>
         <p style="margin: 0 0 0.5rem;"><strong>Name:</strong> ${safeName}</p>
         <p style="margin: 0 0 0.5rem;"><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
         <p style="margin: 0 0 0.5rem;"><strong>City / region:</strong> ${safeCity}</p>
@@ -274,18 +274,18 @@ export async function sendInquiryEmail({ kind, ...payload }) {
         <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeTraining}</div>
         <p style="margin: 1.5rem 0 0.5rem;"><strong>Physics, math, or engineering background:</strong></p>
         <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safePhysics}</div>
-        <p style="margin: 1.5rem 0 0.5rem;"><strong>Why interested in PP-201 and what they hope to get out of it:</strong></p>
+        <p style="margin: 1.5rem 0 0.5rem;"><strong>Why interested in PP-301 and what they hope to get out of it:</strong></p>
         <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeGoals}</div>
         <p style="margin: 1.5rem 0 0; font-size: 0.85rem; color: #666;">Applicant acknowledged participation expectations. Reply directly to this email to respond to ${safeName}.</p>
       </div>
     `.trim()
 
-    const text = `New PP-201 application\n\nName: ${name}\nEmail: ${email}\nCity / region: ${city || '(not provided)'}\nYears teaching: ${YEARS_LABEL[yearsTeaching] || yearsTeaching}\nPilates as main career: ${MAIN_CAREER_LABEL[mainCareer] || mainCareer}\nPrivates per week (avg): ${privatesPerWeek}\nGroup classes per week (avg): ${groupsPerWeek}\nEquipment access: ${(equipment || []).join(', ')}\nCompleted Pilates Physics 101: ${PP101_LABEL[completedPP101] || completedPP101}\nPayment plan preference: ${PAYMENT_PLAN_LABEL[paymentPlan] || paymentPlan}\n\nTraining, certifications, workshops:\n${trainingBackground}\n\nPhysics, math, or engineering background:\n${physicsBackground || '(none provided)'}\n\nWhy interested in PP-201 and what they hope to get out of it:\n${goalsAndInterest}\n\nApplicant acknowledged participation expectations.\nReply directly to this email to respond.`
+    const text = `New PP-301 application\n\nName: ${name}\nEmail: ${email}\nCity / region: ${city || '(not provided)'}\nYears teaching: ${YEARS_LABEL[yearsTeaching] || yearsTeaching}\nPilates as main career: ${MAIN_CAREER_LABEL[mainCareer] || mainCareer}\nPrivates per week (avg): ${privatesPerWeek}\nGroup classes per week (avg): ${groupsPerWeek}\nEquipment access: ${(equipment || []).join(', ')}\nCompleted Pilates Physics 101: ${PP101_LABEL[completedPP101] || completedPP101}\nPayment plan preference: ${PAYMENT_PLAN_LABEL[paymentPlan] || paymentPlan}\n\nTraining, certifications, workshops:\n${trainingBackground}\n\nPhysics, math, or engineering background:\n${physicsBackground || '(none provided)'}\n\nWhy interested in PP-301 and what they hope to get out of it:\n${goalsAndInterest}\n\nApplicant acknowledged participation expectations.\nReply directly to this email to respond.`
 
     const { data, error } = await getResend().emails.send({
       from: FROM,
       to,
-      subject: `PP-201 Application: ${name}`,
+      subject: `PP-301 Application: ${name}`,
       html,
       text,
       replyTo: email,
@@ -302,16 +302,16 @@ export async function sendInquiryAcknowledgement({ kind, to, name }) {
 
   const isApplication = kind === 'application'
   const subject = isApplication
-    ? 'Your PP-201 application — Pilates Physics'
+    ? 'Your PP-301 application — Pilates Physics'
     : 'Thanks for reaching out — Pilates Physics'
 
   const bodyHtml = isApplication
-    ? `<p>Thanks for applying to Pilates Physics 201 — your application came through.</p>
+    ? `<p>Thanks for applying to Pilates Physics 301 — your application came through.</p>
        <p>I review every application personally, and you'll hear back from me within a week.</p>`
     : `<p>Thanks for reaching out — your inquiry came through, and I'll get back to you within a few days.</p>`
 
   const bodyText = isApplication
-    ? `Thanks for applying to Pilates Physics 201 — your application came through.\n\nI review every application personally, and you'll hear back from me within a week.`
+    ? `Thanks for applying to Pilates Physics 301 — your application came through.\n\nI review every application personally, and you'll hear back from me within a week.`
     : `Thanks for reaching out — your inquiry came through, and I'll get back to you within a few days.`
 
   const html = `

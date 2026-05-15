@@ -35,7 +35,7 @@ function Rule() {
   )
 }
 
-export default function PilatesPhysics201() {
+export default function PilatesPhysics301() {
   return (
     <div>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
@@ -86,7 +86,7 @@ export default function PilatesPhysics201() {
                 margin: '0 0 1.5rem',
               }}
             >
-              Pilates Physics 201
+              Pilates Physics 301
             </h1>
             <p
               style={{
@@ -101,7 +101,7 @@ export default function PilatesPhysics201() {
               feedback on, and one private mentoring call every month.
             </p>
 
-            <Link to="/pilates-physics-201/apply" style={primaryButtonStyle}>Apply now</Link>
+            <Link to="/pilates-physics-301/apply" style={primaryButtonStyle}>Apply now</Link>
 
             <p
               style={{
@@ -202,7 +202,7 @@ export default function PilatesPhysics201() {
               maxWidth: '720px',
             }}
           >
-            PP-201 is built for the instructor who keeps asking <em>why</em>.
+            PP-301 is built for the instructor who keeps asking <em>why</em>.
             Structured lectures, case studies on your real clients, and the
             language to explain what your equipment is actually doing, every
             time, with confidence.
@@ -292,7 +292,7 @@ export default function PilatesPhysics201() {
             maxWidth: '720px',
           }}
         >
-          Pilates Physics 201 is best suited for instructors who have been
+          Pilates Physics 301 is best suited for instructors who have been
           teaching full time for at least a year and can dedicate 2-3 hours a
           week to lectures and case study homework.
         </p>
@@ -523,7 +523,7 @@ export default function PilatesPhysics201() {
           </div>
 
           <Link
-            to="/pilates-physics-201/apply"
+            to="/pilates-physics-301/apply"
             style={{ ...primaryButtonStyle, flexShrink: 0 }}
           >
             Apply now
@@ -722,7 +722,7 @@ export default function PilatesPhysics201() {
           {[
             {
               q: 'Do I need to have completed Pilates Physics 101 first?',
-              a: 'Yes. PP-101 establishes the mechanical vocabulary and framework the cohort builds on. If you haven\'t taken it yet, you can add PP-101 to your PP-201 purchase and complete it before the cohort starts.',
+              a: 'Yes. PP-101 establishes the mechanical vocabulary and framework the cohort builds on. If you haven\'t taken it yet, you can add PP-101 to your PP-301 purchase and complete it before the cohort starts.',
             },
             {
               q: 'What\'s the time commitment per week?',
@@ -853,7 +853,7 @@ export default function PilatesPhysics201() {
             </p>
           </div>
 
-          <Link to="/pilates-physics-201/apply" style={primaryButtonStyle}>Apply now</Link>
+          <Link to="/pilates-physics-301/apply" style={primaryButtonStyle}>Apply now</Link>
         </div>
       </section>
 
