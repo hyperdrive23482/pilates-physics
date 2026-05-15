@@ -482,7 +482,7 @@ export default function About() {
                 maxWidth: '520px',
               }}
             >
-              A 2-hour live webinar on the physics of Pilates
+              A 2-hour live workshop on the physics of Pilates
             </p>
           </div>
           <Link

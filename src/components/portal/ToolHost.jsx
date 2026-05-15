@@ -18,8 +18,8 @@ const REGISTRY = {
   'animation-bridge-knee-torque': animation('animation-bridge-knee-torque'),
 }
 
-export default function ToolHost({ webinar }) {
-  const Tool = REGISTRY[webinar.slug]
+export default function ToolHost({ workshop }) {
+  const Tool = REGISTRY[workshop.slug]
   if (!Tool) {
     return (
       <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>

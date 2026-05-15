@@ -19,12 +19,12 @@ function toLocalInput(iso) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 
-export default function WebinarForm({
+export default function WorkshopForm({
   initial,
   onSubmit,
   submitLabel = 'Save',
   busy = false,
-  webinars = [],
+  workshops = [],
   onBackfill,
   backfilling = false,
 }) {
@@ -301,8 +301,8 @@ export default function WebinarForm({
         </summary>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
           <Field
-            label="Bonus tool / webinar"
-            hint="Auto-granted to anyone who buys this webinar via Stripe inside the window below"
+            label="Bonus tool / workshop"
+            hint="Auto-granted to anyone who buys this workshop via Stripe inside the window below"
           >
             <select
               value={form.bonus_webinar_id}
@@ -310,7 +310,7 @@ export default function WebinarForm({
               style={inputStyle}
             >
               <option value="">None</option>
-              {webinars.map((w) => (
+              {workshops.map((w) => (
                 <option key={w.id} value={w.id}>
                   {w.title} ({w.kind})
                 </option>

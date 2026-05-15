@@ -14,7 +14,7 @@ const EMPTY_DRAFT = {
   file_url: '',
 }
 
-export default function ContentEditor({ webinarId }) {
+export default function ContentEditor({ workshopId }) {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -23,7 +23,7 @@ export default function ContentEditor({ webinarId }) {
   const [saving, setSaving] = useState(false)
 
   const refetch = useCallback(async () => {
-    if (!webinarId) {
+    if (!workshopId) {
       setItems([])
       setLoading(false)
       return
@@ -32,12 +32,12 @@ export default function ContentEditor({ webinarId }) {
     const { data, error: err } = await supabase
       .from('webinar_content')
       .select('*')
-      .eq('webinar_id', webinarId)
+      .eq('webinar_id', workshopId)
       .order('sort_order', { ascending: true })
     if (err) setError(err.message)
     else setItems(data ?? [])
     setLoading(false)
-  }, [webinarId])
+  }, [workshopId])
 
   useEffect(() => {
     refetch()
@@ -56,7 +56,7 @@ export default function ContentEditor({ webinarId }) {
   }
 
   function startAdd() {
-    if (!webinarId) return
+    if (!workshopId) return
     setError(null)
     setEditingId('new')
     setDraft({ ...EMPTY_DRAFT })
@@ -85,7 +85,7 @@ export default function ContentEditor({ webinarId }) {
       const { data, error: err } = await supabase
         .from('webinar_content')
         .insert({
-          webinar_id: webinarId,
+          webinar_id: workshopId,
           title: draft.title,
           type: draft.type,
           available_after: draft.available_after,
@@ -146,10 +146,10 @@ export default function ContentEditor({ webinarId }) {
     refetch()
   }
 
-  if (!webinarId) {
+  if (!workshopId) {
     return (
       <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>
-        Save the webinar first to start adding content.
+        Save the workshop first to start adding content.
       </p>
     )
   }
@@ -172,7 +172,7 @@ export default function ContentEditor({ webinarId }) {
               key={item.id}
               draft={draft}
               saving={saving}
-              webinarId={webinarId}
+              workshopId={workshopId}
               onChange={updateDraft}
               onSave={save}
               onCancel={cancel}
@@ -197,7 +197,7 @@ export default function ContentEditor({ webinarId }) {
         <EditForm
           draft={draft}
           saving={saving}
-          webinarId={webinarId}
+          workshopId={workshopId}
           onChange={updateDraft}
           onSave={save}
           onCancel={cancel}
@@ -315,7 +315,7 @@ function StaticRow({ item, isFirst, isLast, disabled, onEdit, onMoveUp, onMoveDo
   )
 }
 
-function EditForm({ draft, saving, webinarId, onChange, onSave, onCancel }) {
+function EditForm({ draft, saving, workshopId, onChange, onSave, onCancel }) {
   return (
     <div
       style={{
@@ -382,8 +382,8 @@ function EditForm({ draft, saving, webinarId, onChange, onSave, onCancel }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
           <span style={labelStyle}>Storage upload</span>
           <FileUpload
-            webinarId={webinarId}
-            value={draft.file_url?.startsWith(`${webinarId}/`) ? draft.file_url : ''}
+            workshopId={workshopId}
+            value={draft.file_url?.startsWith(`${workshopId}/`) ? draft.file_url : ''}
             onChange={(path) => onChange('file_url', path)}
           />
         </div>

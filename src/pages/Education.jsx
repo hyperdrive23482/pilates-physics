@@ -71,7 +71,7 @@ function Rule() {
 
 const PATHS = [
   {
-    eyebrow: '2-Hour Live Webinar',
+    eyebrow: '2-Hour Live Workshop',
     title: 'Pilates Physics 101',
     body: 'A focused 2-hour live session on the mechanics behind reformer springs and the equipment variables that change how a body is loaded. New to Pilates Physics? Start here.',
     meta: 'Next: May 20, 2026',

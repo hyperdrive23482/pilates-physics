@@ -23,7 +23,7 @@ export default function AdminDashboard() {
   }, [request])
 
   const totals = data?.totals
-  const upcoming = (data?.per_webinar ?? []).filter((w) => ['upcoming', 'live'].includes(w.status))
+  const upcoming = (data?.per_workshop ?? []).filter((w) => ['upcoming', 'live'].includes(w.status))
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
@@ -57,7 +57,7 @@ export default function AdminDashboard() {
             </h1>
           </div>
           <Link
-            to="/admin/webinars/new"
+            to="/admin/workshops/new"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -70,7 +70,7 @@ export default function AdminDashboard() {
               fontWeight: 500,
             }}
           >
-            <Plus size={14} /> New webinar
+            <Plus size={14} /> New workshop
           </Link>
         </div>
 
@@ -89,7 +89,7 @@ export default function AdminDashboard() {
                 marginBottom: '3rem',
               }}
             >
-              <StatCard label="Webinars" value={totals.total_webinars} />
+              <StatCard label="Workshops" value={totals.total_workshops} />
               <StatCard label="Users" value={totals.total_users} />
               <StatCard label="Enrollments" value={totals.total_enrollments} />
               <StatCard label="Revenue" value={formatCents(totals.total_revenue_cents)} />
@@ -116,14 +116,14 @@ export default function AdminDashboard() {
               </h2>
               {upcoming.length === 0 ? (
                 <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>
-                  No upcoming webinars.
+                  No upcoming workshops.
                 </p>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   {upcoming.map((w) => (
                     <Link
                       key={w.id}
-                      to={`/admin/webinars/${w.slug}/edit`}
+                      to={`/admin/workshops/${w.slug}/edit`}
                       style={{
                         display: 'flex',
                         justifyContent: 'space-between',

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import RegisterCard from '../components/ui/RegisterCard'
-import { useWebinar } from '../hooks/useWebinars'
+import { useWorkshop } from '../hooks/useWorkshops'
 
 const primaryButtonStyle = {
   display: 'inline-block',
@@ -38,14 +38,14 @@ function Rule() {
 }
 
 export default function PilatesPhysics101() {
-  const { webinar } = useWebinar('PP-101-May-2026')
+  const { workshop } = useWorkshop('PP-101-May-2026')
 
   return (
     <div>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section
         style={{
-          backgroundImage: 'url(/images/homepage/webinar-hero-image.JPG)',
+          backgroundImage: 'url(/images/homepage/workshop-hero-image.JPG)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           position: 'relative',
@@ -77,7 +77,7 @@ export default function PilatesPhysics101() {
                 marginBottom: '1.25rem',
               }}
             >
-              Live Webinar
+              Live Workshop
             </p>
             <h1
               style={{
@@ -400,8 +400,8 @@ export default function PilatesPhysics101() {
               scrollMarginTop: '5rem',
             }}
           >
-            {webinar ? (
-              <RegisterCard webinar={webinar} />
+            {workshop ? (
+              <RegisterCard workshop={workshop} />
             ) : (
               <p style={{ fontSize: '0.9rem', color: 'var(--color-ink-muted)', margin: 0 }}>
                 Loading registration…
@@ -708,7 +708,7 @@ export default function PilatesPhysics101() {
                 margin: 0,
               }}
             >
-              Whether you've been teaching for a year or ten, this webinar gives you a
+              Whether you've been teaching for a year or ten, this workshop gives you a
               mechanical framework for the questions you already have. Reserve your seat —
               registration is open now.
             </p>

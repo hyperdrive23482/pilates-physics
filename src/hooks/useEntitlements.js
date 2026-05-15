@@ -25,9 +25,9 @@ export function useEntitlements(userId) {
       })
   }, [userId, adminLoading])
 
-  function hasAccess(webinarId) {
+  function hasAccess(workshopId) {
     if (isAdmin) return true
-    return entitlements.includes(webinarId)
+    return entitlements.includes(workshopId)
   }
 
   return { entitlements, hasAccess, loading: loading || adminLoading }

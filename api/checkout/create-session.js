@@ -25,19 +25,19 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'email is required for anonymous purchase' })
     }
 
-    // Look up webinar
-    const { data: webinar, error: webErr } = await supabaseAdmin
+    // Look up workshop
+    const { data: workshop, error: webErr } = await supabaseAdmin
       .from('webinars')
       .select('id, title, slug, status, stripe_price_id, kit_tag')
       .eq('slug', slug)
       .maybeSingle()
     if (webErr) throw webErr
-    if (!webinar) return res.status(404).json({ error: 'Webinar not found' })
-    if (!['upcoming', 'live'].includes(webinar.status)) {
-      return res.status(400).json({ error: 'Registration not open for this webinar' })
+    if (!workshop) return res.status(404).json({ error: 'Workshop not found' })
+    if (!['upcoming', 'live'].includes(workshop.status)) {
+      return res.status(400).json({ error: 'Registration not open for this workshop' })
     }
-    if (!webinar.stripe_price_id) {
-      return res.status(400).json({ error: 'Webinar is not configured for purchase yet' })
+    if (!workshop.stripe_price_id) {
+      return res.status(400).json({ error: 'Workshop is not configured for purchase yet' })
     }
 
     // Logged-in duplicate-purchase check
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
         .from('user_entitlements')
         .select('id')
         .eq('user_id', user.id)
-        .eq('webinar_id', webinar.id)
+        .eq('webinar_id', workshop.id)
         .maybeSingle()
       if (existing) {
         return res.status(409).json({
@@ -60,13 +60,13 @@ export default async function handler(req, res) {
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
-      line_items: [{ price: webinar.stripe_price_id, quantity: 1 }],
+      line_items: [{ price: workshop.stripe_price_id, quantity: 1 }],
       customer_email: resolvedEmail,
       allow_promotion_codes: true,
       success_url: `${origin}/workshops/${slug}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/workshops/${slug}`,
       metadata: {
-        webinar_id: webinar.id,
+        webinar_id: workshop.id,
         webinar_slug: slug,
         user_id: user?.id ?? '',
         email: resolvedEmail,

@@ -9,17 +9,17 @@ function filenameFromDisposition(header) {
 }
 
 /**
- * Hook that downloads a certificate PDF for a given webinar.
+ * Hook that downloads a certificate PDF for a given workshop.
  * Usage:
  *   const { download, busy, error } = useCertificateDownload()
- *   await download(webinar)
+ *   await download(workshop)
  */
 export function useCertificateDownload() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState(null)
 
-  const download = useCallback(async (webinar) => {
-    if (!webinar?.id || !webinar?.slug) {
+  const download = useCallback(async (workshop) => {
+    if (!workshop?.id || !workshop?.slug) {
       setError('Missing workshop info')
       return
     }
@@ -32,7 +32,7 @@ export function useCertificateDownload() {
       const token = session?.access_token
       if (!token) throw new Error('Not signed in')
 
-      const res = await fetch(`/api/certificate/${webinar.id}`, {
+      const res = await fetch(`/api/certificate/${workshop.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
 
@@ -50,7 +50,7 @@ export function useCertificateDownload() {
       const blob = await res.blob()
       const filename =
         filenameFromDisposition(res.headers.get('Content-Disposition')) ||
-        `certificate-${webinar.slug}.pdf`
+        `certificate-${workshop.slug}.pdf`
 
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')

@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../../lib/supabase'
 
-export function useAllWebinars() {
-  const [webinars, setWebinars] = useState([])
+export function useAllWorkshops() {
+  const [workshops, setWorkshops] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -13,7 +13,7 @@ export function useAllWebinars() {
       .select('*')
       .order('scheduled_at', { ascending: false, nullsFirst: false })
     if (err) setError(err)
-    else setWebinars(data ?? [])
+    else setWorkshops(data ?? [])
     setLoading(false)
   }, [])
 
@@ -21,17 +21,17 @@ export function useAllWebinars() {
     refetch()
   }, [refetch])
 
-  return { webinars, loading, error, refetch }
+  return { workshops, loading, error, refetch }
 }
 
-export function useAdminWebinar(slug) {
-  const [webinar, setWebinar] = useState(null)
+export function useAdminWorkshop(slug) {
+  const [workshop, setWorkshop] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   const refetch = useCallback(async () => {
     if (!slug) {
-      setWebinar(null)
+      setWorkshop(null)
       setLoading(false)
       return
     }
@@ -42,7 +42,7 @@ export function useAdminWebinar(slug) {
       .eq('slug', slug)
       .maybeSingle()
     if (err) setError(err)
-    else setWebinar(data)
+    else setWorkshop(data)
     setLoading(false)
   }, [slug])
 
@@ -50,5 +50,5 @@ export function useAdminWebinar(slug) {
     refetch()
   }, [refetch])
 
-  return { webinar, loading, error, refetch }
+  return { workshop, loading, error, refetch }
 }

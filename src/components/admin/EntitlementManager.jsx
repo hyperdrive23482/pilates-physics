@@ -2,15 +2,15 @@ import { useState } from 'react'
 import { Trash2, Plus } from 'lucide-react'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 
-export default function EntitlementManager({ userRow, webinars, onChange }) {
+export default function EntitlementManager({ userRow, workshops, onChange }) {
   const { request } = useAdminAPI()
-  const [webinarId, setWebinarId] = useState('')
+  const [workshopId, setWorkshopId] = useState('')
   const [expiresAt, setExpiresAt] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState(null)
 
   async function grant() {
-    if (!webinarId) return
+    if (!workshopId) return
     setBusy(true)
     setError(null)
     try {
@@ -18,11 +18,11 @@ export default function EntitlementManager({ userRow, webinars, onChange }) {
         method: 'POST',
         body: {
           user_id: userRow.id,
-          webinar_id: webinarId,
+          webinar_id: workshopId,
           expires_at: expiresAt || null,
         },
       })
-      setWebinarId('')
+      setWorkshopId('')
       setExpiresAt('')
       onChange?.()
     } catch (err) {
@@ -67,7 +67,7 @@ export default function EntitlementManager({ userRow, webinars, onChange }) {
               }}
             >
               <span style={{ color: 'var(--color-ink)' }}>
-                {e.webinar?.title ?? e.webinar_id}
+                {e.workshop?.title ?? e.webinar_id}
                 <span style={{ color: 'var(--color-ink-muted)', marginLeft: '0.5rem' }}>
                   · {e.source}
                   {e.expires_at ? ` · expires ${new Date(e.expires_at).toLocaleDateString()}` : ''}
@@ -99,12 +99,12 @@ export default function EntitlementManager({ userRow, webinars, onChange }) {
 
       <div className="pp-entitlement-row">
         <select
-          value={webinarId}
-          onChange={(e) => setWebinarId(e.target.value)}
+          value={workshopId}
+          onChange={(e) => setWorkshopId(e.target.value)}
           style={inputStyle}
         >
           <option value="">Grant access to…</option>
-          {webinars.map((w) => (
+          {workshops.map((w) => (
             <option key={w.id} value={w.id}>
               {w.title} ({w.status})
             </option>
@@ -120,7 +120,7 @@ export default function EntitlementManager({ userRow, webinars, onChange }) {
         <button
           type="button"
           onClick={grant}
-          disabled={busy || !webinarId}
+          disabled={busy || !workshopId}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -129,10 +129,10 @@ export default function EntitlementManager({ userRow, webinars, onChange }) {
             background: 'var(--color-accent)',
             color: '#1C1A17',
             border: 'none',
-            cursor: busy || !webinarId ? 'not-allowed' : 'pointer',
+            cursor: busy || !workshopId ? 'not-allowed' : 'pointer',
             fontSize: '0.8rem',
             fontFamily: '"DM Sans", sans-serif',
-            opacity: busy || !webinarId ? 0.6 : 1,
+            opacity: busy || !workshopId ? 0.6 : 1,
           }}
         >
           <Plus size={12} /> Grant

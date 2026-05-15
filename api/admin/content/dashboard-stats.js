@@ -60,7 +60,7 @@ export default async function handler(req, res) {
   if (!admin) return
 
   try {
-    const [pieces, ideas, brain, recentBroadcasts, webinars] = await Promise.all([
+    const [pieces, ideas, brain, recentBroadcasts, workshops] = await Promise.all([
       supabaseAdmin.from('content_pieces').select('status'),
       supabaseAdmin.from('content_ideas').select('status'),
       supabaseAdmin.from('brain_entries').select('is_active, token_estimate'),
@@ -104,7 +104,7 @@ export default async function handler(req, res) {
     const now = Date.now()
     const upcomingWorkshops = []
     const pastWorkshops = []
-    for (const w of webinars.data ?? []) {
+    for (const w of workshops.data ?? []) {
       const t = w.scheduled_at ? new Date(w.scheduled_at).getTime() : null
       if (t === null) continue
       if (t >= now) upcomingWorkshops.push(w)

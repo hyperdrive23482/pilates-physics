@@ -24,7 +24,7 @@ const inputStyle = {
   boxSizing: 'border-box',
 }
 
-export default function RegisterCard({ webinar }) {
+export default function RegisterCard({ workshop }) {
   const { user, signOut } = useEnrollment()
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -32,12 +32,12 @@ export default function RegisterCard({ webinar }) {
   const [status, setStatus] = useState('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
-  const price = webinar.price_cents
-    ? `$${(webinar.price_cents / 100).toFixed(0)}`
+  const price = workshop.price_cents
+    ? `$${(workshop.price_cents / 100).toFixed(0)}`
     : 'Free'
 
   const registrationOpen =
-    webinar.stripe_price_id && ['upcoming', 'live'].includes(webinar.status)
+    workshop.stripe_price_id && ['upcoming', 'live'].includes(workshop.status)
 
   if (!registrationOpen) {
     return (
@@ -84,8 +84,8 @@ export default function RegisterCard({ webinar }) {
       }
 
       const body = user
-        ? { slug: webinar.slug }
-        : { slug: webinar.slug, email, firstName, lastName }
+        ? { slug: workshop.slug }
+        : { slug: workshop.slug, email, firstName, lastName }
 
       const res = await fetch('/api/checkout/create-session', {
         method: 'POST',
@@ -96,7 +96,7 @@ export default function RegisterCard({ webinar }) {
       if (res.status === 409) {
         const data = await res.json()
         setStatus('already_enrolled')
-        setErrorMsg(data.portalUrl || `/portal/${webinar.slug}`)
+        setErrorMsg(data.portalUrl || `/portal/${workshop.slug}`)
         return
       }
 
@@ -127,7 +127,7 @@ export default function RegisterCard({ webinar }) {
           You're already registered
         </h3>
         <p style={{ fontSize: '0.95rem', lineHeight: '1.7', color: 'var(--color-ink-muted)', margin: 0 }}>
-          Head to your portal to access this webinar.
+          Head to your portal to access this workshop.
         </p>
         <Link
           to={errorMsg}

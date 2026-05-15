@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
-import { useWebinar } from '../hooks/useWebinars'
+import { useWorkshop } from '../hooks/useWorkshops'
 import RegisterCard from '../components/ui/RegisterCard'
 import StatusBadge from '../components/portal/StatusBadge'
 import { Calendar, Clock, DollarSign, Video, FileText, Download, ArrowRight } from 'lucide-react'
@@ -29,9 +29,9 @@ function Rule() {
   return <hr style={{ border: 'none', borderTop: '1px solid var(--color-rule)', margin: 0 }} />
 }
 
-export default function WebinarSalesPage() {
+export default function WorkshopSalesPage() {
   const { slug } = useParams()
-  const { webinar, loading } = useWebinar(slug)
+  const { workshop, loading } = useWorkshop(slug)
 
   if (loading) {
     return (
@@ -48,7 +48,7 @@ export default function WebinarSalesPage() {
     )
   }
 
-  if (!webinar) {
+  if (!workshop) {
     return (
       <div style={{ padding: '10rem 2rem', textAlign: 'center' }}>
         <h1
@@ -59,7 +59,7 @@ export default function WebinarSalesPage() {
             marginBottom: '1rem',
           }}
         >
-          Webinar not found
+          Workshop not found
         </h1>
         <Link
           to="/education"
@@ -71,8 +71,8 @@ export default function WebinarSalesPage() {
     )
   }
 
-  const date = webinar.scheduled_at
-    ? new Date(webinar.scheduled_at).toLocaleDateString('en-US', {
+  const date = workshop.scheduled_at
+    ? new Date(workshop.scheduled_at).toLocaleDateString('en-US', {
         weekday: 'long',
         month: 'long',
         day: 'numeric',
@@ -80,16 +80,16 @@ export default function WebinarSalesPage() {
       })
     : null
 
-  const time = webinar.scheduled_at
-    ? new Date(webinar.scheduled_at).toLocaleTimeString('en-US', {
+  const time = workshop.scheduled_at
+    ? new Date(workshop.scheduled_at).toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
         timeZoneName: 'short',
       })
     : null
 
-  const price = webinar.price_cents
-    ? `$${(webinar.price_cents / 100).toFixed(0)}`
+  const price = workshop.price_cents
+    ? `$${(workshop.price_cents / 100).toFixed(0)}`
     : 'Free'
 
   return (
@@ -97,9 +97,9 @@ export default function WebinarSalesPage() {
       {/* Hero */}
       <section
         style={{
-          backgroundImage: webinar.hero_image_url
-            ? `url(${webinar.hero_image_url})`
-            : 'url(/images/homepage/webinar-hero-image.JPG)',
+          backgroundImage: workshop.hero_image_url
+            ? `url(${workshop.hero_image_url})`
+            : 'url(/images/homepage/workshop-hero-image.JPG)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           position: 'relative',
@@ -122,7 +122,7 @@ export default function WebinarSalesPage() {
         >
           <div style={{ maxWidth: '680px' }}>
             <div style={{ marginBottom: '1.25rem' }}>
-              <StatusBadge status={webinar.status} />
+              <StatusBadge status={workshop.status} />
             </div>
             <h1
               style={{
@@ -133,9 +133,9 @@ export default function WebinarSalesPage() {
                 margin: '0 0 1.5rem',
               }}
             >
-              {webinar.title}
+              {workshop.title}
             </h1>
-            {webinar.subtitle && (
+            {workshop.subtitle && (
               <p
                 style={{
                   fontSize: '1.1rem',
@@ -144,7 +144,7 @@ export default function WebinarSalesPage() {
                   margin: '0 0 2rem',
                 }}
               >
-                {webinar.subtitle}
+                {workshop.subtitle}
               </p>
             )}
 
@@ -196,7 +196,7 @@ export default function WebinarSalesPage() {
               {[
                 { label: 'Date', value: date || 'TBD', icon: Calendar },
                 { label: 'Time', value: time || 'TBD', icon: Clock },
-                { label: 'Duration', value: webinar.duration_min ? `${webinar.duration_min} minutes` : 'TBD', icon: Clock },
+                { label: 'Duration', value: workshop.duration_min ? `${workshop.duration_min} minutes` : 'TBD', icon: Clock },
                 { label: 'Format', value: 'Live via Zoom, recording included', icon: Video },
                 { label: 'Price', value: price, icon: DollarSign },
               ].map((item) => (
@@ -241,7 +241,7 @@ export default function WebinarSalesPage() {
               scrollMarginTop: '5rem',
             }}
           >
-            <RegisterCard webinar={webinar} />
+            <RegisterCard workshop={workshop} />
           </div>
         </div>
       </Section>
@@ -328,7 +328,7 @@ export default function WebinarSalesPage() {
       <Rule />
 
       {/* Description */}
-      {webinar.description && (
+      {workshop.description && (
         <>
           <Section>
             <div style={{ maxWidth: '720px' }}>
@@ -352,7 +352,7 @@ export default function WebinarSalesPage() {
                   margin: 0,
                 }}
               >
-                {webinar.description}
+                {workshop.description}
               </p>
             </div>
           </Section>

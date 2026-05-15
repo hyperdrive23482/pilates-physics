@@ -65,18 +65,18 @@ export default async function handler(req, res) {
 
   const session = event.data.object
   const meta = session.metadata ?? {}
-  const webinarId = meta.webinar_id
+  const workshopId = meta.webinar_id
   const firstName = meta.first_name ?? ''
   const lastName = meta.last_name ?? ''
 
   // Always trust the Stripe-side email over metadata — user may have edited it at Checkout
   const email = session.customer_details?.email ?? meta.email
-  if (!email || !webinarId) {
+  if (!email || !workshopId) {
     await logEvent({
       event_id: event.id,
       session_id: session.id,
       event_type: event.type,
-      webinar_id: webinarId || null,
+      webinar_id: workshopId || null,
       status: 'failed',
       error: 'Missing email or webinar_id on session',
       payload: session,
@@ -85,11 +85,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Look up webinar for kit_tag
-    const { data: webinar, error: webErr } = await supabaseAdmin
+    // Look up workshop for kit_tag
+    const { data: workshop, error: webErr } = await supabaseAdmin
       .from('webinars')
       .select('id, title, kit_tag, bonus_webinar_id, bonus_starts_at, bonus_ends_at')
-      .eq('id', webinarId)
+      .eq('id', workshopId)
       .single()
     if (webErr) throw webErr
 
@@ -146,27 +146,27 @@ export default async function handler(req, res) {
     const { error: entErr } = await supabaseAdmin
       .from('user_entitlements')
       .upsert(
-        { user_id: userId, webinar_id: webinarId, source: 'stripe' },
+        { user_id: userId, webinar_id: workshopId, source: 'stripe' },
         { onConflict: 'user_id,webinar_id', ignoreDuplicates: true }
       )
     if (entErr) throw entErr
 
     // ---- Early-registration bonus (non-fatal; backfill API is the safety net) ----
     if (
-      webinar.bonus_webinar_id &&
-      webinar.bonus_webinar_id !== webinarId &&
-      webinar.bonus_starts_at &&
-      webinar.bonus_ends_at
+      workshop.bonus_webinar_id &&
+      workshop.bonus_webinar_id !== workshopId &&
+      workshop.bonus_starts_at &&
+      workshop.bonus_ends_at
     ) {
       const purchasedAt = new Date(event.created * 1000)
       if (
-        purchasedAt >= new Date(webinar.bonus_starts_at) &&
-        purchasedAt <= new Date(webinar.bonus_ends_at)
+        purchasedAt >= new Date(workshop.bonus_starts_at) &&
+        purchasedAt <= new Date(workshop.bonus_ends_at)
       ) {
         const { error: bonusErr } = await supabaseAdmin
           .from('user_entitlements')
           .upsert(
-            { user_id: userId, webinar_id: webinar.bonus_webinar_id, source: 'bonus' },
+            { user_id: userId, webinar_id: workshop.bonus_webinar_id, source: 'bonus' },
             { onConflict: 'user_id,webinar_id', ignoreDuplicates: true }
           )
         if (bonusErr) console.error('bonus grant failed:', bonusErr)
@@ -179,7 +179,7 @@ export default async function handler(req, res) {
         email,
         firstName,
         lastName,
-        webinarTitle: webinar.title,
+        workshopTitle: workshop.title,
         amountCents: session.amount_total,
         userState,
         sessionId: session.id,
@@ -205,9 +205,9 @@ export default async function handler(req, res) {
 
     // ---- Kit.com tag (non-fatal) ----
     let kitError = null
-    if (webinar.kit_tag) {
+    if (workshop.kit_tag) {
       try {
-        await tagSubscriber(email, firstName, lastName, webinar.kit_tag)
+        await tagSubscriber(email, firstName, lastName, workshop.kit_tag)
       } catch (err) {
         kitError = err.message
         console.error('Kit tagging failed:', err)
@@ -218,7 +218,7 @@ export default async function handler(req, res) {
       event_id: event.id,
       session_id: session.id,
       event_type: event.type,
-      webinar_id: webinarId,
+      webinar_id: workshopId,
       user_id: userId,
       user_state: userState,
       status: kitError ? 'kit_failed' : 'processed',
@@ -235,7 +235,7 @@ export default async function handler(req, res) {
       event_id: event.id,
       session_id: session.id,
       event_type: event.type,
-      webinar_id: webinarId,
+      webinar_id: workshopId,
       status: 'failed',
       error: err.message,
       payload: session,

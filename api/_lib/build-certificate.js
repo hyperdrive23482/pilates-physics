@@ -73,13 +73,13 @@ function drawCornerMarks(doc) {
     .stroke()
 }
 
-export function buildCertificate({ webinar, participantName }) {
+export function buildCertificate({ workshop, participantName }) {
   const doc = new PDFDocument({
     size: 'LETTER',
     layout: 'landscape',
     margin: 0,
     info: {
-      Title: `Certificate of Completion — ${webinar.title}`,
+      Title: `Certificate of Completion — ${workshop.title}`,
       Author: 'Pilates Physics',
       Subject: 'Certificate of Completion',
     },
@@ -163,20 +163,20 @@ export function buildCertificate({ webinar, participantName }) {
     .font('Times-Roman')
     .fontSize(22)
     .fillColor(COLOR_INK)
-    .text(webinar.title, SIDE_INSET, y, {
+    .text(workshop.title, SIDE_INSET, y, {
       width: CONTENT_WIDTH,
       align: 'center',
     })
   y = doc.y
 
   // === Subtitle (optional) ===
-  if (webinar.subtitle) {
+  if (workshop.subtitle) {
     y += 4
     doc
       .font('Times-Italic')
       .fontSize(13)
       .fillColor(COLOR_INK_SOFT)
-      .text(webinar.subtitle, SIDE_INSET, y, {
+      .text(workshop.subtitle, SIDE_INSET, y, {
         width: CONTENT_WIDTH,
         align: 'center',
       })
@@ -184,9 +184,9 @@ export function buildCertificate({ webinar, participantName }) {
   }
 
   // === Description (italic, narrower) ===
-  if (webinar.description) {
+  if (workshop.description) {
     y += 14
-    const desc = truncate(webinar.description, 360)
+    const desc = truncate(workshop.description, 360)
     const descSideInset = SIDE_INSET + 70
     doc
       .font('Times-Italic')
@@ -203,10 +203,10 @@ export function buildCertificate({ webinar, participantName }) {
   const metaY = PAGE_HEIGHT - BOTTOM_INSET - 38
   const colWidth = CONTENT_WIDTH / 3
   const cells = [
-    { label: 'DATE', value: formatDate(webinar.scheduled_at) || '—' },
+    { label: 'DATE', value: formatDate(workshop.scheduled_at) || '—' },
     {
       label: 'DURATION',
-      value: webinar.duration_min ? `${webinar.duration_min} minutes` : '—',
+      value: workshop.duration_min ? `${workshop.duration_min} minutes` : '—',
     },
     { label: 'INSTRUCTOR', value: INSTRUCTOR_NAME },
   ]

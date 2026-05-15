@@ -1,14 +1,14 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
-import { useAllWebinars } from '../../hooks/admin/useAllWebinars'
+import { useAllWorkshops } from '../../hooks/admin/useAllWorkshops'
 import AdminNav from '../../components/admin/AdminNav'
 import EntitlementManager from '../../components/admin/EntitlementManager'
 
 export default function AdminUsers() {
   const { user, signOut } = useEnrollment()
   const { request } = useAdminAPI()
-  const { webinars } = useAllWebinars()
+  const { workshops } = useAllWorkshops()
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -141,7 +141,7 @@ export default function AdminUsers() {
                     <div style={{ padding: '0 1rem 1rem' }}>
                       <EntitlementManager
                         userRow={u}
-                        webinars={webinars}
+                        workshops={workshops}
                         onChange={refetch}
                       />
                     </div>

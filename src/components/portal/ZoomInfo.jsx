@@ -1,11 +1,11 @@
 import { Video, Calendar, Clock, Copy, Check } from 'lucide-react'
 import { useState } from 'react'
 
-export default function ZoomInfo({ webinar }) {
+export default function ZoomInfo({ workshop }) {
   const [copied, setCopied] = useState(null)
 
-  if (!webinar.zoom_link) return null
-  if (webinar.status !== 'upcoming' && webinar.status !== 'live') return null
+  if (!workshop.zoom_link) return null
+  if (workshop.status !== 'upcoming' && workshop.status !== 'live') return null
 
   function copyToClipboard(text, field) {
     navigator.clipboard.writeText(text)
@@ -13,8 +13,8 @@ export default function ZoomInfo({ webinar }) {
     setTimeout(() => setCopied(null), 2000)
   }
 
-  const date = webinar.scheduled_at
-    ? new Date(webinar.scheduled_at).toLocaleDateString('en-US', {
+  const date = workshop.scheduled_at
+    ? new Date(workshop.scheduled_at).toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
@@ -22,8 +22,8 @@ export default function ZoomInfo({ webinar }) {
       })
     : null
 
-  const time = webinar.scheduled_at
-    ? new Date(webinar.scheduled_at).toLocaleTimeString('en-US', {
+  const time = workshop.scheduled_at
+    ? new Date(workshop.scheduled_at).toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
         timeZoneName: 'short',
@@ -67,7 +67,7 @@ export default function ZoomInfo({ webinar }) {
           <Clock size={16} style={{ color: 'var(--color-ink-muted)', flexShrink: 0 }} />
           <span style={{ fontSize: '0.9rem', color: 'var(--color-ink)' }}>
             {time}
-            {webinar.duration_min ? ` (${webinar.duration_min} min)` : ''}
+            {workshop.duration_min ? ` (${workshop.duration_min} min)` : ''}
           </span>
         </div>
       )}
@@ -83,7 +83,7 @@ export default function ZoomInfo({ webinar }) {
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <a
-            href={webinar.zoom_link}
+            href={workshop.zoom_link}
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -96,7 +96,7 @@ export default function ZoomInfo({ webinar }) {
             Join Zoom Meeting
           </a>
           <button
-            onClick={() => copyToClipboard(webinar.zoom_link, 'link')}
+            onClick={() => copyToClipboard(workshop.zoom_link, 'link')}
             style={{
               background: 'none',
               border: 'none',
@@ -111,13 +111,13 @@ export default function ZoomInfo({ webinar }) {
           </button>
         </div>
 
-        {webinar.zoom_passcode && (
+        {workshop.zoom_passcode && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span style={{ fontSize: '0.85rem', color: 'var(--color-ink-muted)' }}>
-              Passcode: <span style={{ color: 'var(--color-ink)' }}>{webinar.zoom_passcode}</span>
+              Passcode: <span style={{ color: 'var(--color-ink)' }}>{workshop.zoom_passcode}</span>
             </span>
             <button
-              onClick={() => copyToClipboard(webinar.zoom_passcode, 'passcode')}
+              onClick={() => copyToClipboard(workshop.zoom_passcode, 'passcode')}
               style={{
                 background: 'none',
                 border: 'none',

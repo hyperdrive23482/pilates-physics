@@ -2,29 +2,29 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAdmin } from './useAdmin'
 
-export function useWebinars() {
-  const [webinars, setWebinars] = useState([])
+export function useWorkshops() {
+  const [workshops, setWorkshops] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchWebinars()
+    fetchWorkshops()
   }, [])
 
-  async function fetchWebinars() {
+  async function fetchWorkshops() {
     setLoading(true)
     const { data, error } = await supabase
       .from('webinars')
       .select('*')
       .order('scheduled_at', { ascending: false })
-    if (!error) setWebinars(data || [])
+    if (!error) setWorkshops(data || [])
     setLoading(false)
   }
 
-  return { webinars, loading, refetch: fetchWebinars }
+  return { workshops, loading, refetch: fetchWorkshops }
 }
 
-export function useWebinar(slug) {
-  const [webinar, setWebinar] = useState(null)
+export function useWorkshop(slug) {
+  const [workshop, setWorkshop] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -36,23 +36,23 @@ export function useWebinar(slug) {
       .eq('slug', slug)
       .single()
       .then(({ data, error }) => {
-        if (!error) setWebinar(data)
+        if (!error) setWorkshop(data)
         setLoading(false)
       })
   }, [slug])
 
-  return { webinar, loading }
+  return { workshop, loading }
 }
 
-export function useMyWebinars(userId) {
+export function useMyWorkshops(userId) {
   const { isAdmin, loading: adminLoading } = useAdmin()
-  const [webinars, setWebinars] = useState([])
+  const [workshops, setWorkshops] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (adminLoading) return
     if (!userId) {
-      setWebinars([])
+      setWorkshops([])
       setLoading(false)
       return
     }
@@ -63,14 +63,14 @@ export function useMyWebinars(userId) {
         return (order[a.status] ?? 9) - (order[b.status] ?? 9)
       })
 
-    // Admins see every non-draft webinar without needing entitlements.
+    // Admins see every non-draft workshop without needing entitlements.
     if (isAdmin) {
       supabase
         .from('webinars')
         .select('*')
         .neq('status', 'draft')
         .then(({ data, error }) => {
-          if (!error) setWebinars(sortByStatus(data || []))
+          if (!error) setWorkshops(sortByStatus(data || []))
           setLoading(false)
         })
       return
@@ -78,14 +78,14 @@ export function useMyWebinars(userId) {
 
     supabase
       .from('user_entitlements')
-      .select('*, webinar:webinars(*)')
+      .select('*, workshop:webinars(*)')
       .eq('user_id', userId)
       .then(({ data, error }) => {
         if (!error) {
-          setWebinars(
+          setWorkshops(
             sortByStatus(
               (data || [])
-                .map((e) => e.webinar)
+                .map((e) => e.workshop)
                 .filter(Boolean)
             )
           )
@@ -94,5 +94,5 @@ export function useMyWebinars(userId) {
       })
   }, [userId, isAdmin, adminLoading])
 
-  return { webinars, loading }
+  return { workshops, loading }
 }

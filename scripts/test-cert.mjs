@@ -2,7 +2,7 @@ import { createWriteStream } from 'node:fs'
 import { buildCertificate } from '../api/_lib/build-certificate.js'
 
 const doc = buildCertificate({
-  webinar: {
+  workshop: {
     title: 'Pilates Physics 101',
     subtitle: null,
     description:

@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowRight } from 'lucide-react'
 import StatusBadge from './StatusBadge'
 
-export default function WebinarCard({ webinar, linkTo }) {
-  const date = webinar.scheduled_at
-    ? new Date(webinar.scheduled_at).toLocaleDateString('en-US', {
+export default function WorkshopCard({ workshop, linkTo }) {
+  const date = workshop.scheduled_at
+    ? new Date(workshop.scheduled_at).toLocaleDateString('en-US', {
         weekday: 'short',
         month: 'short',
         day: 'numeric',
@@ -12,8 +12,8 @@ export default function WebinarCard({ webinar, linkTo }) {
       })
     : null
 
-  const time = webinar.scheduled_at
-    ? new Date(webinar.scheduled_at).toLocaleTimeString('en-US', {
+  const time = workshop.scheduled_at
+    ? new Date(workshop.scheduled_at).toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
       })
@@ -35,10 +35,10 @@ export default function WebinarCard({ webinar, linkTo }) {
       onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent)')}
       onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--color-rule)')}
     >
-      {webinar.hero_image_url && (
+      {workshop.hero_image_url && (
         <img
-          src={webinar.hero_image_url}
-          alt={webinar.title}
+          src={workshop.hero_image_url}
+          alt={workshop.title}
           style={{
             width: '100%',
             aspectRatio: '16 / 9',
@@ -48,7 +48,7 @@ export default function WebinarCard({ webinar, linkTo }) {
         />
       )}
 
-      <StatusBadge status={webinar.kind === 'tool' ? 'tool' : webinar.status} />
+      <StatusBadge status={workshop.kind === 'tool' ? 'tool' : workshop.status} />
 
       <h3
         style={{
@@ -59,10 +59,10 @@ export default function WebinarCard({ webinar, linkTo }) {
           margin: 0,
         }}
       >
-        {webinar.title}
+        {workshop.title}
       </h3>
 
-      {webinar.subtitle && (
+      {workshop.subtitle && (
         <p
           style={{
             fontSize: '0.9rem',
@@ -71,7 +71,7 @@ export default function WebinarCard({ webinar, linkTo }) {
             margin: 0,
           }}
         >
-          {webinar.subtitle}
+          {workshop.subtitle}
         </p>
       )}
 
@@ -89,9 +89,9 @@ export default function WebinarCard({ webinar, linkTo }) {
             <Calendar size={13} /> {date}
           </span>
         )}
-        {webinar.duration_min && (
+        {workshop.duration_min && (
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-            <Clock size={13} /> {webinar.duration_min} min
+            <Clock size={13} /> {workshop.duration_min} min
           </span>
         )}
       </div>
@@ -107,9 +107,9 @@ export default function WebinarCard({ webinar, linkTo }) {
           marginTop: 'auto',
         }}
       >
-        {webinar.kind === 'tool'
+        {workshop.kind === 'tool'
           ? 'Open Tool'
-          : webinar.status === 'complete'
+          : workshop.status === 'complete'
           ? 'View Recording'
           : 'View Details'}
         <ArrowRight size={14} />

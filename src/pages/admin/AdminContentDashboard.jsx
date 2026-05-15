@@ -217,7 +217,7 @@ function WorkshopColumn({ heading, rows, emptyText }) {
           {rows.map((w) => (
             <Link
               key={w.id}
-              to={`/admin/webinars/${w.slug}/edit`}
+              to={`/admin/workshops/${w.slug}/edit`}
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',

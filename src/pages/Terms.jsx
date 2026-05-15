@@ -92,7 +92,7 @@ export default function Terms() {
 
       <h2 style={h2Style}>4. Courses &amp; Digital Products</h2>
       <p style={pStyle}>
-        When you purchase or enroll in a course or webinar, you receive a limited, non-exclusive,
+        When you purchase or enroll in a course or workshop, you receive a limited, non-exclusive,
         non-transferable license to access that content for your personal, non-commercial use.
         You may not share, resell, or redistribute course materials.
       </p>

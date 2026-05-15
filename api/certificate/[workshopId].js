@@ -12,25 +12,25 @@ export default async function handler(req, res) {
   if (!auth) return
   const { user } = auth
 
-  const { webinarId } = req.query
-  if (!webinarId) {
-    return res.status(400).json({ error: 'webinarId is required' })
+  const { workshopId } = req.query
+  if (!workshopId) {
+    return res.status(400).json({ error: 'workshopId is required' })
   }
 
   try {
-    // 1. Fetch webinar
-    const { data: webinar, error: wErr } = await supabaseAdmin
+    // 1. Fetch workshop
+    const { data: workshop, error: wErr } = await supabaseAdmin
       .from('webinars')
       .select(
         'id, slug, title, subtitle, description, scheduled_at, duration_min, status'
       )
-      .eq('id', webinarId)
+      .eq('id', workshopId)
       .maybeSingle()
     if (wErr) throw wErr
-    if (!webinar) return res.status(404).json({ error: 'Workshop not found' })
+    if (!workshop) return res.status(404).json({ error: 'Workshop not found' })
 
     // 2. Status check — only completed/archived workshops are eligible.
-    if (webinar.status !== 'complete' && webinar.status !== 'archived') {
+    if (workshop.status !== 'complete' && workshop.status !== 'archived') {
       return res.status(403).json({ error: 'Workshop not yet complete' })
     }
 
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
       .from('user_entitlements')
       .select('id, expires_at')
       .eq('user_id', user.id)
-      .eq('webinar_id', webinar.id)
+      .eq('webinar_id', workshop.id)
       .maybeSingle()
     if (eErr) throw eErr
     if (!ent) return res.status(403).json({ error: 'No access to this workshop' })
@@ -56,12 +56,12 @@ export default async function handler(req, res) {
     const participantName = fullName || user.email || 'Participant'
 
     // 5. Stream PDF
-    const doc = buildCertificate({ webinar, participantName })
+    const doc = buildCertificate({ workshop, participantName })
 
     res.setHeader('Content-Type', 'application/pdf')
     res.setHeader(
       'Content-Disposition',
-      `attachment; filename="certificate-${webinar.slug}.pdf"`
+      `attachment; filename="certificate-${workshop.slug}.pdf"`
     )
     res.setHeader('Cache-Control', 'private, no-store')
 

@@ -7,7 +7,7 @@ const links = [
   { to: '/admin', label: 'Dashboard', end: true },
   { to: '/admin/content', label: 'Content' },
   { to: '/admin/announcements', label: 'Announcements' },
-  { to: '/admin/webinars', label: 'Webinars' },
+  { to: '/admin/workshops', label: 'Workshops' },
   { to: '/admin/tools', label: 'Tools' },
   { to: '/admin/users', label: 'Users' },
   { to: '/admin/analytics', label: 'Analytics' },

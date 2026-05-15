@@ -91,7 +91,7 @@ export async function sendPurchaseNotification({
   email,
   firstName,
   lastName,
-  webinarTitle,
+  workshopTitle,
   amountCents,
   userState,
   sessionId,
@@ -100,7 +100,7 @@ export async function sendPurchaseNotification({
   const fullName = `${firstName} ${lastName}`.trim() || '(no name)'
   const safeName = escapeHtml(fullName)
   const safeEmail = escapeHtml(email)
-  const safeTitle = escapeHtml(webinarTitle || '(unknown course)')
+  const safeTitle = escapeHtml(workshopTitle || '(unknown course)')
   const safeSession = escapeHtml(sessionId || '')
   const stateLabel =
     userState === 'new'
@@ -127,12 +127,12 @@ export async function sendPurchaseNotification({
     </div>
   `.trim()
 
-  const text = `New course purchase\n\nCourse: ${webinarTitle || '(unknown course)'}\nAmount: ${amountFormatted}\nName: ${fullName}\nEmail: ${email}\nCustomer type: ${stateLabel}\n\nStripe session: ${sessionId || ''}`
+  const text = `New course purchase\n\nCourse: ${workshopTitle || '(unknown course)'}\nAmount: ${amountFormatted}\nName: ${fullName}\nEmail: ${email}\nCustomer type: ${stateLabel}\n\nStripe session: ${sessionId || ''}`
 
   const { data, error } = await getResend().emails.send({
     from: FROM,
     to,
-    subject: `New purchase: ${webinarTitle || 'course'} — ${fullName}`,
+    subject: `New purchase: ${workshopTitle || 'course'} — ${fullName}`,
     html,
     text,
   })

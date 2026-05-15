@@ -22,9 +22,9 @@ import PilatesPhysics301 from './pages/PilatesPhysics301'
 import PilatesPhysics301Apply from './pages/PilatesPhysics301Apply'
 import Survey101 from './pages/Survey101'
 import Survey101Portal from './pages/Survey101Portal'
-import WebinarSalesPage from './pages/WebinarSalesPage'
+import WorkshopSalesPage from './pages/WorkshopSalesPage'
 import PortalDashboard from './pages/PortalDashboard'
-import WebinarPortal from './pages/WebinarPortal'
+import WorkshopPortal from './pages/WorkshopPortal'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import ForgotPassword from './pages/ForgotPassword'
@@ -38,8 +38,8 @@ import SubscriptionConfirmed from './pages/SubscriptionConfirmed'
 import RegistrationSuccess from './pages/RegistrationSuccess'
 import AdminGate from './components/admin/AdminGate'
 import AdminDashboard from './pages/admin/AdminDashboard'
-import AdminWebinars from './pages/admin/AdminWebinars'
-import AdminWebinarEdit from './pages/admin/AdminWebinarEdit'
+import AdminWorkshops from './pages/admin/AdminWorkshops'
+import AdminWorkshopEdit from './pages/admin/AdminWorkshopEdit'
 import AdminTools from './pages/admin/AdminTools'
 import AdminUsers from './pages/admin/AdminUsers'
 import AdminAnalytics from './pages/admin/AdminAnalytics'
@@ -126,12 +126,12 @@ export default function App() {
           }
         />
 
-        {/* Keep the dynamic webinar surface for any non-PP-101 webinar admin creates */}
+        {/* Keep the dynamic workshop surface for any non-PP-101 workshop admin creates */}
         <Route
           path="/workshops/:slug"
           element={
             <PageWrapper>
-              <WebinarSalesPage />
+              <WorkshopSalesPage />
             </PageWrapper>
           }
         />
@@ -176,7 +176,7 @@ export default function App() {
         />
         <Route
           path="/portal/:slug"
-          element={<WebinarPortal />}
+          element={<WorkshopPortal />}
         />
         {/* Redirect old /course path */}
         <Route
@@ -248,28 +248,41 @@ export default function App() {
           }
         />
         <Route
-          path="/admin/webinars"
+          path="/admin/workshops"
           element={
             <AdminGate>
-              <AdminWebinars />
+              <AdminWorkshops />
             </AdminGate>
           }
+        />
+        <Route
+          path="/admin/workshops/new"
+          element={
+            <AdminGate>
+              <AdminWorkshopEdit />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/workshops/:slug/edit"
+          element={
+            <AdminGate>
+              <AdminWorkshopEdit />
+            </AdminGate>
+          }
+        />
+        {/* Backward-compat redirects: /admin/webinars → /admin/workshops */}
+        <Route
+          path="/admin/webinars"
+          element={<Navigate to="/admin/workshops" replace />}
         />
         <Route
           path="/admin/webinars/new"
-          element={
-            <AdminGate>
-              <AdminWebinarEdit />
-            </AdminGate>
-          }
+          element={<Navigate to="/admin/workshops/new" replace />}
         />
         <Route
           path="/admin/webinars/:slug/edit"
-          element={
-            <AdminGate>
-              <AdminWebinarEdit />
-            </AdminGate>
-          }
+          element={<RedirectWithSlug to="/admin/workshops/:slug/edit" />}
         />
         <Route
           path="/admin/tools"

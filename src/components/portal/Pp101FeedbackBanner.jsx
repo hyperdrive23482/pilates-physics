@@ -13,10 +13,10 @@ const SURVEY_CUTOFF = new Date('2026-06-01T00:00:00')
  * post-workshop survey. Shown only when the user is entitled to PP-101, the
  * cutoff hasn't passed, and they haven't already submitted.
  */
-export default function Pp101FeedbackBanner({ user, webinars }) {
+export default function Pp101FeedbackBanner({ user, workshops }) {
   const [submissionState, setSubmissionState] = useState('checking') // 'checking' | 'pending' | 'done'
 
-  const entitled = webinars?.some((w) => w.slug === WORKSHOP_SLUG) ?? false
+  const entitled = workshops?.some((w) => w.slug === WORKSHOP_SLUG) ?? false
   const beforeCutoff = new Date() < SURVEY_CUTOFF
 
   useEffect(() => {

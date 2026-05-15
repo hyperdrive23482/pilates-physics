@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useWebinars } from '../hooks/useWebinars'
+import { useWorkshops } from '../hooks/useWorkshops'
 import WaitlistForm from '../components/ui/WaitlistForm'
 import StatusBadge from '../components/portal/StatusBadge'
 import { Calendar, Clock, ArrowRight } from 'lucide-react'
@@ -16,9 +16,9 @@ function Rule() {
   return <hr style={{ border: 'none', borderTop: '1px solid var(--color-rule)', margin: 0 }} />
 }
 
-function CatalogCard({ webinar }) {
-  const date = webinar.scheduled_at
-    ? new Date(webinar.scheduled_at).toLocaleDateString('en-US', {
+function CatalogCard({ workshop }) {
+  const date = workshop.scheduled_at
+    ? new Date(workshop.scheduled_at).toLocaleDateString('en-US', {
         weekday: 'short',
         month: 'long',
         day: 'numeric',
@@ -26,13 +26,13 @@ function CatalogCard({ webinar }) {
       })
     : null
 
-  const price = webinar.price_cents
-    ? `$${(webinar.price_cents / 100).toFixed(0)}`
+  const price = workshop.price_cents
+    ? `$${(workshop.price_cents / 100).toFixed(0)}`
     : 'Free'
 
   return (
     <Link
-      to={`/workshops/${webinar.slug}`}
+      to={`/workshops/${workshop.slug}`}
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -46,15 +46,15 @@ function CatalogCard({ webinar }) {
       onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent)')}
       onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--color-rule)')}
     >
-      {webinar.hero_image_url && (
+      {workshop.hero_image_url && (
         <img
-          src={webinar.hero_image_url}
-          alt={webinar.title}
+          src={workshop.hero_image_url}
+          alt={workshop.title}
           style={{ width: '100%', aspectRatio: '16 / 9', objectFit: 'cover' }}
         />
       )}
 
-      <StatusBadge status={webinar.status} />
+      <StatusBadge status={workshop.status} />
 
       <h3
         style={{
@@ -65,12 +65,12 @@ function CatalogCard({ webinar }) {
           margin: 0,
         }}
       >
-        {webinar.title}
+        {workshop.title}
       </h3>
 
-      {webinar.subtitle && (
+      {workshop.subtitle && (
         <p style={{ fontSize: '0.9rem', lineHeight: '1.6', color: 'var(--color-ink-muted)', margin: 0 }}>
-          {webinar.subtitle}
+          {workshop.subtitle}
         </p>
       )}
 
@@ -89,9 +89,9 @@ function CatalogCard({ webinar }) {
             <Calendar size={13} /> {date}
           </span>
         )}
-        {webinar.duration_min && (
+        {workshop.duration_min && (
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-            <Clock size={13} /> {webinar.duration_min} min
+            <Clock size={13} /> {workshop.duration_min} min
           </span>
         )}
         <span style={{ fontWeight: '600', color: 'var(--color-ink)' }}>{price}</span>
@@ -114,10 +114,10 @@ function CatalogCard({ webinar }) {
   )
 }
 
-export default function WebinarCatalog() {
-  const { webinars, loading } = useWebinars()
+export default function WorkshopCatalog() {
+  const { workshops, loading } = useWorkshops()
 
-  const published = webinars.filter((w) => w.status !== 'draft' && w.kind !== 'tool')
+  const published = workshops.filter((w) => w.status !== 'draft' && w.kind !== 'tool')
   const upcoming = published.filter((w) => w.status === 'upcoming' || w.status === 'live')
   const past = published.filter((w) => w.status === 'complete' || w.status === 'archived')
 
@@ -148,7 +148,7 @@ export default function WebinarCatalog() {
                 marginBottom: '1.25rem',
               }}
             >
-              Webinars
+              Workshops
             </p>
             <h1
               style={{
@@ -169,7 +169,7 @@ export default function WebinarCatalog() {
                 margin: 0,
               }}
             >
-              Interactive webinars that give you a mechanical understanding of the equipment
+              Interactive workshops that give you a mechanical understanding of the equipment
               you teach on every day. Each session includes live Q&A, a full recording, and
               downloadable resources.
             </p>
@@ -179,11 +179,11 @@ export default function WebinarCatalog() {
 
       <Rule />
 
-      {/* Webinar listings */}
+      {/* Workshop listings */}
       <Section>
         {loading ? (
           <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>
-            Loading webinars...
+            Loading workshops...
           </p>
         ) : published.length === 0 ? (
           <div
@@ -237,7 +237,7 @@ export default function WebinarCatalog() {
                 </h2>
                 <div className="catalog-grid">
                   {upcoming.map((w) => (
-                    <CatalogCard key={w.id} webinar={w} />
+                    <CatalogCard key={w.id} workshop={w} />
                   ))}
                 </div>
               </div>
@@ -259,7 +259,7 @@ export default function WebinarCatalog() {
                 </h2>
                 <div className="catalog-grid">
                   {past.map((w) => (
-                    <CatalogCard key={w.id} webinar={w} />
+                    <CatalogCard key={w.id} workshop={w} />
                   ))}
                 </div>
               </div>

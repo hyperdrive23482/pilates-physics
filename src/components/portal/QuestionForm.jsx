@@ -2,19 +2,19 @@ import { useState } from 'react'
 import { supabase } from '../../lib/supabase'
 import { MessageSquare, Send, Check } from 'lucide-react'
 
-export default function QuestionForm({ webinarId, userId }) {
+export default function QuestionForm({ workshopId, userId }) {
   const [question, setQuestion] = useState('')
   const [status, setStatus] = useState('idle') // idle | sending | sent | error
   const [questions, setQuestions] = useState([])
   const [loaded, setLoaded] = useState(false)
 
   // Load user's submitted questions on first render
-  if (!loaded && userId && webinarId) {
+  if (!loaded && userId && workshopId) {
     setLoaded(true)
     supabase
       .from('webinar_questions')
       .select('*')
-      .eq('webinar_id', webinarId)
+      .eq('webinar_id', workshopId)
       .eq('user_id', userId)
       .order('submitted_at', { ascending: true })
       .then(({ data }) => {
@@ -29,7 +29,7 @@ export default function QuestionForm({ webinarId, userId }) {
     setStatus('sending')
     const { data, error } = await supabase
       .from('webinar_questions')
-      .insert({ webinar_id: webinarId, user_id: userId, question: question.trim() })
+      .insert({ webinar_id: workshopId, user_id: userId, question: question.trim() })
       .select()
       .single()
 

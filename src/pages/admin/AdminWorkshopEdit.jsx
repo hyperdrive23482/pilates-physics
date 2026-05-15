@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
-import { useAdminWebinar } from '../../hooks/admin/useAllWebinars'
+import { useAdminWorkshop } from '../../hooks/admin/useAllWorkshops'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import { supabase } from '../../lib/supabase'
 import AdminNav from '../../components/admin/AdminNav'
-import WebinarForm from '../../components/admin/WebinarForm'
+import WorkshopForm from '../../components/admin/WorkshopForm'
 import ContentEditor from '../../components/admin/ContentEditor'
 
 const TABS = [
@@ -15,11 +15,11 @@ const TABS = [
   { id: 'questions', label: 'Questions' },
 ]
 
-export default function AdminWebinarEdit() {
+export default function AdminWorkshopEdit() {
   const { slug } = useParams()
   const isNew = !slug
   const { user, signOut } = useEnrollment()
-  const { webinar, loading, refetch } = useAdminWebinar(isNew ? null : slug)
+  const { workshop, loading, refetch } = useAdminWorkshop(isNew ? null : slug)
   const { request } = useAdminAPI()
   const navigate = useNavigate()
   const [tab, setTab] = useState('details')
@@ -31,7 +31,7 @@ export default function AdminWebinarEdit() {
     let cancelled = false
     async function load() {
       let q = supabase.from('webinars').select('id, title, kind, slug').order('title')
-      if (webinar?.id) q = q.neq('id', webinar.id)
+      if (workshop?.id) q = q.neq('id', workshop.id)
       const { data, error } = await q
       if (!cancelled && !error) setBonusOptions(data ?? [])
     }
@@ -39,7 +39,7 @@ export default function AdminWebinarEdit() {
     return () => {
       cancelled = true
     }
-  }, [webinar?.id])
+  }, [workshop?.id])
 
   async function save(payload) {
     setSaving(true)
@@ -51,16 +51,16 @@ export default function AdminWebinarEdit() {
           .select()
           .single()
         if (error) throw error
-        navigate(`/admin/webinars/${data.slug}/edit`, { replace: true })
+        navigate(`/admin/workshops/${data.slug}/edit`, { replace: true })
       } else {
         const { error } = await supabase
           .from('webinars')
           .update({ ...payload, updated_at: new Date().toISOString() })
-          .eq('id', webinar.id)
+          .eq('id', workshop.id)
         if (error) throw error
         refetch()
         if (payload.slug !== slug) {
-          navigate(`/admin/webinars/${payload.slug}/edit`, { replace: true })
+          navigate(`/admin/workshops/${payload.slug}/edit`, { replace: true })
         }
       }
     } finally {
@@ -69,14 +69,14 @@ export default function AdminWebinarEdit() {
   }
 
   async function handleBackfill() {
-    if (!webinar?.id) return
+    if (!workshop?.id) return
     const bonusTitle =
-      bonusOptions.find((w) => w.id === webinar.bonus_webinar_id)?.title ?? 'the bonus'
-    const start = new Date(webinar.bonus_starts_at).toLocaleString()
-    const end = new Date(webinar.bonus_ends_at).toLocaleString()
+      bonusOptions.find((w) => w.id === workshop.bonus_webinar_id)?.title ?? 'the bonus'
+    const start = new Date(workshop.bonus_starts_at).toLocaleString()
+    const end = new Date(workshop.bonus_ends_at).toLocaleString()
     if (
       !window.confirm(
-        `Grant "${bonusTitle}" to everyone who purchased "${webinar.title}" between ${start} and ${end}? This is idempotent.`,
+        `Grant "${bonusTitle}" to everyone who purchased "${workshop.title}" between ${start} and ${end}? This is idempotent.`,
       )
     ) {
       return
@@ -85,7 +85,7 @@ export default function AdminWebinarEdit() {
     try {
       const result = await request('/api/admin/apply-bonus-backfill', {
         method: 'POST',
-        body: { webinar_id: webinar.id },
+        body: { webinar_id: workshop.id },
       })
       window.alert(
         `Done. Newly granted: ${result.newly_granted}. Already had it: ${result.already_granted}.`,
@@ -103,7 +103,7 @@ export default function AdminWebinarEdit() {
 
       <main className="pp-main" style={{ maxWidth: '900px', margin: '0 auto' }}>
         <Link
-          to="/admin/webinars"
+          to="/admin/workshops"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -114,7 +114,7 @@ export default function AdminWebinarEdit() {
             marginBottom: '1rem',
           }}
         >
-          <ArrowLeft size={14} /> Back to webinars
+          <ArrowLeft size={14} /> Back to workshops
         </Link>
 
         <h1
@@ -125,7 +125,7 @@ export default function AdminWebinarEdit() {
             margin: '0 0 2rem',
           }}
         >
-          {isNew ? 'New webinar' : webinar?.title ?? 'Edit webinar'}
+          {isNew ? 'New workshop' : workshop?.title ?? 'Edit workshop'}
         </h1>
 
         {!isNew && (
@@ -164,21 +164,21 @@ export default function AdminWebinarEdit() {
           loading ? (
             <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>Loading…</p>
           ) : (
-            <WebinarForm
-              initial={webinar}
+            <WorkshopForm
+              initial={workshop}
               onSubmit={save}
-              submitLabel={isNew ? 'Create webinar' : 'Save changes'}
+              submitLabel={isNew ? 'Create workshop' : 'Save changes'}
               busy={saving}
-              webinars={bonusOptions}
+              workshops={bonusOptions}
               onBackfill={isNew ? undefined : handleBackfill}
               backfilling={backfilling}
             />
           )
         ) : null}
 
-        {!isNew && tab === 'content' && <ContentEditor webinarId={webinar?.id} />}
+        {!isNew && tab === 'content' && <ContentEditor workshopId={workshop?.id} />}
 
-        {!isNew && tab === 'questions' && <QuestionsList webinarId={webinar?.id} />}
+        {!isNew && tab === 'questions' && <QuestionsList workshopId={workshop?.id} />}
       </main>
     </div>
   )
@@ -190,16 +190,16 @@ function questionerName(q) {
   return q.email || '(unknown)'
 }
 
-function QuestionsList({ webinarId }) {
+function QuestionsList({ workshopId }) {
   const { request } = useAdminAPI()
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!webinarId) return
+    if (!workshopId) return
     let cancelled = false
     setLoading(true)
-    request(`/api/admin/webinar-questions?webinar_id=${encodeURIComponent(webinarId)}`)
+    request(`/api/admin/workshop-questions?webinar_id=${encodeURIComponent(workshopId)}`)
       .then((data) => {
         if (cancelled) return
         setRows(data?.questions ?? [])
@@ -213,7 +213,7 @@ function QuestionsList({ webinarId }) {
     return () => {
       cancelled = true
     }
-  }, [webinarId, request])
+  }, [workshopId, request])
 
   if (loading) return <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>Loading…</p>
   if (rows.length === 0) {

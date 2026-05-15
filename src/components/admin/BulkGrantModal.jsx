@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 
-export default function BulkGrantModal({ tools, sourceWebinars, onClose }) {
+export default function BulkGrantModal({ tools, sourceWorkshops, onClose }) {
   const { request } = useAdminAPI()
 
   const [targetId, setTargetId] = useState('')
@@ -70,7 +70,7 @@ export default function BulkGrantModal({ tools, sourceWebinars, onClose }) {
   }
 
   const targetTitle = tools.find((t) => t.id === targetId)?.title
-  const sourceTitle = sourceWebinars.find((w) => w.id === sourceId)?.title
+  const sourceTitle = sourceWorkshops.find((w) => w.id === sourceId)?.title
   const sameIds = sourceId && targetId && sourceId === targetId
 
   return (
@@ -138,7 +138,7 @@ export default function BulkGrantModal({ tools, sourceWebinars, onClose }) {
 
         <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-ink-muted)', margin: 0 }}>
-            Grant a tool to every member who already has access to a selected webinar. Members who
+            Grant a tool to every member who already has access to a selected workshop. Members who
             already have the tool are skipped.
           </p>
 
@@ -155,8 +155,8 @@ export default function BulkGrantModal({ tools, sourceWebinars, onClose }) {
 
           <Field label="Source — grant to everyone with access to">
             <select value={sourceId} onChange={(e) => setSourceId(e.target.value)} style={inputStyle}>
-              <option value="">Select a webinar…</option>
-              {sourceWebinars.map((w) => (
+              <option value="">Select a workshop…</option>
+              {sourceWorkshops.map((w) => (
                 <option key={w.id} value={w.id}>
                   {w.title} ({w.status})
                 </option>

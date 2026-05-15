@@ -1,16 +1,16 @@
 import { Link } from 'react-router-dom'
 import { Plus, Trash2, Edit3 } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
-import { useAllWebinars } from '../../hooks/admin/useAllWebinars'
+import { useAllWorkshops } from '../../hooks/admin/useAllWorkshops'
 import { supabase } from '../../lib/supabase'
 import AdminNav from '../../components/admin/AdminNav'
 
-export default function AdminWebinars() {
+export default function AdminWorkshops() {
   const { user, signOut } = useEnrollment()
-  const { webinars: allWebinars, loading, refetch } = useAllWebinars()
-  const webinars = allWebinars.filter((w) => w.kind !== 'tool')
+  const { workshops: allWorkshops, loading, refetch } = useAllWorkshops()
+  const workshops = allWorkshops.filter((w) => w.kind !== 'tool')
 
-  async function deleteWebinar(id, title) {
+  async function deleteWorkshop(id, title) {
     if (!confirm(`Delete "${title}"? This cascades to its content and entitlements.`)) return
     const { error } = await supabase.from('webinars').delete().eq('id', id)
     if (error) {
@@ -34,10 +34,10 @@ export default function AdminWebinars() {
               margin: 0,
             }}
           >
-            Webinars
+            Workshops
           </h1>
           <Link
-            to="/admin/webinars/new"
+            to="/admin/workshops/new"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -50,15 +50,15 @@ export default function AdminWebinars() {
               fontWeight: 500,
             }}
           >
-            <Plus size={14} /> New webinar
+            <Plus size={14} /> New workshop
           </Link>
         </div>
 
         {loading ? (
           <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>Loading…</p>
-        ) : webinars.length === 0 ? (
+        ) : workshops.length === 0 ? (
           <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>
-            No webinars yet. Create your first one.
+            No workshops yet. Create your first one.
           </p>
         ) : (
           <div
@@ -80,7 +80,7 @@ export default function AdminWebinars() {
                 </tr>
               </thead>
               <tbody>
-                {webinars.map((w) => (
+                {workshops.map((w) => (
                   <tr
                     key={w.id}
                     style={{ borderBottom: '1px solid var(--color-rule)' }}
@@ -99,7 +99,7 @@ export default function AdminWebinars() {
                     <Td align="right">
                       <div style={{ display: 'inline-flex', gap: '0.4rem' }}>
                         <Link
-                          to={`/admin/webinars/${w.slug}/edit`}
+                          to={`/admin/workshops/${w.slug}/edit`}
                           aria-label="Edit"
                           style={iconLinkStyle}
                         >
@@ -107,7 +107,7 @@ export default function AdminWebinars() {
                         </Link>
                         <button
                           type="button"
-                          onClick={() => deleteWebinar(w.id, w.title)}
+                          onClick={() => deleteWorkshop(w.id, w.title)}
                           aria-label="Delete"
                           style={iconBtnStyle}
                         >

@@ -29,7 +29,7 @@ export default function Courses() {
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section
         style={{
-          backgroundImage: 'url(/images/homepage/webinar-hero-image.JPG)',
+          backgroundImage: 'url(/images/homepage/workshop-hero-image.JPG)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           position: 'relative',
@@ -61,7 +61,7 @@ export default function Courses() {
                 marginBottom: '1.25rem',
               }}
             >
-              Live Webinar
+              Live Workshop
             </p>
             <h1
               style={{
@@ -712,7 +712,7 @@ export default function Courses() {
                 margin: 0,
               }}
             >
-              Whether you've been teaching for a year or ten, this webinar gives you a
+              Whether you've been teaching for a year or ten, this workshop gives you a
               mechanical framework for the questions you already have. Join the waitlist
               and we'll notify you when registration opens.
             </p>

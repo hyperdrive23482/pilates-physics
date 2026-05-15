@@ -46,7 +46,7 @@ export default function SubscriptionConfirmed() {
           margin: 0,
         }}
       >
-        Your email is confirmed and you'll be the first to hear about new webinars and the occasional note on the mechanics behind the equipment you teach on.
+        Your email is confirmed and you'll be the first to hear about new workshops and the occasional note on the mechanics behind the equipment you teach on.
         No spam — just the good stuff.
       </p>
 

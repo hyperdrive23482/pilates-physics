@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     const paid = session.payment_status === 'paid'
 
     const slug = session.metadata?.webinar_slug
-    const webinarId = session.metadata?.webinar_id
+    const workshopId = session.metadata?.webinar_id
     const email = session.customer_details?.email ?? session.metadata?.email
 
     // Did the webhook fire yet?
@@ -26,12 +26,12 @@ export default async function handler(req, res) {
       .maybeSingle()
 
     let entitlementGranted = false
-    if (eventRow?.user_id && webinarId) {
+    if (eventRow?.user_id && workshopId) {
       const { data: ent } = await supabaseAdmin
         .from('user_entitlements')
         .select('id')
         .eq('user_id', eventRow.user_id)
-        .eq('webinar_id', webinarId)
+        .eq('webinar_id', workshopId)
         .maybeSingle()
       entitlementGranted = !!ent
     }

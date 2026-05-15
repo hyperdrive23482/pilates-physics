@@ -21,7 +21,7 @@ export default async function handler(req, res) {
       .single()
     if (wErr) throw wErr
     if (!w?.bonus_webinar_id || !w.bonus_starts_at || !w.bonus_ends_at) {
-      return res.status(400).json({ error: 'Bonus not fully configured for this webinar' })
+      return res.status(400).json({ error: 'Bonus not fully configured for this workshop' })
     }
 
     const { data: events, error: evtErr } = await supabaseAdmin

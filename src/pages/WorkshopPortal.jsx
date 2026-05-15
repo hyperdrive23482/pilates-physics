@@ -2,9 +2,9 @@ import { useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { useEnrollment } from '../hooks/useEnrollment'
-import { useWebinar } from '../hooks/useWebinars'
+import { useWorkshop } from '../hooks/useWorkshops'
 import { useEntitlements } from '../hooks/useEntitlements'
-import { useWebinarContent } from '../hooks/useWebinarContent'
+import { useWorkshopContent } from '../hooks/useWorkshopContent'
 import PortalNav from '../components/portal/PortalNav'
 import StatusBadge from '../components/portal/StatusBadge'
 import ZoomInfo from '../components/portal/ZoomInfo'
@@ -13,13 +13,13 @@ import QuestionForm from '../components/portal/QuestionForm'
 import ToolHost from '../components/portal/ToolHost'
 import CertificateButton from '../components/portal/CertificateButton'
 
-export default function WebinarPortal() {
+export default function WorkshopPortal() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const { user, loading: authLoading, signOut } = useEnrollment()
-  const { webinar, loading: webinarLoading } = useWebinar(slug)
+  const { workshop, loading: workshopLoading } = useWorkshop(slug)
   const { hasAccess, loading: entLoading } = useEntitlements(user?.id)
-  const { content, loading: contentLoading } = useWebinarContent(webinar?.id, webinar?.status)
+  const { content, loading: contentLoading } = useWorkshopContent(workshop?.id, workshop?.status)
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -28,8 +28,8 @@ export default function WebinarPortal() {
   }, [authLoading, user, navigate])
 
   // Check entitlement once loaded
-  const allLoaded = !authLoading && !webinarLoading && !entLoading
-  const canAccess = webinar && hasAccess(webinar.id)
+  const allLoaded = !authLoading && !workshopLoading && !entLoading
+  const canAccess = workshop && hasAccess(workshop.id)
 
   if (!allLoaded) {
     return (
@@ -50,7 +50,7 @@ export default function WebinarPortal() {
     )
   }
 
-  if (!webinar) {
+  if (!workshop) {
     return (
       <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
         <PortalNav user={user} onSignOut={signOut} />
@@ -63,7 +63,7 @@ export default function WebinarPortal() {
               marginBottom: '1rem',
             }}
           >
-            Webinar not found
+            Workshop not found
           </h1>
           <Link to="/portal" style={{ color: 'var(--color-accent)', textDecoration: 'none', fontSize: '0.9rem' }}>
             Back to dashboard
@@ -89,7 +89,7 @@ export default function WebinarPortal() {
             Access required
           </h1>
           <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '1.5rem' }}>
-            You don't have access to this webinar. Register to get access.
+            You don't have access to this workshop. Register to get access.
           </p>
           <Link
             to={`/workshops/${slug}`}
@@ -103,16 +103,16 @@ export default function WebinarPortal() {
               fontWeight: '500',
             }}
           >
-            View webinar details
+            View workshop details
           </Link>
         </main>
       </div>
     )
   }
 
-  const isTool = webinar.kind === 'tool'
-  const isPreWebinar = !isTool && (webinar.status === 'upcoming' || webinar.status === 'live')
-  const isPostWebinar = !isTool && (webinar.status === 'complete' || webinar.status === 'archived')
+  const isTool = workshop.kind === 'tool'
+  const isPreWorkshop = !isTool && (workshop.status === 'upcoming' || workshop.status === 'live')
+  const isPostWorkshop = !isTool && (workshop.status === 'complete' || workshop.status === 'archived')
 
   const recordings = content.filter((c) => c.type === 'recording')
   const downloads = content.filter((c) => c.type === 'download' || c.type === 'slide_deck')
@@ -120,8 +120,8 @@ export default function WebinarPortal() {
     (c) => c.type === 'bonus' || c.type === 'resource' || c.type === 'link'
   )
 
-  const date = webinar.scheduled_at
-    ? new Date(webinar.scheduled_at).toLocaleDateString('en-US', {
+  const date = workshop.scheduled_at
+    ? new Date(workshop.scheduled_at).toLocaleDateString('en-US', {
         weekday: 'long',
         month: 'long',
         day: 'numeric',
@@ -158,7 +158,7 @@ export default function WebinarPortal() {
 
         {/* Header */}
         <div style={{ marginBottom: '2.5rem' }}>
-          <StatusBadge status={isTool ? 'tool' : webinar.status} />
+          <StatusBadge status={isTool ? 'tool' : workshop.status} />
           <h1
             style={{
               fontFamily: '"DM Serif Display", serif',
@@ -168,9 +168,9 @@ export default function WebinarPortal() {
               margin: '1rem 0 0.5rem',
             }}
           >
-            {webinar.title}
+            {workshop.title}
           </h1>
-          {webinar.subtitle && (
+          {workshop.subtitle && (
             <p
               style={{
                 fontSize: '1rem',
@@ -179,7 +179,7 @@ export default function WebinarPortal() {
                 margin: 0,
               }}
             >
-              {webinar.subtitle}
+              {workshop.subtitle}
             </p>
           )}
           {!isTool && date && (
@@ -191,20 +191,20 @@ export default function WebinarPortal() {
               }}
             >
               {date}
-              {webinar.duration_min ? ` \u00B7 ${webinar.duration_min} minutes` : ''}
+              {workshop.duration_min ? ` \u00B7 ${workshop.duration_min} minutes` : ''}
             </p>
           )}
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-          {/* Tool body (replaces the standard webinar sections) */}
-          {isTool && <ToolHost webinar={webinar} />}
+          {/* Tool body (replaces the standard workshop sections) */}
+          {isTool && <ToolHost workshop={workshop} />}
 
-          {/* Zoom info (pre-webinar only) */}
-          {isPreWebinar && <ZoomInfo webinar={webinar} />}
+          {/* Zoom info (pre-workshop only) */}
+          {isPreWorkshop && <ZoomInfo workshop={workshop} />}
 
-          {/* Certificate of completion (post-webinar) */}
-          {isPostWebinar && (
+          {/* Certificate of completion (post-workshop) */}
+          {isPostWorkshop && (
             <section>
               <h2
                 style={{
@@ -218,12 +218,12 @@ export default function WebinarPortal() {
               >
                 Certificate
               </h2>
-              <CertificateButton webinar={webinar} user={user} />
+              <CertificateButton workshop={workshop} user={user} />
             </section>
           )}
 
-          {/* Recordings (post-webinar) */}
-          {isPostWebinar && recordings.length > 0 && (
+          {/* Recordings (post-workshop) */}
+          {isPostWorkshop && recordings.length > 0 && (
             <section>
               <h2
                 style={{
@@ -245,8 +245,8 @@ export default function WebinarPortal() {
             </section>
           )}
 
-          {/* Webinar recording_url fallback (if no content items but url exists) */}
-          {isPostWebinar && recordings.length === 0 && webinar.recording_url && (
+          {/* Workshop recording_url fallback (if no content items but url exists) */}
+          {isPostWorkshop && recordings.length === 0 && workshop.recording_url && (
             <section>
               <h2
                 style={{
@@ -265,7 +265,7 @@ export default function WebinarPortal() {
                   id: 'main-recording',
                   type: 'recording',
                   title: 'Session Recording',
-                  file_url: webinar.recording_url,
+                  file_url: workshop.recording_url,
                 }}
               />
             </section>
@@ -317,11 +317,11 @@ export default function WebinarPortal() {
             </section>
           )}
 
-          {/* Question form (pre-webinar) */}
-          {isPreWebinar && <QuestionForm webinarId={webinar.id} userId={user.id} />}
+          {/* Question form (pre-workshop) */}
+          {isPreWorkshop && <QuestionForm workshopId={workshop.id} userId={user.id} />}
 
           {/* Description */}
-          {!isTool && webinar.description && (
+          {!isTool && workshop.description && (
             <section>
               <h2
                 style={{
@@ -344,7 +344,7 @@ export default function WebinarPortal() {
                   whiteSpace: 'pre-line',
                 }}
               >
-                {webinar.description}
+                {workshop.description}
               </p>
             </section>
           )}

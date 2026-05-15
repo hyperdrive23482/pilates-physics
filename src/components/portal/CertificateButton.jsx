@@ -4,7 +4,7 @@ import { useCertificateDownload } from '../../hooks/useCertificateDownload'
 
 const ACCENT = 'var(--color-accent)'
 
-export default function CertificateButton({ webinar, user }) {
+export default function CertificateButton({ workshop, user }) {
   const { download, busy, error } = useCertificateDownload()
 
   const meta = user?.user_metadata ?? {}
@@ -17,7 +17,7 @@ export default function CertificateButton({ webinar, user }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
       <button
         type="button"
-        onClick={() => download(webinar)}
+        onClick={() => download(workshop)}
         disabled={busy}
         style={{
           display: 'flex',
@@ -72,7 +72,7 @@ export default function CertificateButton({ webinar, user }) {
               lineHeight: '1.5',
             }}
           >
-            PDF · {webinar.title}
+            PDF · {workshop.title}
           </div>
         </div>
       </button>

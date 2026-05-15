@@ -39,21 +39,21 @@ export default async function handler(req, res) {
     return res.status(404).json({ error: 'Tool not found' })
   }
 
-  const { data: webinar, error: webErr } = await supabaseAdmin
+  const { data: workshop, error: webErr } = await supabaseAdmin
     .from('webinars')
     .select('id, slug, kind')
     .eq('slug', slug)
     .eq('kind', 'tool')
     .maybeSingle()
   if (webErr) return res.status(500).json({ error: webErr.message })
-  if (!webinar) return res.status(404).json({ error: 'Tool not found' })
+  if (!workshop) return res.status(404).json({ error: 'Tool not found' })
 
   if (!isAdmin) {
     const { data: ent, error: entErr } = await supabaseAdmin
       .from('user_entitlements')
       .select('id, expires_at')
       .eq('user_id', user.id)
-      .eq('webinar_id', webinar.id)
+      .eq('webinar_id', workshop.id)
       .maybeSingle()
     if (entErr) return res.status(500).json({ error: entErr.message })
     if (!ent) return res.status(403).json({ error: 'No access' })

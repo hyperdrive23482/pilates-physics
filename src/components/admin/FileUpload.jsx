@@ -5,11 +5,11 @@ import { supabase } from '../../lib/supabase'
 // Upload a file to a Supabase storage bucket.
 // Defaults preserve the original webinar-content private-bucket behavior:
 //   - bucket: 'webinar-content'
-//   - pathPrefix: webinarId (so path becomes {webinarId}/{ts}-{filename})
+//   - pathPrefix: workshopId (so path becomes {workshopId}/{ts}-{filename})
 //   - returnUrl: false (onChange receives the storage path, caller signs it)
 // For public buckets, pass returnUrl so onChange receives the public URL directly.
 export default function FileUpload({
-  webinarId,
+  workshopId,
   bucket = 'webinar-content',
   pathPrefix,
   returnUrl = false,
@@ -21,8 +21,8 @@ export default function FileUpload({
   const [error, setError] = useState(null)
   const inputRef = useRef(null)
 
-  // Back-compat: if pathPrefix isn't supplied, fall back to webinarId.
-  const resolvedPrefix = pathPrefix ?? webinarId ?? ''
+  // Back-compat: if pathPrefix isn't supplied, fall back to workshopId.
+  const resolvedPrefix = pathPrefix ?? workshopId ?? ''
   const disabled = !resolvedPrefix
 
   async function handleFile(e) {

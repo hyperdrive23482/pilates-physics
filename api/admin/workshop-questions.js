@@ -10,8 +10,8 @@ export default async function handler(req, res) {
   const admin = await requireAdmin(req, res)
   if (!admin) return
 
-  const webinarId = req.query.webinar_id
-  if (!webinarId) {
+  const workshopId = req.query.webinar_id
+  if (!workshopId) {
     return res.status(400).json({ error: 'webinar_id is required' })
   }
 
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
       supabaseAdmin
         .from('webinar_questions')
         .select('id, webinar_id, user_id, question, submitted_at, is_answered')
-        .eq('webinar_id', webinarId)
+        .eq('webinar_id', workshopId)
         .order('submitted_at', { ascending: false }),
       supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
     ])
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ questions })
   } catch (err) {
-    console.error('webinar-questions error:', err)
+    console.error('workshop-questions error:', err)
     return res.status(500).json({ error: err.message ?? 'Internal error' })
   }
 }

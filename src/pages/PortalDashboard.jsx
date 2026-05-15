@@ -1,16 +1,16 @@
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEnrollment } from '../hooks/useEnrollment'
-import { useMyWebinars } from '../hooks/useWebinars'
+import { useMyWorkshops } from '../hooks/useWorkshops'
 import PortalNav from '../components/portal/PortalNav'
-import WebinarCard from '../components/portal/WebinarCard'
+import WorkshopCard from '../components/portal/WorkshopCard'
 import Pp101FeedbackBanner from '../components/portal/Pp101FeedbackBanner'
 import { BookOpen, ArrowRight } from 'lucide-react'
 
 export default function PortalDashboard() {
   const { user, loading: authLoading, signOut } = useEnrollment()
   const navigate = useNavigate()
-  const { webinars, loading: webinarsLoading } = useMyWebinars(user?.id)
+  const { workshops, loading: workshopsLoading } = useMyWorkshops(user?.id)
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -39,8 +39,8 @@ export default function PortalDashboard() {
 
   const firstName = user.user_metadata?.first_name || ''
 
-  const tools = webinars.filter((w) => w.kind === 'tool')
-  const nonTools = webinars.filter((w) => w.kind !== 'tool')
+  const tools = workshops.filter((w) => w.kind === 'tool')
+  const nonTools = workshops.filter((w) => w.kind !== 'tool')
   const upcoming = nonTools.filter((w) => w.status === 'upcoming' || w.status === 'live')
   const completed = nonTools.filter((w) => w.status === 'complete')
   const archived = nonTools.filter((w) => w.status === 'archived')
@@ -56,7 +56,7 @@ export default function PortalDashboard() {
           margin: '0 auto',
         }}
       >
-        <Pp101FeedbackBanner user={user} webinars={webinars} />
+        <Pp101FeedbackBanner user={user} workshops={workshops} />
 
         {/* Welcome */}
         <div style={{ marginBottom: '3rem' }}>
@@ -85,11 +85,11 @@ export default function PortalDashboard() {
           </h1>
         </div>
 
-        {webinarsLoading ? (
+        {workshopsLoading ? (
           <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>
-            Loading your webinars...
+            Loading your workshops...
           </p>
-        ) : webinars.length === 0 ? (
+        ) : workshops.length === 0 ? (
           /* Empty state */
           <div
             style={{
@@ -112,7 +112,7 @@ export default function PortalDashboard() {
                 margin: 0,
               }}
             >
-              No webinars yet
+              No workshops yet
             </h2>
             <p
               style={{
@@ -123,7 +123,7 @@ export default function PortalDashboard() {
                 lineHeight: '1.6',
               }}
             >
-              You don't have access to any webinars yet. Browse available sessions and register for one.
+              You don't have access to any workshops yet. Browse available sessions and register for one.
             </p>
             <Link
               to="/education"
@@ -140,7 +140,7 @@ export default function PortalDashboard() {
                 fontFamily: '"DM Sans", sans-serif',
               }}
             >
-              Browse Webinars <ArrowRight size={16} />
+              Browse Workshops <ArrowRight size={16} />
             </Link>
           </div>
         ) : (
@@ -162,7 +162,7 @@ export default function PortalDashboard() {
                 </h2>
                 <div className="portal-grid">
                   {tools.map((w) => (
-                    <WebinarCard key={w.id} webinar={w} linkTo={`/portal/${w.slug}`} />
+                    <WorkshopCard key={w.id} workshop={w} linkTo={`/portal/${w.slug}`} />
                   ))}
                 </div>
               </section>
@@ -185,7 +185,7 @@ export default function PortalDashboard() {
                 </h2>
                 <div className="portal-grid">
                   {upcoming.map((w) => (
-                    <WebinarCard key={w.id} webinar={w} linkTo={`/portal/${w.slug}`} />
+                    <WorkshopCard key={w.id} workshop={w} linkTo={`/portal/${w.slug}`} />
                   ))}
                 </div>
               </section>
@@ -208,7 +208,7 @@ export default function PortalDashboard() {
                 </h2>
                 <div className="portal-grid">
                   {completed.map((w) => (
-                    <WebinarCard key={w.id} webinar={w} linkTo={`/portal/${w.slug}`} />
+                    <WorkshopCard key={w.id} workshop={w} linkTo={`/portal/${w.slug}`} />
                   ))}
                 </div>
               </section>
@@ -231,7 +231,7 @@ export default function PortalDashboard() {
                 </h2>
                 <div className="portal-grid">
                   {archived.map((w) => (
-                    <WebinarCard key={w.id} webinar={w} linkTo={`/portal/${w.slug}`} />
+                    <WorkshopCard key={w.id} workshop={w} linkTo={`/portal/${w.slug}`} />
                   ))}
                 </div>
               </section>
@@ -240,7 +240,7 @@ export default function PortalDashboard() {
         )}
 
         {/* Browse more */}
-        {webinars.length > 0 && (
+        {workshops.length > 0 && (
           <div
             style={{
               marginTop: '3rem',

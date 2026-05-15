@@ -2,16 +2,16 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Trash2, Edit3, UserPlus } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
-import { useAllWebinars } from '../../hooks/admin/useAllWebinars'
+import { useAllWorkshops } from '../../hooks/admin/useAllWorkshops'
 import { supabase } from '../../lib/supabase'
 import AdminNav from '../../components/admin/AdminNav'
 import BulkGrantModal from '../../components/admin/BulkGrantModal'
 
 export default function AdminTools() {
   const { user, signOut } = useEnrollment()
-  const { webinars: allWebinars, loading, refetch } = useAllWebinars()
-  const tools = allWebinars.filter((w) => w.kind === 'tool')
-  const sourceWebinars = allWebinars.filter((w) => w.kind !== 'tool' && w.status !== 'draft')
+  const { workshops: allWorkshops, loading, refetch } = useAllWorkshops()
+  const tools = allWorkshops.filter((w) => w.kind === 'tool')
+  const sourceWorkshops = allWorkshops.filter((w) => w.kind !== 'tool' && w.status !== 'draft')
 
   const [bulkOpen, setBulkOpen] = useState(false)
 
@@ -55,7 +55,7 @@ export default function AdminTools() {
           <button
             type="button"
             onClick={() => setBulkOpen(true)}
-            disabled={tools.length === 0 || sourceWebinars.length === 0}
+            disabled={tools.length === 0 || sourceWorkshops.length === 0}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -68,8 +68,8 @@ export default function AdminTools() {
               fontWeight: 500,
               fontFamily: '"DM Sans", sans-serif',
               cursor:
-                tools.length === 0 || sourceWebinars.length === 0 ? 'not-allowed' : 'pointer',
-              opacity: tools.length === 0 || sourceWebinars.length === 0 ? 0.5 : 1,
+                tools.length === 0 || sourceWorkshops.length === 0 ? 'not-allowed' : 'pointer',
+              opacity: tools.length === 0 || sourceWorkshops.length === 0 ? 0.5 : 1,
             }}
           >
             <UserPlus size={14} /> Bulk grant access
@@ -111,7 +111,7 @@ export default function AdminTools() {
                     <Td align="right">
                       <div style={{ display: 'inline-flex', gap: '0.4rem' }}>
                         <Link
-                          to={`/admin/webinars/${w.slug}/edit`}
+                          to={`/admin/workshops/${w.slug}/edit`}
                           aria-label="Edit"
                           style={iconLinkStyle}
                         >
@@ -138,7 +138,7 @@ export default function AdminTools() {
       {bulkOpen && (
         <BulkGrantModal
           tools={tools}
-          sourceWebinars={sourceWebinars}
+          sourceWorkshops={sourceWorkshops}
           onClose={() => setBulkOpen(false)}
         />
       )}

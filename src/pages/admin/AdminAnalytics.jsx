@@ -68,7 +68,7 @@ export default function AdminAnalytics() {
                   marginBottom: '1rem',
                 }}
               >
-                Per webinar
+                Per workshop
               </h2>
               <div className="pp-table-wrap" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-rule)' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
@@ -84,7 +84,7 @@ export default function AdminAnalytics() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.per_webinar.map((w) => (
+                    {data.per_workshop.map((w) => (
                       <tr key={w.id} style={{ borderBottom: '1px solid var(--color-rule)' }}>
                         <Td>{w.title}</Td>
                         <Td mono>{w.status}</Td>

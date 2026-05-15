@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
-export function useWebinarContent(webinarId, webinarStatus) {
+export function useWorkshopContent(workshopId, workshopStatus) {
   const [content, setContent] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!webinarId) {
+    if (!workshopId) {
       setContent([])
       setLoading(false)
       return
@@ -15,19 +15,19 @@ export function useWebinarContent(webinarId, webinarStatus) {
     supabase
       .from('webinar_content')
       .select('*')
-      .eq('webinar_id', webinarId)
+      .eq('webinar_id', workshopId)
       .order('sort_order', { ascending: true })
       .then(({ data, error }) => {
         if (!error) {
-          const isPostWebinar = webinarStatus === 'complete' || webinarStatus === 'archived'
+          const isPostWorkshop = workshopStatus === 'complete' || workshopStatus === 'archived'
           const filtered = (data || []).filter(
-            (item) => item.available_after === 'always' || isPostWebinar
+            (item) => item.available_after === 'always' || isPostWorkshop
           )
           setContent(filtered)
         }
         setLoading(false)
       })
-  }, [webinarId, webinarStatus])
+  }, [workshopId, workshopStatus])
 
   return { content, loading }
 }

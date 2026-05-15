@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     // Pull all entitlements once and group by user to avoid N round-trips.
     const { data: entitlements, error: entErr } = await supabaseAdmin
       .from('user_entitlements')
-      .select('id, user_id, webinar_id, source, granted_at, expires_at, webinar:webinars(title, slug)')
+      .select('id, user_id, webinar_id, source, granted_at, expires_at, workshop:webinars(title, slug)')
     if (entErr) throw entErr
 
     const byUser = new Map()

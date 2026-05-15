@@ -122,7 +122,7 @@ export default function Landing() {
                 margin: 0,
               }}
             >
-              Join me for a live webinar on May 20th to learn about easy, science-based principles even the most math-averse instructor can grasp.
+              Join me for a live workshop on May 20th to learn about easy, science-based principles even the most math-averse instructor can grasp.
             </p>
 
             <Link
@@ -218,7 +218,7 @@ export default function Landing() {
             </p>
             <p style={{ margin: 0 }}>
               That gap — between knowing what to do and knowing why it works — is exactly where
-              this webinar lives. It won't replace your training. It will make everything in your
+              this workshop lives. It won't replace your training. It will make everything in your
               training make sense.
             </p>
           </div>
@@ -450,7 +450,7 @@ export default function Landing() {
                 margin: 0,
               }}
             >
-              Whether you've been teaching for a year or ten, this webinar gives you a framework to
+              Whether you've been teaching for a year or ten, this workshop gives you a framework to
               answer the questions you already have about how Pilates equipment applies load and
               what that means for your teaching.
             </p>

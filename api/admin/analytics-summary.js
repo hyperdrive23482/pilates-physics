@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   if (!admin) return
 
   try {
-    const [webinarsRes, entitlementsRes, questionsRes, stripeRes, usersRes] = await Promise.all([
+    const [workshopsRes, entitlementsRes, questionsRes, stripeRes, usersRes] = await Promise.all([
       supabaseAdmin.from('webinars').select('id, title, slug, status, price_cents, scheduled_at'),
       supabaseAdmin.from('user_entitlements').select('id, webinar_id, source'),
       supabaseAdmin.from('webinar_questions').select('id, webinar_id, is_answered'),
@@ -19,18 +19,18 @@ export default async function handler(req, res) {
       supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
     ])
 
-    for (const r of [webinarsRes, entitlementsRes, questionsRes, stripeRes]) {
+    for (const r of [workshopsRes, entitlementsRes, questionsRes, stripeRes]) {
       if (r.error) throw r.error
     }
     if (usersRes.error) throw usersRes.error
 
-    const webinars = webinarsRes.data ?? []
+    const workshops = workshopsRes.data ?? []
     const entitlements = entitlementsRes.data ?? []
     const questions = questionsRes.data ?? []
     const events = stripeRes.data ?? []
 
-    // Per-webinar breakdown
-    const perWebinar = webinars.map((w) => {
+    // Per-workshop breakdown
+    const perWorkshop = workshops.map((w) => {
       const wEnt = entitlements.filter((e) => e.webinar_id === w.id)
       const paidEnt = wEnt.filter((e) => e.source === 'stripe')
       const wQuestions = questions.filter((q) => q.webinar_id === w.id)
@@ -51,15 +51,15 @@ export default async function handler(req, res) {
 
     const totals = {
       total_users: usersRes.data.users?.length ?? 0,
-      total_webinars: webinars.length,
+      total_workshops: workshops.length,
       total_enrollments: entitlements.length,
-      total_revenue_cents: perWebinar.reduce((sum, w) => sum + w.revenue_cents, 0),
+      total_revenue_cents: perWorkshop.reduce((sum, w) => sum + w.revenue_cents, 0),
       total_questions: questions.length,
       stripe_event_count: events.length,
       stripe_failed_events: events.filter((e) => e.status !== 'processed').length,
     }
 
-    return res.status(200).json({ totals, per_webinar: perWebinar })
+    return res.status(200).json({ totals, per_workshop: perWorkshop })
   } catch (err) {
     console.error('analytics-summary error:', err)
     return res.status(500).json({ error: err.message ?? 'Internal error' })
