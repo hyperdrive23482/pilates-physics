@@ -79,12 +79,19 @@ const PATHS = [
     to: '/pilates-physics-101',
   },
   {
-    eyebrow: '3-Month Intensive',
-    title: 'Pilates Physics 301',
-    body: 'A small-cohort deep dive: free-body diagrams, chair and tower physics, and physics-based progression planning. Group lectures, homework, and monthly 1:1 calls. By application.',
-    meta: 'Apply by July 19th.',
+    eyebrow: '2-Hour Live Workshop',
+    title: 'Pilates Physics 102: Chair and Cadillac',
+    body: 'A focused 2-hour live session on the mechanics of the Wunda Chair and Cadillac — spring orientation, lever arms, and how the same load behaves differently across these two pieces of equipment.',
+    meta: 'Next: July 15, 2026',
     ctaLabel: 'Learn more',
-    to: '/pilates-physics-301',
+    to: '/pilates-physics-102',
+  },
+  {
+    eyebrow: '3-Hour Workshop',
+    title: 'Pilates Physics 201: Advanced Load Analysis',
+    body: 'A deeper 3-hour workshop on building free-body diagrams for common Pilates exercises and using physics to progress them in your own teaching.',
+    meta: 'Coming soon',
+    ctaLabel: null,
   },
   {
     eyebrow: 'Private',
@@ -183,7 +190,7 @@ export default function Education() {
                 margin: '0 0 1.5rem',
               }}
             >
-              Four ways to learn the physics of Pilates
+              Five ways to learn the physics of Pilates
             </h1>
             <p
               style={{
@@ -193,8 +200,8 @@ export default function Education() {
                 margin: 0,
               }}
             >
-              From a 2-hour intro to a 3-month intensive to private mentoring — pick
-              the depth that fits where you are right now.
+              From 2-hour live workshops to private mentoring — pick the depth
+              that fits where you are right now.
             </p>
           </div>
         </div>
@@ -281,11 +288,11 @@ export default function Education() {
                   <Link to={path.to} style={secondaryButtonStyle}>
                     {path.ctaLabel} →
                   </Link>
-                ) : (
+                ) : path.href ? (
                   <a href={path.href} style={secondaryButtonStyle}>
                     {path.ctaLabel} →
                   </a>
-                )}
+                ) : null}
               </div>
             </div>
           ))}
