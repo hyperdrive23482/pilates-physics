@@ -160,7 +160,10 @@ export default function PilatesPhysics101() {
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
       {/* ── § 01 Hero ────────────────────────────────────────────────────── */}
-      <section className="workshop-hero section-frame">
+      <section
+        className="workshop-hero section-frame"
+        style={{ '--workshop-hero-image': "url('/images/homepage/hero-image-4.jpg')" }}
+      >
         <span className="cross tl"></span>
         <span className="cross tr"></span>
 
