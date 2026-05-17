@@ -23,6 +23,47 @@ export function useWorkshops() {
   return { workshops, loading, refetch: fetchWorkshops }
 }
 
+export function useNextWorkshop() {
+  const [workshop, setWorkshop] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+    let timer
+
+    async function fetchNext() {
+      const { data, error } = await supabase
+        .from('webinars')
+        .select('*')
+        .gt('scheduled_at', new Date().toISOString())
+        .in('status', ['upcoming', 'live'])
+        .order('scheduled_at', { ascending: true })
+        .limit(1)
+        .maybeSingle()
+
+      if (cancelled) return
+      if (!error) {
+        setWorkshop(data || null)
+        // Re-fetch right after the current "next" workshop starts so the CTA
+        // automatically flips to the following one without a page reload.
+        if (data?.scheduled_at) {
+          const ms = new Date(data.scheduled_at).getTime() - Date.now()
+          if (ms > 0) timer = setTimeout(fetchNext, ms + 1000)
+        }
+      }
+      setLoading(false)
+    }
+
+    fetchNext()
+    return () => {
+      cancelled = true
+      if (timer) clearTimeout(timer)
+    }
+  }, [])
+
+  return { workshop, loading }
+}
+
 export function useWorkshop(slug) {
   const [workshop, setWorkshop] = useState(null)
   const [loading, setLoading] = useState(true)

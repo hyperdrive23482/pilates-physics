@@ -1,9 +1,24 @@
 import { Link } from 'react-router-dom'
 import ArrowSvg from '../components/ui/ArrowSvg'
+import { useNextWorkshop } from '../hooks/useWorkshops'
+import { workshopUrl } from '../lib/workshop'
 import '../styles/ppv2.css'
 import './About.css'
 
 export default function About() {
+  const { workshop: nextWorkshop } = useNextWorkshop()
+
+  const ctaDate = nextWorkshop?.scheduled_at
+    ? new Date(nextWorkshop.scheduled_at).toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    : null
+  const durationHours = nextWorkshop?.duration_min
+    ? Math.round(nextWorkshop.duration_min / 60)
+    : 2
+
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
       {/* ── § 01 Hero / Bio ──────────────────────────────────────────────── */}
@@ -169,12 +184,12 @@ export default function About() {
         <div className="container">
           <div className="about-cta__inner">
             <div>
-              <p className="about-cta__kicker">May 20, 2026</p>
+              {ctaDate && <p className="about-cta__kicker">{ctaDate}</p>}
               <h2 className="about-cta__head">
-                A 2-hour live workshop on the <span className="italic accent">physics of Pilates.</span>
+                A {durationHours}-hour live workshop on the <span className="italic accent">physics of Pilates.</span>
               </h2>
             </div>
-            <Link to="/pilates-physics-101" className="btn">
+            <Link to={workshopUrl(nextWorkshop?.slug)} className="btn">
               Register Now
               <ArrowSvg />
             </Link>

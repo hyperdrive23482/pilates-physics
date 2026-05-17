@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import InteractiveSpringDiagram from '../components/ui/InteractiveSpringDiagram'
 import ArrowSvg from '../components/ui/ArrowSvg'
+import { useNextWorkshop } from '../hooks/useWorkshops'
+import { workshopUrl, formatWorkshopWhen } from '../lib/workshop'
 import '../styles/ppv2.css'
 import './Landing.css'
 
@@ -33,6 +35,10 @@ const TESTIMONIALS = [
 
 // ─── Landing page ─────────────────────────────────────────────────────────────
 export default function Landing() {
+  const { workshop: nextWorkshop } = useNextWorkshop()
+  const heroWhat = nextWorkshop ? `${nextWorkshop.title} Workshop` : ' '
+  const heroWhen = nextWorkshop ? formatWorkshopWhen(nextWorkshop.scheduled_at) : ' '
+
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
@@ -55,13 +61,13 @@ export default function Landing() {
               </p>
 
               <div className="hero__cta">
-                <Link to="/pilates-physics-101" className="btn">
+                <Link to={workshopUrl(nextWorkshop?.slug)} className="btn">
                   Register Now
                   <ArrowSvg />
                 </Link>
                 <div className="hero__meta mono">
-                  <div><span className="hero__meta-k">What</span> Pilates Physics 101 Workshop</div>
-                  <div><span className="hero__meta-k">When</span> Wed May 20 11am PDT</div>
+                  <div><span className="hero__meta-k">What</span> {heroWhat}</div>
+                  <div><span className="hero__meta-k">When</span> {heroWhen}</div>
                   <div><span className="hero__meta-k">Where</span> Live, online · recording included</div>
                 </div>
               </div>
