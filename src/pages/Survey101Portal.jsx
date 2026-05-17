@@ -7,6 +7,8 @@ import WorkshopFeedbackForm from '../components/survey/WorkshopFeedbackForm'
 
 const WORKSHOP_TITLE = 'Pilates Physics 101'
 const WORKSHOP_DATE = '2026-05-20'
+// Workshop runs 11am–1pm PDT on May 20 — survey opens when it wraps.
+const SURVEY_OPENS = new Date('2026-05-20T13:00:00-07:00')
 const SURVEY_CUTOFF = new Date('2026-06-01T00:00:00')
 
 const accentLinkStyle = { color: 'var(--color-accent)' }
@@ -127,7 +129,9 @@ export default function Survey101Portal() {
     return <PortalLoading />
   }
 
-  const isClosed = new Date() >= SURVEY_CUTOFF
+  const now = new Date()
+  const isClosed = now >= SURVEY_CUTOFF
+  const notYetOpen = now < SURVEY_OPENS
 
   if (isClosed) {
     return (
@@ -140,6 +144,18 @@ export default function Survey101Portal() {
             education
           </Link>{' '}
           page for upcoming sessions.
+        </MutedParagraph>
+      </PortalShell>
+    )
+  }
+
+  if (notYetOpen) {
+    return (
+      <PortalShell user={user} onSignOut={signOut}>
+        <Eyebrow />
+        <PageTitle>{WORKSHOP_TITLE} survey</PageTitle>
+        <MutedParagraph>
+          The survey opens after the workshop wraps on May 20. Check back then — your feedback shapes the next one.
         </MutedParagraph>
       </PortalShell>
     )

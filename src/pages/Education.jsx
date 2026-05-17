@@ -1,110 +1,50 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-
-const primaryButtonStyle = {
-  display: 'inline-block',
-  padding: '0.875rem 1.75rem',
-  fontSize: '0.95rem',
-  fontWeight: '500',
-  fontFamily: '"DM Sans", sans-serif',
-  background: 'var(--color-accent)',
-  color: '#1C1A17',
-  border: 'none',
-  textDecoration: 'none',
-  cursor: 'pointer',
-}
-
-const secondaryButtonStyle = {
-  display: 'inline-block',
-  padding: '0.75rem 1.5rem',
-  fontSize: '0.9rem',
-  fontWeight: '500',
-  fontFamily: '"DM Sans", sans-serif',
-  background: 'transparent',
-  color: 'var(--color-accent)',
-  border: '1px solid var(--color-accent)',
-  textDecoration: 'none',
-  cursor: 'pointer',
-}
-
-const labelStyle = {
-  display: 'block',
-  fontSize: '0.78rem',
-  fontWeight: '500',
-  color: 'var(--color-ink-muted)',
-  marginBottom: '0.375rem',
-}
-
-const inputStyle = {
-  width: '100%',
-  padding: '0.75rem 1rem',
-  fontSize: '0.9rem',
-  fontFamily: '"DM Sans", sans-serif',
-  border: '1px solid var(--color-rule)',
-  background: 'var(--color-bg)',
-  color: 'var(--color-ink)',
-  outline: 'none',
-  boxSizing: 'border-box',
-}
-
-function Section({ children, style = {}, className = '' }) {
-  return (
-    <section
-      className={className}
-      style={{
-        maxWidth: '1100px',
-        margin: '0 auto',
-        padding: '6rem 2rem',
-        ...style,
-      }}
-    >
-      {children}
-    </section>
-  )
-}
-
-function Rule() {
-  return (
-    <hr style={{ border: 'none', borderTop: '1px solid var(--color-rule)', margin: 0 }} />
-  )
-}
+import ArrowSvg from '../components/ui/ArrowSvg'
+import '../styles/ppv2.css'
+import './Education.css'
 
 const PATHS = [
   {
-    eyebrow: '2-Hour Live Workshop',
+    n: '01',
+    label: '2-HOUR LIVE WORKSHOP',
     title: 'Pilates Physics 101',
     body: 'A focused 2-hour live session on the mechanics behind reformer springs and the equipment variables that change how a body is loaded. New to Pilates Physics? Start here.',
-    meta: 'Next: May 20, 2026',
+    meta: 'Next · May 20, 2026',
     ctaLabel: 'Learn more',
     to: '/pilates-physics-101',
   },
   {
-    eyebrow: '2-Hour Live Workshop',
+    n: '02',
+    label: '2-HOUR LIVE WORKSHOP',
     title: 'Pilates Physics 102: Chair and Cadillac',
     body: 'A focused 2-hour live session on the mechanics of the Wunda Chair and Cadillac — spring orientation, lever arms, and how the same load behaves differently across these two pieces of equipment.',
-    meta: 'Next: July 15, 2026',
+    meta: 'Next · July 15, 2026',
     ctaLabel: 'Learn more',
     to: '/pilates-physics-102',
   },
   {
-    eyebrow: '3-Hour Workshop',
+    n: '03',
+    label: '3-HOUR WORKSHOP',
     title: 'Pilates Physics 201: Advanced Load Analysis',
     body: 'A deeper 3-hour workshop on building free-body diagrams for common Pilates exercises and using physics to progress them in your own teaching.',
     meta: 'Coming soon',
     ctaLabel: null,
   },
   {
-    eyebrow: 'Private',
-    title: '1:1 mentoring',
-    body: 'One-off or ongoing private Ongoing private mentoring tailored to the questions you have right now — your clients, your studio, your equipment. Limited slots. $180 per session. Includes limited email support.',
+    n: '04',
+    label: 'PRIVATE',
+    title: '1:1 Mentoring',
+    body: "One-off or ongoing private mentoring tailored to the questions you have right now — your clients, your studio, your equipment. Limited slots. $180 per session. Includes limited email support.",
     meta: 'By inquiry',
     ctaLabel: 'Inquire',
     href: '#inquiry',
   },
   {
-    eyebrow: 'On-site at your studio',
-    title: 'In-person workshops',
-    body: 'Bring Pilates Physics to your studio or training program. Custom-built sessions from 1-6 hours either in-person or virtual.',
+    n: '05',
+    label: 'ON-SITE AT YOUR STUDIO',
+    title: 'In-person Workshops',
+    body: 'Bring Pilates Physics to your studio or training program. Custom-built sessions from 1–6 hours either in-person or virtual.',
     meta: 'By inquiry',
     ctaLabel: 'Inquire',
     href: '#inquiry',
@@ -141,226 +81,89 @@ export default function Education() {
   }
 
   return (
-    <div>
-      {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <section
-        style={{
-          backgroundImage: 'url(/images/homepage/hero-image-2.JPG)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          position: 'relative',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'rgba(28, 26, 23, 0.7)',
-          }}
-        />
-        <div
-          style={{
-            position: 'relative',
-            zIndex: 1,
-            maxWidth: '1100px',
-            margin: '0 auto',
-            padding: '7rem 2rem 5rem',
-          }}
-        >
-          <div style={{ maxWidth: '720px' }}>
-            <p
-              style={{
-                fontSize: '0.7rem',
-                fontWeight: '600',
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: 'var(--color-accent)',
-                marginBottom: '1.25rem',
-              }}
-            >
-              Education
-            </p>
-            <h1
-              style={{
-                fontFamily: '"DM Serif Display", serif',
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
-                lineHeight: '1.15',
-                color: 'var(--color-ink)',
-                margin: '0 0 1.5rem',
-              }}
-            >
-              Five ways to learn the physics of Pilates
+    <div className="ppv2 grid-bg" data-section-style="alt">
+      {/* ── § 01 Hero ────────────────────────────────────────────────────── */}
+      <section className="education-hero section-frame">
+        <span className="cross tl"></span>
+        <span className="cross tr"></span>
+
+        <div className="container">
+          <div className="education-hero__inner">
+            <div className="kicker">§ 01 · Education</div>
+            <h1 className="education-hero__title">
+              Five ways to learn the <span className="italic accent">physics of Pilates.</span>
             </h1>
-            <p
-              style={{
-                fontSize: '1.1rem',
-                lineHeight: '1.65',
-                color: 'var(--color-ink-muted)',
-                margin: 0,
-              }}
-            >
+            <p className="education-hero__lede">
               From 2-hour live workshops to private mentoring — pick the depth
               that fits where you are right now.
             </p>
           </div>
         </div>
+
+        <span className="cross bl"></span>
+        <span className="cross br"></span>
       </section>
 
-      <Rule />
-
-      {/* ── The four paths ───────────────────────────────────────────────── */}
-      <Section>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '1.5rem',
-          }}
-          className="paths-grid"
-        >
-          {PATHS.map((path) => (
-            <div
-              key={path.title}
-              style={{
-                padding: '2.25rem',
-                background: 'var(--color-surface-raised)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1rem',
-              }}
-            >
-              <p
-                style={{
-                  fontSize: '0.7rem',
-                  fontWeight: '600',
-                  letterSpacing: '0.15em',
-                  textTransform: 'uppercase',
-                  color: 'var(--color-accent)',
-                  margin: 0,
-                }}
-              >
-                {path.eyebrow}
-              </p>
-              <h2
-                style={{
-                  fontFamily: '"DM Serif Display", serif',
-                  fontSize: '1.5rem',
-                  lineHeight: '1.2',
-                  color: 'var(--color-ink)',
-                  margin: 0,
-                }}
-              >
-                {path.title}
-              </h2>
-              <p
-                style={{
-                  fontSize: '0.95rem',
-                  lineHeight: '1.7',
-                  color: 'var(--color-ink-muted)',
-                  margin: 0,
-                  flex: 1,
-                }}
-              >
-                {path.body}
-              </p>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '1rem',
-                  paddingTop: '0.5rem',
-                  borderTop: '1px solid var(--color-rule)',
-                  marginTop: '0.5rem',
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: '0.85rem',
-                    color: 'var(--color-ink)',
-                    fontWeight: '500',
-                  }}
-                >
-                  {path.meta}
-                </span>
-                {path.to ? (
-                  <Link to={path.to} style={secondaryButtonStyle}>
-                    {path.ctaLabel} →
-                  </Link>
-                ) : path.href ? (
-                  <a href={path.href} style={secondaryButtonStyle}>
-                    {path.ctaLabel} →
-                  </a>
-                ) : null}
-              </div>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      <Rule />
-
-      {/* ── Inquiry form ─────────────────────────────────────────────────── */}
-      <section style={{ background: 'var(--color-surface)' }}>
-        <Section style={{ maxWidth: '720px' }}>
-          <div id="inquiry" style={{ scrollMarginTop: '5rem' }}>
-            <p
-              style={{
-                fontSize: '0.7rem',
-                fontWeight: '600',
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: 'var(--color-accent)',
-                marginBottom: '1rem',
-              }}
-            >
-              Inquire
-            </p>
-            <h2
-              style={{
-                fontFamily: '"DM Serif Display", serif',
-                fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
-                lineHeight: '1.2',
-                color: 'var(--color-ink)',
-                margin: '0 0 1rem',
-              }}
-            >
-              Inquire about 1:1 mentoring or in-person workshops
+      {/* ── § 02 Paths ───────────────────────────────────────────────────── */}
+      <section className="section-pad section--inset education-paths">
+        <div className="container">
+          <div className="education-paths__head">
+            <div className="kicker">§ 02 · Learning Paths</div>
+            <h2 className="education-paths__title">
+              Choose the <span className="italic accent">depth.</span>
             </h2>
-            <p
-              style={{
-                fontSize: '1rem',
-                lineHeight: '1.7',
-                color: 'var(--color-ink-muted)',
-                margin: '0 0 2.5rem',
-              }}
-            >
-              Tell me a little about what you're looking for — your studio, your
-              clients, your timeline — and I'll get back to you within a few days.
-            </p>
           </div>
 
+          <div className="education-paths__grid">
+            {PATHS.map((p) => (
+              <article className="fcard" key={p.title}>
+                <div className="fcard__head">
+                  <span className="fcard__n mono">{p.n}</span>
+                  <span className="fcard__dot mono">·</span>
+                  <span className="fcard__label mono accent">{p.label}</span>
+                </div>
+                <h3 className="fcard__title">{p.title}</h3>
+                <p className="fcard__body">{p.body}</p>
+                <div className="fcard__foot">
+                  <span>{p.meta}</span>
+                  {p.to ? (
+                    <Link to={p.to} className="arrow-link">{p.ctaLabel} →</Link>
+                  ) : p.href ? (
+                    <a href={p.href} className="arrow-link">{p.ctaLabel} →</a>
+                  ) : (
+                    <span style={{ color: 'var(--ink-faint)' }}>—</span>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── § 03 Inquiry form ────────────────────────────────────────────── */}
+      <section className="section-pad section--inset education-inquiry" id="inquiry" style={{ scrollMarginTop: '5rem' }}>
+        <div className="container container--narrow">
+          <div className="kicker">§ 03 · Inquire</div>
+          <h2 className="education-inquiry__head">
+            Inquire about <span className="italic accent">mentoring or in-person workshops.</span>
+          </h2>
+          <p className="education-inquiry__lede">
+            Tell me a little about what you're looking for — your studio, your
+            clients, your timeline — and I'll get back to you within a few days.
+          </p>
+
           {status === 'success' ? (
-            <div>
-              <p
-                style={{
-                  fontFamily: '"DM Serif Display", serif',
-                  fontSize: '1.25rem',
-                  color: 'var(--color-accent)',
-                  marginBottom: '0.75rem',
-                }}
-              >
-                Thanks — your inquiry is on its way.
-              </p>
-              <p style={{ fontSize: '0.9rem', color: 'var(--color-ink-muted)' }}>
-                I'll reply within a few days. Check your inbox for a confirmation email.
+            <div className="education-inquiry__success">
+              <p className="education-inquiry__success-head">§ Received</p>
+              <p className="education-inquiry__success-body">
+                Thanks — your inquiry is on its way. I'll reply within a few days.
+                Check your inbox for a confirmation email.
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div>
-                <label style={labelStyle}>Name</label>
+            <form onSubmit={handleSubmit} className="pp-form">
+              <div className="pp-form__field">
+                <label className="pp-form__label">Name</label>
                 <input
                   type="text"
                   required
@@ -368,12 +171,12 @@ export default function Education() {
                   onChange={(e) => setName(e.target.value)}
                   disabled={status === 'loading'}
                   maxLength={200}
-                  style={inputStyle}
+                  className="pp-form__input"
                 />
               </div>
 
-              <div>
-                <label style={labelStyle}>Email</label>
+              <div className="pp-form__field">
+                <label className="pp-form__label">Email</label>
                 <input
                   type="email"
                   required
@@ -381,18 +184,18 @@ export default function Education() {
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={status === 'loading'}
                   maxLength={320}
-                  style={inputStyle}
+                  className="pp-form__input"
                 />
               </div>
 
-              <div>
-                <label style={labelStyle}>I'm interested in</label>
+              <div className="pp-form__field">
+                <label className="pp-form__label">I'm interested in</label>
                 <select
                   required
                   value={interest}
                   onChange={(e) => setInterest(e.target.value)}
                   disabled={status === 'loading'}
-                  style={inputStyle}
+                  className="pp-form__select"
                 >
                   <option value="">Select one…</option>
                   <option value="1:1 mentoring">1:1 mentoring</option>
@@ -401,8 +204,8 @@ export default function Education() {
                 </select>
               </div>
 
-              <div>
-                <label style={labelStyle}>Tell me more</label>
+              <div className="pp-form__field">
+                <label className="pp-form__label">Tell me more</label>
                 <textarea
                   required
                   value={message}
@@ -411,7 +214,7 @@ export default function Education() {
                   maxLength={2000}
                   rows={6}
                   placeholder="What are you looking for? Where are you located? Any timeline?"
-                  style={{ ...inputStyle, resize: 'vertical', fontFamily: '"DM Sans", sans-serif' }}
+                  className="pp-form__textarea"
                 />
               </div>
 
@@ -429,32 +232,19 @@ export default function Education() {
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                style={{
-                  ...primaryButtonStyle,
-                  width: '100%',
-                  cursor: status === 'loading' ? 'wait' : 'pointer',
-                }}
+                className="btn btn--block btn--lg"
               >
                 {status === 'loading' ? 'Sending…' : 'Send inquiry'}
+                {status !== 'loading' && <ArrowSvg />}
               </button>
 
               {status === 'error' && (
-                <p style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: '#e06c75' }}>
-                  {errorMsg}
-                </p>
+                <p className="pp-form__error">{errorMsg}</p>
               )}
             </form>
           )}
-        </Section>
+        </div>
       </section>
-
-      <style>{`
-        @media (max-width: 700px) {
-          .paths-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </div>
   )
 }

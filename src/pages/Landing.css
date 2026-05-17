@@ -1,175 +1,9 @@
-/* Pilates Physics — Landing Page (v2 redesign)
+/* Pilates Physics — Landing page styles
  *
- * All styles scoped under `.ppv2` so they don't bleed into the rest of the site.
- *
- * Token model (mirrors the design bundle):
- *   --bg          page background
- *   --bg-2        slightly stronger surface for inset sections
- *   --bg-3        lightest surface — inner cards
- *   --ink         primary text
- *   --ink-soft    secondary text
- *   --ink-faint   tertiary text
- *   --rule        hairlines / borders
- *   --grid        grid-paper line color
- *   --accent      burnt orange — links, italics, CTAs
+ * Shared v2 primitives live in src/styles/ppv2.css.
+ * This file contains only landing-page-specific sections:
+ *   .hero, .spring-chart, .understanding, .framework, .meet, .cta
  */
-
-.ppv2 {
-  --bg:        #0e0d0b;
-  --bg-2:      #1a1813;
-  --bg-3:      #24201a;
-  --ink:       #E3E3E3;
-  --ink-soft:  rgba(227, 227, 227, 0.65);
-  --ink-faint: rgba(227, 227, 227, 0.42);
-  --rule:      rgba(227, 227, 227, 0.18);
-  --grid:      rgba(227, 227, 227, 0.045);
-  --grid-bold: rgba(227, 227, 227, 0.075);
-  --accent:    #f09f26;
-  --accent-ink: #1c1a17;
-  --accent-warm: #c07c17;
-
-  --pp-font-serif: "Source Serif 4", "Source Serif Pro", Georgia, serif;
-  --pp-font-mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--pp-font-serif);
-  font-size: 17px;
-  line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-.ppv2 *,
-.ppv2 *::before,
-.ppv2 *::after { box-sizing: border-box; }
-
-.ppv2 a { color: inherit; text-decoration: none; }
-
-/* ── Page-wide grid paper texture ─────────────────────────────────────────── */
-.ppv2.grid-bg,
-.ppv2 .grid-bg {
-  background-color: var(--bg);
-  background-image:
-    linear-gradient(to right, var(--grid) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-  background-size: 24px 24px;
-  background-position: 0 0;
-}
-
-/* ── Typography helpers ───────────────────────────────────────────────────── */
-.ppv2 .mono { font-family: var(--pp-font-mono); }
-.ppv2 .italic { font-style: italic; }
-.ppv2 .accent { color: var(--accent); }
-.ppv2 .kicker {
-  font-family: var(--pp-font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-.ppv2 .eyebrow {
-  font-family: var(--pp-font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
-.ppv2 h1,
-.ppv2 h2,
-.ppv2 h3,
-.ppv2 h4 {
-  font-family: var(--pp-font-serif);
-  font-weight: 400;
-  letter-spacing: -0.012em;
-  margin: 0;
-  line-height: 1.04;
-  text-wrap: balance;
-  color: var(--ink);
-}
-.ppv2 h1 { font-size: clamp(56px, 7.4vw, 116px); }
-.ppv2 h2 { font-size: clamp(40px, 4.6vw, 72px); }
-.ppv2 h3 { font-size: clamp(22px, 2vw, 28px); line-height: 1.2; }
-
-/* ── Layout primitives ────────────────────────────────────────────────────── */
-.ppv2 .container {
-  max-width: 1320px;
-  margin: 0 auto;
-  padding: 0 48px;
-}
-.ppv2 .container--wide { max-width: 1480px; }
-.ppv2 .container--narrow { max-width: 980px; }
-
-.ppv2 section { position: relative; }
-.ppv2 .section-pad   { padding: 96px 0 112px; }
-.ppv2 .section-pad-l { padding: 132px 0 144px; }
-
-/* ── Buttons ──────────────────────────────────────────────────────────────── */
-.ppv2 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 22px 13px;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-family: var(--pp-font-mono);
-  font-size: 12.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  border: 1px solid var(--accent);
-  cursor: pointer;
-  transition: transform 120ms ease, background 150ms ease, border-color 150ms ease;
-  text-decoration: none;
-}
-.ppv2 .btn:hover { background: var(--accent-warm); border-color: var(--accent-warm); }
-.ppv2 .btn:active { transform: translateY(1px); }
-
-.ppv2 .arrow-link {
-  font-family: var(--pp-font-mono);
-  font-size: 12.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--accent);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid currentColor;
-  padding-bottom: 2px;
-}
-.ppv2 .arrow-link:hover { color: var(--accent-warm); }
-
-/* ── Underline marker for in-text emphasis ───────────────────────────────── */
-.ppv2 .underline-mark {
-  background-image: linear-gradient(to right, var(--accent) 0%, var(--accent) 100%);
-  background-repeat: no-repeat;
-  background-position: 0 88%;
-  background-size: 100% 2px;
-  padding-bottom: 2px;
-}
-
-/* ── Corner registration crosses ──────────────────────────────────────────── */
-.ppv2 .cross {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  pointer-events: none;
-}
-.ppv2 .cross::before,
-.ppv2 .cross::after {
-  content: "";
-  position: absolute;
-  background: var(--rule);
-}
-.ppv2 .cross::before { left: 0; right: 0; top: 50%; height: 1px; }
-.ppv2 .cross::after  { top: 0; bottom: 0; left: 50%; width: 1px; }
-
-.ppv2 .section-frame { position: relative; }
-.ppv2 .section-frame > .cross.tl { top: 14px; left: 14px; }
-.ppv2 .section-frame > .cross.tr { top: 14px; right: 14px; }
-.ppv2 .section-frame > .cross.bl { bottom: 14px; left: 14px; }
-.ppv2 .section-frame > .cross.br { bottom: 14px; right: 14px; }
 
 /* ── HERO ─────────────────────────────────────────────────────────────────── */
 .ppv2 .hero {
@@ -302,10 +136,6 @@
   flex-shrink: 0;
   animation: ppv2-pulse 2s ease-in-out infinite;
 }
-@keyframes ppv2-pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50%      { transform: scale(1.6); opacity: 0.4; }
-}
 
 /* ── UNDERSTANDING ────────────────────────────────────────────────────────── */
 .ppv2 .understanding__grid {
@@ -367,47 +197,15 @@
   color: var(--ink);
   margin: 0;
 }
+.ppv2 .framework__lede strong {
+  color: var(--ink);
+  font-weight: 600;
+}
 
 .ppv2 .framework__cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-}
-
-.ppv2 .fcard {
-  background: var(--bg-2);
-  border: 1px solid var(--rule);
-  padding: 28px 28px 30px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: 160px;
-}
-.ppv2 .fcard:hover { border-color: var(--accent); }
-.ppv2 .fcard__head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 11.5px;
-  letter-spacing: 0.1em;
-  margin-bottom: 18px;
-}
-.ppv2 .fcard__n { color: var(--ink-faint); }
-.ppv2 .fcard__dot { color: var(--ink-faint); }
-.ppv2 .fcard__label { color: var(--accent); font-weight: 600; }
-.ppv2 .fcard__q {
-  font-size: 26px;
-  line-height: 1.18;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  margin: 0;
-  flex: 1;
-  color: var(--ink);
-}
-
-.ppv2 .framework__lede strong {
-  color: var(--ink);
-  font-weight: 600;
 }
 
 /* ── MEET KALEEN ──────────────────────────────────────────────────────────── */
@@ -416,33 +214,6 @@
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
   gap: 80px;
   align-items: start;
-}
-
-.ppv2 .meet__photo {
-  position: relative;
-  border: 1px solid var(--rule);
-  padding: 28px 14px 18px;
-  background: var(--bg-2);
-}
-.ppv2 .meet__photo-tag {
-  position: absolute;
-  top: 12px;
-  left: 14px;
-  right: 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 10.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(240, 233, 216, 0.7);
-}
-.ppv2 .meet__photo-tag-id { color: var(--accent); }
-.ppv2 .meet__photo img {
-  display: block;
-  width: 100%;
-  height: 560px;
-  object-fit: cover;
 }
 
 .ppv2 .meet__head {
@@ -486,41 +257,6 @@
   gap: 16px;
 }
 
-/* Testimonial cards */
-.ppv2 .quote-card {
-  border: 1px solid var(--rule);
-  background: var(--bg-2);
-  padding: 22px 24px 24px;
-  font-family: var(--pp-font-serif);
-  color: var(--ink);
-  position: relative;
-}
-.ppv2 .quote-card .handle {
-  font-family: var(--pp-font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.04em;
-  color: var(--ink-soft);
-  text-transform: lowercase;
-  display: flex;
-  align-items: baseline;
-  gap: 2px;
-  margin-bottom: 10px;
-}
-.ppv2 .quote-card .handle .at {
-  color: var(--accent);
-  font-family: var(--pp-font-mono);
-  font-size: 18px;
-  line-height: 1;
-  font-weight: 500;
-  flex-shrink: 0;
-}
-.ppv2 .quote-card p {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--ink);
-}
-
 /* ── CTA ──────────────────────────────────────────────────────────────────── */
 .ppv2 .cta { padding: 132px 0 144px; }
 .ppv2 .cta__inner { text-align: center; }
@@ -543,66 +279,17 @@
   font-size: 13px;
 }
 
-/* ── Section style: alternating bands (Option A from design chat) ────────
- * Hero is <section> #1 (no .section--inset). Among the remaining .section--inset
- * sections, tint the EVEN-positioned siblings so the page reads as alternating
- * bands of bg ↔ bg-2. The :nth-of-type counter walks all section siblings, so
- * Understanding (#2) and Meet Kaleen (#4) tint; Framework (#3) and CTA (#5)
- * stay on the page grid. */
-.ppv2[data-section-style="alt"] .section--inset {
-  background: transparent;
-  border: none;
-  margin: 0;
-  position: relative;
-}
-.ppv2[data-section-style="alt"] .section--inset:nth-of-type(even) {
-  background: var(--bg-2);
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-}
-
-/* ── Section style: inset cards (Option E from design chat) ──────────────── */
-.ppv2[data-section-style="inset"] .section--inset {
-  background: var(--bg-2);
-  border: 1px solid var(--rule);
-  margin: 48px 48px;
-  position: relative;
-}
-.ppv2[data-section-style="inset"] .section--inset + .section--inset { margin-top: 0; }
-.ppv2[data-section-style="inset"] .section--inset:last-of-type { margin-bottom: 64px; }
-.ppv2[data-section-style="inset"] .section--inset.section-pad   { padding: 80px 0 88px; }
-.ppv2[data-section-style="inset"] .section--inset.section-pad-l { padding: 112px 0 120px; }
-
-/* Inner cards always bump to the lightest tone so they pop against whichever
- * surface the parent section is sitting on. */
-.ppv2 .section--inset .fcard,
-.ppv2 .section--inset .quote-card,
-.ppv2 .section--inset .meet__photo {
-  background: var(--bg-3);
-}
-
-/* ── RESPONSIVE ───────────────────────────────────────────────────────────── */
+/* ── RESPONSIVE (landing-specific) ────────────────────────────────────────── */
 @media (max-width: 1100px) {
-  .ppv2 .container,
-  .ppv2 .container--wide,
-  .ppv2 .container--narrow { padding: 0 32px; }
   .ppv2 .hero__grid { grid-template-columns: 1fr; gap: 56px; }
+  .ppv2 .hero__visual { display: none; }
   .ppv2 .understanding__grid { grid-template-columns: 1fr; gap: 32px; }
   .ppv2 .framework__cards { grid-template-columns: 1fr; }
   .ppv2 .meet__grid { grid-template-columns: 1fr; gap: 48px; }
   .ppv2 .meet__t-grid { grid-template-columns: 1fr 1fr; }
-  .ppv2[data-section-style="inset"] .section--inset { margin: 32px 24px; }
 }
 @media (max-width: 700px) {
-  .ppv2 h1,
   .ppv2 .hero__title { font-size: 56px !important; }
-  .ppv2 .container,
-  .ppv2 .container--wide,
-  .ppv2 .container--narrow { padding: 0 22px; }
-  .ppv2 .section-pad,
-  .ppv2 .section-pad-l,
   .ppv2 .cta { padding: 72px 0 80px; }
   .ppv2 .meet__t-grid { grid-template-columns: 1fr; }
-  .ppv2 .meet__photo img { height: 420px; }
-  .ppv2[data-section-style="inset"] .section--inset { margin: 24px 12px; }
 }

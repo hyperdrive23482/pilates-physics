@@ -1,0 +1,445 @@
+/* Pilates Physics — v2 design system (shared primitives)
+ *
+ * Tokens, typography helpers, layout primitives, and reusable components.
+ * Scoped under `.ppv2` so they don't bleed into the rest of the site.
+ *
+ * Page-specific styles live in each page's own CSS file
+ * (Landing.css, About.css, Blog.css, Education.css, Workshop.css, Survey101.css).
+ *
+ * Reference: docs/design-system.md
+ */
+
+.ppv2 {
+  --bg:        #0e0d0b;
+  --bg-2:      #1a1813;
+  --bg-3:      #24201a;
+  --ink:       #E3E3E3;
+  --ink-soft:  rgba(227, 227, 227, 0.65);
+  --ink-faint: rgba(227, 227, 227, 0.42);
+  --rule:      rgba(227, 227, 227, 0.18);
+  --grid:      rgba(227, 227, 227, 0.045);
+  --grid-bold: rgba(227, 227, 227, 0.075);
+  --accent:    #f09f26;
+  --accent-ink: #1c1a17;
+  --accent-warm: #c07c17;
+
+  --pp-font-serif: "Source Serif 4", "Source Serif Pro", Georgia, serif;
+  --pp-font-mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--pp-font-serif);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.ppv2 *,
+.ppv2 *::before,
+.ppv2 *::after { box-sizing: border-box; }
+
+.ppv2 a { color: inherit; text-decoration: none; }
+
+/* ── Page-wide grid paper texture ─────────────────────────────────────────── */
+.ppv2.grid-bg,
+.ppv2 .grid-bg {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0;
+}
+
+/* ── Typography helpers ───────────────────────────────────────────────────── */
+.ppv2 .mono { font-family: var(--pp-font-mono); }
+.ppv2 .italic { font-style: italic; }
+.ppv2 .accent { color: var(--accent); }
+.ppv2 .kicker {
+  font-family: var(--pp-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.ppv2 .eyebrow {
+  font-family: var(--pp-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.ppv2 h1,
+.ppv2 h2,
+.ppv2 h3,
+.ppv2 h4 {
+  font-family: var(--pp-font-serif);
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  margin: 0;
+  line-height: 1.04;
+  text-wrap: balance;
+  color: var(--ink);
+}
+.ppv2 h1 { font-size: clamp(56px, 7.4vw, 116px); }
+.ppv2 h2 { font-size: clamp(40px, 4.6vw, 72px); }
+.ppv2 h3 { font-size: clamp(22px, 2vw, 28px); line-height: 1.2; }
+
+/* ── Layout primitives ────────────────────────────────────────────────────── */
+.ppv2 .container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+.ppv2 .container--wide { max-width: 1480px; }
+.ppv2 .container--narrow { max-width: 980px; }
+
+.ppv2 section { position: relative; }
+.ppv2 .section-pad   { padding: 96px 0 112px; }
+.ppv2 .section-pad-l { padding: 132px 0 144px; }
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.ppv2 .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px 13px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--pp-font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--accent);
+  cursor: pointer;
+  transition: transform 120ms ease, background 150ms ease, border-color 150ms ease;
+  text-decoration: none;
+}
+.ppv2 .btn:hover { background: var(--accent-warm); border-color: var(--accent-warm); }
+.ppv2 .btn:active { transform: translateY(1px); }
+.ppv2 .btn:disabled { opacity: 0.6; cursor: wait; }
+
+.ppv2 .btn--block { width: 100%; justify-content: center; }
+.ppv2 .btn--lg { padding: 18px 30px 17px; font-size: 13px; }
+
+.ppv2 .arrow-link {
+  font-family: var(--pp-font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  background: none;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  cursor: pointer;
+}
+.ppv2 .arrow-link:hover { color: var(--accent-warm); }
+
+/* ── Underline marker for in-text emphasis ───────────────────────────────── */
+.ppv2 .underline-mark {
+  background-image: linear-gradient(to right, var(--accent) 0%, var(--accent) 100%);
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 100% 2px;
+  padding-bottom: 2px;
+}
+
+/* ── Corner registration crosses ──────────────────────────────────────────── */
+.ppv2 .cross {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+}
+.ppv2 .cross::before,
+.ppv2 .cross::after {
+  content: "";
+  position: absolute;
+  background: var(--rule);
+}
+.ppv2 .cross::before { left: 0; right: 0; top: 50%; height: 1px; }
+.ppv2 .cross::after  { top: 0; bottom: 0; left: 50%; width: 1px; }
+
+.ppv2 .section-frame { position: relative; }
+.ppv2 .section-frame > .cross.tl { top: 14px; left: 14px; }
+.ppv2 .section-frame > .cross.tr { top: 14px; right: 14px; }
+.ppv2 .section-frame > .cross.bl { bottom: 14px; left: 14px; }
+.ppv2 .section-frame > .cross.br { bottom: 14px; right: 14px; }
+
+/* ── Framework / feature card ─────────────────────────────────────────────── */
+.ppv2 .fcard {
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  padding: 28px 28px 30px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 160px;
+}
+.ppv2 .fcard:hover { border-color: var(--accent); }
+.ppv2 .fcard__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  margin-bottom: 18px;
+}
+.ppv2 .fcard__n { color: var(--ink-faint); }
+.ppv2 .fcard__dot { color: var(--ink-faint); }
+.ppv2 .fcard__label { color: var(--accent); font-weight: 600; }
+.ppv2 .fcard__q,
+.ppv2 .fcard__title {
+  font-size: 26px;
+  line-height: 1.18;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--ink);
+}
+.ppv2 .fcard__body {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 14px 0 0;
+  flex: 1;
+}
+.ppv2 .fcard__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--pp-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* ── Testimonial / quote card ─────────────────────────────────────────────── */
+.ppv2 .quote-card {
+  border: 1px solid var(--rule);
+  background: var(--bg-2);
+  padding: 22px 24px 24px;
+  font-family: var(--pp-font-serif);
+  color: var(--ink);
+  position: relative;
+}
+.ppv2 .quote-card .handle {
+  font-family: var(--pp-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  text-transform: lowercase;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+.ppv2 .quote-card .handle .at {
+  color: var(--accent);
+  font-family: var(--pp-font-mono);
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.ppv2 .quote-card p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* ── Figure-tagged photo card (FIG. NN BIO) ──────────────────────────────── */
+.ppv2 .meet__photo {
+  position: relative;
+  border: 1px solid var(--rule);
+  padding: 28px 14px 18px;
+  background: var(--bg-2);
+}
+.ppv2 .meet__photo-tag {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-family: var(--pp-font-mono);
+}
+.ppv2 .meet__photo-tag-id { color: var(--accent); }
+.ppv2 .meet__photo img {
+  display: block;
+  width: 100%;
+  height: 560px;
+  object-fit: cover;
+}
+
+/* ── Spec list (mono key-value rows) ──────────────────────────────────────── */
+.ppv2 .spec-list {
+  margin: 0;
+  padding: 0;
+  font-family: var(--pp-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+}
+.ppv2 .spec-list__row {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.ppv2 .spec-list__row:first-child { padding-top: 0; }
+.ppv2 .spec-list__row:last-child { border-bottom: 0; }
+.ppv2 .spec-list__k {
+  color: var(--accent);
+  text-transform: uppercase;
+  flex: 0 0 88px;
+}
+.ppv2 .spec-list__v {
+  color: var(--ink);
+  font-family: var(--pp-font-serif);
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+
+/* ── Form primitives (reusable across pages) ──────────────────────────────── */
+.ppv2 .pp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.ppv2 .pp-form__row {
+  display: flex;
+  gap: 14px;
+}
+.ppv2 .pp-form__row > .pp-form__field { flex: 1; }
+.ppv2 .pp-form__field {
+  display: flex;
+  flex-direction: column;
+}
+.ppv2 .pp-form__label {
+  font-family: var(--pp-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.ppv2 .pp-form__input,
+.ppv2 .pp-form__textarea,
+.ppv2 .pp-form__select {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: var(--pp-font-serif);
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ink);
+  background: var(--bg-3);
+  border: 1px solid var(--rule);
+  outline: none;
+  border-radius: 0;
+  transition: border-color 150ms ease;
+}
+.ppv2 .pp-form__input:focus,
+.ppv2 .pp-form__textarea:focus,
+.ppv2 .pp-form__select:focus { border-color: var(--accent); }
+.ppv2 .pp-form__input::placeholder,
+.ppv2 .pp-form__textarea::placeholder { color: var(--ink-faint); }
+.ppv2 .pp-form__textarea { resize: vertical; min-height: 140px; }
+.ppv2 .pp-form__help {
+  font-family: var(--pp-font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin: 6px 0 0;
+}
+.ppv2 .pp-form__error {
+  font-family: var(--pp-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #e88;
+  margin: 0;
+}
+
+/* ── Section style: alternating bands ─────────────────────────────────────
+ * Hero is <section> #1 (no .section--inset). Among the remaining .section--inset
+ * sections, tint the EVEN-positioned siblings so the page reads as alternating
+ * bands of bg ↔ bg-2.
+ */
+.ppv2[data-section-style="alt"] .section--inset {
+  background: transparent;
+  border: none;
+  margin: 0;
+  position: relative;
+}
+.ppv2[data-section-style="alt"] .section--inset:nth-of-type(even) {
+  background: var(--bg-2);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ── Section style: inset cards ──────────────────────────────────────────── */
+.ppv2[data-section-style="inset"] .section--inset {
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  margin: 48px 48px;
+  position: relative;
+}
+.ppv2[data-section-style="inset"] .section--inset + .section--inset { margin-top: 0; }
+.ppv2[data-section-style="inset"] .section--inset:last-of-type { margin-bottom: 64px; }
+.ppv2[data-section-style="inset"] .section--inset.section-pad   { padding: 80px 0 88px; }
+.ppv2[data-section-style="inset"] .section--inset.section-pad-l { padding: 112px 0 120px; }
+
+/* Inner cards always bump to the lightest tone so they pop against whichever
+ * surface the parent section is sitting on. */
+.ppv2 .section--inset .fcard,
+.ppv2 .section--inset .quote-card,
+.ppv2 .section--inset .meet__photo {
+  background: var(--bg-3);
+}
+
+/* ── Pulse animation (shared) ─────────────────────────────────────────────── */
+@keyframes ppv2-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.6); opacity: 0.4; }
+}
+
+/* ── RESPONSIVE (shared primitives) ───────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .ppv2 .container,
+  .ppv2 .container--wide,
+  .ppv2 .container--narrow { padding: 0 32px; }
+  .ppv2[data-section-style="inset"] .section--inset { margin: 32px 24px; }
+}
+@media (max-width: 700px) {
+  .ppv2 h1 { font-size: 56px !important; }
+  .ppv2 .container,
+  .ppv2 .container--wide,
+  .ppv2 .container--narrow { padding: 0 22px; }
+  .ppv2 .section-pad,
+  .ppv2 .section-pad-l { padding: 72px 0 80px; }
+  .ppv2 .meet__photo img { height: 420px; }
+  .ppv2 .pp-form__row { flex-direction: column; gap: 20px; }
+  .ppv2[data-section-style="inset"] .section--inset { margin: 24px 12px; }
+}

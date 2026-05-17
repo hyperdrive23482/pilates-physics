@@ -6,6 +6,8 @@ import { supabase } from '../../lib/supabase'
 const WORKSHOP_TITLE = 'Pilates Physics 101'
 const WORKSHOP_DATE = '2026-05-20'
 const WORKSHOP_SLUG = 'PP-101-May-2026'
+// Workshop runs 11am–1pm PDT on May 20 — survey opens when it wraps.
+const SURVEY_OPENS = new Date('2026-05-20T13:00:00-07:00')
 const SURVEY_CUTOFF = new Date('2026-06-01T00:00:00')
 
 /**
@@ -17,10 +19,11 @@ export default function Pp101FeedbackBanner({ user, workshops }) {
   const [submissionState, setSubmissionState] = useState('checking') // 'checking' | 'pending' | 'done'
 
   const entitled = workshops?.some((w) => w.slug === WORKSHOP_SLUG) ?? false
-  const beforeCutoff = new Date() < SURVEY_CUTOFF
+  const now = new Date()
+  const inWindow = now >= SURVEY_OPENS && now < SURVEY_CUTOFF
 
   useEffect(() => {
-    if (!user?.id || !entitled || !beforeCutoff) {
+    if (!user?.id || !entitled || !inWindow) {
       setSubmissionState('done')
       return
     }
@@ -39,9 +42,9 @@ export default function Pp101FeedbackBanner({ user, workshops }) {
     return () => {
       cancelled = true
     }
-  }, [user?.id, entitled, beforeCutoff])
+  }, [user?.id, entitled, inWindow])
 
-  if (!entitled || !beforeCutoff || submissionState !== 'pending') return null
+  if (!entitled || !inWindow || submissionState !== 'pending') return null
 
   return (
     <div

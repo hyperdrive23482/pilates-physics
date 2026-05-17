@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { renderMarkdown } from '../lib/markdown'
+import '../styles/ppv2.css'
+import './Blog.css'
 
 export default function BlogPost() {
   const { slug } = useParams()
@@ -32,106 +34,75 @@ export default function BlogPost() {
 
   if (loading) {
     return (
-      <section style={{ maxWidth: '760px', margin: '0 auto', padding: '6rem 2rem' }}>
-        <p style={{ color: 'var(--color-ink-muted)' }}>Loading…</p>
-      </section>
+      <div className="ppv2 grid-bg">
+        <section className="blog-state">
+          <div className="container container--narrow">
+            <p className="blog-list__loading">Loading…</p>
+          </div>
+        </section>
+      </div>
     )
   }
 
   if (notFound || !post) {
     return (
-      <section style={{ maxWidth: '760px', margin: '0 auto', padding: '6rem 2rem' }}>
-        <h1 style={{ fontFamily: '"DM Serif Display", serif', color: 'var(--color-ink)' }}>
-          Post not found
-        </h1>
-        <Link to="/blog" style={{ color: 'var(--color-accent)' }}>
-          ← Back to all posts
-        </Link>
-      </section>
+      <div className="ppv2 grid-bg">
+        <section className="blog-state">
+          <div className="container container--narrow">
+            <h1>Post not found</h1>
+            <Link to="/blog" className="arrow-link">← Back to all posts</Link>
+          </div>
+        </section>
+      </div>
     )
   }
 
+  const date = post.published_at
+    ? new Date(post.published_at).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    : ''
+
   return (
-    <article>
-      <header
-        style={{
-          borderBottom: '1px solid var(--color-rule)',
-          background: 'var(--color-surface)',
-        }}
-      >
-        <div style={{ maxWidth: '760px', margin: '0 auto', padding: '6rem 2rem 3rem' }}>
-          <Link
-            to="/blog"
-            style={{
-              fontSize: '0.75rem',
-              color: 'var(--color-accent)',
-              textDecoration: 'none',
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-            }}
-          >
+    <article className="ppv2 grid-bg">
+      <header className="blog-post__header">
+        <div className="container container--narrow">
+          <Link to="/blog" className="blog-post__back">
             ← The Pilates Physics Blog
           </Link>
-          <h1
-            style={{
-              fontFamily: '"DM Serif Display", serif',
-              fontSize: 'clamp(2rem, 4vw, 3rem)',
-              lineHeight: 1.1,
-              color: 'var(--color-ink)',
-              margin: '1rem 0 0.75rem',
-            }}
-          >
-            {post.title}
-          </h1>
-          <p
-            style={{
-              fontSize: '0.85rem',
-              color: 'var(--color-ink-muted)',
-              margin: 0,
-            }}
-          >
-            {post.published_at
-              ? new Date(post.published_at).toLocaleDateString(undefined, {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })
-              : ''}
-          </p>
+          <h1 className="blog-post__title">{post.title}</h1>
+          <p className="blog-post__date">{date}</p>
         </div>
       </header>
 
       {post.featured_image_url && (
-        <div style={{ maxWidth: '760px', margin: '0 auto', padding: '2rem 2rem 0' }}>
-          <div
-            style={{
-              width: '100%',
-              aspectRatio: '16 / 9',
-              overflow: 'hidden',
-              background: 'var(--color-surface)',
-            }}
-          >
-            <img
-              src={post.featured_image_url}
-              alt={post.featured_image_alt || ''}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-            />
+        <div className="blog-post__feature">
+          <div className="container container--narrow">
+            <div className="meet__photo">
+              <div className="meet__photo-tag">
+                <span className="meet__photo-tag-id">FIG. 01</span>
+                <span>{post.featured_image_alt || 'IMAGE'}</span>
+              </div>
+              <img
+                src={post.featured_image_url}
+                alt={post.featured_image_alt || ''}
+              />
+            </div>
           </div>
         </div>
       )}
 
-      <section style={{ maxWidth: '720px', margin: '0 auto', padding: '3rem 2rem 6rem' }}>
-        <div
-          className="pp-blog-body"
-          style={{
-            color: 'var(--color-ink)',
-            fontSize: '1.05rem',
-            lineHeight: 1.7,
-          }}
-          dangerouslySetInnerHTML={{
-            __html: post.body_html || renderMarkdown(post.body_markdown),
-          }}
-        />
+      <section className="blog-post__body">
+        <div className="container container--narrow">
+          <div
+            className="blog-body"
+            dangerouslySetInnerHTML={{
+              __html: post.body_html || renderMarkdown(post.body_markdown),
+            }}
+          />
+        </div>
       </section>
     </article>
   )

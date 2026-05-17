@@ -2,32 +2,30 @@ import { useParams, Link } from 'react-router-dom'
 import { useWorkshop } from '../hooks/useWorkshops'
 import RegisterCard from '../components/ui/RegisterCard'
 import StatusBadge from '../components/portal/StatusBadge'
-import { Calendar, Clock, DollarSign, Video, FileText, Download, ArrowRight } from 'lucide-react'
+import ArrowSvg from '../components/ui/ArrowSvg'
+import '../styles/ppv2.css'
+import './Workshop.css'
 
-const heroButtonStyle = {
-  display: 'inline-block',
-  padding: '0.875rem 1.75rem',
-  fontSize: '0.95rem',
-  fontWeight: '500',
-  fontFamily: '"DM Sans", sans-serif',
-  background: 'var(--color-accent)',
-  color: '#1C1A17',
-  border: 'none',
-  textDecoration: 'none',
-  cursor: 'pointer',
-}
-
-function Section({ children, style = {} }) {
-  return (
-    <section style={{ maxWidth: '1100px', margin: '0 auto', padding: '6rem 2rem', ...style }}>
-      {children}
-    </section>
-  )
-}
-
-function Rule() {
-  return <hr style={{ border: 'none', borderTop: '1px solid var(--color-rule)', margin: 0 }} />
-}
+const INCLUDED = [
+  {
+    n: '01',
+    label: 'LIVE SESSION',
+    title: 'Live Session',
+    body: 'Real-time instruction with live Q&A. Ask questions, get answers, go deeper on the topics that matter to your practice.',
+  },
+  {
+    n: '02',
+    label: 'RECORDING',
+    title: 'Full Recording',
+    body: "Can't attend live? The full recording is shared within 24 hours and available in your portal.",
+  },
+  {
+    n: '03',
+    label: 'RESOURCES',
+    title: 'Downloadable Resources',
+    body: 'Reference materials and resources you can use in the studio, available before and after the session.',
+  },
+]
 
 export default function WorkshopSalesPage() {
   const { slug } = useParams()
@@ -35,38 +33,21 @@ export default function WorkshopSalesPage() {
 
   if (loading) {
     return (
-      <div
-        style={{
-          padding: '10rem 2rem',
-          textAlign: 'center',
-          color: 'var(--color-ink-muted)',
-          fontSize: '0.9rem',
-        }}
-      >
-        Loading...
+      <div className="ppv2 grid-bg">
+        <section className="workshop-state">
+          <p className="workshop-state__msg">Loading…</p>
+        </section>
       </div>
     )
   }
 
   if (!workshop) {
     return (
-      <div style={{ padding: '10rem 2rem', textAlign: 'center' }}>
-        <h1
-          style={{
-            fontFamily: '"DM Serif Display", serif',
-            fontSize: '1.5rem',
-            color: 'var(--color-ink)',
-            marginBottom: '1rem',
-          }}
-        >
-          Workshop not found
-        </h1>
-        <Link
-          to="/education"
-          style={{ color: 'var(--color-accent)', textDecoration: 'none', fontSize: '0.9rem' }}
-        >
-          Browse all programs
-        </Link>
+      <div className="ppv2 grid-bg">
+        <section className="workshop-state">
+          <h1 className="workshop-state__head">Workshop not found</h1>
+          <Link to="/education" className="arrow-link">Browse all programs →</Link>
+        </section>
       </div>
     )
   }
@@ -92,319 +73,134 @@ export default function WorkshopSalesPage() {
     ? `$${(workshop.price_cents / 100).toFixed(0)}`
     : 'Free'
 
+  const heroStyle = workshop.hero_image_url
+    ? { '--workshop-hero-image': `url(${workshop.hero_image_url})` }
+    : undefined
+
+  const specs = [
+    { k: 'Date', v: date || 'TBD' },
+    { k: 'Time', v: time || 'TBD' },
+    { k: 'Duration', v: workshop.duration_min ? `${workshop.duration_min} minutes` : 'TBD' },
+    { k: 'Format', v: 'Live via Zoom · recording included' },
+    { k: 'Price', v: price },
+  ]
+
   return (
-    <div>
-      {/* Hero */}
-      <section
-        style={{
-          backgroundImage: workshop.hero_image_url
-            ? `url(${workshop.hero_image_url})`
-            : 'url(/images/homepage/workshop-hero-image.JPG)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          position: 'relative',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'rgba(0, 0, 0, 0.55)',
-          }}
-        />
-        <div
-          style={{
-            maxWidth: '1100px',
-            margin: '0 auto',
-            padding: '7rem 2rem 5rem',
-            position: 'relative',
-          }}
-        >
-          <div style={{ maxWidth: '680px' }}>
-            <div style={{ marginBottom: '1.25rem' }}>
+    <div className="ppv2 grid-bg" data-section-style="alt">
+      {/* ── § 01 Hero ────────────────────────────────────────────────────── */}
+      <section className="workshop-hero section-frame" style={heroStyle}>
+        <span className="cross tl"></span>
+        <span className="cross tr"></span>
+
+        <div className="container">
+          <div className="workshop-hero__inner">
+            <div className="kicker" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <span>§ 01 · Live Workshop</span>
               <StatusBadge status={workshop.status} />
             </div>
-            <h1
-              style={{
-                fontFamily: '"DM Serif Display", serif',
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
-                lineHeight: '1.15',
-                color: '#fff',
-                margin: '0 0 1.5rem',
-              }}
-            >
-              {workshop.title}
-            </h1>
+            <h1 className="workshop-hero__title">{workshop.title}</h1>
             {workshop.subtitle && (
-              <p
-                style={{
-                  fontSize: '1.1rem',
-                  lineHeight: '1.65',
-                  color: 'rgba(255, 255, 255, 0.85)',
-                  margin: '0 0 2rem',
-                }}
-              >
-                {workshop.subtitle}
-              </p>
+              <p className="workshop-hero__lede">{workshop.subtitle}</p>
             )}
 
-            <a href="#register" style={heroButtonStyle}>Register Now — {price}</a>
-
+            <div className="workshop-hero__cta">
+              <a href="#register" className="btn btn--lg">
+                Register Now — {price}
+                <ArrowSvg />
+              </a>
+            </div>
             {date && (
-              <p
-                style={{
-                  fontSize: '0.78rem',
-                  color: 'rgba(255, 255, 255, 0.7)',
-                  marginTop: '1rem',
-                }}
-              >
-                Live on {date}. Recording included.
+              <p className="workshop-hero__meta">
+                <span className="workshop-hero__meta-k">Live</span>{date} · recording included
               </p>
             )}
+          </div>
+        </div>
+
+        <span className="cross bl"></span>
+        <span className="cross br"></span>
+      </section>
+
+      {/* ── § 02 Details + Register ──────────────────────────────────────── */}
+      <section className="section-pad section--inset workshop-details">
+        <div className="container">
+          <div className="workshop-details__grid">
+            <div>
+              <div className="kicker">§ 02 · Details</div>
+              <h2 className="workshop-details__head">The <span className="italic accent">specs.</span></h2>
+
+              <dl className="spec-list">
+                {specs.map((s) => (
+                  <div className="spec-list__row" key={s.k}>
+                    <dt className="spec-list__k">{s.k}</dt>
+                    <dd className="spec-list__v">{s.v}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            <div id="register" className="workshop-details__register">
+              <RegisterCard workshop={workshop} />
+            </div>
           </div>
         </div>
       </section>
 
-      <Rule />
-
-      {/* Details & Register */}
-      <Section>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '4rem',
-            alignItems: 'start',
-          }}
-          className="sales-details-grid"
-        >
-          {/* Left: details */}
-          <div>
-            <h2
-              style={{
-                fontFamily: '"DM Serif Display", serif',
-                fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
-                lineHeight: '1.2',
-                color: 'var(--color-ink)',
-                margin: '0 0 2rem',
-              }}
-            >
-              Details
-            </h2>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              {[
-                { label: 'Date', value: date || 'TBD', icon: Calendar },
-                { label: 'Time', value: time || 'TBD', icon: Clock },
-                { label: 'Duration', value: workshop.duration_min ? `${workshop.duration_min} minutes` : 'TBD', icon: Clock },
-                { label: 'Format', value: 'Live via Zoom, recording included', icon: Video },
-                { label: 'Price', value: price, icon: DollarSign },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.25rem',
-                    paddingBottom: '1.25rem',
-                    borderBottom: '1px solid var(--color-rule)',
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: '0.7rem',
-                      fontWeight: '600',
-                      letterSpacing: '0.15em',
-                      textTransform: 'uppercase',
-                      color: 'var(--color-accent)',
-                    }}
-                  >
-                    {item.label}
-                  </span>
-                  <span style={{ fontSize: '1rem', color: 'var(--color-ink)' }}>
-                    {item.value}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right: register card */}
-          <div
-            id="register"
-            style={{
-              background: 'var(--color-surface)',
-              padding: '2.5rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1.5rem',
-              scrollMarginTop: '5rem',
-            }}
-          >
-            <RegisterCard workshop={workshop} />
-          </div>
-        </div>
-      </Section>
-
-      <Rule />
-
-      {/* What's included */}
-      <section style={{ background: 'var(--color-surface)' }}>
-        <Section>
-          <h2
-            style={{
-              fontFamily: '"DM Serif Display", serif',
-              fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
-              lineHeight: '1.2',
-              color: 'var(--color-ink)',
-              margin: '0 0 3rem',
-            }}
-          >
-            What's included
+      {/* ── § 03 What's included ─────────────────────────────────────────── */}
+      <section className="section-pad section--inset workshop-included">
+        <div className="container">
+          <div className="kicker">§ 03 · What's included</div>
+          <h2 className="workshop-included__head">
+            Every registration <span className="italic accent">includes.</span>
           </h2>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '1.5rem',
-            }}
-            className="sales-included-grid"
-          >
-            {[
-              {
-                icon: Video,
-                label: 'Live Session',
-                desc: 'Real-time instruction with live Q&A. Ask questions, get answers, go deeper on the topics that matter to your practice.',
-              },
-              {
-                icon: FileText,
-                label: 'Full Recording',
-                desc: "Can't attend live? The full recording is shared within 24 hours and available in your portal.",
-              },
-              {
-                icon: Download,
-                label: 'Downloadable Resources',
-                desc: 'Reference materials and resources you can use in the studio, available before and after the session.',
-              },
-            ].map((item) => (
-              <div
-                key={item.label}
-                style={{
-                  padding: '2rem',
-                  background: 'var(--color-surface-raised)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.75rem',
-                }}
-              >
-                <item.icon size={24} style={{ color: 'var(--color-accent)' }} />
-                <h3
-                  style={{
-                    fontFamily: '"DM Serif Display", serif',
-                    fontSize: '1.1rem',
-                    color: 'var(--color-ink)',
-                    margin: 0,
-                  }}
-                >
-                  {item.label}
-                </h3>
-                <p
-                  style={{
-                    fontSize: '0.95rem',
-                    lineHeight: '1.7',
-                    color: 'var(--color-ink-muted)',
-                    margin: 0,
-                  }}
-                >
-                  {item.desc}
-                </p>
-              </div>
+          <div className="workshop-included__grid">
+            {INCLUDED.map((c) => (
+              <article className="fcard" key={c.n}>
+                <div className="fcard__head">
+                  <span className="fcard__n mono">{c.n}</span>
+                  <span className="fcard__dot mono">·</span>
+                  <span className="fcard__label mono accent">{c.label}</span>
+                </div>
+                <h3 className="fcard__title">{c.title}</h3>
+                <p className="fcard__body">{c.body}</p>
+              </article>
             ))}
           </div>
-        </Section>
-      </section>
-
-      <Rule />
-
-      {/* Description */}
-      {workshop.description && (
-        <>
-          <Section>
-            <div style={{ maxWidth: '720px' }}>
-              <h2
-                style={{
-                  fontFamily: '"DM Serif Display", serif',
-                  fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
-                  lineHeight: '1.2',
-                  color: 'var(--color-ink)',
-                  margin: '0 0 2rem',
-                }}
-              >
-                About this session
-              </h2>
-              <p
-                style={{
-                  fontSize: '1rem',
-                  lineHeight: '1.8',
-                  color: 'var(--color-ink-muted)',
-                  whiteSpace: 'pre-line',
-                  margin: 0,
-                }}
-              >
-                {workshop.description}
-              </p>
-            </div>
-          </Section>
-          <Rule />
-        </>
-      )}
-
-      {/* Already registered? */}
-      <section style={{ background: 'var(--color-surface)' }}>
-        <div
-          style={{
-            maxWidth: '680px',
-            margin: '0 auto',
-            padding: '4rem 2rem',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '1rem',
-          }}
-        >
-          <p style={{ fontSize: '0.95rem', color: 'var(--color-ink-muted)', margin: 0 }}>
-            Already registered?
-          </p>
-          <Link
-            to="/login"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.375rem',
-              fontSize: '0.9rem',
-              fontWeight: '500',
-              color: 'var(--color-accent)',
-              textDecoration: 'none',
-            }}
-          >
-            Log in to your portal <ArrowRight size={14} />
-          </Link>
         </div>
       </section>
 
-      <style>{`
-        @media (max-width: 900px) {
-          .sales-details-grid {
-            grid-template-columns: 1fr !important;
-            gap: 2.5rem !important;
-          }
-          .sales-included-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
+      {/* ── § 04 Description (optional) ──────────────────────────────────── */}
+      {workshop.description && (
+        <section className="section-pad section--inset">
+          <div className="container container--narrow">
+            <div className="kicker">§ 04 · About this session</div>
+            <h2 className="workshop-details__head">
+              About <span className="italic accent">this session.</span>
+            </h2>
+            <p
+              style={{
+                fontSize: '18px',
+                lineHeight: 1.7,
+                color: 'var(--ink)',
+                whiteSpace: 'pre-line',
+                margin: 0,
+                maxWidth: '64ch',
+              }}
+            >
+              {workshop.description}
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* ── Already registered? ──────────────────────────────────────────── */}
+      <section className="workshop-existing">
+        <div className="container">
+          <p>Already registered?</p>
+          <Link to="/login" className="arrow-link">Log in to your portal →</Link>
+        </div>
+      </section>
     </div>
   )
 }
