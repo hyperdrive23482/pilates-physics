@@ -243,7 +243,7 @@ export default function InteractiveSpringDiagram() {
         return (
           <line
             x1={start.x} y1={start.y} x2={end.x} y2={end.y}
-            stroke="rgba(184,101,30,0.25)"
+            stroke="rgba(240,159,38,0.25)"
             strokeWidth="1.5"
             strokeDasharray="3 4"
           />
@@ -252,17 +252,17 @@ export default function InteractiveSpringDiagram() {
 
       {/* Filled area under curve */}
       {fillPath && (
-        <path d={fillPath} fill="rgba(184,101,30,0.1)" />
+        <path d={fillPath} fill="rgba(240,159,38,0.1)" />
       )}
 
       {/* Force curve */}
       {curvePath && (
-        <path d={curvePath} stroke="#b8651e" strokeWidth="2.5" fill="none" strokeLinejoin="round" />
+        <path d={curvePath} stroke="#f09f26" strokeWidth="2.5" fill="none" strokeLinejoin="round" />
       )}
 
       {/* Current position dot */}
       {dotPt && (
-        <circle cx={dotPt.x} cy={dotPt.y} r="4.5" fill="#b8651e" />
+        <circle cx={dotPt.x} cy={dotPt.y} r="4.5" fill="#f09f26" />
       )}
 
       {/* Force readout near the dot */}
@@ -270,7 +270,7 @@ export default function InteractiveSpringDiagram() {
         <text
           x={dotPt.x + 8}
           y={dotPt.y - 10}
-          fill="#b8651e"
+          fill="#f09f26"
           fontSize="10"
           fontFamily="DM Sans, sans-serif"
           fontWeight="600"
@@ -280,7 +280,7 @@ export default function InteractiveSpringDiagram() {
       )}
 
       {/* Spring coil below graph */}
-      <path d={springPath} stroke="#b8651e" strokeWidth="1.5" fill="none" strokeLinejoin="round" />
+      <path d={springPath} stroke="#f09f26" strokeWidth="1.5" fill="none" strokeLinejoin="round" />
       {/* Spring anchor (left wall) */}
       <line x1={AREA.x} y1={AREA.y + AREA.h + 20} x2={AREA.x} y2={AREA.y + AREA.h + 36} stroke="#888780" strokeWidth="2" />
 
@@ -289,7 +289,7 @@ export default function InteractiveSpringDiagram() {
         x={AREA.x + AREA.w - 4}
         y={AREA.y + 16}
         textAnchor="end"
-        fill="rgba(184,101,30,0.6)"
+        fill="rgba(240,159,38,0.6)"
         fontSize="11"
         fontFamily="DM Sans, sans-serif"
         fontWeight="600"
