@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&family=JetBrains+Mono:wght@300;400;500;600&display=swap');
 
 @import "tailwindcss";
 
@@ -9,7 +10,7 @@
   --color-ink: #F1EFE8;
   --color-ink-muted: #888780;
   --color-ink-dim: #5F5E5A;
-  --color-accent: #EF9F27;
+  --color-accent: #b8651e;
   --color-accent-light: #242118;
   --color-rule: #2E2B26;
   --color-module-1: #2B4C6F;
@@ -28,7 +29,7 @@
   --color-ink: #F1EFE8;
   --color-ink-muted: #888780;
   --color-ink-dim: #5F5E5A;
-  --color-accent: #EF9F27;
+  --color-accent: #b8651e;
   --color-accent-light: #242118;
   --color-rule: #2E2B26;
   --color-module-1: #2B4C6F;
@@ -51,19 +52,76 @@ h1, h2, h3, h4 {
 .nav-link {
   color: var(--color-ink-muted);
   text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  border-bottom: 2px solid transparent;
-  padding-bottom: 2px;
-  transition: border-color 0.2s ease;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 1px solid transparent;
+  padding: 6px 2px;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 .nav-link:hover {
-  border-bottom-color: var(--color-accent);
+  color: var(--color-ink);
 }
 
 .nav-link.active {
+  color: var(--color-ink);
   border-bottom-color: var(--color-accent);
+}
+
+/* ─── Footer layout (matches Claude design template) ─────────────────── */
+.pp-footer-news {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 56px;
+  align-items: end;
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.pp-footer-cols {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding: 48px 0;
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.pp-footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pp-footer-col a:hover {
+  color: var(--color-accent) !important;
+}
+
+@media (max-width: 900px) {
+  .pp-footer-inner {
+    padding: 0 32px !important;
+  }
+  .pp-footer-news {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .pp-footer-cols {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .pp-footer-inner {
+    padding: 0 22px !important;
+  }
+  .pp-footer-bottom {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
 }
 
 /* ─── Kit.com waitlist form overrides ─────────────────────────────────── */
@@ -73,13 +131,13 @@ h1, h2, h3, h4 {
   border-radius: 0 !important;
   padding: 0 !important;
   box-shadow: none !important;
-  font-family: 'DM Sans', sans-serif !important;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace !important;
   max-width: none !important;
   margin: 0 !important;
 }
 
 .pp-kit-form .formkit-form * {
-  font-family: 'DM Sans', sans-serif !important;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace !important;
   box-shadow: none !important;
 }
 

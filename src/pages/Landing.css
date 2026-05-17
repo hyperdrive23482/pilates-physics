@@ -1,0 +1,608 @@
+/* Pilates Physics — Landing Page (v2 redesign)
+ *
+ * All styles scoped under `.ppv2` so they don't bleed into the rest of the site.
+ *
+ * Token model (mirrors the design bundle):
+ *   --bg          page background
+ *   --bg-2        slightly stronger surface for inset sections
+ *   --bg-3        lightest surface — inner cards
+ *   --ink         primary text
+ *   --ink-soft    secondary text
+ *   --ink-faint   tertiary text
+ *   --rule        hairlines / borders
+ *   --grid        grid-paper line color
+ *   --accent      burnt orange — links, italics, CTAs
+ */
+
+.ppv2 {
+  --bg:        #0e0d0b;
+  --bg-2:      #1a1813;
+  --bg-3:      #24201a;
+  --ink:       #f0e9d8;
+  --ink-soft:  rgba(240, 233, 216, 0.65);
+  --ink-faint: rgba(240, 233, 216, 0.42);
+  --rule:      rgba(240, 233, 216, 0.18);
+  --grid:      rgba(240, 233, 216, 0.045);
+  --grid-bold: rgba(240, 233, 216, 0.075);
+  --accent:    #b8651e;
+  --accent-ink: #fbf7ec;
+  --accent-warm: #964f12;
+
+  --pp-font-serif: "Source Serif 4", "Source Serif Pro", Georgia, serif;
+  --pp-font-mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--pp-font-serif);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.ppv2 *,
+.ppv2 *::before,
+.ppv2 *::after { box-sizing: border-box; }
+
+.ppv2 a { color: inherit; text-decoration: none; }
+
+/* ── Page-wide grid paper texture ─────────────────────────────────────────── */
+.ppv2.grid-bg,
+.ppv2 .grid-bg {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0;
+}
+
+/* ── Typography helpers ───────────────────────────────────────────────────── */
+.ppv2 .mono { font-family: var(--pp-font-mono); }
+.ppv2 .italic { font-style: italic; }
+.ppv2 .accent { color: var(--accent); }
+.ppv2 .kicker {
+  font-family: var(--pp-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.ppv2 .eyebrow {
+  font-family: var(--pp-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.ppv2 h1,
+.ppv2 h2,
+.ppv2 h3,
+.ppv2 h4 {
+  font-family: var(--pp-font-serif);
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  margin: 0;
+  line-height: 1.04;
+  text-wrap: balance;
+  color: var(--ink);
+}
+.ppv2 h1 { font-size: clamp(56px, 7.4vw, 116px); }
+.ppv2 h2 { font-size: clamp(40px, 4.6vw, 72px); }
+.ppv2 h3 { font-size: clamp(22px, 2vw, 28px); line-height: 1.2; }
+
+/* ── Layout primitives ────────────────────────────────────────────────────── */
+.ppv2 .container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+.ppv2 .container--wide { max-width: 1480px; }
+.ppv2 .container--narrow { max-width: 980px; }
+
+.ppv2 section { position: relative; }
+.ppv2 .section-pad   { padding: 96px 0 112px; }
+.ppv2 .section-pad-l { padding: 132px 0 144px; }
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.ppv2 .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px 13px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--pp-font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--accent);
+  cursor: pointer;
+  transition: transform 120ms ease, background 150ms ease, border-color 150ms ease;
+  text-decoration: none;
+}
+.ppv2 .btn:hover { background: var(--accent-warm); border-color: var(--accent-warm); }
+.ppv2 .btn:active { transform: translateY(1px); }
+
+.ppv2 .arrow-link {
+  font-family: var(--pp-font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+}
+.ppv2 .arrow-link:hover { color: var(--accent-warm); }
+
+/* ── Underline marker for in-text emphasis ───────────────────────────────── */
+.ppv2 .underline-mark {
+  background-image: linear-gradient(to right, var(--accent) 0%, var(--accent) 100%);
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 100% 2px;
+  padding-bottom: 2px;
+}
+
+/* ── Corner registration crosses ──────────────────────────────────────────── */
+.ppv2 .cross {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+}
+.ppv2 .cross::before,
+.ppv2 .cross::after {
+  content: "";
+  position: absolute;
+  background: var(--rule);
+}
+.ppv2 .cross::before { left: 0; right: 0; top: 50%; height: 1px; }
+.ppv2 .cross::after  { top: 0; bottom: 0; left: 50%; width: 1px; }
+
+.ppv2 .section-frame { position: relative; }
+.ppv2 .section-frame > .cross.tl { top: 14px; left: 14px; }
+.ppv2 .section-frame > .cross.tr { top: 14px; right: 14px; }
+.ppv2 .section-frame > .cross.bl { bottom: 14px; left: 14px; }
+.ppv2 .section-frame > .cross.br { bottom: 14px; right: 14px; }
+
+/* ── HERO ─────────────────────────────────────────────────────────────────── */
+.ppv2 .hero {
+  padding: 96px 0 96px;
+  position: relative;
+  isolation: isolate;
+  background-color: #0e0d0b;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(15, 13, 10, 0.82) 0%,
+      rgba(15, 13, 10, 0.58) 32%,
+      rgba(15, 13, 10, 0.22) 62%,
+      rgba(15, 13, 10, 0.12) 100%
+    ),
+    url('/images/homepage/hero-image.jpg');
+  background-size: cover;
+  background-position: center 35%;
+  color: #f0e9d8;
+}
+.ppv2 .hero .hero__inner { position: relative; z-index: 1; }
+.ppv2 .hero,
+.ppv2 .hero h1,
+.ppv2 .hero p,
+.ppv2 .hero .hero__lede,
+.ppv2 .hero .hero__meta { color: #f0e9d8; }
+.ppv2 .hero .hero__meta-k { color: var(--accent); }
+.ppv2 .hero .underline-mark { color: #fff; }
+.ppv2 .hero .cross::before,
+.ppv2 .hero .cross::after { background: rgba(240, 233, 216, 0.35); }
+
+.ppv2 .hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 72px;
+  align-items: start;
+}
+
+.ppv2 .hero__title {
+  font-size: clamp(64px, 7.2vw, 124px);
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  margin: 0 0 32px;
+  font-weight: 400;
+}
+.ppv2 .hero__title .italic {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.ppv2 .hero__lede {
+  font-size: 19px;
+  line-height: 1.5;
+  max-width: 540px;
+  margin: 0 0 36px;
+}
+
+.ppv2 .hero__cta {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.ppv2 .hero__meta {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+}
+.ppv2 .hero__meta-k {
+  color: var(--accent);
+  display: inline-block;
+  width: 56px;
+  text-transform: uppercase;
+}
+
+.ppv2 .hero__visual {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto;
+  gap: 28px;
+}
+
+/* ── Spring chart card (wraps existing InteractiveSpringDiagram) ─────────── */
+.ppv2 .spring-chart {
+  border: 1px solid rgba(240, 233, 216, 0.28);
+  background: rgba(15, 13, 10, 0.55);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  color: #f0e9d8;
+  padding: 38px 22px 18px;
+  position: relative;
+  margin: 0;
+}
+.ppv2 .spring-chart__cap {
+  position: absolute;
+  top: 12px; left: 22px; right: 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(240, 233, 216, 0.7);
+  font-family: var(--pp-font-mono);
+}
+.ppv2 .spring-chart__cap-id { color: var(--accent); }
+.ppv2 .spring-chart__body { display: flex; justify-content: center; }
+.ppv2 .spring-chart__hint {
+  margin-top: 10px;
+  font-size: 11.5px;
+  color: rgba(240, 233, 216, 0.75);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.02em;
+  font-family: var(--pp-font-mono);
+  flex-wrap: wrap;
+}
+.ppv2 .spring-chart__hint em {
+  color: var(--accent);
+  font-style: italic;
+}
+.ppv2 .spring-chart__hint-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+  display: inline-block;
+  flex-shrink: 0;
+  animation: ppv2-pulse 2s ease-in-out infinite;
+}
+@keyframes ppv2-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.6); opacity: 0.4; }
+}
+
+/* ── UNDERSTANDING ────────────────────────────────────────────────────────── */
+.ppv2 .understanding__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.4fr);
+  gap: 96px;
+  align-items: start;
+}
+.ppv2 .understanding__head {
+  font-size: clamp(36px, 3.6vw, 56px);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  margin: 18px 0 0;
+}
+.ppv2 .understanding__right p {
+  font-size: 19px;
+  line-height: 1.55;
+  margin: 0 0 22px;
+  color: var(--ink);
+  max-width: 62ch;
+}
+.ppv2 .understanding__right p em {
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 500;
+}
+.ppv2 .understanding__marginalia {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 32px;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.ppv2 .understanding__marg-line {
+  width: 56px;
+  height: 1px;
+  background: var(--accent);
+}
+
+/* ── FRAMEWORK ────────────────────────────────────────────────────────────── */
+.ppv2 .framework__head {
+  display: block;
+  margin-bottom: 64px;
+}
+.ppv2 .framework__title {
+  font-size: clamp(64px, 8vw, 124px);
+  line-height: 0.94;
+  letter-spacing: -0.022em;
+  margin: 16px 0 24px;
+  font-weight: 400;
+}
+.ppv2 .framework__lede {
+  font-size: 19px;
+  line-height: 1.55;
+  max-width: 60ch;
+  color: var(--ink);
+  margin: 0;
+}
+
+.ppv2 .framework__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.ppv2 .fcard {
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  padding: 28px 28px 30px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 160px;
+}
+.ppv2 .fcard:hover { border-color: var(--accent); }
+.ppv2 .fcard__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  margin-bottom: 18px;
+}
+.ppv2 .fcard__n { color: var(--ink-faint); }
+.ppv2 .fcard__dot { color: var(--ink-faint); }
+.ppv2 .fcard__label { color: var(--accent); font-weight: 600; }
+.ppv2 .fcard__q {
+  font-size: 26px;
+  line-height: 1.18;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0;
+  flex: 1;
+  color: var(--ink);
+}
+
+.ppv2 .framework__lede strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ── MEET KALEEN ──────────────────────────────────────────────────────────── */
+.ppv2 .meet__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: 80px;
+  align-items: start;
+}
+
+.ppv2 .meet__photo {
+  position: relative;
+  border: 1px solid var(--rule);
+  padding: 28px 14px 18px;
+  background: var(--bg-2);
+}
+.ppv2 .meet__photo-tag {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(240, 233, 216, 0.7);
+}
+.ppv2 .meet__photo-tag-id { color: var(--accent); }
+.ppv2 .meet__photo img {
+  display: block;
+  width: 100%;
+  height: 560px;
+  object-fit: cover;
+}
+
+.ppv2 .meet__head {
+  font-size: clamp(56px, 6vw, 96px);
+  line-height: 0.96;
+  letter-spacing: -0.02em;
+  margin: 16px 0 12px;
+  font-weight: 400;
+}
+.ppv2 .meet__role {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 28px;
+  font-family: var(--pp-font-mono);
+}
+.ppv2 .meet__copy p {
+  font-size: 18px;
+  line-height: 1.55;
+  max-width: 56ch;
+  color: var(--ink);
+  margin: 0 0 18px;
+}
+
+.ppv2 .meet__testimonials { margin-top: 88px; }
+.ppv2 .meet__t-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.ppv2 .meet__t-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+.ppv2 .meet__t-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* Testimonial cards */
+.ppv2 .quote-card {
+  border: 1px solid var(--rule);
+  background: var(--bg-2);
+  padding: 22px 24px 24px;
+  font-family: var(--pp-font-serif);
+  color: var(--ink);
+  position: relative;
+}
+.ppv2 .quote-card .handle {
+  font-family: var(--pp-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  text-transform: lowercase;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+.ppv2 .quote-card .handle .at {
+  color: var(--accent);
+  font-family: var(--pp-font-mono);
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.ppv2 .quote-card p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* ── CTA ──────────────────────────────────────────────────────────────────── */
+.ppv2 .cta { padding: 132px 0 144px; }
+.ppv2 .cta__inner { text-align: center; }
+.ppv2 .cta__head {
+  font-size: clamp(48px, 5.6vw, 84px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 24px 0 28px;
+  font-weight: 400;
+}
+.ppv2 .cta__lede {
+  font-size: 19px;
+  line-height: 1.55;
+  max-width: 60ch;
+  margin: 0 auto 44px;
+  color: var(--ink-soft);
+}
+.ppv2 .cta__btn {
+  padding: 18px 30px 17px;
+  font-size: 13px;
+}
+
+/* ── Section style: alternating bands (Option A from design chat) ────────
+ * Hero is <section> #1 (no .section--inset). Among the remaining .section--inset
+ * sections, tint the EVEN-positioned siblings so the page reads as alternating
+ * bands of bg ↔ bg-2. The :nth-of-type counter walks all section siblings, so
+ * Understanding (#2) and Meet Kaleen (#4) tint; Framework (#3) and CTA (#5)
+ * stay on the page grid. */
+.ppv2[data-section-style="alt"] .section--inset {
+  background: transparent;
+  border: none;
+  margin: 0;
+  position: relative;
+}
+.ppv2[data-section-style="alt"] .section--inset:nth-of-type(even) {
+  background: var(--bg-2);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ── Section style: inset cards (Option E from design chat) ──────────────── */
+.ppv2[data-section-style="inset"] .section--inset {
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  margin: 48px 48px;
+  position: relative;
+}
+.ppv2[data-section-style="inset"] .section--inset + .section--inset { margin-top: 0; }
+.ppv2[data-section-style="inset"] .section--inset:last-of-type { margin-bottom: 64px; }
+.ppv2[data-section-style="inset"] .section--inset.section-pad   { padding: 80px 0 88px; }
+.ppv2[data-section-style="inset"] .section--inset.section-pad-l { padding: 112px 0 120px; }
+
+/* Inner cards always bump to the lightest tone so they pop against whichever
+ * surface the parent section is sitting on. */
+.ppv2 .section--inset .fcard,
+.ppv2 .section--inset .quote-card,
+.ppv2 .section--inset .meet__photo {
+  background: var(--bg-3);
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .ppv2 .container,
+  .ppv2 .container--wide,
+  .ppv2 .container--narrow { padding: 0 32px; }
+  .ppv2 .hero__grid { grid-template-columns: 1fr; gap: 56px; }
+  .ppv2 .understanding__grid { grid-template-columns: 1fr; gap: 32px; }
+  .ppv2 .framework__cards { grid-template-columns: 1fr; }
+  .ppv2 .meet__grid { grid-template-columns: 1fr; gap: 48px; }
+  .ppv2 .meet__t-grid { grid-template-columns: 1fr 1fr; }
+  .ppv2[data-section-style="inset"] .section--inset { margin: 32px 24px; }
+}
+@media (max-width: 700px) {
+  .ppv2 h1,
+  .ppv2 .hero__title { font-size: 56px !important; }
+  .ppv2 .container,
+  .ppv2 .container--wide,
+  .ppv2 .container--narrow { padding: 0 22px; }
+  .ppv2 .section-pad,
+  .ppv2 .section-pad-l,
+  .ppv2 .cta { padding: 72px 0 80px; }
+  .ppv2 .meet__t-grid { grid-template-columns: 1fr; }
+  .ppv2 .meet__photo img { height: 420px; }
+  .ppv2[data-section-style="inset"] .section--inset { margin: 24px 12px; }
+}

@@ -1,113 +1,160 @@
 import { Link } from 'react-router-dom'
 import NewsletterForm from '../ui/NewsletterForm'
 
+const MONO = '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace'
+const SERIF = '"Source Serif 4", "Source Serif Pro", Georgia, serif'
+
+const kickerStyle = {
+  fontFamily: MONO,
+  fontSize: '11.5px',
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase',
+  color: 'var(--color-accent)',
+  margin: 0,
+}
+
+const eyebrowStyle = {
+  fontFamily: MONO,
+  fontSize: '11.5px',
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase',
+  color: 'var(--color-ink-muted)',
+  margin: '0 0 4px',
+}
+
+const colLinkStyle = {
+  color: 'var(--color-ink)',
+  fontSize: '14px',
+  lineHeight: '1.4',
+  padding: '2px 0',
+  textDecoration: 'none',
+  fontFamily: SERIF,
+}
+
+const logoTextStyle = {
+  fontFamily: MONO,
+  fontSize: '13px',
+  letterSpacing: '0.16em',
+  textTransform: 'uppercase',
+  lineHeight: '1.05',
+  display: 'block',
+}
+
 export default function Footer() {
   return (
     <footer
       style={{
         borderTop: '1px solid var(--color-rule)',
         backgroundColor: 'var(--color-bg)',
+        padding: '56px 0 32px',
       }}
     >
-      <div className="max-w-6xl mx-auto px-6 py-12">
+      <div style={{ maxWidth: '1480px', margin: '0 auto', padding: '0 48px' }} className="pp-footer-inner">
         {/* Newsletter row */}
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '1.5rem',
-            paddingBottom: '2rem',
-            marginBottom: '2.5rem',
-            borderBottom: '1px solid var(--color-rule)',
-          }}
-        >
-          <div style={{ flex: '1 1 280px', minWidth: 0 }}>
-            <p
-              className="text-sm font-medium"
-              style={{ color: 'var(--color-ink)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}
+        <div className="pp-footer-news">
+          <div>
+            <div style={kickerStyle}>Newsletter</div>
+            <h3
+              style={{
+                fontFamily: SERIF,
+                fontSize: 'clamp(28px, 3vw, 40px)',
+                lineHeight: '1.1',
+                letterSpacing: '-0.015em',
+                fontWeight: 400,
+                color: 'var(--color-ink)',
+                margin: '12px 0 8px',
+              }}
             >
-              Newsletter
-            </p>
-            <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.85rem', lineHeight: '1.5', margin: 0 }}>
-              Occasional notes on the physics behind Pilates equipment plus workshop and mentorship announcements.
-            </p>
+              Occasional notes on the{' '}
+              <span style={{ fontStyle: 'italic', color: 'var(--color-accent)' }}>physics</span>{' '}
+              of Pilates equipment.
+            </h3>
           </div>
-          <NewsletterForm compact className="pp-kit-form--inline" style={{ flex: '1 1 360px', maxWidth: '520px' }} />
+          <NewsletterForm compact className="pp-kit-form--inline" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Column 1: Brand + tagline */}
-          <div className="md:col-span-2">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', marginBottom: '0.5rem', alignItems: 'flex-start' }}>
-              <span style={{
-                fontFamily: '"DM Sans", sans-serif',
-                fontWeight: '500',
-                fontSize: '0.65rem',
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: 'var(--color-ink)',
-                borderBottom: '1px solid var(--color-accent)',
-                paddingBottom: '2px',
-                display: 'block',
-              }}>
+        {/* Columns */}
+        <div className="pp-footer-cols">
+          <div className="pp-footer-col pp-footer-brand">
+            <Link
+              to="/"
+              style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: '1px', alignItems: 'flex-start' }}
+            >
+              <span
+                style={{
+                  ...logoTextStyle,
+                  color: 'var(--color-ink)',
+                  fontWeight: 600,
+                  borderBottom: '1px solid var(--color-accent)',
+                  paddingBottom: '2px',
+                }}
+              >
                 Pilates
               </span>
-              <span style={{
-                fontFamily: '"DM Sans", sans-serif',
-                fontWeight: '500',
-                fontSize: '0.65rem',
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: 'var(--color-accent)',
-                display: 'block',
-              }}>
+              <span style={{ ...logoTextStyle, color: 'var(--color-accent)', fontWeight: 500 }}>
                 Physics
               </span>
-            </div>
-            <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+            </Link>
+            <p
+              style={{
+                color: 'var(--color-ink-muted)',
+                fontSize: '13px',
+                lineHeight: '1.4',
+                maxWidth: '26ch',
+                margin: '12px 0 0',
+                fontFamily: SERIF,
+              }}
+            >
               Mechanics-grounded Pilates education.
             </p>
           </div>
 
-          {/* Column 2: Navigation */}
-          <div>
-            <p
-              className="mb-3 text-sm font-medium"
-              style={{ color: 'var(--color-ink)', textTransform: 'uppercase', letterSpacing: '0.05em' }}
-            >
-              Navigation
-            </p>
-            <nav className="flex flex-col gap-2">
-              <Link to="/about" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>About Kaleen</Link>
-              <Link to="/education" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Education</Link>
-              <Link to="/help" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Help</Link>
-              {/* <Link to="/contact" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Contact</Link> */}
-            </nav>
+          <div className="pp-footer-col">
+            <div style={eyebrowStyle}>Navigation</div>
+            <Link to="/about" style={colLinkStyle}>About Kaleen</Link>
+            <Link to="/education" style={colLinkStyle}>Education</Link>
+            <Link to="/blog" style={colLinkStyle}>Blog</Link>
+            <Link to="/help" style={colLinkStyle}>Help</Link>
           </div>
 
-          {/* Column 3: Admin */}
-          <div>
-            <p
-              className="mb-3 text-sm font-medium"
-              style={{ color: 'var(--color-ink)', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+          <div className="pp-footer-col">
+            <div style={eyebrowStyle}>Admin</div>
+            <Link to="/login" style={colLinkStyle}>Login</Link>
+            <Link to="/terms" style={colLinkStyle}>Terms</Link>
+            <Link to="/privacy" style={colLinkStyle}>Privacy</Link>
+          </div>
+
+          <div className="pp-footer-col">
+            <div style={eyebrowStyle}>Contact</div>
+            <a href="mailto:hello@pilatesphysics.com" style={colLinkStyle}>hello@pilatesphysics.com</a>
+            <a
+              href="https://instagram.com/kaleenc_"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={colLinkStyle}
             >
-              Admin
-            </p>
-            <nav className="flex flex-col gap-2">
-              <Link to="/login" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Login</Link>
-              <Link to="/terms" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Terms</Link>
-              <Link to="/privacy" style={{ color: 'var(--color-ink-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Privacy</Link>
-            </nav>
-            </div>
+              Instagram · @kaleenc_
+            </a>
+          </div>
         </div>
-        <p
-          className="mt-10 text-center"
-          style={{ color: 'var(--color-ink-muted)', fontSize: '0.8rem' }}
+
+        {/* Bottom rail */}
+        <div
+          className="pp-footer-bottom"
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            paddingTop: '24px',
+            fontSize: '10.5px',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            color: 'var(--color-ink-dim)',
+            fontFamily: MONO,
+          }}
         >
-          &copy; 2026 Pilates Physics
-        </p>
+          <span>&copy; 2026 Pilates Physics · Kaleen Canevari</span>
+          <span>PILATESPHYSICS.COM</span>
+        </div>
       </div>
     </footer>
   )

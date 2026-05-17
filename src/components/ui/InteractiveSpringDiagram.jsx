@@ -84,7 +84,6 @@ const X_TICKS = [0, 6, 12, 18]
 export default function InteractiveSpringDiagram() {
   const svgRef = useRef(null)
   const [isDragging, setIsDragging] = useState(false)
-  const [hasInteracted, setHasInteracted] = useState(false)
 
   // Use framer-motion spring for smooth physics-based return
   const motionPos = useSpring(INITIAL_POS, { stiffness: 120, damping: 18, mass: 0.8 })
@@ -133,7 +132,6 @@ export default function InteractiveSpringDiagram() {
     (e) => {
       e.currentTarget.setPointerCapture(e.pointerId)
       setIsDragging(true)
-      setHasInteracted(true)
       const n = getNormPos(e.clientX)
       motionPos.jump(n)
     },
@@ -245,7 +243,7 @@ export default function InteractiveSpringDiagram() {
         return (
           <line
             x1={start.x} y1={start.y} x2={end.x} y2={end.y}
-            stroke="rgba(239,159,39,0.25)"
+            stroke="rgba(184,101,30,0.25)"
             strokeWidth="1.5"
             strokeDasharray="3 4"
           />
@@ -254,17 +252,17 @@ export default function InteractiveSpringDiagram() {
 
       {/* Filled area under curve */}
       {fillPath && (
-        <path d={fillPath} fill="rgba(239,159,39,0.1)" />
+        <path d={fillPath} fill="rgba(184,101,30,0.1)" />
       )}
 
       {/* Force curve */}
       {curvePath && (
-        <path d={curvePath} stroke="#EF9F27" strokeWidth="2.5" fill="none" strokeLinejoin="round" />
+        <path d={curvePath} stroke="#b8651e" strokeWidth="2.5" fill="none" strokeLinejoin="round" />
       )}
 
       {/* Current position dot */}
       {dotPt && (
-        <circle cx={dotPt.x} cy={dotPt.y} r="4.5" fill="#EF9F27" />
+        <circle cx={dotPt.x} cy={dotPt.y} r="4.5" fill="#b8651e" />
       )}
 
       {/* Force readout near the dot */}
@@ -272,7 +270,7 @@ export default function InteractiveSpringDiagram() {
         <text
           x={dotPt.x + 8}
           y={dotPt.y - 10}
-          fill="#EF9F27"
+          fill="#b8651e"
           fontSize="10"
           fontFamily="DM Sans, sans-serif"
           fontWeight="600"
@@ -282,28 +280,16 @@ export default function InteractiveSpringDiagram() {
       )}
 
       {/* Spring coil below graph */}
-      <path d={springPath} stroke="#EF9F27" strokeWidth="1.5" fill="none" strokeLinejoin="round" />
+      <path d={springPath} stroke="#b8651e" strokeWidth="1.5" fill="none" strokeLinejoin="round" />
       {/* Spring anchor (left wall) */}
       <line x1={AREA.x} y1={AREA.y + AREA.h + 20} x2={AREA.x} y2={AREA.y + AREA.h + 36} stroke="#888780" strokeWidth="2" />
-      {/* Spring label */}
-      <text
-        x={AREA.x + AREA.w / 2}
-        y={AREA.y + AREA.h + 58}
-        textAnchor="middle"
-        fill="#888780"
-        fontSize="9"
-        fontFamily="DM Sans, sans-serif"
-        style={{ opacity: hasInteracted ? 0 : 1, transition: 'opacity 0.5s' }}
-      >
-        ← drag to stretch →
-      </text>
 
       {/* F = kx + b label */}
       <text
         x={AREA.x + AREA.w - 4}
         y={AREA.y + 16}
         textAnchor="end"
-        fill="rgba(239,159,39,0.6)"
+        fill="rgba(184,101,30,0.6)"
         fontSize="11"
         fontFamily="DM Sans, sans-serif"
         fontWeight="600"

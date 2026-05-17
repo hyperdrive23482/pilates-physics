@@ -1,7 +1,32 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
-import Button from '../ui/Button'
+
+const logoTextStyle = {
+  fontFamily: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
+  fontSize: '13px',
+  letterSpacing: '0.16em',
+  textTransform: 'uppercase',
+  lineHeight: '1.05',
+  display: 'block',
+}
+
+const ghostButtonStyle = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  padding: '10px 18px 9px',
+  fontFamily: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
+  fontSize: '12px',
+  fontWeight: 400,
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
+  color: 'var(--color-ink)',
+  background: 'transparent',
+  border: '1px solid var(--color-rule)',
+  textDecoration: 'none',
+  cursor: 'pointer',
+  transition: 'border-color 0.15s ease',
+}
 
 export default function Navbar({ hasAnnouncement = true }) {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -20,34 +45,24 @@ export default function Navbar({ hasAnnouncement = true }) {
           to="/"
           style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: '1px' }}
         >
-          <span style={{
-            fontFamily: '"DM Sans", sans-serif',
-            fontWeight: '500',
-            fontSize: '0.75rem',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            color: 'var(--color-ink)',
-            borderBottom: '1px solid var(--color-accent)',
-            paddingBottom: '2px',
-            display: 'block',
-          }}>
+          <span
+            style={{
+              ...logoTextStyle,
+              color: 'var(--color-ink)',
+              fontWeight: 600,
+              borderBottom: '1px solid var(--color-accent)',
+              paddingBottom: '2px',
+            }}
+          >
             Pilates
           </span>
-          <span style={{
-            fontFamily: '"DM Sans", sans-serif',
-            fontWeight: '500',
-            fontSize: '0.75rem',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            color: 'var(--color-accent)',
-            display: 'block',
-          }}>
+          <span style={{ ...logoTextStyle, color: 'var(--color-accent)', fontWeight: 500 }}>
             Physics
           </span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-4">
+        <nav className="hidden md:flex items-center" style={{ gap: '28px' }}>
           <NavLink to="/" className="nav-link" end>Home</NavLink>
           <NavLink to="/education" className="nav-link">Education</NavLink>
           <NavLink to="/blog" className="nav-link">Blog</NavLink>
@@ -55,7 +70,15 @@ export default function Navbar({ hasAnnouncement = true }) {
         </nav>
 
         {/* Desktop login */}
-        <Button href="/login" variant="secondary" className="hidden md:inline-block">Login</Button>
+        <Link
+          to="/login"
+          className="hidden md:inline-flex"
+          style={ghostButtonStyle}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-ink)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--color-rule)' }}
+        >
+          Login
+        </Link>
 
         {/* Mobile hamburger */}
         <button
@@ -76,7 +99,7 @@ export default function Navbar({ hasAnnouncement = true }) {
             borderTop: '1px solid var(--color-rule)',
           }}
         >
-          <nav className="flex flex-col px-6 py-4 gap-4">
+          <nav className="flex flex-col px-6 py-4 gap-2">
             <NavLink to="/" className="nav-link" end onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Home</NavLink>
             <NavLink to="/education" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Education</NavLink>
             <NavLink to="/blog" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Blog</NavLink>
