@@ -103,8 +103,8 @@ export default function Education() {
               Five ways to learn the <span className="italic accent">physics of Pilates.</span>
             </h1>
             <p className="education-hero__lede">
-              From 2-hour live workshops to private mentoring — pick the depth
-              that fits where you are right now.
+              Live workshops, private mentoring, and licensed teacher-training
+              modules. Pick the depth that fits where you are right now.
             </p>
           </div>
         </div>
