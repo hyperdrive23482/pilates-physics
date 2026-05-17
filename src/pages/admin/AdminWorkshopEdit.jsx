@@ -8,11 +8,13 @@ import { supabase } from '../../lib/supabase'
 import AdminNav from '../../components/admin/AdminNav'
 import WorkshopForm from '../../components/admin/WorkshopForm'
 import ContentEditor from '../../components/admin/ContentEditor'
+import WorkshopFeedbackPanel from '../../components/admin/WorkshopFeedbackPanel'
 
 const TABS = [
   { id: 'details', label: 'Details' },
   { id: 'content', label: 'Content' },
   { id: 'questions', label: 'Questions' },
+  { id: 'feedback', label: 'Feedback' },
 ]
 
 export default function AdminWorkshopEdit() {
@@ -179,8 +181,43 @@ export default function AdminWorkshopEdit() {
         {!isNew && tab === 'content' && <ContentEditor workshopId={workshop?.id} />}
 
         {!isNew && tab === 'questions' && <QuestionsList workshopId={workshop?.id} />}
+
+        {!isNew && tab === 'feedback' && <FeedbackTab workshop={workshop} />}
       </main>
     </div>
+  )
+}
+
+function FeedbackTab({ workshop }) {
+  const { request } = useAdminAPI()
+  const [data, setData] = useState(null)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    request('/api/admin/workshop-feedback')
+      .then(setData)
+      .catch((e) => setError(e.message))
+  }, [request])
+
+  if (error) {
+    return <p style={{ color: '#ff7d7d', fontSize: '0.85rem' }}>{error}</p>
+  }
+  if (!data) {
+    return <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>Loading…</p>
+  }
+
+  // workshop_feedback rows match on workshop_title + workshop_date.
+  // The workshop record stores scheduled_at as a timestamptz; slice to YYYY-MM-DD.
+  const date = workshop?.scheduled_at?.slice(0, 10)
+  const key = workshop?.title && date ? `${workshop.title}|${date}` : null
+  const entry = key ? data.by_workshop?.[key] : null
+
+  return (
+    <WorkshopFeedbackPanel
+      workshopTitle={workshop?.title}
+      workshopDate={date}
+      data={entry}
+    />
   )
 }
 

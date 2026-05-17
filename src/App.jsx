@@ -42,6 +42,7 @@ import AdminWorkshopEdit from './pages/admin/AdminWorkshopEdit'
 import AdminTools from './pages/admin/AdminTools'
 import AdminUsers from './pages/admin/AdminUsers'
 import AdminAnalytics from './pages/admin/AdminAnalytics'
+import AdminWorkshopFeedback from './pages/admin/AdminWorkshopFeedback'
 import AdminAnimations from './pages/admin/AdminAnimations'
 import AdminPoseStudio from './pages/admin/AdminPoseStudio'
 import AdminAnnouncements from './pages/admin/AdminAnnouncements'
@@ -296,6 +297,14 @@ export default function App() {
           element={
             <AdminGate>
               <AdminAnalytics />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/workshop-feedback"
+          element={
+            <AdminGate>
+              <AdminWorkshopFeedback />
             </AdminGate>
           }
         />

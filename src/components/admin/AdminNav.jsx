@@ -11,6 +11,7 @@ const links = [
   { to: '/admin/tools', label: 'Tools' },
   { to: '/admin/users', label: 'Users' },
   { to: '/admin/analytics', label: 'Analytics' },
+  { to: '/admin/workshop-feedback', label: 'Feedback' },
   { to: '/admin/animations', label: 'Animations' },
   { to: '/admin/pose-studio', label: 'Pose Studio' },
 ]
