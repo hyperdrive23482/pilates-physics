@@ -5,18 +5,24 @@ import { useWorkshop } from '../hooks/useWorkshops'
 import '../styles/ppv2.css'
 import './Workshop.css'
 
-const WHO = [
+const FRAMEWORK = [
   {
     n: '01',
-    body: 'Teach (or want to teach) on the Chair and Cadillac and want a clearer mental model of what the springs are actually doing.',
+    label: 'INTENTION',
+    title: 'Why are you teaching this exercise?',
+    body: 'What outcome are you actually aiming for. Stability, max load, coordination, flexibility, warm-up, breath. The same exercise can emphasize different purposes.',
   },
   {
     n: '02',
-    body: <>Have noticed that <em>where</em> the spring attaches changes everything — and want to know <em>why</em>.</>,
+    label: 'LOADING',
+    title: 'What forces is the client experiencing?',
+    body: 'Where are the loads coming from? Body weight, spring tension, equipment adjustments. The loads have to support the intent.',
   },
   {
     n: '03',
-    body: 'Already understand reformer mechanics and want to extend that thinking to the rest of the apparatus.',
+    label: 'FEEDBACK',
+    title: 'What do you see, what do they say?',
+    body: 'Visual cues from the body, verbal cues from the client. Observing without asking is guessing.',
   },
 ]
 
@@ -25,7 +31,7 @@ const TOPICS = [
     n: '01',
     label: 'CHAIR SPRINGS',
     title: 'Chair Spring Mechanics',
-    body: 'Where the springs attach on a Wunda or Combo Chair, how the pedal travel changes the spring length, and what that means for the load through the exercise.',
+    body: 'Where the springs attach on a Wunda or Combo Chair, how pedal travel changes the spring length, and what that means for the load through the exercise.',
   },
   {
     n: '02',
@@ -36,14 +42,14 @@ const TOPICS = [
   {
     n: '03',
     label: 'LEVERS',
-    title: 'Body Position & Lever Arms',
-    body: 'How the relationship between the body, the spring, and the apparatus determines the actual load on a joint — and why small position changes produce big mechanical changes.',
+    title: 'Body Position and Lever Arms',
+    body: 'How the relationship between the body, the spring, and the apparatus determines the actual load on a joint. Small position changes produce large mechanical changes.',
   },
   {
     n: '04',
     label: 'FRAMEWORK',
     title: 'A Transferable Framework',
-    body: 'How the same physics principles that explain the reformer also explain the Chair and Cadillac. One mental model, applied across the apparatus.',
+    body: 'The same physics principles that explain the reformer also explain the Chair and Cadillac. One mental model, applied across the apparatus.',
   },
 ]
 
@@ -72,18 +78,18 @@ const INCLUDED = [
     n: '03',
     label: 'REFERENCE',
     title: 'Reference Guide',
-    body: 'A downloadable PDF covering the key topics from the session — built for quick reference in the studio.',
+    body: 'A downloadable PDF covering the key topics from the session. Built for quick reference in the studio.',
   },
 ]
 
 const FAQ = [
   {
     q: 'Do I need an engineering background?',
-    a: 'Not at all. The concepts are explained for movement professionals — no math prerequisites, no jargon without context.',
+    a: 'Not at all. The concepts are explained for movement professionals. No math prerequisites, no jargon without context.',
   },
   {
     q: 'Do I need to have taken Pilates Physics 101?',
-    a: "No. 102 stands on its own. If you have taken 101, you'll recognize the framework being extended to new equipment; if you haven't, you'll still walk away with a clear mental model for the Chair and Cadillac.",
+    a: "No. 102 stands on its own. If you have taken 101, you'll recognize the framework being extended to new equipment. If you haven't, you'll still walk away with a clear mental model for the Chair and Cadillac.",
   },
   {
     q: 'Will there be a recording?',
@@ -91,7 +97,7 @@ const FAQ = [
   },
   {
     q: 'What equipment knowledge do I need?',
-    a: "This course is best for professionals who are certified to teach Pilates and have at least some exposure to the Chair and/or Cadillac. You don't need to teach on them daily — just enough familiarity to follow along.",
+    a: "This course is best for professionals who are certified to teach Pilates and have at least some exposure to the Chair and/or Cadillac. You don't need to teach on them daily, just enough familiarity to follow along.",
   },
   {
     q: 'Is this for classical or contemporary instructors?',
@@ -115,19 +121,19 @@ export default function PilatesPhysics102() {
 
         <div className="container">
           <div className="workshop-hero__inner">
-            <div className="kicker">§ 01 · Live Workshop · Pilates Physics 102</div>
+            <div className="kicker">§ 01 · Pilates Physics 102 Workshop</div>
             <h1 className="workshop-hero__title">
-              The physics of the <span className="italic accent">Chair and Cadillac.</span>
+              Physics for the <span className="italic accent">Chair and Cadillac.</span>
             </h1>
             <p className="workshop-hero__lede">
-              A 2-hour live session for Pilates instructors who want to understand
-              what changes when the body moves from the reformer to the Chair or the
-              Cadillac — and why the same spring feels nothing alike on each.
+              The same spring on a different hook is a different exercise. This workshop
+              builds the mental model for what changes when the body moves from the
+              reformer to the Chair or the Cadillac.
             </p>
 
             <div className="workshop-hero__cta">
               <a href="#register" className="btn btn--lg">
-                Register Now — $99
+                Register Now. $99
                 <ArrowSvg />
               </a>
             </div>
@@ -141,40 +147,67 @@ export default function PilatesPhysics102() {
         <span className="cross br"></span>
       </section>
 
-      {/* ── § 02 Who it's for ────────────────────────────────────────────── */}
-      <section className="section-pad section--inset workshop-who">
+      {/* ── § 02 Why a physics class for the Chair and Cadillac ──────────── */}
+      <section className="section-pad section--inset workshop-why">
         <div className="container">
-          <div className="kicker">§ 02 · Who it's for</div>
-          <h2 className="workshop-who__head">
-            For Pilates instructors <span className="italic accent">who…</span>
+          <div className="kicker">§ 02 · Why a physics class for the Chair and Cadillac</div>
+          <h2 className="workshop-why__head">
+            What works on the reformer doesn't always transfer to <span className="italic accent">the rest of the apparatus.</span>
           </h2>
+          <p className="workshop-why__body">
+            If you can read load on the reformer but feel less certain on the Chair, or
+            if you can teach the Cadillac but can't fully explain why a high hook and a
+            low hook feel so different, this workshop is for you.
+          </p>
+        </div>
+      </section>
 
-          <div className="workshop-who__grid">
-            {WHO.map((c) => (
+      {/* ── § 03 Framework ───────────────────────────────────────────────── */}
+      <section className="section-pad section--inset workshop-framework">
+        <div className="container">
+          <div className="workshop-framework__head-wrap">
+            <div className="kicker">§ 03 · The Framework</div>
+            <h2 className="workshop-framework__head">
+              The same lens. <span className="italic accent">On the Chair and Cadillac.</span>
+            </h2>
+            <p className="workshop-framework__lede">
+              Before any physics, a way of looking at any Pilates exercise on any
+              apparatus. The framework runs as a loop: set the intention, read the
+              loading, listen to the feedback, then adjust.
+            </p>
+          </div>
+
+          <div className="workshop-framework__grid">
+            {FRAMEWORK.map((c) => (
               <article className="fcard" key={c.n}>
                 <div className="fcard__head">
                   <span className="fcard__n mono">{c.n}</span>
                   <span className="fcard__dot mono">·</span>
-                  <span className="fcard__label mono accent">WHO</span>
+                  <span className="fcard__label mono accent">{c.label}</span>
                 </div>
+                <h3 className="fcard__title">{c.title}</h3>
                 <p className="fcard__body">{c.body}</p>
               </article>
             ))}
           </div>
+
+          <p className="workshop-framework__close mono">
+            The apparatus changes. The lens stays the same.
+          </p>
         </div>
       </section>
 
-      {/* ── § 03 Topics covered ──────────────────────────────────────────── */}
+      {/* ── § 04 Topics covered ──────────────────────────────────────────── */}
       <section className="section-pad-l section--inset workshop-topics">
         <div className="container">
           <div className="workshop-topics__head">
-            <div className="kicker">§ 03 · What you'll learn</div>
+            <div className="kicker">§ 04 · What you'll learn</div>
             <h2 className="workshop-topics__title">
-              Four topics, one <span className="italic accent">mental model.</span>
+              Four topics. One <span className="italic accent">transferable model.</span>
             </h2>
             <p className="workshop-topics__lede">
-              Connected topics that extend the Pilates Physics framework to the
-              Chair and Cadillac — two pieces of equipment that load the body very
+              Connected topics that extend the Pilates Physics framework to the Chair
+              and the Cadillac. Two pieces of equipment that load the body very
               differently from the reformer.
             </p>
           </div>
@@ -195,12 +228,12 @@ export default function PilatesPhysics102() {
         </div>
       </section>
 
-      {/* ── § 04 Details + Register ──────────────────────────────────────── */}
+      {/* ── § 05 Details + Register ──────────────────────────────────────── */}
       <section className="section-pad section--inset workshop-details">
         <div className="container">
           <div className="workshop-details__grid">
             <div>
-              <div className="kicker">§ 04 · Details</div>
+              <div className="kicker">§ 05 · Details</div>
               <h2 className="workshop-details__head">The <span className="italic accent">specs.</span></h2>
 
               <dl className="spec-list">
@@ -224,7 +257,7 @@ export default function PilatesPhysics102() {
         </div>
       </section>
 
-      {/* ── § 05 Instructor ──────────────────────────────────────────────── */}
+      {/* ── § 06 Instructor ──────────────────────────────────────────────── */}
       <section className="section-pad section--inset workshop-instructor">
         <div className="container">
           <div className="workshop-instructor__grid">
@@ -237,23 +270,21 @@ export default function PilatesPhysics102() {
             </div>
 
             <div className="workshop-instructor__body">
-              <div className="kicker">§ 05 · Your Instructor</div>
+              <div className="kicker">§ 06 · Your Instructor</div>
               <h2 className="workshop-instructor__head">
                 Meet <span className="italic accent">Kaleen.</span>
               </h2>
               <p className="workshop-instructor__role">Mechanical Engineer · Pilates Instructor</p>
 
               <p>
-                Kaleen studied mechanical engineering before stepping on a reformer.
-                In 2013 she joined Balanced Body as a design engineer, and started
-                teaching Pilates in 2014. She's spent over a decade at the intersection
-                of engineering and movement — designing equipment, running a Pilates
-                equipment maintenance business, and founding a connected Pilates
-                equipment company.
+                Mechanical engineer first, Pilates instructor since 2014. Kaleen's
+                spent over a decade at the intersection of the two: as a design
+                engineer at Balanced Body, running an equipment maintenance business
+                (The Fit Reformer), and founding a smart Pilates equipment company.
               </p>
               <p>
                 Pilates Physics is where she brings that engineering lens to
-                instructor education — making the mechanics behind the equipment
+                instructor education, making the mechanics behind the equipment
                 accessible to every working instructor.
               </p>
 
@@ -263,10 +294,10 @@ export default function PilatesPhysics102() {
         </div>
       </section>
 
-      {/* ── § 06 What's included ─────────────────────────────────────────── */}
+      {/* ── § 07 What's included ─────────────────────────────────────────── */}
       <section className="section-pad section--inset workshop-included">
         <div className="container">
-          <div className="kicker">§ 06 · What's included</div>
+          <div className="kicker">§ 07 · What's included</div>
           <h2 className="workshop-included__head">
             Every registration <span className="italic accent">includes.</span>
           </h2>
@@ -287,41 +318,44 @@ export default function PilatesPhysics102() {
         </div>
       </section>
 
-      {/* ── § 07 FAQ ─────────────────────────────────────────────────────── */}
+      {/* ── § 08 FAQ ─────────────────────────────────────────────────────── */}
       <section className="section-pad section--inset workshop-faq">
         <div className="container container--narrow">
-          <div className="kicker">§ 07 · Common questions</div>
+          <div className="kicker">§ 08 · Common questions</div>
           <h2 className="workshop-faq__head">
             Frequently <span className="italic accent">asked.</span>
           </h2>
 
           <div className="workshop-faq__list">
             {FAQ.map((item, i) => (
-              <div className="workshop-faq__item" key={i}>
-                <div className="workshop-faq__n">Q.{String(i + 1).padStart(2, '0')}</div>
-                <div>
+              <details className="workshop-faq__item" key={i}>
+                <summary className="workshop-faq__summary">
+                  <span className="workshop-faq__n">Q.{String(i + 1).padStart(2, '0')}</span>
                   <h3 className="workshop-faq__q">{item.q}</h3>
+                  <span className="workshop-faq__toggle" aria-hidden="true">+</span>
+                </summary>
+                <div className="workshop-faq__answer">
                   <p className="workshop-faq__a">{item.a}</p>
                 </div>
-              </div>
+              </details>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── § 08 Final CTA ───────────────────────────────────────────────── */}
+      {/* ── § 09 Final CTA ───────────────────────────────────────────────── */}
       <section className="workshop-cta section--inset">
         <div className="container container--narrow">
-          <div className="kicker">§ 08 · Register</div>
+          <div className="kicker">§ 09 · Register</div>
           <h2 className="workshop-cta__head">
             Extend your framework to the <span className="italic accent">Chair and Cadillac.</span>
           </h2>
           <p className="workshop-cta__lede">
-            One focused session. One mental model across the apparatus. Reserve your seat —
-            registration is open now.
+            One focused session. One mental model across the apparatus. Reserve your
+            seat. Registration is open now.
           </p>
           <a href="#register" className="btn btn--lg">
-            Register Now — $99
+            Register Now. $99
             <ArrowSvg />
           </a>
         </div>
