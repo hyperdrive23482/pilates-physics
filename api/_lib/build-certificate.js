@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const LOGO_BUFFER = readFileSync(
-  path.join(__dirname, '../_assets/pilates-physics-logo.png')
+  path.join(__dirname, '../../public/images/logos/black-transparent-logo.png')
 )
 
 const SIGNATURE_BUFFER = readFileSync(
