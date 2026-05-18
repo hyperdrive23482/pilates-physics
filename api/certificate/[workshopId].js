@@ -34,17 +34,20 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'Workshop not yet complete' })
     }
 
-    // 3. Entitlement check
-    const { data: ent, error: eErr } = await supabaseAdmin
-      .from('user_entitlements')
-      .select('id, expires_at')
-      .eq('user_id', user.id)
-      .eq('webinar_id', workshop.id)
-      .maybeSingle()
-    if (eErr) throw eErr
-    if (!ent) return res.status(403).json({ error: 'No access to this workshop' })
-    if (ent.expires_at && new Date(ent.expires_at) <= new Date()) {
-      return res.status(403).json({ error: 'Access expired' })
+    // 3. Entitlement check (admins bypass)
+    const isAdmin = user.user_metadata?.is_admin === true
+    if (!isAdmin) {
+      const { data: ent, error: eErr } = await supabaseAdmin
+        .from('user_entitlements')
+        .select('id, expires_at')
+        .eq('user_id', user.id)
+        .eq('webinar_id', workshop.id)
+        .maybeSingle()
+      if (eErr) throw eErr
+      if (!ent) return res.status(403).json({ error: 'No access to this workshop' })
+      if (ent.expires_at && new Date(ent.expires_at) <= new Date()) {
+        return res.status(403).json({ error: 'Access expired' })
+      }
     }
 
     // 4. Resolve participant name (fallback to email).
