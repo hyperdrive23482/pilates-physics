@@ -95,6 +95,11 @@ export default async function handler(req, res) {
     if (authResult?.error) return res.status(401).json({ error: authResult.error })
     const authUser = authResult?.user ?? null
 
+    const workshopDate = workshopDateString(webinar.scheduled_at)
+    if (!workshopDate) {
+      return res.status(400).json({ error: 'Workshop has no scheduled date. Ask the admin to set one before collecting feedback.' })
+    }
+
     let identity
     if (authUser) {
       identity = {
@@ -102,28 +107,41 @@ export default async function handler(req, res) {
         email: authUser.email,
         user_id: authUser.id,
       }
-      const { data: existing, error: existingErr } = await supabaseAdmin
-        .from('workshop_feedback')
-        .select('id')
-        .eq('user_id', authUser.id)
-        .eq('webinar_id', webinar.id)
-        .maybeSingle()
-      if (existingErr) {
-        console.error('survey-feedback dedup check error:', existingErr)
-        return res.status(500).json({ error: 'Could not save your feedback. Please try again.' })
-      }
-      if (existing) {
-        return res.status(409).json({ error: 'You have already submitted feedback for this workshop.' })
+      // Dedup by webinar_id first; fall back to title+date so rows created
+      // before the webinar_id backfill (migration 025) still register as
+      // duplicates instead of hitting the legacy unique constraint at INSERT.
+      const dedupQueries = [
+        supabaseAdmin
+          .from('workshop_feedback')
+          .select('id')
+          .eq('user_id', authUser.id)
+          .eq('webinar_id', webinar.id)
+          .maybeSingle(),
+        supabaseAdmin
+          .from('workshop_feedback')
+          .select('id')
+          .eq('user_id', authUser.id)
+          .eq('workshop_title', webinar.title)
+          .eq('workshop_date', workshopDate)
+          .maybeSingle(),
+      ]
+      for (const promise of dedupQueries) {
+        const { data, error } = await promise
+        if (error) {
+          console.error('survey-feedback dedup check error:', error)
+          return res.status(500).json({
+            error: 'Could not check for existing feedback.',
+            detail: error.message,
+          })
+        }
+        if (data) {
+          return res.status(409).json({ error: 'You have already submitted feedback for this workshop.' })
+        }
       }
     } else {
       const nameEmail = validateNameEmail(body)
       if (nameEmail.error) return res.status(400).json({ error: nameEmail.error })
       identity = { ...nameEmail.payload, user_id: null }
-    }
-
-    const workshopDate = workshopDateString(webinar.scheduled_at)
-    if (!workshopDate) {
-      return res.status(400).json({ error: 'Workshop has no scheduled date. Ask the admin to set one before collecting feedback.' })
     }
 
     const insertPayload = {
@@ -140,8 +158,16 @@ export default async function handler(req, res) {
       .insert(insertPayload)
 
     if (insertErr) {
+      // 23505 = postgres unique_violation. Either the new (user_id, webinar_id)
+      // index or the legacy (user_id, workshop_title, workshop_date) index fired.
+      if (insertErr.code === '23505') {
+        return res.status(409).json({ error: 'You have already submitted feedback for this workshop.' })
+      }
       console.error('survey-feedback insert error:', insertErr)
-      return res.status(500).json({ error: 'Could not save your feedback. Please try again.' })
+      return res.status(500).json({
+        error: 'Could not save your feedback. Please try again.',
+        detail: insertErr.message,
+      })
     }
 
     try {
