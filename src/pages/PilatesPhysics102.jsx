@@ -8,48 +8,42 @@ import './Workshop.css'
 const FRAMEWORK = [
   {
     n: '01',
-    label: 'INTENTION',
-    title: 'Why are you teaching this exercise?',
-    body: 'What outcome are you actually aiming for. Stability, max load, coordination, flexibility, warm-up, breath. The same exercise can emphasize different purposes.',
+    label: 'FEEDBACK LOOP',
+    title: 'The same loop, two new pieces of equipment.',
+    body: 'Intention. Loading. Feedback. The framework that ran through every reformer exercise runs through every cadillac and chair exercise too.',
   },
   {
     n: '02',
-    label: 'LOADING',
-    title: 'What forces is the client experiencing?',
-    body: 'Where are the loads coming from? Body weight, spring tension, equipment adjustments. The loads have to support the intent.',
+    label: 'SPRING MECHANICS',
+    title: "Hooke's Law. Supportive vs. resistive.",
+    body: 'Springs only pull. They get heavier as they stretch. They can support or resist the intended movement, depending on setup.',
   },
   {
     n: '03',
-    label: 'FEEDBACK',
-    title: 'What do you see, what do they say?',
-    body: 'Visual cues from the body, verbal cues from the client. Observing without asking is guessing.',
+    label: 'BODY WEIGHT',
+    title: 'When body weight enters the equation.',
+    body: 'Body weight can affect the difficulty of some exercises on every apparatus, even when springs are in play.',
   },
 ]
 
 const TOPICS = [
   {
     n: '01',
-    label: 'CHAIR SPRINGS',
-    title: 'Chair Spring Mechanics',
-    body: 'Where the springs attach on a Wunda or Combo Chair, how pedal travel changes the spring length, and what that means for the load through the exercise.',
+    label: 'CHAIR MECHANICS',
+    title: 'Spring tension on a fixed arc.',
+    body: 'How the spring and pedal interact to apply load to the body.',
   },
   {
     n: '02',
-    label: 'CADILLAC',
-    title: 'Cadillac Spring Geometry',
-    body: 'Why the same spring on a different hook is a different exercise. How attachment height and angle change the direction and magnitude of force the body has to manage.',
+    label: 'CADILLAC MECHANICS',
+    title: 'Where you anchor changes the load.',
+    body: 'How the spring and push-through bar interact to apply load to the body.',
   },
   {
     n: '03',
-    label: 'LEVERS',
-    title: 'Body Position and Lever Arms',
-    body: 'How the relationship between the body, the spring, and the apparatus determines the actual load on a joint. Small position changes produce large mechanical changes.',
-  },
-  {
-    n: '04',
-    label: 'FRAMEWORK',
-    title: 'A Transferable Framework',
-    body: 'The same physics principles that explain the reformer also explain the Chair and Cadillac. One mental model, applied across the apparatus.',
+    label: 'ANGLE OF PULL',
+    title: 'From feeling to vector resolution.',
+    body: 'Far more important on the chair and cadillac than on the reformer. We go deeper into it here.',
   },
 ]
 
@@ -58,6 +52,7 @@ const SPECS = [
   { k: 'Time', v: '11am PDT / 2pm EDT' },
   { k: 'Duration', v: '2 hours' },
   { k: 'Format', v: 'Live via Zoom · recording included' },
+  { k: 'NPCP CECs', v: '2.0' },
   { k: 'Price', v: '$99' },
 ]
 
@@ -89,15 +84,22 @@ const FAQ = [
   },
   {
     q: 'Do I need to have taken Pilates Physics 101?',
-    a: "No. 102 stands on its own. If you have taken 101, you'll recognize the framework being extended to new equipment. If you haven't, you'll still walk away with a clear mental model for the Chair and Cadillac.",
+    a: (
+      <>
+        I recommend taking Pilates Physics 101, which introduces the framework
+        and physics on the reformer before this course. It's often easier to
+        understand the concepts on equipment you are <i>very</i> familiar with,
+        which for most of us is the reformer.
+      </>
+    ),
   },
   {
     q: 'Will there be a recording?',
     a: 'Yes. The full recording is shared within 24 hours of the live session.',
   },
   {
-    q: 'What equipment knowledge do I need?',
-    a: "This course is best for professionals who are certified to teach Pilates and have at least some exposure to the Chair and/or Cadillac. You don't need to teach on them daily, just enough familiarity to follow along.",
+    q: 'Do I need a cadillac and chair in my studio?',
+    a: 'No. The workshop is conceptual. We cover cross-brand variation on the chair (Wunda, EXO/HiPro, Combo) so the principles apply wherever you teach.',
   },
   {
     q: 'Is this for classical or contemporary instructors?',
@@ -123,12 +125,12 @@ export default function PilatesPhysics102() {
           <div className="workshop-hero__inner">
             <div className="kicker">§ 01 · Pilates Physics 102 Workshop</div>
             <h1 className="workshop-hero__title">
-              Physics for the <span className="italic accent">Chair and Cadillac.</span>
+              Same framework. <span className="italic accent">New geometry.</span>
             </h1>
             <p className="workshop-hero__lede">
-              The same spring on a different hook is a different exercise. This workshop
-              builds the mental model for what changes when the body moves from the
-              reformer to the Chair or the Cadillac.
+              Expand the Pilates Physics framework beyond the reformer to two new
+              pieces of equipment that introduce different mechanical applications
+              of force.
             </p>
 
             <div className="workshop-hero__cta">
@@ -147,17 +149,18 @@ export default function PilatesPhysics102() {
         <span className="cross br"></span>
       </section>
 
-      {/* ── § 02 Why a physics class for the Chair and Cadillac ──────────── */}
+      {/* ── § 02 Why a physics class for the chair and cadillac ──────────── */}
       <section className="section-pad section--inset workshop-why">
         <div className="container">
-          <div className="kicker">§ 02 · Why a physics class for the Chair and Cadillac</div>
+          <div className="kicker">§ 02 · Why this workshop</div>
           <h2 className="workshop-why__head">
-            What works on the reformer doesn't always transfer to <span className="italic accent">the rest of the apparatus.</span>
+            You can feel the difference between a high hook and a low hook. <span className="italic accent">Now explain it.</span>
           </h2>
           <p className="workshop-why__body">
-            If you can read load on the reformer but feel less certain on the Chair, or
-            if you can teach the Cadillac but can't fully explain why a high hook and a
-            low hook feel so different, this workshop is for you.
+            If you can teach the same exercise on the cadillac with two different
+            anchor heights and feel that they're different, but can't fully say why,
+            this workshop is for you. Same on the chair, where a heavy client and a
+            light client work very different loads on the same springs.
           </p>
         </div>
       </section>
@@ -166,14 +169,13 @@ export default function PilatesPhysics102() {
       <section className="section-pad section--inset workshop-framework">
         <div className="container">
           <div className="workshop-framework__head-wrap">
-            <div className="kicker">§ 03 · The Framework</div>
+            <div className="kicker">§ 03 · Built on Pilates Physics 101</div>
             <h2 className="workshop-framework__head">
-              The same lens. <span className="italic accent">On the Chair and Cadillac.</span>
+              Expand your feedback loop to <span className="italic accent">two new apparatus.</span>
             </h2>
             <p className="workshop-framework__lede">
-              Before any physics, a way of looking at any Pilates exercise on any
-              apparatus. The framework runs as a loop: set the intention, read the
-              loading, listen to the feedback, then adjust.
+              The same feedback loop, spring mechanics, and body weight analysis from
+              Pilates Physics 101 apply to the chair and cadillac.
             </p>
           </div>
 
@@ -191,9 +193,6 @@ export default function PilatesPhysics102() {
             ))}
           </div>
 
-          <p className="workshop-framework__close mono">
-            The apparatus changes. The lens stays the same.
-          </p>
         </div>
       </section>
 
@@ -203,12 +202,11 @@ export default function PilatesPhysics102() {
           <div className="workshop-topics__head">
             <div className="kicker">§ 04 · What you'll learn</div>
             <h2 className="workshop-topics__title">
-              Four topics. One <span className="italic accent">transferable model.</span>
+              Two pieces of equipment, <span className="italic accent">united by physics.</span>
             </h2>
             <p className="workshop-topics__lede">
-              Connected topics that extend the Pilates Physics framework to the Chair
-              and the Cadillac. Two pieces of equipment that load the body very
-              differently from the reformer.
+              The chair and cadillac look and work differently, but they're tied
+              together by the basics of spring mechanics and angle of pull.
             </p>
           </div>
 
@@ -348,11 +346,11 @@ export default function PilatesPhysics102() {
         <div className="container container--narrow">
           <div className="kicker">§ 09 · Register</div>
           <h2 className="workshop-cta__head">
-            Extend your framework to the <span className="italic accent">Chair and Cadillac.</span>
+            The framework you already have. <span className="italic accent">On the rest of the apparatus.</span>
           </h2>
           <p className="workshop-cta__lede">
-            One focused session. One mental model across the apparatus. Reserve your
-            seat. Registration is open now.
+            One focused session. The 101 framework, extended to the cadillac and the
+            chair. Reserve your seat. Registration is open now.
           </p>
           <a href="#register" className="btn btn--lg">
             Register Now. $99
