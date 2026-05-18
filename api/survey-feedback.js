@@ -1,43 +1,8 @@
 import { sendSurveyFeedbackEmail } from './_lib/resend.js'
 import { supabaseAdmin } from './_lib/supabase-admin.js'
+import { validateResponses, legacyColumnMirror } from './_lib/survey-validation.js'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-const WORKSHOP_TITLE = 'Pilates Physics 101'
-const WORKSHOP_DATE = '2026-05-20'
-
-// Pacific midnight on June 1 — the latest US-local "June 1 begins". Any honest
-// US respondent at their local June-1-eve still gets through; tampered submissions
-// well past the window do not.
-const SURVEY_CUTOFF_ISO = '2026-06-01T00:00:00-07:00'
-
-const YEARS_OPTIONS = new Set([
-  "I'm not an instructor",
-  'I am in teacher training',
-  '<1 year',
-  '1-3 years',
-  '4-9 years',
-  '10+ years',
-])
-const VALUABLE_OPTIONS = new Set([
-  'Framework',
-  'Background Physics',
-  'Practical Application',
-  'Wrap-Up Challenge worksheet',
-])
-const RUSHED_OPTIONS = new Set([
-  'Framework',
-  'Background Physics',
-  'Practical Application',
-  'Wrap-Up',
-  'Nothing — pacing felt right',
-])
-const LENGTH_OPTIONS = new Set(["Could've been shorter", 'Just right', "Could've been longer"])
-const SHARE_OPTIONS = new Set([
-  'Yes, with my first name',
-  'Yes, but keep me anonymous',
-  'No, please keep my responses private',
-])
 
 function trimString(value) {
   return typeof value === 'string' ? value.trim() : ''
@@ -46,77 +11,12 @@ function trimString(value) {
 function validateNameEmail(body) {
   const name = trimString(body.name)
   const email = trimString(body.email)
-
   if (!name) return { error: 'Name is required' }
   if (!email) return { error: 'Email is required' }
   if (name.length > 200) return { error: 'Name is too long' }
   if (email.length > 320) return { error: 'Email is too long' }
   if (!EMAIL_RE.test(email)) return { error: 'Please enter a valid email address' }
-
   return { payload: { name, email } }
-}
-
-function validateSurveyBody(body) {
-  const yearsTeaching = trimString(body.years_teaching)
-  const npsRaw = body.nps_score
-  const changeThisWeek = trimString(body.change_this_week)
-  const ahaMoment = trimString(body.aha_moment)
-  const valuableSections = Array.isArray(body.valuable_sections) ? body.valuable_sections : []
-  const rushedSection = trimString(body.rushed_section)
-  const confusing = trimString(body.confusing)
-  const lengthFeedback = trimString(body.length_feedback)
-  const sharePermission = trimString(body.share_permission)
-  const nextWorkshopTopic = trimString(body.next_workshop_topic)
-  const anythingElse = trimString(body.anything_else)
-
-  if (!yearsTeaching) return { error: 'Years teaching is required' }
-  if (!YEARS_OPTIONS.has(yearsTeaching)) return { error: 'Please select a valid years-teaching option' }
-
-  if (!Number.isInteger(npsRaw) || npsRaw < 1 || npsRaw > 10) {
-    return { error: 'Please select a score from 1 to 10' }
-  }
-
-  if (!changeThisWeek) return { error: 'Please tell me one thing that will change how you teach this week' }
-  if (changeThisWeek.length > 2000) return { error: 'Response is too long (max 2000 characters)' }
-
-  if (!ahaMoment) return { error: 'Please share your favorite aha moment' }
-  if (ahaMoment.length > 2000) return { error: 'Response is too long (max 2000 characters)' }
-
-  if (valuableSections.length === 0) return { error: 'Please select at least one valuable section' }
-  for (const item of valuableSections) {
-    if (!VALUABLE_OPTIONS.has(item)) return { error: 'Invalid valuable-section option' }
-  }
-
-  if (!rushedSection) return { error: 'Please tell me about pacing' }
-  if (!RUSHED_OPTIONS.has(rushedSection)) return { error: 'Invalid rushed-section option' }
-
-  if (!confusing) return { error: 'Please tell me what was confusing (you can say "nothing")' }
-  if (confusing.length > 2000) return { error: 'Response is too long (max 2000 characters)' }
-
-  if (!lengthFeedback) return { error: 'Please tell me about the length' }
-  if (!LENGTH_OPTIONS.has(lengthFeedback)) return { error: 'Invalid length option' }
-
-  if (!sharePermission) return { error: 'Please tell me whether I can share your feedback' }
-  if (!SHARE_OPTIONS.has(sharePermission)) return { error: 'Invalid share-permission option' }
-
-  if (nextWorkshopTopic.length > 2000) return { error: 'Response is too long (max 2000 characters)' }
-  if (anythingElse.length > 2000) return { error: 'Response is too long (max 2000 characters)' }
-
-  return {
-    payload: {
-      years_teaching: yearsTeaching,
-      nps_score: npsRaw,
-      change_this_week: changeThisWeek,
-      aha_moment: ahaMoment,
-      valuable_sections: valuableSections,
-      rushed_section: rushedSection,
-      confusing,
-      length_feedback: lengthFeedback,
-      share_permission: sharePermission,
-      next_workshop_topic: nextWorkshopTopic || null,
-      anything_else: anythingElse || null,
-    },
-  }
 }
 
 async function getAuthedUser(req) {
@@ -136,6 +36,13 @@ function nameFromUser(user) {
   return combined || user.email
 }
 
+function workshopDateString(scheduledAt) {
+  if (!scheduledAt) return null
+  const d = new Date(scheduledAt)
+  if (Number.isNaN(d.getTime())) return null
+  return d.toISOString().slice(0, 10)
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST')
@@ -150,16 +57,43 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true })
     }
 
-    if (Date.now() >= Date.parse(SURVEY_CUTOFF_ISO)) {
+    const webinarSlug = trimString(body.webinar_slug)
+    if (!webinarSlug) {
+      return res.status(400).json({ error: 'webinar_slug is required' })
+    }
+
+    const { data: webinar, error: webinarErr } = await supabaseAdmin
+      .from('webinars')
+      .select('id, slug, title, scheduled_at, survey_config')
+      .eq('slug', webinarSlug)
+      .maybeSingle()
+
+    if (webinarErr) {
+      console.error('survey-feedback webinar lookup error:', webinarErr)
+      return res.status(500).json({ error: 'Could not load the workshop. Please try again.' })
+    }
+    if (!webinar) {
+      return res.status(404).json({ error: 'Workshop not found' })
+    }
+
+    const config = webinar.survey_config
+    if (!config?.enabled) {
+      return res.status(403).json({ error: 'The survey is not currently accepting responses.' })
+    }
+    const now = Date.now()
+    if (config.opens_at && now < Date.parse(config.opens_at)) {
+      return res.status(403).json({ error: 'The survey has not opened yet.' })
+    }
+    if (config.closes_at && now >= Date.parse(config.closes_at)) {
       return res.status(403).json({ error: 'The survey period is closed.' })
     }
+
+    const validation = validateResponses(config, body.responses)
+    if (validation.error) return res.status(400).json({ error: validation.error })
 
     const authResult = await getAuthedUser(req)
     if (authResult?.error) return res.status(401).json({ error: authResult.error })
     const authUser = authResult?.user ?? null
-
-    const surveyResult = validateSurveyBody(body)
-    if (surveyResult.error) return res.status(400).json({ error: surveyResult.error })
 
     let identity
     if (authUser) {
@@ -168,13 +102,11 @@ export default async function handler(req, res) {
         email: authUser.email,
         user_id: authUser.id,
       }
-
       const { data: existing, error: existingErr } = await supabaseAdmin
         .from('workshop_feedback')
         .select('id')
         .eq('user_id', authUser.id)
-        .eq('workshop_title', WORKSHOP_TITLE)
-        .eq('workshop_date', WORKSHOP_DATE)
+        .eq('webinar_id', webinar.id)
         .maybeSingle()
       if (existingErr) {
         console.error('survey-feedback dedup check error:', existingErr)
@@ -189,11 +121,18 @@ export default async function handler(req, res) {
       identity = { ...nameEmail.payload, user_id: null }
     }
 
+    const workshopDate = workshopDateString(webinar.scheduled_at)
+    if (!workshopDate) {
+      return res.status(400).json({ error: 'Workshop has no scheduled date. Ask the admin to set one before collecting feedback.' })
+    }
+
     const insertPayload = {
-      workshop_title: WORKSHOP_TITLE,
-      workshop_date: WORKSHOP_DATE,
+      webinar_id: webinar.id,
+      workshop_title: webinar.title,
+      workshop_date: workshopDate,
+      responses: validation.responses,
+      ...legacyColumnMirror(validation.responses),
       ...identity,
-      ...surveyResult.payload,
     }
 
     const { error: insertErr } = await supabaseAdmin
@@ -207,11 +146,13 @@ export default async function handler(req, res) {
 
     try {
       await sendSurveyFeedbackEmail({
-        workshopTitle: WORKSHOP_TITLE,
-        workshopDate: WORKSHOP_DATE,
+        workshopTitle: webinar.title,
+        workshopDate,
         name: identity.name,
         email: identity.email,
-        ...surveyResult.payload,
+        questions: config.questions,
+        responses: validation.responses,
+        recipientEmail: config.admin_email,
       })
     } catch (emailErr) {
       console.error('survey-feedback email failed:', emailErr)

@@ -1,15 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useEnrollment } from '../hooks/useEnrollment'
+import { useWorkshop } from '../hooks/useWorkshops'
 import { supabase } from '../lib/supabase'
 import PortalNav from '../components/portal/PortalNav'
-import WorkshopFeedbackForm from '../components/survey/WorkshopFeedbackForm'
-
-const WORKSHOP_TITLE = 'Pilates Physics 101'
-const WORKSHOP_DATE = '2026-05-20'
-// Workshop runs 11am–1pm PDT on May 20 — survey opens when it wraps.
-const SURVEY_OPENS = new Date('2026-05-20T13:00:00-07:00')
-const SURVEY_CUTOFF = new Date('2026-06-01T00:00:00')
+import DynamicSurveyForm from '../components/survey/DynamicSurveyForm'
 
 const accentLinkStyle = { color: 'var(--color-accent)' }
 
@@ -29,7 +24,7 @@ function PortalLoading() {
     <div
       style={{
         minHeight: '100vh',
-                display: 'flex',
+        display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         fontFamily: 'var(--font-serif)',
@@ -91,8 +86,10 @@ function MutedParagraph({ children, style = {} }) {
   )
 }
 
-export default function Survey101Portal() {
+export default function SurveyPortal() {
+  const { slug } = useParams()
   const { user, loading: authLoading, signOut } = useEnrollment()
+  const { workshop, loading: workshopLoading } = useWorkshop(slug)
   const navigate = useNavigate()
 
   const [submitted, setSubmitted] = useState(false)
@@ -105,14 +102,13 @@ export default function Survey101Portal() {
   }, [authLoading, user, navigate])
 
   useEffect(() => {
-    if (!user?.id) return
+    if (!user?.id || !workshop?.id) return
     let cancelled = false
     supabase
       .from('workshop_feedback')
       .select('id')
       .eq('user_id', user.id)
-      .eq('workshop_title', WORKSHOP_TITLE)
-      .eq('workshop_date', WORKSHOP_DATE)
+      .eq('webinar_id', workshop.id)
       .maybeSingle()
       .then(({ data }) => {
         if (cancelled) return
@@ -122,39 +118,54 @@ export default function Survey101Portal() {
     return () => {
       cancelled = true
     }
-  }, [user?.id])
+  }, [user?.id, workshop?.id])
 
-  if (authLoading || !user) {
+  if (authLoading || !user || workshopLoading) {
     return <PortalLoading />
   }
 
-  const now = new Date()
-  const isClosed = now >= SURVEY_CUTOFF
-  const notYetOpen = now < SURVEY_OPENS
+  if (!workshop) {
+    return (
+      <PortalShell user={user} onSignOut={signOut}>
+        <Eyebrow />
+        <PageTitle>Workshop not found</PageTitle>
+        <MutedParagraph>
+          That workshop doesn't exist. Head back to{' '}
+          <Link to="/portal" style={accentLinkStyle}>your portal</Link>.
+        </MutedParagraph>
+      </PortalShell>
+    )
+  }
+
+  const config = workshop.survey_config
+  const enabled = !!config?.enabled
+  const now = Date.now()
+  const opensAt = config?.opens_at ? Date.parse(config.opens_at) : null
+  const closesAt = config?.closes_at ? Date.parse(config.closes_at) : null
+  const isClosed = !enabled || (closesAt != null && now >= closesAt)
+  const notYetOpen = enabled && opensAt != null && now < opensAt
 
   if (isClosed) {
     return (
       <PortalShell user={user} onSignOut={signOut}>
         <Eyebrow />
-        <PageTitle>{WORKSHOP_TITLE} survey</PageTitle>
+        <PageTitle>{workshop.title} survey</PageTitle>
         <MutedParagraph>
-          The survey period is closed. Thanks for being part of the workshop — see the{' '}
-          <Link to="/education" style={accentLinkStyle}>
-            education
-          </Link>{' '}
-          page for upcoming sessions.
+          The survey period is closed. Thanks for being part of the workshop. See the{' '}
+          <Link to="/education" style={accentLinkStyle}>education</Link> page for upcoming sessions.
         </MutedParagraph>
       </PortalShell>
     )
   }
 
   if (notYetOpen) {
+    const opensDate = opensAt ? new Date(opensAt).toLocaleString() : 'soon'
     return (
       <PortalShell user={user} onSignOut={signOut}>
         <Eyebrow />
-        <PageTitle>{WORKSHOP_TITLE} survey</PageTitle>
+        <PageTitle>{workshop.title} survey</PageTitle>
         <MutedParagraph>
-          The survey opens after the workshop wraps on May 20. Check back then — your feedback shapes the next one.
+          The survey opens after the workshop wraps ({opensDate}). Check back then. Your feedback shapes the next one.
         </MutedParagraph>
       </PortalShell>
     )
@@ -163,7 +174,7 @@ export default function Survey101Portal() {
   if (submissionCheckLoading) {
     return (
       <PortalShell user={user} onSignOut={signOut}>
-        <MutedParagraph>Loading your survey…</MutedParagraph>
+        <MutedParagraph>Loading your survey...</MutedParagraph>
       </PortalShell>
     )
   }
@@ -172,13 +183,10 @@ export default function Survey101Portal() {
     return (
       <PortalShell user={user} onSignOut={signOut}>
         <Eyebrow />
-        <PageTitle>Thanks — feedback received.</PageTitle>
+        <PageTitle>Thanks, feedback received.</PageTitle>
         <MutedParagraph style={{ marginBottom: '1rem' }}>
           That's incredibly helpful. Watch the{' '}
-          <Link to="/education" style={accentLinkStyle}>
-            education
-          </Link>{' '}
-          page for the next workshop.
+          <Link to="/education" style={accentLinkStyle}>education</Link> page for the next workshop.
         </MutedParagraph>
         <Link
           to="/portal"
@@ -191,7 +199,7 @@ export default function Survey101Portal() {
             fontWeight: '500',
           }}
         >
-          ← Back to your portal
+          Back to your portal
         </Link>
       </PortalShell>
     )
@@ -208,7 +216,7 @@ export default function Survey101Portal() {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ ...payload, webinar_slug: slug }),
     })
     const data = await res.json().catch(() => ({}))
     if (res.status === 409) {
@@ -221,14 +229,15 @@ export default function Survey101Portal() {
   return (
     <PortalShell user={user} onSignOut={signOut}>
       <Eyebrow />
-      <PageTitle>{WORKSHOP_TITLE} Feedback</PageTitle>
+      <PageTitle>{workshop.title} Feedback</PageTitle>
       <MutedParagraph style={{ marginBottom: '3rem' }}>
-        Hey there! I have a quick favor to ask.  Would you fill this out to help me make{' '}
-        {WORKSHOP_TITLE} even better next time? Takes about 5 minutes. Honest feedback is the most
+        Hey there! I have a quick favor to ask. Would you fill this out to help me make{' '}
+        {workshop.title} even better next time? Takes about 5 minutes. Honest feedback is the most
         useful kind, even if it stings a little. Thank you!
       </MutedParagraph>
 
-      <WorkshopFeedbackForm
+      <DynamicSurveyForm
+        surveyConfig={config}
         showNameEmail={false}
         onSubmit={handleSubmit}
         onSuccess={() => setSubmitted(true)}

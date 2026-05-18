@@ -19,8 +19,8 @@ import About from './pages/About'
 import Education from './pages/Education'
 import PilatesPhysics101 from './pages/PilatesPhysics101'
 import PilatesPhysics102 from './pages/PilatesPhysics102'
-import Survey101 from './pages/Survey101'
-import Survey101Portal from './pages/Survey101Portal'
+import Survey from './pages/Survey'
+import SurveyPortal from './pages/SurveyPortal'
 import WorkshopSalesPage from './pages/WorkshopSalesPage'
 import PortalDashboard from './pages/PortalDashboard'
 import WorkshopPortal from './pages/WorkshopPortal'
@@ -110,12 +110,17 @@ export default function App() {
           }
         />
         <Route
-          path="/survey-101"
+          path="/survey/:slug"
           element={
             <PageWrapper>
-              <Survey101 />
+              <Survey />
             </PageWrapper>
           }
+        />
+        {/* Back-compat redirect for emails/links already in flight */}
+        <Route
+          path="/survey-101"
+          element={<Navigate to="/survey/PP-101-May-2026" replace />}
         />
 
         {/* Keep the dynamic workshop surface for any non-PP-101 workshop admin creates */}
@@ -163,8 +168,12 @@ export default function App() {
         />
         {/* Static portal routes must come BEFORE the dynamic /portal/:slug route */}
         <Route
+          path="/portal/survey/:slug"
+          element={<SurveyPortal />}
+        />
+        <Route
           path="/portal/survey-101"
-          element={<Survey101Portal />}
+          element={<Navigate to="/portal/survey/PP-101-May-2026" replace />}
         />
         <Route
           path="/portal/:slug"

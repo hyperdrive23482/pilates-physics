@@ -1,10 +1,11 @@
 import { supabaseAdmin } from '../_lib/supabase-admin.js'
 import { requireAdmin } from '../_lib/require-admin.js'
+import { normalizeRowResponses } from '../_lib/survey-validation.js'
 
 // Returns every workshop_feedback row (admin-gated) plus per-workshop
-// aggregates (NPS distribution + multi-choice tallies). The dataset is
-// small — one row per attendee per workshop — so we send it all and let
-// the client filter by selected workshop.
+// aggregates derived from each workshop's survey_config. Workshops with
+// an enabled survey but no responses yet are included so the admin
+// dropdown shows them before the first submission.
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET')
@@ -15,76 +16,143 @@ export default async function handler(req, res) {
   if (!admin) return
 
   try {
-    const { data: rows, error } = await supabaseAdmin
-      .from('workshop_feedback')
-      .select('*')
-      .order('created_at', { ascending: false })
+    const [feedbackRes, webinarsRes] = await Promise.all([
+      supabaseAdmin
+        .from('workshop_feedback')
+        .select('*')
+        .order('created_at', { ascending: false }),
+      supabaseAdmin
+        .from('webinars')
+        .select('id, slug, title, scheduled_at, survey_config'),
+    ])
 
-    if (error) throw error
+    if (feedbackRes.error) throw feedbackRes.error
+    if (webinarsRes.error) throw webinarsRes.error
+
+    const rows = feedbackRes.data ?? []
+    const webinars = webinarsRes.data ?? []
+
+    const webinarById = new Map(webinars.map((w) => [w.id, w]))
+    const webinarByTitleDate = new Map()
+    for (const w of webinars) {
+      if (!w.scheduled_at) continue
+      const date = new Date(w.scheduled_at).toISOString().slice(0, 10)
+      webinarByTitleDate.set(`${w.title}|${date}`, w)
+    }
 
     const byWorkshop = {}
-    for (const row of rows ?? []) {
-      const key = `${row.workshop_title}|${row.workshop_date}`
-      if (!byWorkshop[key]) {
-        byWorkshop[key] = {
-          workshop_title: row.workshop_title,
-          workshop_date: row.workshop_date,
-          response_count: 0,
-          nps_sum: 0,
-          nps_distribution: Object.fromEntries(
-            Array.from({ length: 10 }, (_, i) => [i + 1, 0])
-          ),
-          years_teaching_counts: {},
-          valuable_sections_counts: {},
-          rushed_section_counts: {},
-          length_feedback_counts: {},
-          share_permission_counts: {},
-          responses: [],
+
+    function ensureBucket(key, workshop) {
+      if (byWorkshop[key]) return byWorkshop[key]
+      const date =
+        workshop?.scheduled_at
+          ? new Date(workshop.scheduled_at).toISOString().slice(0, 10)
+          : null
+      byWorkshop[key] = {
+        key,
+        webinar_id: workshop?.id ?? null,
+        slug: workshop?.slug ?? null,
+        workshop_title: workshop?.title ?? null,
+        workshop_date: date,
+        survey_config: workshop?.survey_config ?? null,
+        response_count: 0,
+        nps: null,
+        aggregates: {},
+        responses: [],
+      }
+      return byWorkshop[key]
+    }
+
+    // Seed buckets for enabled-survey workshops so they appear in the
+    // dropdown before any responses arrive.
+    for (const w of webinars) {
+      if (!w.survey_config?.enabled) continue
+      const key = w.id ? `wid:${w.id}` : null
+      if (!key) continue
+      const bucket = ensureBucket(key, w)
+      bucket.workshop_title = w.title
+      bucket.slug = w.slug
+    }
+
+    for (const row of rows) {
+      const workshop = row.webinar_id
+        ? webinarById.get(row.webinar_id)
+        : webinarByTitleDate.get(`${row.workshop_title}|${row.workshop_date}`)
+      const key = workshop?.id
+        ? `wid:${workshop.id}`
+        : `td:${row.workshop_title}|${row.workshop_date}`
+      const bucket = ensureBucket(key, workshop)
+
+      // Fall back to the row's own title/date if the workshop record is gone.
+      if (!bucket.workshop_title) bucket.workshop_title = row.workshop_title
+      if (!bucket.workshop_date) bucket.workshop_date = row.workshop_date
+
+      const normalized = normalizeRowResponses(row)
+      bucket.responses.push({ ...row, responses_normalized: normalized })
+      bucket.response_count += 1
+
+      const questions = bucket.survey_config?.questions
+      if (Array.isArray(questions)) {
+        for (const q of questions) {
+          const value = normalized[q.id]
+          if (value == null) continue
+          if (q.type === 'nps') {
+            if (!bucket.nps) {
+              bucket.nps = {
+                sum: 0,
+                count: 0,
+                distribution: Object.fromEntries(
+                  Array.from({ length: 10 }, (_, i) => [i + 1, 0])
+                ),
+              }
+            }
+            if (Number.isInteger(value) && value >= 1 && value <= 10) {
+              bucket.nps.sum += value
+              bucket.nps.count += 1
+              bucket.nps.distribution[value] += 1
+            }
+          } else if (q.type === 'single_select') {
+            if (!bucket.aggregates[q.id]) bucket.aggregates[q.id] = {}
+            bucket.aggregates[q.id][value] = (bucket.aggregates[q.id][value] ?? 0) + 1
+          } else if (q.type === 'multi_select' && Array.isArray(value)) {
+            if (!bucket.aggregates[q.id]) bucket.aggregates[q.id] = {}
+            for (const v of value) {
+              bucket.aggregates[q.id][v] = (bucket.aggregates[q.id][v] ?? 0) + 1
+            }
+          }
         }
       }
-      const bucket = byWorkshop[key]
-      bucket.response_count += 1
-      bucket.nps_sum += row.nps_score
-      bucket.nps_distribution[row.nps_score] =
-        (bucket.nps_distribution[row.nps_score] ?? 0) + 1
-      bucket.years_teaching_counts[row.years_teaching] =
-        (bucket.years_teaching_counts[row.years_teaching] ?? 0) + 1
-      for (const v of row.valuable_sections ?? []) {
-        bucket.valuable_sections_counts[v] =
-          (bucket.valuable_sections_counts[v] ?? 0) + 1
-      }
-      bucket.rushed_section_counts[row.rushed_section] =
-        (bucket.rushed_section_counts[row.rushed_section] ?? 0) + 1
-      bucket.length_feedback_counts[row.length_feedback] =
-        (bucket.length_feedback_counts[row.length_feedback] ?? 0) + 1
-      bucket.share_permission_counts[row.share_permission] =
-        (bucket.share_permission_counts[row.share_permission] ?? 0) + 1
-      bucket.responses.push(row)
     }
 
     const workshops = []
-    for (const [key, b] of Object.entries(byWorkshop)) {
-      b.avg_nps = b.response_count
-        ? Number((b.nps_sum / b.response_count).toFixed(2))
-        : null
-      b.promoter_count = Object.entries(b.nps_distribution)
-        .filter(([n]) => Number(n) >= 9)
-        .reduce((s, [, c]) => s + c, 0)
-      b.detractor_count = Object.entries(b.nps_distribution)
-        .filter(([n]) => Number(n) <= 6)
-        .reduce((s, [, c]) => s + c, 0)
-      delete b.nps_sum
-
+    for (const bucket of Object.values(byWorkshop)) {
+      if (bucket.nps && bucket.nps.count > 0) {
+        bucket.nps.avg = Number((bucket.nps.sum / bucket.nps.count).toFixed(2))
+        bucket.nps.promoter_count = Object.entries(bucket.nps.distribution)
+          .filter(([n]) => Number(n) >= 9)
+          .reduce((s, [, c]) => s + c, 0)
+        bucket.nps.detractor_count = Object.entries(bucket.nps.distribution)
+          .filter(([n]) => Number(n) <= 6)
+          .reduce((s, [, c]) => s + c, 0)
+        delete bucket.nps.sum
+      }
       workshops.push({
-        key,
-        workshop_title: b.workshop_title,
-        workshop_date: b.workshop_date,
-        count: b.response_count,
-        avg_nps: b.avg_nps,
+        key: bucket.key,
+        webinar_id: bucket.webinar_id,
+        slug: bucket.slug,
+        workshop_title: bucket.workshop_title,
+        workshop_date: bucket.workshop_date,
+        count: bucket.response_count,
+        avg_nps: bucket.nps?.avg ?? null,
       })
     }
 
-    workshops.sort((a, b) => (a.workshop_date < b.workshop_date ? 1 : -1))
+    workshops.sort((a, b) => {
+      const ad = a.workshop_date ?? ''
+      const bd = b.workshop_date ?? ''
+      if (ad === bd) return (a.workshop_title ?? '').localeCompare(b.workshop_title ?? '')
+      return ad < bd ? 1 : -1
+    })
 
     return res.status(200).json({ workshops, by_workshop: byWorkshop })
   } catch (err) {

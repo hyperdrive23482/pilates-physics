@@ -3,53 +3,66 @@ import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 
-const WORKSHOP_TITLE = 'Pilates Physics 101'
-const WORKSHOP_DATE = '2026-05-20'
-const WORKSHOP_SLUG = 'PP-101-May-2026'
-// Workshop runs 11am–1pm PDT on May 20 — survey opens when it wraps.
-const SURVEY_OPENS = new Date('2026-05-20T13:00:00-07:00')
-const SURVEY_CUTOFF = new Date('2026-06-01T00:00:00')
-
 /**
- * Login-time prompt asking attendees of Pilates Physics 101 to fill out the
- * post-workshop survey. Shown only when the user is entitled to PP-101, the
- * cutoff hasn't passed, and they haven't already submitted.
+ * Iterates the user's entitled workshops and renders one banner per
+ * workshop whose survey is currently open and not yet submitted by
+ * this user. Stacks vertically if multiple surveys are eligible.
  */
-export default function Pp101FeedbackBanner({ user, workshops }) {
-  const [submissionState, setSubmissionState] = useState('checking') // 'checking' | 'pending' | 'done'
+export default function FeedbackBanner({ user, workshops }) {
+  const eligible = (workshops ?? []).filter((w) => {
+    const config = w.survey_config
+    if (!config?.enabled) return false
+    const now = Date.now()
+    const opensAt = config.opens_at ? Date.parse(config.opens_at) : null
+    const closesAt = config.closes_at ? Date.parse(config.closes_at) : null
+    if (opensAt != null && now < opensAt) return false
+    if (closesAt != null && now >= closesAt) return false
+    return true
+  })
 
-  const entitled = workshops?.some((w) => w.slug === WORKSHOP_SLUG) ?? false
-  const now = new Date()
-  const inWindow = now >= SURVEY_OPENS && now < SURVEY_CUTOFF
+  const [submittedIds, setSubmittedIds] = useState(null)
 
   useEffect(() => {
-    if (!user?.id || !entitled || !inWindow) {
-      setSubmissionState('done')
+    if (!user?.id || eligible.length === 0) {
+      setSubmittedIds(new Set())
       return
     }
     let cancelled = false
+    const ids = eligible.map((w) => w.id)
     supabase
       .from('workshop_feedback')
-      .select('id')
+      .select('webinar_id')
       .eq('user_id', user.id)
-      .eq('workshop_title', WORKSHOP_TITLE)
-      .eq('workshop_date', WORKSHOP_DATE)
-      .maybeSingle()
+      .in('webinar_id', ids)
       .then(({ data }) => {
         if (cancelled) return
-        setSubmissionState(data ? 'done' : 'pending')
+        setSubmittedIds(new Set((data ?? []).map((r) => r.webinar_id)))
       })
     return () => {
       cancelled = true
     }
-  }, [user?.id, entitled, inWindow])
+    // eligible identities change every render; key off ids string instead.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, eligible.map((w) => w.id).join(',')])
 
-  if (!entitled || !inWindow || submissionState !== 'pending') return null
+  if (submittedIds == null) return null
 
+  const toPrompt = eligible.filter((w) => !submittedIds.has(w.id))
+  if (toPrompt.length === 0) return null
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2rem' }}>
+      {toPrompt.map((w) => (
+        <SingleBanner key={w.id} workshop={w} />
+      ))}
+    </div>
+  )
+}
+
+function SingleBanner({ workshop }) {
   return (
     <div
       style={{
-        marginBottom: '2rem',
         padding: '1.25rem 1.5rem',
         background: 'var(--color-surface-raised)',
         border: '1px solid var(--color-accent)',
@@ -81,12 +94,11 @@ export default function Pp101FeedbackBanner({ user, workshops }) {
             lineHeight: '1.5',
           }}
         >
-          Your feedback on {WORKSHOP_TITLE} would mean a lot — about 5 minutes, helps shape the
-          next one.
+          Your feedback on {workshop.title} would mean a lot. About 5 minutes, helps shape the next one.
         </p>
       </div>
       <Link
-        to="/portal/survey-101"
+        to={`/portal/survey/${workshop.slug}`}
         style={{
           display: 'inline-flex',
           alignItems: 'center',

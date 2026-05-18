@@ -4,7 +4,7 @@ import { useEnrollment } from '../hooks/useEnrollment'
 import { useMyWorkshops } from '../hooks/useWorkshops'
 import PortalNav from '../components/portal/PortalNav'
 import WorkshopCard from '../components/portal/WorkshopCard'
-import Pp101FeedbackBanner from '../components/portal/Pp101FeedbackBanner'
+import FeedbackBanner from '../components/portal/FeedbackBanner'
 import { BookOpen, ArrowRight } from 'lucide-react'
 
 export default function PortalDashboard() {
@@ -54,7 +54,7 @@ export default function PortalDashboard() {
           margin: '0 auto',
         }}
       >
-        <Pp101FeedbackBanner user={user} workshops={workshops} />
+        <FeedbackBanner user={user} workshops={workshops} />
 
         {/* Welcome */}
         <div style={{ marginBottom: '3rem' }}>

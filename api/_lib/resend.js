@@ -335,107 +335,90 @@ export async function sendInquiryAcknowledgement({ kind, to, name }) {
   return data
 }
 
+function formatResponseForEmail(question, value) {
+  if (value == null) return ''
+  switch (question.type) {
+    case 'nps':
+      return `${value} / 10`
+    case 'multi_select':
+      return Array.isArray(value) ? value.join(', ') : String(value)
+    default:
+      return String(value)
+  }
+}
+
 export async function sendSurveyFeedbackEmail({
   workshopTitle,
   workshopDate,
   name,
   email,
-  years_teaching,
-  nps_score,
-  change_this_week,
-  aha_moment,
-  valuable_sections,
-  rushed_section,
-  confusing,
-  length_feedback,
-  share_permission,
-  next_workshop_topic,
-  anything_else,
+  questions,
+  responses,
+  recipientEmail,
 }) {
-  const to = process.env.CONTACT_TO_EMAIL || 'kaleen@pilatesphysics.com'
+  const to = recipientEmail || process.env.CONTACT_TO_EMAIL || 'kaleen@pilatesphysics.com'
 
   const safeTitle = escapeHtml(workshopTitle)
   const safeDate = escapeHtml(workshopDate)
   const safeName = escapeHtml(name)
   const safeEmail = escapeHtml(email)
-  const safeYears = escapeHtml(years_teaching)
-  const safeNps = escapeHtml(String(nps_score))
-  const safeValuable = escapeHtml((valuable_sections || []).join(', '))
-  const safeRushed = escapeHtml(rushed_section)
-  const safeLength = escapeHtml(length_feedback)
-  const safeShare = escapeHtml(share_permission)
-  const safeChange = escapeHtml(change_this_week).replace(/\n/g, '<br>')
-  const safeAha = escapeHtml(aha_moment).replace(/\n/g, '<br>')
-  const safeConfusing = escapeHtml(confusing).replace(/\n/g, '<br>')
-  const safeNextTopic = next_workshop_topic
-    ? escapeHtml(next_workshop_topic).replace(/\n/g, '<br>')
-    : null
-  const safeAnythingElse = anything_else
-    ? escapeHtml(anything_else).replace(/\n/g, '<br>')
-    : null
 
   const quote = (content) =>
     `<div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${content}</div>`
 
-  const html = `
-    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1C1A17; line-height: 1.6;">
-      <p style="margin: 0 0 1rem; font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 0.08em;">New survey response — ${safeTitle} (${safeDate})</p>
-      <p style="margin: 0 0 0.5rem;"><strong>Name:</strong> ${safeName}</p>
-      <p style="margin: 0 0 0.5rem;"><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
-      <p style="margin: 0 0 0.5rem;"><strong>Years teaching:</strong> ${safeYears}</p>
-      <p style="margin: 0 0 0.5rem;"><strong>NPS:</strong> ${safeNps} / 10</p>
-      <p style="margin: 1.5rem 0 0.5rem;"><strong>Most valuable sections:</strong> ${safeValuable}</p>
-      <p style="margin: 0 0 0.5rem;"><strong>Section that felt rushed:</strong> ${safeRushed}</p>
-      <p style="margin: 0 0 0.5rem;"><strong>Length feedback:</strong> ${safeLength}</p>
-      <p style="margin: 0 0 0.5rem;"><strong>Share permission:</strong> ${safeShare}</p>
-      <p style="margin: 1.5rem 0 0.5rem;"><strong>What's going to change how they teach this week:</strong></p>
-      ${quote(safeChange)}
-      <p style="margin: 1.5rem 0 0.5rem;"><strong>Favorite aha moment:</strong></p>
-      ${quote(safeAha)}
-      <p style="margin: 1.5rem 0 0.5rem;"><strong>Confusing / wants explained differently:</strong></p>
-      ${quote(safeConfusing)}
-      ${safeNextTopic ? `<p style="margin: 1.5rem 0 0.5rem;"><strong>What they want to learn next:</strong></p>${quote(safeNextTopic)}` : ''}
-      ${safeAnythingElse ? `<p style="margin: 1.5rem 0 0.5rem;"><strong>Anything else:</strong></p>${quote(safeAnythingElse)}` : ''}
-      <p style="margin: 1.5rem 0 0; font-size: 0.85rem; color: #666;">Reply directly to this email to respond to ${safeName}.</p>
-    </div>
-  `.trim()
+  const npsQuestion = (questions || []).find((q) => q.type === 'nps')
+  const npsValue = npsQuestion ? responses?.[npsQuestion.id] : null
 
+  const htmlBlocks = []
   const textLines = [
     `New survey response — ${workshopTitle} (${workshopDate})`,
     '',
     `Name: ${name}`,
     `Email: ${email}`,
-    `Years teaching: ${years_teaching}`,
-    `NPS: ${nps_score} / 10`,
-    '',
-    `Most valuable sections: ${(valuable_sections || []).join(', ')}`,
-    `Section that felt rushed: ${rushed_section}`,
-    `Length feedback: ${length_feedback}`,
-    `Share permission: ${share_permission}`,
-    '',
-    `What's going to change how they teach this week:`,
-    change_this_week,
-    '',
-    `Favorite aha moment:`,
-    aha_moment,
-    '',
-    `Confusing / wants explained differently:`,
-    confusing,
   ]
-  if (next_workshop_topic) {
-    textLines.push('', `What they want to learn next:`, next_workshop_topic)
+
+  for (const q of questions || []) {
+    const raw = responses?.[q.id]
+    const present =
+      raw !== undefined &&
+      raw !== null &&
+      !(typeof raw === 'string' && raw.trim() === '') &&
+      !(Array.isArray(raw) && raw.length === 0)
+    if (!present) continue
+
+    const formatted = formatResponseForEmail(q, raw)
+    const safeLabel = escapeHtml(q.label)
+    const safeValue = escapeHtml(formatted)
+
+    if (q.type === 'long_text') {
+      htmlBlocks.push(`<p style="margin: 1.5rem 0 0.5rem;"><strong>${safeLabel}</strong></p>${quote(safeValue.replace(/\n/g, '<br>'))}`)
+    } else {
+      htmlBlocks.push(`<p style="margin: 0 0 0.5rem;"><strong>${safeLabel}</strong> ${safeValue}</p>`)
+    }
+
+    textLines.push('', q.label, formatted)
   }
-  if (anything_else) {
-    textLines.push('', `Anything else:`, anything_else)
-  }
-  const text = textLines.join('\n')
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1C1A17; line-height: 1.6;">
+      <p style="margin: 0 0 1rem; font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 0.08em;">New survey response from ${safeTitle} (${safeDate})</p>
+      <p style="margin: 0 0 0.5rem;"><strong>Name:</strong> ${safeName}</p>
+      <p style="margin: 0 0 1rem;"><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
+      ${htmlBlocks.join('\n      ')}
+      <p style="margin: 1.5rem 0 0; font-size: 0.85rem; color: #666;">Reply directly to this email to respond to ${safeName}.</p>
+    </div>
+  `.trim()
+
+  const subject = npsValue != null
+    ? `Survey response: ${workshopTitle} from ${name} (NPS ${npsValue})`
+    : `Survey response: ${workshopTitle} from ${name}`
 
   const { data, error } = await getResend().emails.send({
     from: FROM,
     to,
-    subject: `Survey response: ${workshopTitle} — ${name} (NPS ${nps_score})`,
+    subject,
     html,
-    text,
+    text: textLines.join('\n'),
     replyTo: email,
   })
   if (error) throw new Error(`Resend send failed: ${error.message ?? JSON.stringify(error)}`)

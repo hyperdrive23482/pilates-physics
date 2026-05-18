@@ -9,11 +9,13 @@ import AdminNav from '../../components/admin/AdminNav'
 import WorkshopForm from '../../components/admin/WorkshopForm'
 import ContentEditor from '../../components/admin/ContentEditor'
 import WorkshopFeedbackPanel from '../../components/admin/WorkshopFeedbackPanel'
+import SurveyConfigEditor from '../../components/admin/SurveyConfigEditor'
 
 const TABS = [
   { id: 'details', label: 'Details' },
   { id: 'content', label: 'Content' },
-  { id: 'questions', label: 'Questions' },
+  { id: 'questions', label: 'Pre-workshop Q&A' },
+  { id: 'survey', label: 'Post-workshop survey' },
   { id: 'feedback', label: 'Feedback' },
 ]
 
@@ -182,9 +184,55 @@ export default function AdminWorkshopEdit() {
 
         {!isNew && tab === 'questions' && <QuestionsList workshopId={workshop?.id} />}
 
+        {!isNew && tab === 'survey' && <SurveyTab workshop={workshop} onSaved={refetch} />}
+
         {!isNew && tab === 'feedback' && <FeedbackTab workshop={workshop} />}
       </main>
     </div>
+  )
+}
+
+function SurveyTab({ workshop, onSaved }) {
+  const { request } = useAdminAPI()
+  const [responseCount, setResponseCount] = useState(0)
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    if (!workshop?.id) return
+    request('/api/admin/workshop-feedback')
+      .then((data) => {
+        const bucket = data?.by_workshop?.[`wid:${workshop.id}`]
+        setResponseCount(bucket?.response_count ?? 0)
+      })
+      .catch(() => setResponseCount(0))
+  }, [workshop?.id, request])
+
+  async function handleSave(payload) {
+    if (!workshop?.id) return
+    setSaving(true)
+    try {
+      const { error } = await supabase
+        .from('webinars')
+        .update({ survey_config: payload, updated_at: new Date().toISOString() })
+        .eq('id', workshop.id)
+      if (error) throw error
+      onSaved?.()
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (!workshop?.id) {
+    return <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>Loading...</p>
+  }
+
+  return (
+    <SurveyConfigEditor
+      value={workshop.survey_config}
+      responseCount={responseCount}
+      onSave={handleSave}
+      saving={saving}
+    />
   )
 }
 
@@ -206,10 +254,10 @@ function FeedbackTab({ workshop }) {
     return <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>Loading…</p>
   }
 
-  // workshop_feedback rows match on workshop_title + workshop_date.
-  // The workshop record stores scheduled_at as a timestamptz; slice to YYYY-MM-DD.
+  // Feedback buckets are now keyed by webinar id, which is stable
+  // even if the workshop title or date changes.
   const date = workshop?.scheduled_at?.slice(0, 10)
-  const key = workshop?.title && date ? `${workshop.title}|${date}` : null
+  const key = workshop?.id ? `wid:${workshop.id}` : null
   const entry = key ? data.by_workshop?.[key] : null
 
   return (

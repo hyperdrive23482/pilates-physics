@@ -19,24 +19,6 @@ const SHARE_BADGES = {
   },
 }
 
-const CSV_COLUMNS = [
-  'created_at',
-  'name',
-  'email',
-  'user_id',
-  'years_teaching',
-  'nps_score',
-  'change_this_week',
-  'aha_moment',
-  'valuable_sections',
-  'rushed_section',
-  'confusing',
-  'length_feedback',
-  'share_permission',
-  'next_workshop_topic',
-  'anything_else',
-]
-
 function formatPercent(n, total) {
   if (!total) return '0%'
   return `${Math.round((n / total) * 100)}%`
@@ -49,12 +31,21 @@ function csvEscape(value) {
   return str
 }
 
-function downloadCsv(filename, rows) {
-  const header = CSV_COLUMNS.join(',')
+function formatCellValue(question, value) {
+  if (value == null) return ''
+  if (question?.type === 'multi_select' && Array.isArray(value)) {
+    return value.join(', ')
+  }
+  if (typeof value === 'string') return value
+  return String(value)
+}
+
+function downloadCsv(filename, headers, rows) {
+  const headerLine = headers.map((h) => csvEscape(h.label)).join(',')
   const body = rows
-    .map((r) => CSV_COLUMNS.map((c) => csvEscape(r[c])).join(','))
+    .map((r) => headers.map((h) => csvEscape(h.value(r))).join(','))
     .join('\n')
-  const blob = new Blob([`${header}\n${body}`], {
+  const blob = new Blob([`${headerLine}\n${body}`], {
     type: 'text/csv;charset=utf-8',
   })
   const url = URL.createObjectURL(blob)
@@ -65,6 +56,11 @@ function downloadCsv(filename, rows) {
   a.click()
   document.body.removeChild(a)
   URL.revokeObjectURL(url)
+}
+
+function shareValueFromResponse(r) {
+  const normalized = r.responses_normalized ?? {}
+  return normalized.share_permission ?? r.share_permission ?? null
 }
 
 export default function WorkshopFeedbackPanel({ workshopTitle, workshopDate, data }) {
@@ -79,9 +75,23 @@ export default function WorkshopFeedbackPanel({ workshopTitle, workshopDate, dat
   }
 
   const total = data.response_count
-  const csvName = `feedback-${data.workshop_title
+  const config = data.survey_config
+  const questions = Array.isArray(config?.questions) ? config.questions : []
+  const npsQuestion = questions.find((q) => q.type === 'nps')
+
+  const csvHeaders = [
+    { label: 'submitted_at', value: (r) => r.created_at },
+    { label: 'name', value: (r) => r.name },
+    { label: 'email', value: (r) => r.email },
+    { label: 'user_id', value: (r) => r.user_id ?? '' },
+    ...questions.map((q) => ({
+      label: q.label,
+      value: (r) => formatCellValue(q, (r.responses_normalized ?? {})[q.id]),
+    })),
+  ]
+  const csvName = `feedback-${(data.workshop_title ?? 'workshop')
     .replace(/\s+/g, '-')
-    .toLowerCase()}-${data.workshop_date}.csv`
+    .toLowerCase()}-${data.workshop_date ?? 'undated'}.csv`
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
@@ -120,7 +130,7 @@ export default function WorkshopFeedbackPanel({ workshopTitle, workshopDate, dat
         </div>
         <button
           type="button"
-          onClick={() => downloadCsv(csvName, data.responses)}
+          onClick={() => downloadCsv(csvName, csvHeaders, data.responses)}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -146,22 +156,28 @@ export default function WorkshopFeedbackPanel({ workshopTitle, workshopDate, dat
         }}
       >
         <StatCard label="Responses" value={total} />
-        <StatCard label="Avg NPS" value={data.avg_nps ?? '—'} />
-        <StatCard
-          label="Promoters (9–10)"
-          value={data.promoter_count}
-          sublabel={formatPercent(data.promoter_count, total)}
-        />
-        <StatCard
-          label="Detractors (1–6)"
-          value={data.detractor_count}
-          sublabel={formatPercent(data.detractor_count, total)}
-        />
+        {data.nps && (
+          <>
+            <StatCard label="Avg NPS" value={data.nps.avg ?? '-'} />
+            <StatCard
+              label="Promoters (9-10)"
+              value={data.nps.promoter_count ?? 0}
+              sublabel={formatPercent(data.nps.promoter_count ?? 0, total)}
+            />
+            <StatCard
+              label="Detractors (1-6)"
+              value={data.nps.detractor_count ?? 0}
+              sublabel={formatPercent(data.nps.detractor_count ?? 0, total)}
+            />
+          </>
+        )}
       </div>
 
-      <Section title="NPS distribution">
-        <BarList counts={data.nps_distribution} total={total} sort="key-asc" />
-      </Section>
+      {data.nps && (
+        <Section title="NPS distribution">
+          <BarList counts={data.nps.distribution} total={total} sort="key-asc" />
+        </Section>
+      )}
 
       <div
         style={{
@@ -170,27 +186,19 @@ export default function WorkshopFeedbackPanel({ workshopTitle, workshopDate, dat
           gap: '2rem',
         }}
       >
-        <Section title="Years teaching">
-          <BarList counts={data.years_teaching_counts} total={total} />
-        </Section>
-        <Section title="Most valuable sections">
-          <BarList counts={data.valuable_sections_counts} total={total} />
-        </Section>
-        <Section title="Rushed section">
-          <BarList counts={data.rushed_section_counts} total={total} />
-        </Section>
-        <Section title="Length feedback">
-          <BarList counts={data.length_feedback_counts} total={total} />
-        </Section>
-        <Section title="Share permission">
-          <BarList counts={data.share_permission_counts} total={total} />
-        </Section>
+        {questions
+          .filter((q) => q.type === 'single_select' || q.type === 'multi_select')
+          .map((q) => (
+            <Section key={q.id} title={q.label}>
+              <BarList counts={data.aggregates?.[q.id] ?? {}} total={total} />
+            </Section>
+          ))}
       </div>
 
       <Section title={`Free-text responses (${total})`}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {data.responses.map((r) => (
-            <ResponseCard key={r.id} response={r} />
+            <ResponseCard key={r.id} response={r} questions={questions} npsQuestion={npsQuestion} />
           ))}
         </div>
       </Section>
@@ -219,7 +227,7 @@ function Section({ title, children }) {
 }
 
 function BarList({ counts, total, sort = 'value-desc' }) {
-  let entries = Object.entries(counts)
+  let entries = Object.entries(counts ?? {})
   if (sort === 'key-asc') {
     entries.sort(([a], [b]) => Number(a) - Number(b))
   } else {
@@ -295,8 +303,12 @@ function BarList({ counts, total, sort = 'value-desc' }) {
   )
 }
 
-function ResponseCard({ response: r }) {
-  const shareBadge = SHARE_BADGES[r.share_permission] ?? null
+function ResponseCard({ response: r, questions, npsQuestion }) {
+  const normalized = r.responses_normalized ?? {}
+  const shareValue = shareValueFromResponse(r)
+  const shareBadge = shareValue ? SHARE_BADGES[shareValue] : null
+  const npsValue = npsQuestion ? normalized[npsQuestion.id] : null
+
   return (
     <article
       style={{
@@ -322,9 +334,6 @@ function ResponseCard({ response: r }) {
         <span style={{ fontSize: '0.8rem', color: 'var(--color-ink-muted)' }}>
           {r.email}
         </span>
-        <span style={{ fontSize: '0.8rem', color: 'var(--color-ink-muted)' }}>
-          · {r.years_teaching}
-        </span>
         <span
           style={{
             marginLeft: 'auto',
@@ -334,7 +343,7 @@ function ResponseCard({ response: r }) {
             flexWrap: 'wrap',
           }}
         >
-          <NpsChip score={r.nps_score} />
+          {npsValue != null && <NpsChip score={npsValue} />}
           <Badge
             label={r.user_id ? 'Portal' : 'Public'}
             color="#9ca3af"
@@ -345,20 +354,21 @@ function ResponseCard({ response: r }) {
       </header>
 
       <div style={{ display: 'grid', gap: '1rem', fontSize: '0.9rem', lineHeight: 1.55 }}>
-        <Field label="Q2 — Change this week">{r.change_this_week}</Field>
-        <Field label="Q3 — Aha moment">{r.aha_moment}</Field>
-        <Field label="Q4 — Valuable sections">
-          {(r.valuable_sections ?? []).join(', ')}
-        </Field>
-        <Field label="Q5 — Rushed">{r.rushed_section}</Field>
-        <Field label="Q6 — Confusing">{r.confusing}</Field>
-        <Field label="Q7 — Length">{r.length_feedback}</Field>
-        {r.next_workshop_topic && (
-          <Field label="Q9 — Next workshop topic">{r.next_workshop_topic}</Field>
-        )}
-        {r.anything_else && (
-          <Field label="Q10 — Anything else">{r.anything_else}</Field>
-        )}
+        {questions
+          .filter((q) => q.type !== 'nps')
+          .map((q) => {
+            const value = normalized[q.id]
+            const empty =
+              value == null ||
+              (typeof value === 'string' && value.trim() === '') ||
+              (Array.isArray(value) && value.length === 0)
+            if (empty) return null
+            return (
+              <Field key={q.id} label={q.label}>
+                {formatCellValue(q, value)}
+              </Field>
+            )
+          })}
       </div>
 
       <p style={{ marginTop: '1rem', fontSize: '0.7rem', color: 'var(--color-ink-muted)' }}>
