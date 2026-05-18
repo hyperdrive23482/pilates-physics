@@ -238,7 +238,7 @@ export function buildCertificate({ workshop, participantName }) {
   }
 
   // === Meta row at bottom (Date / Duration / Instructor) ===
-  const metaY = PAGE_HEIGHT - BOTTOM_INSET - 38
+  const metaY = PAGE_HEIGHT - BOTTOM_INSET - 55
   const colWidth = CONTENT_WIDTH / 3
 
   // Signature image, centered in the INSTRUCTOR column, above the meta row.
@@ -326,7 +326,7 @@ export function buildCertificate({ workshop, participantName }) {
           align: 'center',
         })
     }
-    footerY = npcpY + 30
+    footerY = npcpY + 44
   }
 
   // === Footer URL ===
