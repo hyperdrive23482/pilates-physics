@@ -1,6 +1,6 @@
 import { sendSurveyFeedbackEmail } from './_lib/resend.js'
 import { supabaseAdmin } from './_lib/supabase-admin.js'
-import { validateResponses, legacyColumnMirror } from './_lib/survey-validation.js'
+import { validateResponses } from './_lib/survey-validation.js'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -149,7 +149,6 @@ export default async function handler(req, res) {
       workshop_title: webinar.title,
       workshop_date: workshopDate,
       responses: validation.responses,
-      ...legacyColumnMirror(validation.responses),
       ...identity,
     }
 

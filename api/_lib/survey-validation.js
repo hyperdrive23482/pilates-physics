@@ -14,49 +14,16 @@ const MAX_SHORT_TEXT_LEN = 200
 const MAX_OPTIONS = 30
 const MAX_QUESTIONS = 40
 
-// Legacy typed columns on workshop_feedback. The new API writes the
-// matching value into the typed column when a response's question id is
-// one of these AND its value passes the legacy CHECK constraint. That
-// keeps the existing PP-101 analytics and CSVs working unchanged.
-const LEGACY_COLUMN_VALUES = {
-  years_teaching: new Set([
-    "I'm not an instructor",
-    'I am in teacher training',
-    '<1 year',
-    '1-3 years',
-    '4-9 years',
-    '10+ years',
-  ]),
-  rushed_section: new Set([
-    'Framework',
-    'Background Physics',
-    'Practical Application',
-    'Wrap-Up',
-    'Nothing — pacing felt right',
-  ]),
-  length_feedback: new Set(["Could've been shorter", 'Just right', "Could've been longer"]),
-  share_permission: new Set([
-    'Yes, with my first name',
-    'Yes, but keep me anonymous',
-    'No, please keep my responses private',
-  ]),
-}
-
-// Multi-select column: the set is the allowed VALUES inside the array.
-const LEGACY_VALUABLE_SECTIONS = new Set([
-  'Framework',
-  'Background Physics',
-  'Practical Application',
-  'Wrap-Up Challenge worksheet',
-])
-
-const TYPED_TEXT_COLUMNS = new Set([
-  'change_this_week',
-  'aha_moment',
-  'confusing',
-  'next_workshop_topic',
-  'anything_else',
-])
+// The original 022 migration created typed columns (nps_score, years_teaching,
+// valuable_sections, rushed_section, length_feedback, share_permission, plus
+// the text fields) each with a CHECK constraint enumerating allowed values.
+// We previously dual-wrote to those columns from the new code path, but the
+// CHECK constraints are brittle (any whitespace / smart-quote drift between
+// the JS strings and the DB definition fails the insert) and the new
+// analytics path reads from the `responses` jsonb via normalizeRowResponses
+// anyway. So new submissions write to jsonb only; the typed columns stay
+// nullable and exist purely to keep historical pre-migration-025 PP-101 rows
+// readable.
 
 function isString(v) {
   return typeof v === 'string'
@@ -217,32 +184,11 @@ export function validateResponses(config, rawResponses) {
   return { responses: cleaned }
 }
 
-// Given a validated `responses` blob, derive any typed-column values
-// the row should mirror. Anything that doesn't match a legacy enum is
-// skipped — typed columns are nullable now, so missing values are fine.
-export function legacyColumnMirror(responses) {
-  const mirror = {}
-  for (const [qid, value] of Object.entries(responses)) {
-    if (qid === 'nps_score' && Number.isInteger(value)) {
-      mirror.nps_score = value
-      continue
-    }
-    if (qid === 'valuable_sections' && Array.isArray(value)) {
-      const filtered = value.filter((v) => LEGACY_VALUABLE_SECTIONS.has(v))
-      if (filtered.length === value.length && filtered.length > 0) {
-        mirror.valuable_sections = filtered
-      }
-      continue
-    }
-    if (LEGACY_COLUMN_VALUES[qid] && LEGACY_COLUMN_VALUES[qid].has(value)) {
-      mirror[qid] = value
-      continue
-    }
-    if (TYPED_TEXT_COLUMNS.has(qid) && isString(value) && value.length > 0) {
-      mirror[qid] = value
-    }
-  }
-  return mirror
+// Kept as a no-op for backward compatibility with any callers still
+// importing it. New rows write to the responses jsonb only; see the
+// comment block above for rationale.
+export function legacyColumnMirror() {
+  return {}
 }
 
 // Given a row from workshop_feedback, return a unified responses map
