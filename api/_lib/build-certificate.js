@@ -10,6 +10,10 @@ const LOGO_BUFFER = readFileSync(
   path.join(__dirname, '../_assets/pilates-physics-logo.png')
 )
 
+const SIGNATURE_BUFFER = readFileSync(
+  path.join(__dirname, '../../public/images/about/kaleen_signature.png')
+)
+
 const INSTRUCTOR_NAME = 'Kaleen Canevari'
 
 // US Letter landscape (points; 72 = 1 inch). 11 x 8.5 in.
@@ -38,6 +42,21 @@ function formatDate(scheduledAt) {
   if (Number.isNaN(d.getTime())) return ''
   return new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/Los_Angeles',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(d)
+}
+
+// Date-only columns ('YYYY-MM-DD') represent calendar dates with no
+// timezone. Format in UTC so the calendar date doesn't shift when LA is
+// behind UTC.
+function formatDateOnly(dateStr) {
+  if (!dateStr) return ''
+  const d = new Date(dateStr)
+  if (Number.isNaN(d.getTime())) return ''
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: 'UTC',
     month: 'long',
     day: 'numeric',
     year: 'numeric',
@@ -202,6 +221,18 @@ export function buildCertificate({ workshop, participantName }) {
   // === Meta row at bottom (Date / Duration / Instructor) ===
   const metaY = PAGE_HEIGHT - BOTTOM_INSET - 38
   const colWidth = CONTENT_WIDTH / 3
+
+  // Signature image, centered in the INSTRUCTOR column, above the meta row.
+  const sigBoxWidth = 110
+  const sigBoxHeight = 28
+  const sigX = SIDE_INSET + 2 * colWidth + (colWidth - sigBoxWidth) / 2
+  const sigY = metaY - sigBoxHeight - 4
+  doc.image(SIGNATURE_BUFFER, sigX, sigY, {
+    fit: [sigBoxWidth, sigBoxHeight],
+    align: 'center',
+    valign: 'bottom',
+  })
+
   const cells = [
     { label: 'DATE', value: formatDate(workshop.scheduled_at) || '—' },
     {
@@ -231,12 +262,60 @@ export function buildCertificate({ workshop, participantName }) {
       })
   }
 
+  // === Optional NPCP attribution row, below the meta row ===
+  const hasNpcp =
+    workshop.npcp_cecs != null ||
+    workshop.npcp_course_id ||
+    workshop.npcp_approval_date
+  let footerY = PAGE_HEIGHT - BOTTOM_INSET + 8
+  if (hasNpcp) {
+    const npcpY = metaY + 36
+    const npcpCells = [
+      {
+        label: 'NPCP CECs',
+        value:
+          workshop.npcp_cecs != null
+            ? Number(workshop.npcp_cecs).toFixed(1)
+            : '—',
+      },
+      {
+        label: 'NPCP COURSE ID',
+        value: workshop.npcp_course_id || '—',
+      },
+      {
+        label: 'APPROVAL DATE',
+        value: formatDateOnly(workshop.npcp_approval_date) || '—',
+      },
+    ]
+    for (let i = 0; i < npcpCells.length; i++) {
+      const x = SIDE_INSET + i * colWidth
+      doc
+        .font('Helvetica-Bold')
+        .fontSize(7)
+        .fillColor(COLOR_INK_FAINT)
+        .text(npcpCells[i].label, x, npcpY, {
+          width: colWidth,
+          align: 'center',
+          characterSpacing: 2,
+        })
+      doc
+        .font('Times-Roman')
+        .fontSize(11)
+        .fillColor(COLOR_INK_SOFT)
+        .text(npcpCells[i].value, x, npcpY + 11, {
+          width: colWidth,
+          align: 'center',
+        })
+    }
+    footerY = npcpY + 30
+  }
+
   // === Footer URL ===
   doc
     .font('Helvetica')
     .fontSize(8)
     .fillColor(COLOR_INK_FAINT)
-    .text('PILATESPHYSICS.COM', 0, PAGE_HEIGHT - BOTTOM_INSET + 8, {
+    .text('PILATESPHYSICS.COM', 0, footerY, {
       width: PAGE_WIDTH,
       align: 'center',
       characterSpacing: 3,

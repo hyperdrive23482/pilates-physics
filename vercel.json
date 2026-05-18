@@ -11,6 +11,9 @@
     },
     "api/portal/animation.js": {
       "includeFiles": "animations/**"
+    },
+    "api/certificate/[workshopId].js": {
+      "includeFiles": "public/images/about/kaleen_signature.png"
     }
   },
   "crons": [

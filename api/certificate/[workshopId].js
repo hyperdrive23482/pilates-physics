@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     const { data: workshop, error: wErr } = await supabaseAdmin
       .from('webinars')
       .select(
-        'id, slug, title, subtitle, description, scheduled_at, duration_min, status'
+        'id, slug, title, subtitle, description, scheduled_at, duration_min, status, npcp_cecs, npcp_course_id, npcp_approval_date'
       )
       .eq('id', workshopId)
       .maybeSingle()

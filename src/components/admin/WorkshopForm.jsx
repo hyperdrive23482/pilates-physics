@@ -46,6 +46,9 @@ export default function WorkshopForm({
     bonus_webinar_id: '',
     bonus_starts_at: '',
     bonus_ends_at: '',
+    npcp_cecs: '',
+    npcp_course_id: '',
+    npcp_approval_date: '',
   })
   const [slugTouched, setSlugTouched] = useState(false)
   const [error, setError] = useState(null)
@@ -71,6 +74,9 @@ export default function WorkshopForm({
       bonus_webinar_id: initial.bonus_webinar_id ?? '',
       bonus_starts_at: toLocalInput(initial.bonus_starts_at),
       bonus_ends_at: toLocalInput(initial.bonus_ends_at),
+      npcp_cecs: initial.npcp_cecs ?? '',
+      npcp_course_id: initial.npcp_course_id ?? '',
+      npcp_approval_date: initial.npcp_approval_date ?? '',
     })
     setSlugTouched(true)
     setDirty(false)
@@ -121,6 +127,9 @@ export default function WorkshopForm({
       bonus_webinar_id: form.bonus_webinar_id || null,
       bonus_starts_at: form.bonus_starts_at ? new Date(form.bonus_starts_at).toISOString() : null,
       bonus_ends_at: form.bonus_ends_at ? new Date(form.bonus_ends_at).toISOString() : null,
+      npcp_cecs: form.npcp_cecs === '' ? null : Number(form.npcp_cecs),
+      npcp_course_id: form.npcp_course_id.trim() || null,
+      npcp_approval_date: form.npcp_approval_date || null,
     }
 
     try {
@@ -280,6 +289,59 @@ export default function WorkshopForm({
           />
         </Field>
       </Row>
+
+      <details
+        style={{
+          border: '1px solid var(--color-rule)',
+          padding: '1rem 1.25rem',
+          background: 'var(--color-surface)',
+        }}
+      >
+        <summary
+          style={{
+            cursor: 'pointer',
+            fontSize: '0.85rem',
+            fontWeight: 500,
+            color: 'var(--color-ink)',
+            fontFamily: '"DM Sans", sans-serif',
+          }}
+        >
+          NPCP certificate info
+        </summary>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+          <Row>
+            <Field label="NPCP CECs" hint="e.g. 2.0">
+              <input
+                type="number"
+                min="0"
+                step="0.5"
+                value={form.npcp_cecs}
+                onChange={(e) => update('npcp_cecs', e.target.value)}
+                style={inputStyle}
+              />
+            </Field>
+            <Field label="NPCP Course ID" hint="e.g. 20245-9648">
+              <input
+                type="text"
+                value={form.npcp_course_id}
+                onChange={(e) => update('npcp_course_id', e.target.value)}
+                style={inputStyle}
+              />
+            </Field>
+          </Row>
+          <Field label="Course approval date">
+            <input
+              type="date"
+              value={form.npcp_approval_date}
+              onChange={(e) => update('npcp_approval_date', e.target.value)}
+              style={inputStyle}
+            />
+          </Field>
+          <span style={{ fontSize: '0.72rem', color: 'var(--color-ink-muted)' }}>
+            Filling any of these fields adds an NPCP attribution row to the certificate PDF.
+          </span>
+        </div>
+      </details>
 
       <details
         style={{
