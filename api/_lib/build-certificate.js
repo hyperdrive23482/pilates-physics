@@ -14,6 +14,19 @@ const SIGNATURE_BUFFER = readFileSync(
   path.join(__dirname, '../../public/images/about/kaleen_signature.png')
 )
 
+const FONT_SERIF = readFileSync(
+  path.join(__dirname, '../_assets/fonts/SourceSerif4-Regular.ttf')
+)
+const FONT_SERIF_ITALIC = readFileSync(
+  path.join(__dirname, '../_assets/fonts/SourceSerif4-It.ttf')
+)
+const FONT_SERIF_SEMIBOLD = readFileSync(
+  path.join(__dirname, '../_assets/fonts/SourceSerif4-Semibold.ttf')
+)
+const FONT_MONO_MEDIUM = readFileSync(
+  path.join(__dirname, '../_assets/fonts/JetBrainsMono-Medium.ttf')
+)
+
 const INSTRUCTOR_NAME = 'Kaleen Canevari'
 
 // US Letter landscape (points; 72 = 1 inch). 11 x 8.5 in.
@@ -104,6 +117,11 @@ export function buildCertificate({ workshop, participantName }) {
     },
   })
 
+  doc.registerFont('Serif', FONT_SERIF)
+  doc.registerFont('Serif-Italic', FONT_SERIF_ITALIC)
+  doc.registerFont('Serif-Bold', FONT_SERIF_SEMIBOLD)
+  doc.registerFont('Mono', FONT_MONO_MEDIUM)
+
   // Cream paper background (logo PNG has a transparent background, so the
   // cream shows through around the wordmark cleanly).
   doc.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT).fill(COLOR_PAPER)
@@ -121,13 +139,13 @@ export function buildCertificate({ workshop, participantName }) {
 
   // === CERTIFICATE OF COMPLETION ===
   doc
-    .font('Helvetica-Bold')
-    .fontSize(10.5)
+    .font('Mono')
+    .fontSize(9.5)
     .fillColor(COLOR_INK_SOFT)
     .text('CERTIFICATE OF COMPLETION', SIDE_INSET, y, {
       width: CONTENT_WIDTH,
       align: 'center',
-      characterSpacing: 4,
+      characterSpacing: 3,
     })
   y = doc.y + 10
 
@@ -144,19 +162,19 @@ export function buildCertificate({ workshop, participantName }) {
 
   // === THIS IS TO CERTIFY THAT ===
   doc
-    .font('Helvetica')
-    .fontSize(8.5)
+    .font('Mono')
+    .fontSize(7.5)
     .fillColor(COLOR_INK_FAINT)
     .text('THIS IS TO CERTIFY THAT', SIDE_INSET, y, {
       width: CONTENT_WIDTH,
       align: 'center',
-      characterSpacing: 3,
+      characterSpacing: 2,
     })
   y = doc.y + 12
 
   // === Participant name ===
   doc
-    .font('Times-Italic')
+    .font('Serif-Italic')
     .fontSize(58)
     .fillColor(COLOR_INK)
     .text(participantName, SIDE_INSET, y, {
@@ -167,24 +185,25 @@ export function buildCertificate({ workshop, participantName }) {
 
   // === HAS SUCCESSFULLY COMPLETED ===
   doc
-    .font('Helvetica')
-    .fontSize(8.5)
+    .font('Mono')
+    .fontSize(7.5)
     .fillColor(COLOR_INK_FAINT)
     .text('HAS SUCCESSFULLY COMPLETED', SIDE_INSET, y, {
       width: CONTENT_WIDTH,
       align: 'center',
-      characterSpacing: 3,
+      characterSpacing: 2,
     })
   y = doc.y + 8
 
   // === Workshop title ===
   doc
-    .font('Times-Roman')
+    .font('Serif-Bold')
     .fontSize(22)
     .fillColor(COLOR_INK)
     .text(workshop.title, SIDE_INSET, y, {
       width: CONTENT_WIDTH,
       align: 'center',
+      characterSpacing: -0.3,
     })
   y = doc.y
 
@@ -192,7 +211,7 @@ export function buildCertificate({ workshop, participantName }) {
   if (workshop.subtitle) {
     y += 4
     doc
-      .font('Times-Italic')
+      .font('Serif-Italic')
       .fontSize(13)
       .fillColor(COLOR_INK_SOFT)
       .text(workshop.subtitle, SIDE_INSET, y, {
@@ -208,7 +227,7 @@ export function buildCertificate({ workshop, participantName }) {
     const desc = truncate(workshop.description, 360)
     const descSideInset = SIDE_INSET + 70
     doc
-      .font('Times-Italic')
+      .font('Serif-Italic')
       .fontSize(12)
       .fillColor(COLOR_INK_SOFT)
       .text(desc, descSideInset, y, {
@@ -244,17 +263,17 @@ export function buildCertificate({ workshop, participantName }) {
   for (let i = 0; i < cells.length; i++) {
     const x = SIDE_INSET + i * colWidth
     doc
-      .font('Helvetica-Bold')
-      .fontSize(7.5)
+      .font('Mono')
+      .fontSize(6.5)
       .fillColor(COLOR_INK_FAINT)
       .text(cells[i].label, x, metaY, {
         width: colWidth,
         align: 'center',
-        characterSpacing: 2,
+        characterSpacing: 1.5,
       })
     doc
-      .font('Times-Roman')
-      .fontSize(13)
+      .font('Serif')
+      .fontSize(12)
       .fillColor(COLOR_INK)
       .text(cells[i].value, x, metaY + 14, {
         width: colWidth,
@@ -290,17 +309,17 @@ export function buildCertificate({ workshop, participantName }) {
     for (let i = 0; i < npcpCells.length; i++) {
       const x = SIDE_INSET + i * colWidth
       doc
-        .font('Helvetica-Bold')
-        .fontSize(7)
+        .font('Mono')
+        .fontSize(6)
         .fillColor(COLOR_INK_FAINT)
         .text(npcpCells[i].label, x, npcpY, {
           width: colWidth,
           align: 'center',
-          characterSpacing: 2,
+          characterSpacing: 1.5,
         })
       doc
-        .font('Times-Roman')
-        .fontSize(11)
+        .font('Serif')
+        .fontSize(10.5)
         .fillColor(COLOR_INK_SOFT)
         .text(npcpCells[i].value, x, npcpY + 11, {
           width: colWidth,
@@ -312,13 +331,13 @@ export function buildCertificate({ workshop, participantName }) {
 
   // === Footer URL ===
   doc
-    .font('Helvetica')
-    .fontSize(8)
+    .font('Mono')
+    .fontSize(7)
     .fillColor(COLOR_INK_FAINT)
     .text('PILATESPHYSICS.COM', 0, footerY, {
       width: PAGE_WIDTH,
       align: 'center',
-      characterSpacing: 3,
+      characterSpacing: 2,
       lineBreak: false,
     })
 
