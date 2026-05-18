@@ -135,7 +135,7 @@ export default function AnnouncementForm({
               justifyContent: 'center',
               fontSize: '0.78rem',
               color: 'var(--color-ink-muted)',
-              fontFamily: '"DM Sans", sans-serif',
+              fontFamily: 'var(--font-serif)',
             }}
           >
             Type a message below to see the preview
@@ -229,12 +229,12 @@ export default function AnnouncementForm({
           style={{
             padding: '0.75rem 1.5rem',
             background: 'var(--color-accent)',
-            color: '#1C1A17',
+            color: 'var(--color-accent-ink)',
             border: 'none',
             cursor: busy ? 'wait' : 'pointer',
             fontSize: '0.9rem',
             fontWeight: 500,
-            fontFamily: '"DM Sans", sans-serif',
+            fontFamily: 'var(--font-serif)',
             opacity: busy ? 0.7 : 1,
           }}
         >
@@ -277,6 +277,6 @@ const inputStyle = {
   color: 'var(--color-ink)',
   border: '1px solid var(--color-rule)',
   fontSize: '0.9rem',
-  fontFamily: '"DM Sans", sans-serif',
+  fontFamily: 'var(--font-serif)',
   outline: 'none',
 }

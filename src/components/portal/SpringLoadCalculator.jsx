@@ -75,10 +75,10 @@ function ModeToggle({ mode, onChange }) {
             style={{
               padding: '0.5rem 1rem',
               fontSize: '0.8rem',
-              fontFamily: '"DM Sans", sans-serif',
+              fontFamily: 'var(--font-serif)',
               fontWeight: '500',
               letterSpacing: '0.02em',
-              color: active ? '#1C1A17' : 'var(--color-ink-muted)',
+              color: active ? 'var(--color-accent-ink)' : 'var(--color-ink-muted)',
               background: active ? 'var(--color-accent)' : 'transparent',
               border: 'none',
               cursor: 'pointer',
@@ -99,7 +99,7 @@ function SpringSelectorRow({ selection, onChange, onRemove }) {
     width: '100%',
     padding: '0.5rem 0.65rem',
     fontSize: '0.85rem',
-    fontFamily: '"DM Sans", sans-serif',
+    fontFamily: 'var(--font-serif)',
     border: '1px solid var(--color-rule)',
     background: 'var(--color-bg)',
     color: 'var(--color-ink)',
@@ -262,7 +262,7 @@ function SpringSelectorPanel({ selections, setSelections, mode, setMode }) {
           gap: '0.375rem',
           padding: '0.65rem 1rem',
           fontSize: '0.85rem',
-          fontFamily: '"DM Sans", sans-serif',
+          fontFamily: 'var(--font-serif)',
           fontWeight: '500',
           color: 'var(--color-accent)',
           background: 'transparent',
@@ -370,7 +370,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
         textAnchor="middle"
         fill="#888780"
         fontSize="11"
-        fontFamily="DM Sans, sans-serif"
+        fontFamily="JetBrains Mono, ui-monospace, monospace"
         transform={`rotate(-90, 18, ${AREA.y + AREA.h / 2})`}
       >
         Force (lbs)
@@ -380,7 +380,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
       {yTicks.map((lb) => {
         const gy = AREA.y + AREA.h - (lb / maxForce) * AREA.h
         return (
-          <text key={`yt-${lb}`} x={AREA.x - 8} y={gy + 4} textAnchor="end" fill="#888780" fontSize="10" fontFamily="DM Sans, sans-serif">
+          <text key={`yt-${lb}`} x={AREA.x - 8} y={gy + 4} textAnchor="end" fill="#888780" fontSize="10" fontFamily="JetBrains Mono, ui-monospace, monospace">
             {lb}
           </text>
         )
@@ -393,7 +393,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
         textAnchor="middle"
         fill="#888780"
         fontSize="11"
-        fontFamily="DM Sans, sans-serif"
+        fontFamily="JetBrains Mono, ui-monospace, monospace"
       >
         Spring extension (inches)
       </text>
@@ -404,7 +404,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
         return (
           <g key={`xt-${inch}`}>
             <line x1={gx} y1={AREA.y + AREA.h} x2={gx} y2={AREA.y + AREA.h + 5} stroke="#F1EFE8" strokeWidth="1" />
-            <text x={gx} y={AREA.y + AREA.h + 18} textAnchor="middle" fill="#888780" fontSize="10" fontFamily="DM Sans, sans-serif">
+            <text x={gx} y={AREA.y + AREA.h + 18} textAnchor="middle" fill="#888780" fontSize="10" fontFamily="JetBrains Mono, ui-monospace, monospace">
               {inch}&quot;
             </text>
           </g>
@@ -461,7 +461,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
               textAnchor={isStacked ? 'start' : 'end'}
               fill={ln.strokeColor}
               fontSize="11"
-              fontFamily="DM Sans, sans-serif"
+              fontFamily="JetBrains Mono, ui-monospace, monospace"
               fontWeight="600"
             >
               {ln.label}: {force.toFixed(1)} lbs
@@ -478,7 +478,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
           textAnchor="end"
           fill="var(--color-ink)"
           fontSize="11"
-          fontFamily="DM Sans, sans-serif"
+          fontFamily="JetBrains Mono, ui-monospace, monospace"
           fontWeight="600"
         >
           {cursorExtension.toFixed(1)}&quot; extension
@@ -492,7 +492,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
           textAnchor="middle"
           fill="#888780"
           fontSize="12"
-          fontFamily="DM Sans, sans-serif"
+          fontFamily="JetBrains Mono, ui-monospace, monospace"
         >
           Add a spring to see its force curve
         </text>
@@ -678,7 +678,7 @@ function FAQItem({ item, isOpen, onToggle }) {
           cursor: 'pointer',
           textAlign: 'left',
           color: 'var(--color-ink)',
-          fontFamily: '"DM Sans", sans-serif',
+          fontFamily: 'var(--font-serif)',
           fontSize: '0.95rem',
           fontWeight: '500',
         }}
@@ -699,7 +699,7 @@ function FAQItem({ item, isOpen, onToggle }) {
           style={{
             padding: '0 0 1.25rem',
             color: 'var(--color-ink-muted)',
-            fontFamily: '"DM Sans", sans-serif',
+            fontFamily: 'var(--font-serif)',
             fontSize: '0.9rem',
             lineHeight: '1.65',
           }}
@@ -731,7 +731,7 @@ function FAQ() {
           textTransform: 'uppercase',
           color: 'var(--color-ink-muted)',
           margin: '0 0 1rem',
-          fontFamily: '"DM Sans", sans-serif',
+          fontFamily: 'var(--font-serif)',
         }}
       >
         Frequently Asked Questions
@@ -804,7 +804,7 @@ export default function SpringLoadCalculator() {
           style={{
             fontSize: '0.75rem',
             color: 'var(--color-ink-muted)',
-            fontFamily: '"DM Sans", sans-serif',
+            fontFamily: 'var(--font-serif)',
             margin: '0 0 0.75rem',
             minHeight: '1.1em',
             textAlign: 'center',

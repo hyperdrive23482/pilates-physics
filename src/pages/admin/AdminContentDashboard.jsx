@@ -48,7 +48,7 @@ export default function AdminContentDashboard() {
   const pastWorkshops = stats?.past_workshops ?? []
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100vh' }}>
       <AdminNav user={user} onSignOut={signOut} />
 
       <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -68,7 +68,7 @@ export default function AdminContentDashboard() {
             </p>
             <h1
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
                 color: 'var(--color-ink)',
                 margin: 0,
@@ -277,7 +277,7 @@ function PrimaryLink({ to, icon, label }) {
         gap: '0.4rem',
         padding: '0.7rem 1.1rem',
         background: 'var(--color-accent)',
-        color: '#1C1A17',
+        color: 'var(--color-accent-ink)',
         textDecoration: 'none',
         fontSize: '0.85rem',
         fontWeight: 500,

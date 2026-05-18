@@ -1,9 +1,8 @@
 export default function StatCard({ label, value, sublabel }) {
   return (
     <div
+      className="pp-card"
       style={{
-        background: 'var(--color-surface)',
-        border: '1px solid var(--color-rule)',
         padding: '1.25rem 1.5rem',
         display: 'flex',
         flexDirection: 'column',
@@ -12,20 +11,12 @@ export default function StatCard({ label, value, sublabel }) {
         justifyContent: 'space-between',
       }}
     >
-      <span
-        style={{
-          fontSize: '0.65rem',
-          fontWeight: 600,
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          color: 'var(--color-ink-muted)',
-        }}
-      >
+      <span className="pp-section-label" style={{ fontSize: '0.65rem' }}>
         {label}
       </span>
       <span
         style={{
-          fontFamily: '"DM Serif Display", serif',
+          fontFamily: 'var(--font-serif)',
           fontSize: '1.75rem',
           color: 'var(--color-ink)',
           lineHeight: 1,

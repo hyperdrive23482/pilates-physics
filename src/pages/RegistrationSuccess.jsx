@@ -75,7 +75,7 @@ export default function RegistrationSuccess() {
           <>
             <h1
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: '1.75rem',
                 color: 'var(--color-ink)',
                 margin: 0,
@@ -94,7 +94,7 @@ export default function RegistrationSuccess() {
             <Mail size={28} style={{ color: 'var(--color-accent)' }} />
             <h1
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: '1.75rem',
                 color: 'var(--color-ink)',
                 margin: 0,
@@ -114,7 +114,7 @@ export default function RegistrationSuccess() {
             <Mail size={28} style={{ color: 'var(--color-accent)' }} />
             <h1
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: '1.75rem',
                 color: 'var(--color-ink)',
                 margin: 0,
@@ -134,7 +134,7 @@ export default function RegistrationSuccess() {
             <CheckCircle2 size={28} style={{ color: 'var(--color-accent)' }} />
             <h1
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: '1.75rem',
                 color: 'var(--color-ink)',
                 margin: 0,
@@ -155,7 +155,7 @@ export default function RegistrationSuccess() {
                 fontSize: '0.9rem',
                 fontWeight: 500,
                 background: 'var(--color-accent)',
-                color: '#1C1A17',
+                color: 'var(--color-accent-ink)',
                 textDecoration: 'none',
               }}
             >
@@ -168,7 +168,7 @@ export default function RegistrationSuccess() {
           <>
             <h1
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: '1.75rem',
                 color: 'var(--color-ink)',
                 margin: 0,
@@ -187,7 +187,7 @@ export default function RegistrationSuccess() {
           <>
             <h1
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: '1.75rem',
                 color: 'var(--color-ink)',
                 margin: 0,

@@ -23,11 +23,9 @@ export default function PortalDashboard() {
       <div
         style={{
           minHeight: '100vh',
-          background: 'var(--color-bg)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontFamily: '"DM Sans", sans-serif',
           color: 'var(--color-ink-muted)',
           fontSize: '0.9rem',
         }}
@@ -46,7 +44,7 @@ export default function PortalDashboard() {
   const archived = nonTools.filter((w) => w.status === 'archived')
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100vh' }}>
       <PortalNav user={user} onSignOut={signOut} />
 
       <main
@@ -60,27 +58,10 @@ export default function PortalDashboard() {
 
         {/* Welcome */}
         <div style={{ marginBottom: '3rem' }}>
-          <p
-            style={{
-              fontSize: '0.7rem',
-              fontWeight: '600',
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              color: 'var(--color-accent)',
-              marginBottom: '0.75rem',
-            }}
-          >
+          <p className="pp-eyebrow" style={{ marginBottom: '0.75rem' }}>
             Your Portal
           </p>
-          <h1
-            style={{
-              fontFamily: '"DM Serif Display", serif',
-              fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
-              lineHeight: '1.15',
-              color: 'var(--color-ink)',
-              margin: 0,
-            }}
-          >
+          <h1 className="pp-page-title">
             {firstName ? `Welcome back, ${firstName}` : 'Welcome back'}
           </h1>
         </div>
@@ -92,9 +73,8 @@ export default function PortalDashboard() {
         ) : workshops.length === 0 ? (
           /* Empty state */
           <div
+            className="pp-card"
             style={{
-              background: 'var(--color-surface)',
-              border: '1px solid var(--color-rule)',
               padding: '3rem 2rem',
               textAlign: 'center',
               display: 'flex',
@@ -106,7 +86,6 @@ export default function PortalDashboard() {
             <BookOpen size={36} style={{ color: 'var(--color-ink-muted)' }} />
             <h2
               style={{
-                fontFamily: '"DM Serif Display", serif',
                 fontSize: '1.25rem',
                 color: 'var(--color-ink)',
                 margin: 0,
@@ -125,21 +104,7 @@ export default function PortalDashboard() {
             >
               You don't have access to any workshops yet. Browse available sessions and register for one.
             </p>
-            <Link
-              to="/education"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.375rem',
-                padding: '0.75rem 1.5rem',
-                background: 'var(--color-accent)',
-                color: '#1C1A17',
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-                fontWeight: '500',
-                fontFamily: '"DM Sans", sans-serif',
-              }}
-            >
+            <Link to="/education" className="pp-btn pp-btn--primary">
               Browse Workshops <ArrowRight size={16} />
             </Link>
           </div>
@@ -148,16 +113,7 @@ export default function PortalDashboard() {
             {/* Tools */}
             {tools.length > 0 && (
               <section>
-                <h2
-                  style={{
-                    fontSize: '0.7rem',
-                    fontWeight: '600',
-                    letterSpacing: '0.15em',
-                    textTransform: 'uppercase',
-                    color: 'var(--color-ink-muted)',
-                    marginBottom: '1.25rem',
-                  }}
-                >
+                <h2 className="pp-section-label" style={{ marginBottom: '1.25rem' }}>
                   Tools
                 </h2>
                 <div className="portal-grid">
@@ -171,16 +127,7 @@ export default function PortalDashboard() {
             {/* Upcoming / Live */}
             {upcoming.length > 0 && (
               <section>
-                <h2
-                  style={{
-                    fontSize: '0.7rem',
-                    fontWeight: '600',
-                    letterSpacing: '0.15em',
-                    textTransform: 'uppercase',
-                    color: 'var(--color-ink-muted)',
-                    marginBottom: '1.25rem',
-                  }}
-                >
+                <h2 className="pp-section-label" style={{ marginBottom: '1.25rem' }}>
                   Upcoming
                 </h2>
                 <div className="portal-grid">
@@ -194,16 +141,7 @@ export default function PortalDashboard() {
             {/* Completed */}
             {completed.length > 0 && (
               <section>
-                <h2
-                  style={{
-                    fontSize: '0.7rem',
-                    fontWeight: '600',
-                    letterSpacing: '0.15em',
-                    textTransform: 'uppercase',
-                    color: 'var(--color-ink-muted)',
-                    marginBottom: '1.25rem',
-                  }}
-                >
+                <h2 className="pp-section-label" style={{ marginBottom: '1.25rem' }}>
                   Recordings Available
                 </h2>
                 <div className="portal-grid">
@@ -217,16 +155,7 @@ export default function PortalDashboard() {
             {/* Archived */}
             {archived.length > 0 && (
               <section>
-                <h2
-                  style={{
-                    fontSize: '0.7rem',
-                    fontWeight: '600',
-                    letterSpacing: '0.15em',
-                    textTransform: 'uppercase',
-                    color: 'var(--color-ink-muted)',
-                    marginBottom: '1.25rem',
-                  }}
-                >
+                <h2 className="pp-section-label" style={{ marginBottom: '1.25rem' }}>
                   Past Sessions
                 </h2>
                 <div className="portal-grid">

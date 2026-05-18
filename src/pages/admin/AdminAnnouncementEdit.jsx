@@ -40,7 +40,7 @@ export default function AdminAnnouncementEdit() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100vh' }}>
       <AdminNav user={user} onSignOut={signOut} />
 
       <main className="pp-main" style={{ maxWidth: '900px', margin: '0 auto' }}>
@@ -61,7 +61,7 @@ export default function AdminAnnouncementEdit() {
 
         <h1
           style={{
-            fontFamily: '"DM Serif Display", serif',
+            fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(1.5rem, 3vw, 2rem)',
             color: 'var(--color-ink)',
             margin: '0 0 2rem',

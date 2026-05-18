@@ -127,11 +127,11 @@ export default function EntitlementManager({ userRow, workshops, onChange }) {
             gap: '0.3rem',
             padding: '0.45rem 0.7rem',
             background: 'var(--color-accent)',
-            color: '#1C1A17',
+            color: 'var(--color-accent-ink)',
             border: 'none',
             cursor: busy || !workshopId ? 'not-allowed' : 'pointer',
             fontSize: '0.8rem',
-            fontFamily: '"DM Sans", sans-serif',
+            fontFamily: 'var(--font-serif)',
             opacity: busy || !workshopId ? 0.6 : 1,
           }}
         >
@@ -150,6 +150,6 @@ const inputStyle = {
   color: 'var(--color-ink)',
   border: '1px solid var(--color-rule)',
   fontSize: '0.8rem',
-  fontFamily: '"DM Sans", sans-serif',
+  fontFamily: 'var(--font-serif)',
   outline: 'none',
 }

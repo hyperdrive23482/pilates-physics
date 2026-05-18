@@ -109,7 +109,7 @@ export default function WorkshopFeedbackPanel({ workshopTitle, workshopDate, dat
           </p>
           <h2
             style={{
-              fontFamily: '"DM Serif Display", serif',
+              fontFamily: 'var(--font-serif)',
               fontSize: '1.4rem',
               color: 'var(--color-ink)',
               margin: 0,
@@ -131,7 +131,7 @@ export default function WorkshopFeedbackPanel({ workshopTitle, workshopDate, dat
             border: '1px solid var(--color-rule)',
             fontSize: '0.85rem',
             cursor: 'pointer',
-            fontFamily: '"DM Sans", sans-serif',
+            fontFamily: 'var(--font-serif)',
           }}
         >
           <Download size={14} /> Export CSV

@@ -24,7 +24,7 @@ export default function AdminGate({ children }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontFamily: '"DM Sans", sans-serif',
+          fontFamily: 'var(--font-serif)',
           color: 'var(--color-ink-muted)',
           fontSize: '0.9rem',
         }}

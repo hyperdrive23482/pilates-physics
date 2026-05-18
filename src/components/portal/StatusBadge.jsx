@@ -17,6 +17,7 @@ export default function StatusBadge({ status }) {
         display: 'inline-flex',
         alignItems: 'center',
         gap: '0.375rem',
+        fontFamily: 'var(--font-mono)',
         fontSize: '0.7rem',
         fontWeight: '600',
         letterSpacing: '0.1em',

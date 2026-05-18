@@ -195,7 +195,7 @@ export default function InteractiveSpringDiagram() {
         textAnchor="middle"
         fill="#888780"
         fontSize="10.5"
-        fontFamily="DM Sans, sans-serif"
+        fontFamily="JetBrains Mono, ui-monospace, monospace"
         transform={`rotate(-90, 16, ${AREA.y + AREA.h / 2})`}
       >
         Force (lbs)
@@ -205,7 +205,7 @@ export default function InteractiveSpringDiagram() {
       {Y_TICKS.filter((v) => v > 0).map((lb) => {
         const gy = AREA.y + AREA.h - (lb / MAX_FORCE) * AREA.h
         return (
-          <text key={`yt-${lb}`} x={AREA.x - 6} y={gy + 4} textAnchor="end" fill="#888780" fontSize="9" fontFamily="DM Sans, sans-serif">
+          <text key={`yt-${lb}`} x={AREA.x - 6} y={gy + 4} textAnchor="end" fill="#888780" fontSize="9" fontFamily="JetBrains Mono, ui-monospace, monospace">
             {lb}
           </text>
         )
@@ -218,7 +218,7 @@ export default function InteractiveSpringDiagram() {
         textAnchor="middle"
         fill="#888780"
         fontSize="10.5"
-        fontFamily="DM Sans, sans-serif"
+        fontFamily="JetBrains Mono, ui-monospace, monospace"
       >
         Spring extension (inches)
       </text>
@@ -229,7 +229,7 @@ export default function InteractiveSpringDiagram() {
         return (
           <g key={`xt-${inch}`}>
             <line x1={gx} y1={AREA.y + AREA.h} x2={gx} y2={AREA.y + AREA.h + 5} stroke="#F1EFE8" strokeWidth="1" />
-            <text x={gx} y={AREA.y + AREA.h + 18} textAnchor="middle" fill="#888780" fontSize="9" fontFamily="DM Sans, sans-serif">
+            <text x={gx} y={AREA.y + AREA.h + 18} textAnchor="middle" fill="#888780" fontSize="9" fontFamily="JetBrains Mono, ui-monospace, monospace">
               {inch}&quot;
             </text>
           </g>
@@ -272,7 +272,7 @@ export default function InteractiveSpringDiagram() {
           y={dotPt.y - 10}
           fill="#f09f26"
           fontSize="10"
-          fontFamily="DM Sans, sans-serif"
+          fontFamily="JetBrains Mono, ui-monospace, monospace"
           fontWeight="600"
         >
           {Math.round(currentForce)} lbs @ {currentInches}&quot;
@@ -291,7 +291,7 @@ export default function InteractiveSpringDiagram() {
         textAnchor="end"
         fill="rgba(240,159,38,0.6)"
         fontSize="11"
-        fontFamily="DM Sans, sans-serif"
+        fontFamily="JetBrains Mono, ui-monospace, monospace"
         fontWeight="600"
       >
         F = kx + b

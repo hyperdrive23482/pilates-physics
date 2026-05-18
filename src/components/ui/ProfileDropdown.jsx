@@ -38,12 +38,12 @@ export default function ProfileDropdown({ user, onSignOut }) {
           height: '34px',
           borderRadius: '50%',
           background: 'var(--color-accent)',
-          color: '#1C1A17',
+          color: 'var(--color-accent-ink)',
           border: 'none',
           cursor: 'pointer',
           fontSize: '0.78rem',
           fontWeight: '600',
-          fontFamily: '"DM Sans", sans-serif',
+          fontFamily: 'var(--font-serif)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -128,7 +128,7 @@ export default function ProfileDropdown({ user, onSignOut }) {
               border: 'none',
               cursor: 'pointer',
               width: '100%',
-              fontFamily: '"DM Sans", sans-serif',
+              fontFamily: 'var(--font-serif)',
               transition: 'background 0.15s',
             }}
             onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.05)')}

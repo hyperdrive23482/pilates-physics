@@ -486,7 +486,7 @@ export default function AdminPoseStudio() {
       if (state.showVideo) {
         ctx.drawImage(video, 0, 0, w, h)
       } else {
-        ctx.fillStyle = '#1C1A17'
+        ctx.fillStyle = '#0e0d0b'
         ctx.fillRect(0, 0, w, h)
       }
 
@@ -1013,7 +1013,7 @@ export default function AdminPoseStudio() {
   }, [])
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100vh' }}>
       <AdminNav user={user} onSignOut={signOut} />
       <main
         ref={rootRef}
@@ -1304,13 +1304,13 @@ export default function AdminPoseStudio() {
 
 const POSE_STUDIO_CSS = `
   .pose-studio-root {
-    --bg: #1C1A17;
-    --panel: #242118;
-    --panel-2: #2E2B26;
-    --border: #2E2B26;
-    --text: #F1EFE8;
-    --text-dim: #888780;
-    --accent: #EF9F27;
+    --bg: #0e0d0b;
+    --panel: #1a1813;
+    --panel-2: #24201a;
+    --border: rgba(227, 227, 227, 0.18);
+    --text: #E3E3E3;
+    --text-dim: rgba(227, 227, 227, 0.65);
+    --accent: #f09f26;
     --accent-2: #FFB856;
     --danger: #ff4a6b;
     color: var(--text);

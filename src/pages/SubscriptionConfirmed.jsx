@@ -28,7 +28,7 @@ export default function SubscriptionConfirmed() {
 
       <h1
         style={{
-          fontFamily: '"DM Serif Display", serif',
+          fontFamily: 'var(--font-serif)',
           fontSize: 'clamp(2rem, 4vw, 3rem)',
           lineHeight: '1.15',
           color: 'var(--color-ink)',
@@ -58,11 +58,11 @@ export default function SubscriptionConfirmed() {
           gap: '0.5rem',
           padding: '0.75rem 1.5rem',
           background: 'var(--color-accent)',
-          color: '#1C1A17',
+          color: 'var(--color-accent-ink)',
           textDecoration: 'none',
           fontSize: '0.9rem',
           fontWeight: '500',
-          fontFamily: '"DM Sans", sans-serif',
+          fontFamily: 'var(--font-serif)',
         }}
       >
         Back to Home

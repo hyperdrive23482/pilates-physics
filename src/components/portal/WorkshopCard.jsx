@@ -22,13 +22,11 @@ export default function WorkshopCard({ workshop, linkTo }) {
   return (
     <Link
       to={linkTo}
+      className="pp-card"
       style={{
         display: 'flex',
         flexDirection: 'column',
         gap: '1rem',
-        padding: '1.5rem',
-        background: 'var(--color-surface)',
-        border: '1px solid var(--color-rule)',
         textDecoration: 'none',
         transition: 'border-color 0.2s',
       }}
@@ -52,7 +50,7 @@ export default function WorkshopCard({ workshop, linkTo }) {
 
       <h3
         style={{
-          fontFamily: '"DM Serif Display", serif',
+          fontFamily: 'var(--font-serif)',
           fontSize: '1.15rem',
           lineHeight: '1.3',
           color: 'var(--color-ink)',

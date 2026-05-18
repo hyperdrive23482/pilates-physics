@@ -26,11 +26,12 @@ export default function PortalNav({ user, onSignOut }) {
         >
           <span
             style={{
-              fontFamily: '"DM Sans", sans-serif',
-              fontWeight: '500',
-              fontSize: '0.75rem',
-              letterSpacing: '0.2em',
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 600,
+              fontSize: '13px',
+              letterSpacing: '0.16em',
               textTransform: 'uppercase',
+              lineHeight: '1.05',
               color: 'var(--color-ink)',
               borderBottom: '1px solid var(--color-accent)',
               paddingBottom: '2px',
@@ -41,11 +42,12 @@ export default function PortalNav({ user, onSignOut }) {
           </span>
           <span
             style={{
-              fontFamily: '"DM Sans", sans-serif',
-              fontWeight: '500',
-              fontSize: '0.75rem',
-              letterSpacing: '0.2em',
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 500,
+              fontSize: '13px',
+              letterSpacing: '0.16em',
               textTransform: 'uppercase',
+              lineHeight: '1.05',
               color: 'var(--color-accent)',
               display: 'block',
             }}
@@ -54,15 +56,7 @@ export default function PortalNav({ user, onSignOut }) {
           </span>
         </Link>
 
-        <span
-          style={{
-            fontSize: '0.7rem',
-            fontWeight: '600',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            color: 'var(--color-ink-muted)',
-          }}
-        >
+        <span className="pp-section-label">
           Portal
         </span>
       </div>

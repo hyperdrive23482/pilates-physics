@@ -39,7 +39,7 @@ const MOBILE_SCALE_BODY = `
     btn.type = 'button';
     btn.textContent = 'Mobile scale';
     var isNarrow = window.innerWidth <= 600;
-    btn.style.cssText = 'position:fixed;bottom:14px;right:14px;z-index:99999;padding:' + (isNarrow ? '6px 10px' : '8px 14px') + ';font-family:\\'DM Mono\\',monospace;font-size:' + (isNarrow ? '10px' : '11px') + ';letter-spacing:0.12em;text-transform:uppercase;background:rgba(20,20,20,0.92);color:#e8e4dc;border:1px solid #2a2a2a;border-radius:6px;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 4px 12px rgba(0,0,0,0.35);';
+    btn.style.cssText = 'position:fixed;bottom:14px;right:14px;z-index:99999;padding:' + (isNarrow ? '6px 10px' : '8px 14px') + ';font-family:\\'JetBrains Mono\\',monospace;font-size:' + (isNarrow ? '10px' : '11px') + ';letter-spacing:0.12em;text-transform:uppercase;background:rgba(20,20,20,0.92);color:#e8e4dc;border:1px solid #2a2a2a;border-radius:6px;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 4px 12px rgba(0,0,0,0.35);';
     btn.addEventListener('click', function(){
       var on = !document.body.classList.contains('__pp-mobile-scale');
       document.body.classList.toggle('__pp-mobile-scale', on);
@@ -133,14 +133,14 @@ export default function AdminAnimations() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100vh' }}>
       <AdminNav user={user} onSignOut={signOut} />
 
       <main className="pp-main" style={{ maxWidth: '1400px', margin: '0 auto' }}>
         <div style={{ marginBottom: '1.5rem' }}>
           <h1
             style={{
-              fontFamily: '"DM Serif Display", serif',
+              fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(1.5rem, 3vw, 2rem)',
               color: 'var(--color-ink)',
               margin: 0,
@@ -201,7 +201,7 @@ export default function AdminAnimations() {
                         fontSize: '0.7rem',
                         color: 'var(--color-ink-muted)',
                         marginTop: '0.25rem',
-                        fontFamily: '"DM Mono", monospace',
+                        fontFamily: 'var(--font-mono)',
                       }}
                     >
                       {a.name}

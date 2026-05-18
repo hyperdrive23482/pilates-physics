@@ -45,7 +45,7 @@ export default function ZoomInfo({ workshop }) {
         <Video size={18} style={{ color: 'var(--color-accent)' }} />
         <h3
           style={{
-            fontFamily: '"DM Serif Display", serif',
+            fontFamily: 'var(--font-serif)',
             fontSize: '1.1rem',
             color: 'var(--color-ink)',
             margin: 0,

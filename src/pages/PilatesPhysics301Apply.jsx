@@ -6,9 +6,9 @@ const primaryButtonStyle = {
   padding: '0.875rem 1.75rem',
   fontSize: '0.95rem',
   fontWeight: '500',
-  fontFamily: '"DM Sans", sans-serif',
+  fontFamily: 'var(--font-serif)',
   background: 'var(--color-accent)',
-  color: '#1C1A17',
+  color: 'var(--color-accent-ink)',
   border: 'none',
   textDecoration: 'none',
   cursor: 'pointer',
@@ -26,7 +26,7 @@ const inputStyle = {
   width: '100%',
   padding: '0.75rem 1rem',
   fontSize: '0.9rem',
-  fontFamily: '"DM Sans", sans-serif',
+  fontFamily: 'var(--font-serif)',
   border: '1px solid var(--color-rule)',
   background: 'var(--color-bg)',
   color: 'var(--color-ink)',
@@ -144,7 +144,7 @@ export default function PilatesPhysics301Apply() {
       </p>
       <h1
         style={{
-          fontFamily: '"DM Serif Display", serif',
+          fontFamily: 'var(--font-serif)',
           fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
           lineHeight: '1.2',
           color: 'var(--color-ink)',
@@ -180,7 +180,7 @@ export default function PilatesPhysics301Apply() {
           <div>
             <p
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: '1.25rem',
                 color: 'var(--color-accent)',
                 marginBottom: '0.75rem',
@@ -334,7 +334,7 @@ export default function PilatesPhysics301Apply() {
                 disabled={status === 'loading'}
                 maxLength={2000}
                 rows={4}
-                style={{ ...inputStyle, resize: 'vertical', fontFamily: '"DM Sans", sans-serif' }}
+                style={{ ...inputStyle, resize: 'vertical', fontFamily: 'var(--font-serif)' }}
               />
             </div>
 
@@ -358,7 +358,7 @@ export default function PilatesPhysics301Apply() {
                 disabled={status === 'loading'}
                 maxLength={2000}
                 rows={4}
-                style={{ ...inputStyle, resize: 'vertical', fontFamily: '"DM Sans", sans-serif' }}
+                style={{ ...inputStyle, resize: 'vertical', fontFamily: 'var(--font-serif)' }}
               />
             </div>
 
@@ -388,7 +388,7 @@ export default function PilatesPhysics301Apply() {
                 disabled={status === 'loading'}
                 maxLength={2000}
                 rows={5}
-                style={{ ...inputStyle, resize: 'vertical', fontFamily: '"DM Sans", sans-serif' }}
+                style={{ ...inputStyle, resize: 'vertical', fontFamily: 'var(--font-serif)' }}
               />
             </div>
 

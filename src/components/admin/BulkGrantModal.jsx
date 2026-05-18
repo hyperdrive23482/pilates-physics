@@ -112,7 +112,7 @@ export default function BulkGrantModal({ tools, sourceWorkshops, onClose }) {
         >
           <h2
             style={{
-              fontFamily: '"DM Serif Display", serif',
+              fontFamily: 'var(--font-serif)',
               fontSize: '1.15rem',
               color: 'var(--color-ink)',
               margin: 0,
@@ -298,7 +298,7 @@ const inputStyle = {
   color: 'var(--color-ink)',
   border: '1px solid var(--color-rule)',
   fontSize: '0.85rem',
-  fontFamily: '"DM Sans", sans-serif',
+  fontFamily: 'var(--font-serif)',
   outline: 'none',
   width: '100%',
 }
@@ -306,10 +306,10 @@ const inputStyle = {
 const primaryBtn = {
   padding: '0.55rem 1rem',
   background: 'var(--color-accent)',
-  color: '#1C1A17',
+  color: 'var(--color-accent-ink)',
   border: 'none',
   fontSize: '0.85rem',
-  fontFamily: '"DM Sans", sans-serif',
+  fontFamily: 'var(--font-serif)',
   fontWeight: 500,
 }
 
@@ -319,6 +319,6 @@ const secondaryBtn = {
   color: 'var(--color-ink)',
   border: '1px solid var(--color-rule)',
   fontSize: '0.85rem',
-  fontFamily: '"DM Sans", sans-serif',
+  fontFamily: 'var(--font-serif)',
   cursor: 'pointer',
 }

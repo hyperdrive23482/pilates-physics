@@ -5,9 +5,9 @@ const primaryButtonStyle = {
   padding: '0.875rem 1.75rem',
   fontSize: '0.95rem',
   fontWeight: '500',
-  fontFamily: '"DM Sans", sans-serif',
+  fontFamily: 'var(--font-serif)',
   background: 'var(--color-accent)',
-  color: '#1C1A17',
+  color: 'var(--color-accent-ink)',
   border: 'none',
   textDecoration: 'none',
   cursor: 'pointer',
@@ -79,7 +79,7 @@ export default function PilatesPhysics301() {
             </p>
             <h1
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
                 lineHeight: '1.15',
                 color: 'var(--color-ink)',
@@ -123,7 +123,7 @@ export default function PilatesPhysics301() {
         <Section>
           <h2
             style={{
-              fontFamily: '"DM Serif Display", serif',
+              fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
               lineHeight: '1.2',
               color: 'var(--color-ink)',
@@ -171,7 +171,7 @@ export default function PilatesPhysics301() {
               >
                 <span
                   style={{
-                    fontFamily: '"DM Serif Display", serif',
+                    fontFamily: 'var(--font-serif)',
                     fontSize: '2.5rem',
                     color: '#EF9F27',
                     lineHeight: 0.6,
@@ -216,7 +216,7 @@ export default function PilatesPhysics301() {
       <Section>
         <h2
           style={{
-            fontFamily: '"DM Serif Display", serif',
+            fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
             lineHeight: '1.2',
             color: 'var(--color-ink)',
@@ -261,7 +261,7 @@ export default function PilatesPhysics301() {
             >
               <span
                 style={{
-                  fontFamily: '"DM Serif Display", serif',
+                  fontFamily: 'var(--font-serif)',
                   fontSize: '1.5rem',
                   color: '#EF9F27',
                   lineHeight: 1,
@@ -305,7 +305,7 @@ export default function PilatesPhysics301() {
         <Section>
           <h2
             style={{
-              fontFamily: '"DM Serif Display", serif',
+              fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
               lineHeight: '1.2',
               color: 'var(--color-ink)',
@@ -373,7 +373,7 @@ export default function PilatesPhysics301() {
               >
                 <span
                   style={{
-                    fontFamily: '"DM Serif Display", serif',
+                    fontFamily: 'var(--font-serif)',
                     fontSize: '1.75rem',
                     color: 'var(--color-rule)',
                     lineHeight: 1,
@@ -383,7 +383,7 @@ export default function PilatesPhysics301() {
                 </span>
                 <h3
                   style={{
-                    fontFamily: '"DM Serif Display", serif',
+                    fontFamily: 'var(--font-serif)',
                     fontSize: '1.1rem',
                     color: 'var(--color-ink)',
                     margin: 0,
@@ -413,7 +413,7 @@ export default function PilatesPhysics301() {
       <Section>
         <h2
           style={{
-            fontFamily: '"DM Serif Display", serif',
+            fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
             lineHeight: '1.2',
             color: 'var(--color-ink)',
@@ -457,7 +457,7 @@ export default function PilatesPhysics301() {
             >
               <h3
                 style={{
-                  fontFamily: '"DM Serif Display", serif',
+                  fontFamily: 'var(--font-serif)',
                   fontSize: '1.1rem',
                   color: 'var(--color-ink)',
                   margin: 0,
@@ -500,7 +500,7 @@ export default function PilatesPhysics301() {
           <div style={{ flex: '1 1 460px' }}>
             <h3
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: '1.4rem',
                 color: 'var(--color-ink)',
                 margin: '0 0 0.5rem',
@@ -532,7 +532,7 @@ export default function PilatesPhysics301() {
 
         <h2
           style={{
-            fontFamily: '"DM Serif Display", serif',
+            fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
             lineHeight: '1.2',
             color: 'var(--color-ink)',
@@ -634,7 +634,7 @@ export default function PilatesPhysics301() {
                 </p>
                 <h2
                   style={{
-                    fontFamily: '"DM Serif Display", serif',
+                    fontFamily: 'var(--font-serif)',
                     fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
                     lineHeight: '1.2',
                     color: 'var(--color-ink)',
@@ -708,7 +708,7 @@ export default function PilatesPhysics301() {
       <Section>
         <h2
           style={{
-            fontFamily: '"DM Serif Display", serif',
+            fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
             lineHeight: '1.2',
             color: 'var(--color-ink)',
@@ -773,7 +773,7 @@ export default function PilatesPhysics301() {
               >
                 <h3
                   style={{
-                    fontFamily: '"DM Serif Display", serif',
+                    fontFamily: 'var(--font-serif)',
                     fontSize: '1.1rem',
                     color: 'var(--color-ink)',
                     margin: 0,
@@ -831,7 +831,7 @@ export default function PilatesPhysics301() {
           <div>
             <h2
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
                 lineHeight: '1.2',
                 color: 'var(--color-ink)',

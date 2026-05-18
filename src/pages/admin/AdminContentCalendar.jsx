@@ -40,7 +40,7 @@ export default function AdminContentCalendar() {
     .reverse()
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100vh' }}>
       <AdminNav user={user} onSignOut={signOut} />
 
       <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -62,7 +62,7 @@ export default function AdminContentCalendar() {
         <div className="pp-header-row" style={{ marginBottom: '2rem' }}>
           <h1
             style={{
-              fontFamily: '"DM Serif Display", serif',
+              fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(1.5rem, 3vw, 2rem)',
               color: 'var(--color-ink)',
               margin: 0,

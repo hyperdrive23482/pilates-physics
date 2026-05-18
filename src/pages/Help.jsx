@@ -47,7 +47,7 @@ export default function Help() {
   }
 
   const h1Style = {
-    fontFamily: '"DM Serif Display", serif',
+    fontFamily: 'var(--font-serif)',
     fontSize: 'clamp(2rem, 4vw, 3rem)',
     lineHeight: '1.15',
     color: 'var(--color-ink)',
@@ -55,7 +55,7 @@ export default function Help() {
   }
 
   const h2Style = {
-    fontFamily: '"DM Serif Display", serif',
+    fontFamily: 'var(--font-serif)',
     fontSize: '1.35rem',
     lineHeight: '1.3',
     color: 'var(--color-ink)',
@@ -63,7 +63,7 @@ export default function Help() {
   }
 
   const h3Style = {
-    fontFamily: '"DM Sans", sans-serif',
+    fontFamily: 'var(--font-serif)',
     fontSize: '1rem',
     fontWeight: '500',
     lineHeight: '1.4',
@@ -90,7 +90,7 @@ export default function Help() {
     width: '100%',
     padding: '0.75rem 1rem',
     fontSize: '0.9rem',
-    fontFamily: '"DM Sans", sans-serif',
+    fontFamily: 'var(--font-serif)',
     border: '1px solid var(--color-rule)',
     background: 'var(--color-surface)',
     color: 'var(--color-ink)',
@@ -168,7 +168,7 @@ export default function Help() {
         <div>
           <p
             style={{
-              fontFamily: '"DM Serif Display", serif',
+              fontFamily: 'var(--font-serif)',
               fontSize: '1.25rem',
               color: 'var(--color-accent)',
               marginBottom: '0.75rem',
@@ -212,7 +212,7 @@ export default function Help() {
             disabled={status === 'loading'}
             maxLength={5000}
             rows={6}
-            style={{ ...inputStyle, marginBottom: '1.5rem', resize: 'vertical', fontFamily: '"DM Sans", sans-serif' }}
+            style={{ ...inputStyle, marginBottom: '1.5rem', resize: 'vertical', fontFamily: 'var(--font-serif)' }}
           />
 
           <input
@@ -234,9 +234,9 @@ export default function Help() {
               padding: '0.75rem 1.5rem',
               fontSize: '0.9rem',
               fontWeight: '500',
-              fontFamily: '"DM Sans", sans-serif',
+              fontFamily: 'var(--font-serif)',
               background: 'var(--color-accent)',
-              color: '#1C1A17',
+              color: 'var(--color-accent-ink)',
               border: 'none',
               cursor: status === 'loading' ? 'wait' : 'pointer',
             }}

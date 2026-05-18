@@ -93,11 +93,11 @@ export default function Pp101FeedbackBanner({ user, workshops }) {
           gap: '0.5rem',
           padding: '0.75rem 1.25rem',
           background: 'var(--color-accent)',
-          color: '#1C1A17',
+          color: 'var(--color-accent-ink)',
           textDecoration: 'none',
           fontSize: '0.9rem',
           fontWeight: '500',
-          fontFamily: '"DM Sans", sans-serif',
+          fontFamily: 'var(--font-serif)',
           whiteSpace: 'nowrap',
         }}
       >

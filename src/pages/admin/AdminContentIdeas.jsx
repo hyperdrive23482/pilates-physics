@@ -91,7 +91,7 @@ export default function AdminContentIdeas() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100vh' }}>
       <AdminNav user={user} onSignOut={signOut} />
 
       <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -113,7 +113,7 @@ export default function AdminContentIdeas() {
         <div className="pp-header-row" style={{ marginBottom: '2rem' }}>
           <h1
             style={{
-              fontFamily: '"DM Serif Display", serif',
+              fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(1.5rem, 3vw, 2rem)',
               color: 'var(--color-ink)',
               margin: 0,
@@ -131,7 +131,7 @@ export default function AdminContentIdeas() {
                   fontSize: '0.75rem',
                   padding: '0.4rem 0.75rem',
                   background: statusFilter === s ? 'var(--color-accent)' : 'transparent',
-                  color: statusFilter === s ? '#1C1A17' : 'var(--color-ink-muted)',
+                  color: statusFilter === s ? 'var(--color-accent-ink)' : 'var(--color-ink-muted)',
                   border: '1px solid var(--color-rule)',
                   cursor: 'pointer',
                   textTransform: 'uppercase',
@@ -183,7 +183,7 @@ export default function AdminContentIdeas() {
               gap: '0.4rem',
               padding: '0.7rem 1.1rem',
               background: 'var(--color-accent)',
-              color: '#1C1A17',
+              color: 'var(--color-accent-ink)',
               border: 'none',
               fontSize: '0.85rem',
               fontWeight: 500,
@@ -268,7 +268,7 @@ export default function AdminContentIdeas() {
                       gap: '0.4rem',
                       padding: '0.5rem 0.9rem',
                       background: 'var(--color-accent)',
-                      color: '#1C1A17',
+                      color: 'var(--color-accent-ink)',
                       border: 'none',
                       fontSize: '0.8rem',
                       fontWeight: 500,
@@ -294,7 +294,7 @@ const inputStyle = {
   border: '1px solid var(--color-rule)',
   color: 'var(--color-ink)',
   fontSize: '0.9rem',
-  fontFamily: '"DM Sans", sans-serif',
+  fontFamily: 'var(--font-serif)',
   outline: 'none',
 }
 

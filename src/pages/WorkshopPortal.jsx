@@ -36,11 +36,10 @@ export default function WorkshopPortal() {
       <div
         style={{
           minHeight: '100vh',
-          background: 'var(--color-bg)',
-          display: 'flex',
+                    display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontFamily: '"DM Sans", sans-serif',
+          fontFamily: 'var(--font-serif)',
           color: 'var(--color-ink-muted)',
           fontSize: '0.9rem',
         }}
@@ -52,12 +51,12 @@ export default function WorkshopPortal() {
 
   if (!workshop) {
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+      <div style={{ minHeight: '100vh' }}>
         <PortalNav user={user} onSignOut={signOut} />
         <main style={{ maxWidth: '680px', margin: '0 auto', padding: '6rem 2rem', textAlign: 'center' }}>
           <h1
             style={{
-              fontFamily: '"DM Serif Display", serif',
+              fontFamily: 'var(--font-serif)',
               fontSize: '1.5rem',
               color: 'var(--color-ink)',
               marginBottom: '1rem',
@@ -75,12 +74,12 @@ export default function WorkshopPortal() {
 
   if (!canAccess) {
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+      <div style={{ minHeight: '100vh' }}>
         <PortalNav user={user} onSignOut={signOut} />
         <main style={{ maxWidth: '680px', margin: '0 auto', padding: '6rem 2rem', textAlign: 'center' }}>
           <h1
             style={{
-              fontFamily: '"DM Serif Display", serif',
+              fontFamily: 'var(--font-serif)',
               fontSize: '1.5rem',
               color: 'var(--color-ink)',
               marginBottom: '1rem',
@@ -97,7 +96,7 @@ export default function WorkshopPortal() {
               display: 'inline-block',
               padding: '0.75rem 1.5rem',
               background: 'var(--color-accent)',
-              color: '#1C1A17',
+              color: 'var(--color-accent-ink)',
               textDecoration: 'none',
               fontSize: '0.9rem',
               fontWeight: '500',
@@ -130,7 +129,7 @@ export default function WorkshopPortal() {
     : null
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100vh' }}>
       <PortalNav user={user} onSignOut={signOut} />
 
       <main
@@ -161,7 +160,7 @@ export default function WorkshopPortal() {
           <StatusBadge status={isTool ? 'tool' : workshop.status} />
           <h1
             style={{
-              fontFamily: '"DM Serif Display", serif',
+              fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
               lineHeight: '1.15',
               color: 'var(--color-ink)',

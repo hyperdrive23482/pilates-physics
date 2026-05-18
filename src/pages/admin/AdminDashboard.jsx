@@ -26,50 +26,20 @@ export default function AdminDashboard() {
   const upcoming = (data?.per_workshop ?? []).filter((w) => ['upcoming', 'live'].includes(w.status))
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100vh' }}>
       <AdminNav user={user} onSignOut={signOut} />
 
       <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <div className="pp-header-row" style={{ marginBottom: '2rem' }}>
           <div>
-            <p
-              style={{
-                fontSize: '0.7rem',
-                fontWeight: 600,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: 'var(--color-accent)',
-                marginBottom: '0.5rem',
-              }}
-            >
+            <p className="pp-eyebrow" style={{ marginBottom: '0.5rem' }}>
               Admin
             </p>
-            <h1
-              style={{
-                fontFamily: '"DM Serif Display", serif',
-                fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
-                lineHeight: 1.15,
-                color: 'var(--color-ink)',
-                margin: 0,
-              }}
-            >
+            <h1 className="pp-page-title">
               Dashboard
             </h1>
           </div>
-          <Link
-            to="/admin/workshops/new"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              padding: '0.75rem 1.25rem',
-              background: 'var(--color-accent)',
-              color: '#1C1A17',
-              textDecoration: 'none',
-              fontSize: '0.85rem',
-              fontWeight: 500,
-            }}
-          >
+          <Link to="/admin/workshops/new" className="pp-btn pp-btn--primary">
             <Plus size={14} /> New workshop
           </Link>
         </div>
@@ -102,16 +72,7 @@ export default function AdminDashboard() {
             </div>
 
             <section>
-              <h2
-                style={{
-                  fontSize: '0.7rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.15em',
-                  textTransform: 'uppercase',
-                  color: 'var(--color-ink-muted)',
-                  marginBottom: '1rem',
-                }}
-              >
+              <h2 className="pp-section-label" style={{ marginBottom: '1rem' }}>
                 Upcoming / live
               </h2>
               {upcoming.length === 0 ? (
@@ -124,13 +85,12 @@ export default function AdminDashboard() {
                     <Link
                       key={w.id}
                       to={`/admin/workshops/${w.slug}/edit`}
+                      className="pp-card"
                       style={{
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         padding: '0.9rem 1rem',
-                        background: 'var(--color-surface)',
-                        border: '1px solid var(--color-rule)',
                         textDecoration: 'none',
                         color: 'var(--color-ink)',
                       }}

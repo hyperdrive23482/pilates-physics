@@ -44,14 +44,14 @@ export default function AdminAnnouncements() {
   const now = Date.now()
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100vh' }}>
       <AdminNav user={user} onSignOut={signOut} />
 
       <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <div className="pp-header-row" style={{ marginBottom: '2rem' }}>
           <h1
             style={{
-              fontFamily: '"DM Serif Display", serif',
+              fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(1.5rem, 3vw, 2rem)',
               color: 'var(--color-ink)',
               margin: 0,
@@ -67,7 +67,7 @@ export default function AdminAnnouncements() {
               gap: '0.4rem',
               padding: '0.7rem 1.1rem',
               background: 'var(--color-accent)',
-              color: '#1C1A17',
+              color: 'var(--color-accent-ink)',
               textDecoration: 'none',
               fontSize: '0.85rem',
               fontWeight: 500,

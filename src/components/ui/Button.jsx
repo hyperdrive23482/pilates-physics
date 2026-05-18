@@ -9,13 +9,13 @@ const baseStyles = {
   border: 'none',
   textDecoration: 'none',
   lineHeight: '1',
-  fontFamily: '"DM Sans", sans-serif',
+  fontFamily: 'var(--font-serif)',
 }
 
 const variantStyles = {
   primary: {
     backgroundColor: 'var(--color-accent)',
-    color: '#1C1A17',
+    color: 'var(--color-accent-ink)',
     border: 'none',
   },
   secondary: {

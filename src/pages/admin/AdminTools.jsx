@@ -26,7 +26,7 @@ export default function AdminTools() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100vh' }}>
       <AdminNav user={user} onSignOut={signOut} />
 
       <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -34,7 +34,7 @@ export default function AdminTools() {
           <div>
             <h1
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: 'clamp(1.5rem, 3vw, 2rem)',
                 color: 'var(--color-ink)',
                 margin: 0,
@@ -62,11 +62,11 @@ export default function AdminTools() {
               gap: '0.4rem',
               padding: '0.7rem 1.1rem',
               background: 'var(--color-accent)',
-              color: '#1C1A17',
+              color: 'var(--color-accent-ink)',
               border: 'none',
               fontSize: '0.85rem',
               fontWeight: 500,
-              fontFamily: '"DM Sans", sans-serif',
+              fontFamily: 'var(--font-serif)',
               cursor:
                 tools.length === 0 || sourceWorkshops.length === 0 ? 'not-allowed' : 'pointer',
               opacity: tools.length === 0 || sourceWorkshops.length === 0 ? 0.5 : 1,

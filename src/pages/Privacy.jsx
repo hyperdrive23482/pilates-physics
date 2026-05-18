@@ -6,7 +6,7 @@ export default function Privacy() {
   }
 
   const h1Style = {
-    fontFamily: '"DM Serif Display", serif',
+    fontFamily: 'var(--font-serif)',
     fontSize: 'clamp(2rem, 4vw, 3rem)',
     lineHeight: '1.15',
     color: 'var(--color-ink)',
@@ -14,7 +14,7 @@ export default function Privacy() {
   }
 
   const h2Style = {
-    fontFamily: '"DM Serif Display", serif',
+    fontFamily: 'var(--font-serif)',
     fontSize: '1.35rem',
     lineHeight: '1.3',
     color: 'var(--color-ink)',

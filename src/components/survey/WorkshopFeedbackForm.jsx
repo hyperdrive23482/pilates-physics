@@ -39,9 +39,9 @@ const primaryButtonStyle = {
   padding: '0.875rem 1.75rem',
   fontSize: '0.95rem',
   fontWeight: '500',
-  fontFamily: '"DM Sans", sans-serif',
+  fontFamily: 'var(--font-serif)',
   background: 'var(--color-accent)',
-  color: '#1C1A17',
+  color: 'var(--color-accent-ink)',
   border: 'none',
   textDecoration: 'none',
   cursor: 'pointer',
@@ -59,7 +59,7 @@ const inputStyle = {
   width: '100%',
   padding: '0.75rem 1rem',
   fontSize: '0.9rem',
-  fontFamily: '"DM Sans", sans-serif',
+  fontFamily: 'var(--font-serif)',
   border: '1px solid var(--color-rule)',
   background: 'var(--color-bg)',
   color: 'var(--color-ink)',
@@ -74,7 +74,7 @@ const fieldsetStyle = {
 }
 
 const sectionHeadingStyle = {
-  fontFamily: '"DM Serif Display", serif',
+  fontFamily: 'var(--font-serif)',
   fontSize: '1.5rem',
   color: 'var(--color-ink)',
   marginBottom: '1.25rem',
@@ -297,7 +297,7 @@ export default function WorkshopFeedbackForm({
                       padding: '0.55rem 0.75rem',
                       border: `1px solid ${selected ? 'var(--color-accent)' : 'var(--color-rule)'}`,
                       background: selected ? 'var(--color-accent)' : 'var(--color-bg)',
-                      color: selected ? '#1C1A17' : 'var(--color-ink)',
+                      color: selected ? 'var(--color-accent-ink)' : 'var(--color-ink)',
                       cursor: 'pointer',
                       fontSize: '0.95rem',
                       fontWeight: '500',
@@ -345,7 +345,7 @@ export default function WorkshopFeedbackForm({
               disabled={disabled}
               maxLength={2000}
               rows={4}
-              style={{ ...inputStyle, resize: 'vertical', fontFamily: '"DM Sans", sans-serif' }}
+              style={{ ...inputStyle, resize: 'vertical', fontFamily: 'var(--font-serif)' }}
             />
           </div>
 
@@ -362,7 +362,7 @@ export default function WorkshopFeedbackForm({
               disabled={disabled}
               maxLength={2000}
               rows={4}
-              style={{ ...inputStyle, resize: 'vertical', fontFamily: '"DM Sans", sans-serif' }}
+              style={{ ...inputStyle, resize: 'vertical', fontFamily: 'var(--font-serif)' }}
             />
           </div>
 
@@ -423,7 +423,7 @@ export default function WorkshopFeedbackForm({
               disabled={disabled}
               maxLength={2000}
               rows={4}
-              style={{ ...inputStyle, resize: 'vertical', fontFamily: '"DM Sans", sans-serif' }}
+              style={{ ...inputStyle, resize: 'vertical', fontFamily: 'var(--font-serif)' }}
             />
           </div>
 
@@ -483,7 +483,7 @@ export default function WorkshopFeedbackForm({
               disabled={disabled}
               maxLength={2000}
               rows={3}
-              style={{ ...inputStyle, resize: 'vertical', fontFamily: '"DM Sans", sans-serif' }}
+              style={{ ...inputStyle, resize: 'vertical', fontFamily: 'var(--font-serif)' }}
             />
           </div>
 
@@ -499,7 +499,7 @@ export default function WorkshopFeedbackForm({
               disabled={disabled}
               maxLength={2000}
               rows={3}
-              style={{ ...inputStyle, resize: 'vertical', fontFamily: '"DM Sans", sans-serif' }}
+              style={{ ...inputStyle, resize: 'vertical', fontFamily: 'var(--font-serif)' }}
             />
           </div>
         </div>

@@ -61,11 +61,12 @@ export default function AdminNav({ user, onSignOut }) {
         >
           <span
             style={{
-              fontFamily: '"DM Sans", sans-serif',
-              fontWeight: 500,
-              fontSize: '0.75rem',
-              letterSpacing: '0.2em',
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 600,
+              fontSize: '13px',
+              letterSpacing: '0.16em',
               textTransform: 'uppercase',
+              lineHeight: '1.05',
               color: 'var(--color-ink)',
               borderBottom: '1px solid var(--color-accent)',
               paddingBottom: '2px',
@@ -76,11 +77,12 @@ export default function AdminNav({ user, onSignOut }) {
           </span>
           <span
             style={{
-              fontFamily: '"DM Sans", sans-serif',
+              fontFamily: 'var(--font-mono)',
               fontWeight: 500,
-              fontSize: '0.75rem',
-              letterSpacing: '0.2em',
+              fontSize: '13px',
+              letterSpacing: '0.16em',
               textTransform: 'uppercase',
+              lineHeight: '1.05',
               color: 'var(--color-accent)',
               display: 'block',
             }}
@@ -89,16 +91,7 @@ export default function AdminNav({ user, onSignOut }) {
           </span>
         </Link>
 
-        <span
-          style={{
-            fontSize: '0.7rem',
-            fontWeight: 600,
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            color: 'var(--color-accent)',
-            flexShrink: 0,
-          }}
-        >
+        <span className="pp-eyebrow" style={{ flexShrink: 0 }}>
           Admin
         </span>
 
@@ -111,14 +104,7 @@ export default function AdminNav({ user, onSignOut }) {
               key={l.to}
               to={l.to}
               end={l.end}
-              style={({ isActive }) => ({
-                fontSize: '0.8rem',
-                fontFamily: '"DM Sans", sans-serif',
-                textDecoration: 'none',
-                color: isActive ? 'var(--color-ink)' : 'var(--color-ink-muted)',
-                borderBottom: isActive ? '1px solid var(--color-accent)' : '1px solid transparent',
-                paddingBottom: '2px',
-              })}
+              className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
             >
               {l.label}
             </NavLink>
@@ -129,8 +115,7 @@ export default function AdminNav({ user, onSignOut }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <Link
           to="/portal"
-          className="pp-admin-nav-exit"
-          style={{ fontSize: '0.8rem', color: 'var(--color-ink-muted)', textDecoration: 'none' }}
+          className="pp-admin-nav-exit nav-link"
         >
           Exit to Portal
         </Link>
@@ -167,7 +152,7 @@ export default function AdminNav({ user, onSignOut }) {
               display: 'block',
               padding: '0.85rem 1.25rem',
               fontSize: '0.9rem',
-              fontFamily: '"DM Sans", sans-serif',
+              fontFamily: 'var(--font-serif)',
               color: 'var(--color-ink-muted)',
               textDecoration: 'none',
               borderTop: '1px solid var(--color-rule)',

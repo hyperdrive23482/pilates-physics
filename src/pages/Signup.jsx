@@ -41,7 +41,7 @@ export default function Signup() {
     width: '100%',
     padding: '0.75rem 1rem',
     fontSize: '0.9rem',
-    fontFamily: '"DM Sans", sans-serif',
+    fontFamily: 'var(--font-serif)',
     border: '1px solid var(--color-rule)',
     background: 'var(--color-surface)',
     color: 'var(--color-ink)',
@@ -54,8 +54,7 @@ export default function Signup() {
     <div
       style={{
         minHeight: '100vh',
-        background: 'var(--color-bg)',
-        display: 'flex',
+                display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '2rem',
@@ -90,7 +89,7 @@ export default function Signup() {
 
         <h1
           style={{
-            fontFamily: '"DM Serif Display", serif',
+            fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(1.75rem, 4vw, 2.75rem)',
             lineHeight: '1.15',
             color: 'var(--color-ink)',
@@ -116,7 +115,7 @@ export default function Signup() {
           <div>
             <p
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: '1.25rem',
                 color: 'var(--color-accent)',
                 marginBottom: '0.75rem',
@@ -173,9 +172,9 @@ export default function Signup() {
                 padding: '0.75rem 1.5rem',
                 fontSize: '0.9rem',
                 fontWeight: '500',
-                fontFamily: '"DM Sans", sans-serif',
+                fontFamily: 'var(--font-serif)',
                 background: 'var(--color-accent)',
-                color: '#1C1A17',
+                color: 'var(--color-accent-ink)',
                 border: 'none',
                 cursor: status === 'loading' ? 'wait' : 'pointer',
               }}

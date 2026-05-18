@@ -214,13 +214,13 @@ export default function ContentEditor({ workshopId }) {
               gap: '0.4rem',
               padding: '0.6rem 1rem',
               background: 'var(--color-accent)',
-              color: '#1C1A17',
+              color: 'var(--color-accent-ink)',
               border: 'none',
               cursor: isEditing ? 'not-allowed' : 'pointer',
               opacity: isEditing ? 0.5 : 1,
               fontSize: '0.85rem',
               fontWeight: 500,
-              fontFamily: '"DM Sans", sans-serif',
+              fontFamily: 'var(--font-serif)',
             }}
           >
             <Plus size={14} />
@@ -402,7 +402,7 @@ function EditForm({ draft, saving, workshopId, onChange, onSave, onCancel }) {
             cursor: saving ? 'not-allowed' : 'pointer',
             opacity: saving ? 0.6 : 1,
             fontSize: '0.85rem',
-            fontFamily: '"DM Sans", sans-serif',
+            fontFamily: 'var(--font-serif)',
           }}
         >
           Cancel
@@ -414,13 +414,13 @@ function EditForm({ draft, saving, workshopId, onChange, onSave, onCancel }) {
           style={{
             padding: '0.5rem 1rem',
             background: 'var(--color-accent)',
-            color: '#1C1A17',
+            color: 'var(--color-accent-ink)',
             border: 'none',
             cursor: saving ? 'not-allowed' : 'pointer',
             opacity: saving ? 0.6 : 1,
             fontSize: '0.85rem',
             fontWeight: 500,
-            fontFamily: '"DM Sans", sans-serif',
+            fontFamily: 'var(--font-serif)',
           }}
         >
           {saving ? 'Saving…' : 'Save'}
@@ -479,7 +479,7 @@ const inputStyle = {
   color: 'var(--color-ink)',
   border: '1px solid var(--color-rule)',
   fontSize: '0.85rem',
-  fontFamily: '"DM Sans", sans-serif',
+  fontFamily: 'var(--font-serif)',
   outline: 'none',
 }
 

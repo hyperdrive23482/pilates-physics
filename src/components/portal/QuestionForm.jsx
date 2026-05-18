@@ -59,7 +59,7 @@ export default function QuestionForm({ workshopId, userId }) {
         <MessageSquare size={18} style={{ color: 'var(--color-accent)' }} />
         <h3
           style={{
-            fontFamily: '"DM Serif Display", serif',
+            fontFamily: 'var(--font-serif)',
             fontSize: '1.1rem',
             color: 'var(--color-ink)',
             margin: 0,
@@ -121,7 +121,7 @@ export default function QuestionForm({ workshopId, userId }) {
             flex: 1,
             padding: '0.75rem',
             fontSize: '0.9rem',
-            fontFamily: '"DM Sans", sans-serif',
+            fontFamily: 'var(--font-serif)',
             border: '1px solid var(--color-rule)',
             background: 'var(--color-bg)',
             color: 'var(--color-ink)',
@@ -135,7 +135,7 @@ export default function QuestionForm({ workshopId, userId }) {
           style={{
             padding: '0.75rem',
             background: status === 'sent' ? '#98C379' : 'var(--color-accent)',
-            color: '#1C1A17',
+            color: 'var(--color-accent-ink)',
             border: 'none',
             cursor: !question.trim() || status === 'sending' ? 'default' : 'pointer',
             opacity: !question.trim() ? 0.5 : 1,

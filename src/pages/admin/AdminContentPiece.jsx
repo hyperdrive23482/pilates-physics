@@ -334,7 +334,7 @@ export default function AdminContentPiece() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+      <div style={{ minHeight: '100vh' }}>
         <AdminNav user={user} onSignOut={signOut} />
         <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <p style={{ color: 'var(--color-ink-muted)' }}>Loading…</p>
@@ -345,7 +345,7 @@ export default function AdminContentPiece() {
 
   if (error || !piece) {
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+      <div style={{ minHeight: '100vh' }}>
         <AdminNav user={user} onSignOut={signOut} />
         <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <p style={{ color: '#ff7d7d' }}>{error || 'Piece not found'}</p>
@@ -365,7 +365,7 @@ export default function AdminContentPiece() {
   const blogLocked = piece.status === 'scheduled'
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }} data-color-mode="dark">
+    <div style={{ minHeight: '100vh' }} data-color-mode="dark">
       <AdminNav user={user} onSignOut={signOut} />
 
       <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -388,7 +388,7 @@ export default function AdminContentPiece() {
           <div style={{ flex: 1, minWidth: 0 }}>
             <h1
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: 'clamp(1.5rem, 3vw, 2rem)',
                 color: 'var(--color-ink)',
                 margin: 0,
@@ -819,7 +819,7 @@ function Step({ number, title, subtitle, children, locked }) {
         {number !== null && (
           <span
             style={{
-              fontFamily: '"DM Serif Display", serif',
+              fontFamily: 'var(--font-serif)',
               fontSize: '1.5rem',
               color: 'var(--color-accent)',
               lineHeight: 1,
@@ -830,7 +830,7 @@ function Step({ number, title, subtitle, children, locked }) {
         )}
         <h2
           style={{
-            fontFamily: '"DM Serif Display", serif',
+            fontFamily: 'var(--font-serif)',
             fontSize: '1.25rem',
             color: 'var(--color-ink)',
             margin: 0,
@@ -946,14 +946,14 @@ function AudienceSelector({
               style={{
                 padding: '0.4rem 0.75rem',
                 background: active ? 'var(--color-accent)' : 'transparent',
-                color: active ? '#1C1A17' : 'var(--color-ink)',
+                color: active ? 'var(--color-accent-ink)' : 'var(--color-ink)',
                 border: '1px solid',
                 borderColor: active ? 'var(--color-accent)' : 'var(--color-rule)',
                 fontSize: '0.8rem',
                 fontWeight: active ? 600 : 500,
                 cursor: disabled ? 'not-allowed' : 'pointer',
                 opacity: disabled ? 0.5 : 1,
-                fontFamily: '"DM Sans", sans-serif',
+                fontFamily: 'var(--font-serif)',
               }}
             >
               {t.name}
@@ -1120,7 +1120,7 @@ function TabBtn({ active, disabled, onClick, children }) {
         fontWeight: active ? 600 : 500,
         cursor: disabled ? 'not-allowed' : 'pointer',
         opacity: disabled ? 0.4 : 1,
-        fontFamily: '"DM Sans", sans-serif',
+        fontFamily: 'var(--font-serif)',
       }}
     >
       {children}
@@ -1247,7 +1247,7 @@ function AudienceView({ reactions }) {
           >
             <div
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: '1.05rem',
                 color: 'var(--color-ink)',
               }}
@@ -1357,7 +1357,7 @@ const inputStyle = {
   border: '1px solid var(--color-rule)',
   color: 'var(--color-ink)',
   fontSize: '0.9rem',
-  fontFamily: '"DM Sans", sans-serif',
+  fontFamily: 'var(--font-serif)',
   outline: 'none',
 }
 
@@ -1375,7 +1375,7 @@ function primaryBtn(disabled) {
     gap: '0.4rem',
     padding: '0.7rem 1.1rem',
     background: 'var(--color-accent)',
-    color: '#1C1A17',
+    color: 'var(--color-accent-ink)',
     border: 'none',
     fontSize: '0.85rem',
     fontWeight: 500,

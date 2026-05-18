@@ -58,7 +58,7 @@ function CatalogCard({ workshop }) {
 
       <h3
         style={{
-          fontFamily: '"DM Serif Display", serif',
+          fontFamily: 'var(--font-serif)',
           fontSize: '1.25rem',
           lineHeight: '1.3',
           color: 'var(--color-ink)',
@@ -152,7 +152,7 @@ export default function WorkshopCatalog() {
             </p>
             <h1
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
                 lineHeight: '1.15',
                 color: 'var(--color-ink)',
@@ -198,7 +198,7 @@ export default function WorkshopCatalog() {
           >
             <h2
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: '1.5rem',
                 color: 'var(--color-ink)',
                 margin: 0,
@@ -285,7 +285,7 @@ export default function WorkshopCatalog() {
         >
           <h2
             style={{
-              fontFamily: '"DM Serif Display", serif',
+              fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
               lineHeight: '1.2',
               color: 'var(--color-ink)',

@@ -79,7 +79,7 @@ export default function InlineImageUpload({
             border: '1px solid var(--color-rule)',
             cursor: busy || disabled ? 'not-allowed' : 'pointer',
             fontSize: '0.75rem',
-            fontFamily: '"DM Sans", sans-serif',
+            fontFamily: 'var(--font-serif)',
             opacity: busy || disabled ? 0.6 : 1,
           }}
         >

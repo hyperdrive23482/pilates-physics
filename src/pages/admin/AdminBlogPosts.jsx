@@ -47,7 +47,7 @@ export default function AdminBlogPosts() {
   const filtered = filter === 'all' ? posts : posts.filter((p) => p.status === filter)
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div style={{ minHeight: '100vh' }}>
       <AdminNav user={user} onSignOut={signOut} />
 
       <main className="pp-main" style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -82,7 +82,7 @@ export default function AdminBlogPosts() {
             </p>
             <h1
               style={{
-                fontFamily: '"DM Serif Display", serif',
+                fontFamily: 'var(--font-serif)',
                 fontSize: 'clamp(1.5rem, 3vw, 2rem)',
                 color: 'var(--color-ink)',
                 margin: 0,
@@ -183,11 +183,11 @@ function FilterChip({ active, onClick, label }) {
       style={{
         padding: '0.4rem 0.85rem',
         background: active ? 'var(--color-accent)' : 'transparent',
-        color: active ? '#1C1A17' : 'var(--color-ink)',
+        color: active ? 'var(--color-accent-ink)' : 'var(--color-ink)',
         border: '1px solid',
         borderColor: active ? 'var(--color-accent)' : 'var(--color-rule)',
         fontSize: '0.78rem',
-        fontFamily: '"DM Sans", sans-serif',
+        fontFamily: 'var(--font-serif)',
         cursor: 'pointer',
       }}
     >

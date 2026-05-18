@@ -72,7 +72,7 @@ export default function FileUpload({
             border: '1px solid var(--color-rule)',
             cursor: busy || disabled ? 'not-allowed' : 'pointer',
             fontSize: '0.8rem',
-            fontFamily: '"DM Sans", sans-serif',
+            fontFamily: 'var(--font-serif)',
             opacity: busy || disabled ? 0.6 : 1,
           }}
         >
