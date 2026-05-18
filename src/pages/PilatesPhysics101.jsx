@@ -64,6 +64,7 @@ const SPECS = [
   { k: 'Time', v: '11am PDT / 2pm EDT' },
   { k: 'Duration', v: '2 hours' },
   { k: 'Format', v: 'Live via Zoom · recording included' },
+  { k: 'NPCP CECs', v: '2.0' },
   { k: 'Price', v: '$99' },
 ]
 

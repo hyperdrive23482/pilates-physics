@@ -158,8 +158,11 @@
 }
 .ppv2 .workshop-topics__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
+}
+.ppv2 .workshop-topics__grid--cols-3 {
+  grid-template-columns: repeat(3, 1fr);
 }
 .ppv2 .workshop-topics__grid .fcard:nth-child(5) {
   grid-column: 1 / -1;

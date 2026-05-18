@@ -16,20 +16,37 @@ const FRAMEWORK_DATA = [
 const TESTIMONIALS = [
   {
     handle: 'playpilatescompany',
-    quote: 'Really glad I found your account! Another thing totally absent from my teacher training…',
+    quote: 'Really glad I found your account! Another thing totally absent from my teacher training...',
   },
   {
     handle: 'eduardogperez68',
     quote:
-      '@kaleenc_ you are a natural teacher. This is what needs to be added to instructor education. Truly understanding the science to make better teaching decisions.',
+      '@kaleenc_ you are a natural teacher. This is what needs to be added to instructor education. Truly understanding the the science to make better teaching decisions.',
   },
   {
-    handle: 'cttcpilatesandmore',
-    quote: 'So glad to have this explained in an understandable way.',
+    handle: 'cttcpilatesandmovement',
+    quote: 'Love your videos. Its great to have this explained in a clear and easy to undderstand way!',
   },
   {
-    handle: 'reformerstudio.nyc',
-    quote: 'Changed how I write programming. Spring choice isn\'t a vibe anymore — it\'s a load decision.',
+    handle: 'debnus4',
+    quote: 'This is amazing information. Thank you. Stuff I was never taught and didn\'t know I needed.',
+  },
+  {
+    handle: 'bodylinela',
+    quote:
+      'I love your account, but honestly, I didn\'t think there was another person in the world as interested in all of this stuff as I am. Actually, you are way more interested than me. I\'m glad you\'re spending time sorting all this stuff out so I don\'t have to.!!!',
+  },
+  {
+    handle: 'lisahovav',
+    quote: 'Excellent content and good to know the science behind the apparatus! Happy to have found you 🙌',
+  },
+  {
+    handle: 'pilatesly',
+    quote: 'interesting! you explain it so well',
+  },
+  {
+    handle: 'elematz_pilates',
+    quote: 'Love the blend of science and Pilates! So inspiring to see the magic behind our movements explained.',
   },
 ]
 

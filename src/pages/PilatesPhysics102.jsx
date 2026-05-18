@@ -210,7 +210,7 @@ export default function PilatesPhysics102() {
             </p>
           </div>
 
-          <div className="workshop-topics__grid">
+          <div className="workshop-topics__grid workshop-topics__grid--cols-3">
             {TOPICS.map((t) => (
               <article className="fcard" key={t.n}>
                 <div className="fcard__head">
