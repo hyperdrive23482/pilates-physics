@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ArrowDown, ArrowUp, Plus, Trash2 } from 'lucide-react'
 import { QUESTION_TYPES, validateSurveyConfig } from '../../../api/_lib/survey-validation.js'
+import { SURVEY_TEMPLATES, getTemplate } from '../../lib/survey-templates.js'
 
 const TYPE_LABELS = {
   nps: 'NPS (1-10)',
@@ -56,6 +57,7 @@ export default function SurveyConfigEditor({
   const initial = value && typeof value === 'object' ? value : EMPTY_CONFIG
   const [form, setForm] = useState(() => normalizeForForm(initial))
   const [pendingType, setPendingType] = useState('single_select')
+  const [pendingTemplate, setPendingTemplate] = useState(SURVEY_TEMPLATES[0]?.id ?? '')
   const [error, setError] = useState(null)
 
   useEffect(() => {
@@ -67,6 +69,24 @@ export default function SurveyConfigEditor({
   const lockedHint = locked
     ? `This workshop already has ${responseCount} response${responseCount === 1 ? '' : 's'}. You can add or rename questions, but deleting or removing options would orphan existing data.`
     : null
+
+  function loadTemplate() {
+    const template = getTemplate(pendingTemplate)
+    if (!template) return
+    if (form.questions.length > 0) {
+      const ok = window.confirm(
+        `Replace the current ${form.questions.length} question${form.questions.length === 1 ? '' : 's'} with the "${template.label}" template?`,
+      )
+      if (!ok) return
+    }
+    setForm((prev) => ({
+      ...prev,
+      questions: template.questions.map((q) => ({
+        ...q,
+        options: Array.isArray(q.options) ? q.options.slice() : undefined,
+      })),
+    }))
+  }
 
   const validation = useMemo(() => {
     const payload = toConfigPayload(form)
@@ -226,6 +246,36 @@ export default function SurveyConfigEditor({
       </Field>
 
       <SectionLabel>Questions</SectionLabel>
+
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.6rem',
+          flexWrap: 'wrap',
+          padding: '0.75rem 1rem',
+          background: 'var(--color-surface)',
+          border: '1px solid var(--color-rule)',
+        }}
+      >
+        <span style={{ fontSize: '0.8rem', color: 'var(--color-ink-muted)' }}>
+          Start from a template:
+        </span>
+        <select
+          value={pendingTemplate}
+          onChange={(e) => setPendingTemplate(e.target.value)}
+          style={{ ...inputStyle, padding: '0.45rem 0.65rem', minWidth: '260px' }}
+        >
+          {SURVEY_TEMPLATES.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.label}
+            </option>
+          ))}
+        </select>
+        <button type="button" onClick={loadTemplate} style={addButtonStyle}>
+          Load template
+        </button>
+      </div>
 
       {form.questions.length === 0 ? (
         <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.85rem', margin: 0 }}>
