@@ -4,13 +4,15 @@ import { Eye, EyeOff } from 'lucide-react'
 import { useEnrollment } from '../hooks/useEnrollment'
 
 export default function Login() {
-  const { user, signIn } = useEnrollment()
+  const { user, signIn, resetPasswordRequest } = useEnrollment()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [status, setStatus] = useState('idle') // idle | loading | error
   const [errorMsg, setErrorMsg] = useState('')
+  const [resendStatus, setResendStatus] = useState('idle') // idle | loading | success | error
+  const [resendErrorMsg, setResendErrorMsg] = useState('')
 
   useEffect(() => {
     if (user) navigate('/course', { replace: true })
@@ -27,6 +29,23 @@ export default function Login() {
     } catch (err) {
       setErrorMsg(err.message || 'Invalid email or password.')
       setStatus('error')
+    }
+  }
+
+  async function handleResend() {
+    if (!email) {
+      setResendErrorMsg('Enter your email above first.')
+      setResendStatus('error')
+      return
+    }
+    setResendStatus('loading')
+    setResendErrorMsg('')
+    try {
+      await resetPasswordRequest(email)
+      setResendStatus('success')
+    } catch (err) {
+      setResendErrorMsg(err.message || 'Something went wrong. Try again.')
+      setResendStatus('error')
     }
   }
 
@@ -198,6 +217,40 @@ export default function Login() {
               {errorMsg}
             </p>
           )}
+
+          <div style={{ marginTop: '1.25rem', textAlign: 'center' }}>
+            <p style={{ fontSize: '0.8rem', color: 'var(--color-ink-muted)', margin: '0 0 0.375rem' }}>
+              Didn't receive your welcome email?
+            </p>
+            {resendStatus === 'success' ? (
+              <p style={{ fontSize: '0.8rem', color: 'var(--color-accent)', margin: 0 }}>
+                Sent. Check your inbox for an access link.
+              </p>
+            ) : (
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={resendStatus === 'loading'}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  fontSize: '0.8rem',
+                  color: 'var(--color-accent)',
+                  textDecoration: 'underline',
+                  cursor: resendStatus === 'loading' ? 'wait' : 'pointer',
+                  fontFamily: 'inherit',
+                }}
+              >
+                {resendStatus === 'loading' ? 'Sending...' : 'Resend access link'}
+              </button>
+            )}
+            {resendStatus === 'error' && (
+              <p style={{ marginTop: '0.375rem', fontSize: '0.75rem', color: '#e06c75' }}>
+                {resendErrorMsg}
+              </p>
+            )}
+          </div>
         </form>
 
         <p
