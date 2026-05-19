@@ -31,10 +31,13 @@ export default function Signup() {
 
   const labelStyle = {
     display: 'block',
-    fontSize: '0.78rem',
-    fontWeight: '500',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.7rem',
+    fontWeight: '600',
+    letterSpacing: '0.15em',
+    textTransform: 'uppercase',
     color: 'var(--color-ink-muted)',
-    marginBottom: '0.375rem',
+    marginBottom: '0.5rem',
   }
 
   const inputStyle = {
@@ -74,17 +77,8 @@ export default function Signup() {
           ← Back to home
         </Link>
 
-        <p
-          style={{
-            fontSize: '0.7rem',
-            fontWeight: '600',
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            color: 'var(--color-accent)',
-            marginBottom: '1.25rem',
-          }}
-        >
-          Free Course — Pilates Physics
+        <p className="pp-eyebrow" style={{ marginBottom: '1.25rem' }}>
+          Free Course
         </p>
 
         <h1
@@ -169,17 +163,19 @@ export default function Signup() {
               disabled={status === 'loading'}
               style={{
                 width: '100%',
-                padding: '0.75rem 1.5rem',
-                fontSize: '0.9rem',
-                fontWeight: '500',
-                fontFamily: 'var(--font-serif)',
+                padding: '0.85rem 1.5rem',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.78rem',
+                fontWeight: '600',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
                 background: 'var(--color-accent)',
                 color: 'var(--color-accent-ink)',
                 border: 'none',
                 cursor: status === 'loading' ? 'wait' : 'pointer',
               }}
             >
-              {status === 'loading' ? 'Creating account...' : 'Create Account'}
+              {status === 'loading' ? 'Creating account…' : 'Create Account'}
             </button>
 
             {status === 'error' && (

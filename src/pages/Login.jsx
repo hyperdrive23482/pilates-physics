@@ -73,16 +73,7 @@ export default function Login() {
           ← Back to home
         </Link>
 
-        <p
-          style={{
-            fontSize: '0.7rem',
-            fontWeight: '600',
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            color: 'var(--color-accent)',
-            marginBottom: '1.25rem',
-          }}
-        >
+        <p className="pp-eyebrow" style={{ marginBottom: '1.25rem' }}>
           Welcome Back
         </p>
 
@@ -102,10 +93,13 @@ export default function Login() {
           <label
             style={{
               display: 'block',
-              fontSize: '0.78rem',
-              fontWeight: '500',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.7rem',
+              fontWeight: '600',
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
               color: 'var(--color-ink-muted)',
-              marginBottom: '0.375rem',
+              marginBottom: '0.5rem',
             }}
           >
             Email
@@ -134,10 +128,13 @@ export default function Login() {
             <label
               style={{
                 display: 'block',
-                fontSize: '0.78rem',
-                fontWeight: '500',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.7rem',
+                fontWeight: '600',
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
                 color: 'var(--color-ink-muted)',
-                marginBottom: '0.375rem',
+                marginBottom: '0.5rem',
               }}
             >
               Password
@@ -145,7 +142,11 @@ export default function Login() {
             <Link
               to="/forgot-password"
               style={{
-                fontSize: '0.75rem',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.65rem',
+                fontWeight: '600',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
                 color: 'var(--color-accent)',
                 textDecoration: 'none',
               }}
@@ -199,17 +200,19 @@ export default function Login() {
             disabled={status === 'loading'}
             style={{
               width: '100%',
-              padding: '0.75rem 1.5rem',
-              fontSize: '0.9rem',
-              fontWeight: '500',
-              fontFamily: 'var(--font-serif)',
+              padding: '0.85rem 1.5rem',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.78rem',
+              fontWeight: '600',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
               background: 'var(--color-accent)',
               color: 'var(--color-accent-ink)',
               border: 'none',
               cursor: status === 'loading' ? 'wait' : 'pointer',
             }}
           >
-            {status === 'loading' ? 'Signing in...' : 'Log In'}
+            {status === 'loading' ? 'Signing in…' : 'Log In'}
           </button>
 
           {status === 'error' && (
@@ -219,12 +222,22 @@ export default function Login() {
           )}
 
           <div style={{ marginTop: '1.25rem', textAlign: 'center' }}>
-            <p style={{ fontSize: '0.8rem', color: 'var(--color-ink-muted)', margin: '0 0 0.375rem' }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--color-ink-muted)', margin: '0 0 0.5rem' }}>
               Didn't receive your welcome email?
             </p>
             {resendStatus === 'success' ? (
-              <p style={{ fontSize: '0.8rem', color: 'var(--color-accent)', margin: 0 }}>
-                Sent. Check your inbox for an access link.
+              <p
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.7rem',
+                  fontWeight: '600',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color: 'var(--color-accent)',
+                  margin: 0,
+                }}
+              >
+                Sent. Check your inbox.
               </p>
             ) : (
               <button
@@ -235,34 +248,42 @@ export default function Login() {
                   background: 'none',
                   border: 'none',
                   padding: 0,
-                  fontSize: '0.8rem',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.7rem',
+                  fontWeight: '600',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
                   color: 'var(--color-accent)',
                   textDecoration: 'underline',
                   cursor: resendStatus === 'loading' ? 'wait' : 'pointer',
-                  fontFamily: 'inherit',
                 }}
               >
-                {resendStatus === 'loading' ? 'Sending...' : 'Resend access link'}
+                {resendStatus === 'loading' ? 'Sending…' : 'Resend access link'}
               </button>
             )}
             {resendStatus === 'error' && (
-              <p style={{ marginTop: '0.375rem', fontSize: '0.75rem', color: '#e06c75' }}>
+              <p style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: '#e06c75' }}>
                 {resendErrorMsg}
               </p>
             )}
           </div>
         </form>
 
-        <p
-          style={{
-            marginTop: '1.5rem',
-            fontSize: '0.85rem',
-            color: 'var(--color-ink-muted)',
-            lineHeight: '1.5',
-          }}
-        >
-          This portal is available to workshop participants only. An account is created for you when you purchase a workshop.
-        </p>
+        <div className="pp-card" style={{ marginTop: '1.5rem' }}>
+          <p className="pp-section-label" style={{ margin: '0 0 0.5rem' }}>
+            Workshop participants
+          </p>
+          <p
+            style={{
+              margin: 0,
+              fontSize: '0.85rem',
+              color: 'var(--color-ink-muted)',
+              lineHeight: '1.55',
+            }}
+          >
+            This portal is available to workshop participants only. An account is created for you when you purchase a workshop.
+          </p>
+        </div>
       </div>
     </div>
   )

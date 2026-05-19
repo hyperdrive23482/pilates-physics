@@ -46,16 +46,7 @@ export default function ForgotPassword() {
           ← Back to home
         </Link>
 
-        <p
-          style={{
-            fontSize: '0.7rem',
-            fontWeight: '600',
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            color: 'var(--color-accent)',
-            marginBottom: '1.25rem',
-          }}
-        >
+        <p className="pp-eyebrow" style={{ marginBottom: '1.25rem' }}>
           Password Reset
         </p>
 
@@ -103,10 +94,13 @@ export default function ForgotPassword() {
             <label
               style={{
                 display: 'block',
-                fontSize: '0.78rem',
-                fontWeight: '500',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.7rem',
+                fontWeight: '600',
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
                 color: 'var(--color-ink-muted)',
-                marginBottom: '0.375rem',
+                marginBottom: '0.5rem',
               }}
             >
               Email
@@ -136,17 +130,19 @@ export default function ForgotPassword() {
               disabled={status === 'loading'}
               style={{
                 width: '100%',
-                padding: '0.75rem 1.5rem',
-                fontSize: '0.9rem',
-                fontWeight: '500',
-                fontFamily: 'var(--font-serif)',
+                padding: '0.85rem 1.5rem',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.78rem',
+                fontWeight: '600',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
                 background: 'var(--color-accent)',
                 color: 'var(--color-accent-ink)',
                 border: 'none',
                 cursor: status === 'loading' ? 'wait' : 'pointer',
               }}
             >
-              {status === 'loading' ? 'Sending...' : 'Send Reset Link'}
+              {status === 'loading' ? 'Sending…' : 'Send Reset Link'}
             </button>
 
             {status === 'error' && (
