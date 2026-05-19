@@ -270,9 +270,6 @@ export default function Login() {
         </form>
 
         <div className="pp-card" style={{ marginTop: '1.5rem' }}>
-          <p className="pp-section-label" style={{ margin: '0 0 0.5rem' }}>
-            Workshop participants
-          </p>
           <p
             style={{
               margin: 0,
