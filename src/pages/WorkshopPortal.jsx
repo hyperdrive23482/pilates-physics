@@ -19,7 +19,7 @@ export default function WorkshopPortal() {
   const { user, loading: authLoading, signOut } = useEnrollment()
   const { workshop, loading: workshopLoading } = useWorkshop(slug)
   const { hasAccess, loading: entLoading } = useEntitlements(user?.id)
-  const { content, loading: contentLoading } = useWorkshopContent(workshop?.id, workshop?.status)
+  const { content } = useWorkshopContent(workshop?.id, workshop?.status)
 
   useEffect(() => {
     if (!authLoading && !user) {

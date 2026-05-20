@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { motion, useSpring, useTransform } from 'framer-motion'
+import { useSpring } from 'framer-motion'
 
 // Physics constants
 const TRAVEL = 18 // inches

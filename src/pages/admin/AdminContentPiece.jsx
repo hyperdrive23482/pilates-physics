@@ -357,7 +357,6 @@ export default function AdminContentPiece() {
     )
   }
 
-  const editable = piece.status === 'drafting' || piece.status === 'in_review'
   const hasContent = !!piece.blog_markdown
   const isLocked = piece.status === 'scheduled' || piece.status === 'published'
   // Blog stays editable after publish so edits propagate to the live blog_posts

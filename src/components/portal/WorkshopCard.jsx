@@ -12,13 +12,6 @@ export default function WorkshopCard({ workshop, linkTo }) {
       })
     : null
 
-  const time = workshop.scheduled_at
-    ? new Date(workshop.scheduled_at).toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-      })
-    : null
-
   return (
     <Link
       to={linkTo}

@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react'
 import { useEnrollment } from '../hooks/useEnrollment'
+import ExpiredLinkNotice from '../components/ui/ExpiredLinkNotice'
 
 export default function SetPassword() {
-  const { setPassword } = useEnrollment()
+  const { user, loading, setPassword } = useEnrollment()
   const navigate = useNavigate()
   const [password, setPasswordValue] = useState('')
   const [confirm, setConfirm] = useState('')
@@ -30,6 +31,32 @@ export default function SetPassword() {
       setErrorMsg(err.message || 'Something went wrong. Try again.')
       setStatus('error')
     }
+  }
+
+  // Hydrating the session from storage.
+  if (loading) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: 'var(--font-serif)',
+          color: 'var(--color-ink-muted)',
+          fontSize: '0.9rem',
+        }}
+      >
+        Loading…
+      </div>
+    )
+  }
+
+  // No session: the link expired, was already used, or was opened in a context
+  // that dropped the session (common with in-app email browsers). updateUser()
+  // would fail with "Auth session missing!", so show a recovery path instead.
+  if (!user) {
+    return <ExpiredLinkNotice />
   }
 
   return (

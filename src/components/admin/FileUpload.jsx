@@ -35,7 +35,7 @@ export default function FileUpload({
     setBusy(true)
     setError(null)
     try {
-      const safeName = file.name.replace(/[^\w.\-]+/g, '_')
+      const safeName = file.name.replace(/[^\w.-]+/g, '_')
       const path = `${resolvedPrefix}/${Date.now()}-${safeName}`
       const { error: upErr } = await supabase.storage
         .from(bucket)

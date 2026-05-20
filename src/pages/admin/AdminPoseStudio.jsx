@@ -537,7 +537,7 @@ export default function AdminPoseStudio() {
       drawCalibrationOverlay(w, h)
     }
 
-    function drawCalibrationOverlay(w, h) {
+    function drawCalibrationOverlay(w, _h) {
       const { calibPointA: a, calibPointB: b } = state
       if (!a && !b) return
       const r = Math.max(4, w * 0.005)

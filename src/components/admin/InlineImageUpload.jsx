@@ -27,7 +27,7 @@ export default function InlineImageUpload({
     setError(null)
     setCopied(false)
     try {
-      const safeName = file.name.replace(/[^\w.\-]+/g, '_')
+      const safeName = file.name.replace(/[^\w.-]+/g, '_')
       const path = `${pathPrefix}/inline/${Date.now()}-${safeName}`
       const { error: upErr } = await supabase.storage
         .from(bucket)
