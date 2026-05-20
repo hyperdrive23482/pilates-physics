@@ -207,7 +207,7 @@ export default async function handler(req, res) {
     let kitError = null
     if (workshop.kit_tag) {
       try {
-        await tagSubscriber(email, firstName, lastName, workshop.kit_tag)
+        await tagSubscriber(email, firstName, workshop.kit_tag)
       } catch (err) {
         kitError = err.message
         console.error('Kit tagging failed:', err)

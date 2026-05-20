@@ -15,7 +15,7 @@ function headers() {
   }
 }
 
-async function upsertSubscriber(email, firstName, lastName) {
+async function upsertSubscriber(email, firstName) {
   const res = await fetch(`${KIT_BASE}/subscribers`, {
     method: 'POST',
     headers: headers(),
@@ -23,7 +23,6 @@ async function upsertSubscriber(email, firstName, lastName) {
       email_address: email,
       first_name: firstName || undefined,
       state: 'active',
-      fields: lastName ? { last_name: lastName } : undefined,
     }),
   })
   if (!res.ok) {
@@ -96,8 +95,8 @@ async function applyTag(tagId, email) {
   return res.json()
 }
 
-export async function tagSubscriber(email, firstName, lastName, tagName) {
-  await upsertSubscriber(email, firstName, lastName)
+export async function tagSubscriber(email, firstName, tagName) {
+  await upsertSubscriber(email, firstName)
   const tagId = await resolveTagId(tagName)
   await applyTag(tagId, email)
 }
