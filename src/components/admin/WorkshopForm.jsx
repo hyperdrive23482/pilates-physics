@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const STATUSES = ['draft', 'upcoming', 'live', 'complete', 'archived']
+const STATUSES = ['draft', 'upcoming', 'live', 'awaiting_recording', 'complete', 'archived']
 
 function slugify(s) {
   return s

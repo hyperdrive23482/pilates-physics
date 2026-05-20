@@ -111,7 +111,13 @@ export default function WorkshopPortal() {
 
   const isTool = workshop.kind === 'tool'
   const isPreWorkshop = !isTool && (workshop.status === 'upcoming' || workshop.status === 'live')
-  const isPostWorkshop = !isTool && (workshop.status === 'complete' || workshop.status === 'archived')
+  const isPostWorkshop =
+    !isTool &&
+    (workshop.status === 'awaiting_recording' ||
+      workshop.status === 'complete' ||
+      workshop.status === 'archived')
+  const hasRecording =
+    !isTool && (workshop.status === 'complete' || workshop.status === 'archived')
 
   const recordings = content.filter((c) => c.type === 'recording')
   const downloads = content.filter((c) => c.type === 'download' || c.type === 'slide_deck')
@@ -221,8 +227,8 @@ export default function WorkshopPortal() {
             </section>
           )}
 
-          {/* Recordings (post-workshop) */}
-          {isPostWorkshop && recordings.length > 0 && (
+          {/* Recordings (post-workshop, only once a recording exists) */}
+          {hasRecording && recordings.length > 0 && (
             <section>
               <h2
                 style={{
@@ -245,7 +251,7 @@ export default function WorkshopPortal() {
           )}
 
           {/* Workshop recording_url fallback (if no content items but url exists) */}
-          {isPostWorkshop && recordings.length === 0 && workshop.recording_url && (
+          {hasRecording && recordings.length === 0 && workshop.recording_url && (
             <section>
               <h2
                 style={{
@@ -267,6 +273,40 @@ export default function WorkshopPortal() {
                   file_url: workshop.recording_url,
                 }}
               />
+            </section>
+          )}
+
+          {/* Awaiting-recording notice */}
+          {workshop.status === 'awaiting_recording' && (
+            <section
+              style={{
+                padding: '1.25rem 1.5rem',
+                border: '1px solid var(--color-rule)',
+                background: 'var(--color-surface)',
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: '0.7rem',
+                  fontWeight: '600',
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase',
+                  color: 'var(--color-ink-muted)',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                Recording
+              </h2>
+              <p
+                style={{
+                  fontSize: '0.9rem',
+                  lineHeight: '1.6',
+                  color: 'var(--color-ink-muted)',
+                  margin: 0,
+                }}
+              >
+                The recording will be posted here once it's ready.
+              </p>
             </section>
           )}
 

@@ -40,7 +40,9 @@ export default function PortalDashboard() {
   const tools = workshops.filter((w) => w.kind === 'tool')
   const nonTools = workshops.filter((w) => w.kind !== 'tool')
   const upcoming = nonTools.filter((w) => w.status === 'upcoming' || w.status === 'live')
-  const completed = nonTools.filter((w) => w.status === 'complete')
+  const completed = nonTools.filter(
+    (w) => w.status === 'complete' || w.status === 'awaiting_recording'
+  )
   const archived = nonTools.filter((w) => w.status === 'archived')
 
   return (

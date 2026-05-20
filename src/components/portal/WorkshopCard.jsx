@@ -109,6 +109,8 @@ export default function WorkshopCard({ workshop, linkTo }) {
           ? 'Open Tool'
           : workshop.status === 'complete'
           ? 'View Recording'
+          : workshop.status === 'awaiting_recording'
+          ? 'View Materials'
           : 'View Details'}
         <ArrowRight size={14} />
       </div>

@@ -100,7 +100,7 @@ export function useMyWorkshops(userId) {
 
     const sortByStatus = (list) =>
       list.sort((a, b) => {
-        const order = { live: 0, upcoming: 1, complete: 2, archived: 3 }
+        const order = { live: 0, upcoming: 1, awaiting_recording: 2, complete: 3, archived: 4 }
         return (order[a.status] ?? 9) - (order[b.status] ?? 9)
       })
 

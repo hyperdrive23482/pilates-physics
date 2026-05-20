@@ -61,9 +61,27 @@ export default async function handler(req, res) {
       }
     }
 
+    // 3. Auto-flip upcoming workshops to awaiting_recording once scheduled_at + 1h has passed.
+    // The DB trigger will then promote them to 'complete' the moment recording_url is set.
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString()
+    const { data: endedRows, error: endedErr } = await supabaseAdmin
+      .from('webinars')
+      .update({ status: 'awaiting_recording' })
+      .eq('status', 'upcoming')
+      .neq('kind', 'tool')
+      .not('scheduled_at', 'is', null)
+      .lte('scheduled_at', oneHourAgo)
+      .select('id, slug')
+    if (endedErr) {
+      console.error('Failed to auto-end workshops:', endedErr)
+    }
+    const awaitingRecordingIds = (endedRows ?? []).map((r) => r.id)
+
     return res.status(200).json({
       published_count: publishedIds.length,
       published_ids: publishedIds,
+      awaiting_recording_count: awaitingRecordingIds.length,
+      awaiting_recording_ids: awaitingRecordingIds,
     })
   } catch (err) {
     console.error('publish-scheduled error:', err)

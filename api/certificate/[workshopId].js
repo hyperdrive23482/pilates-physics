@@ -29,8 +29,12 @@ export default async function handler(req, res) {
     if (wErr) throw wErr
     if (!workshop) return res.status(404).json({ error: 'Workshop not found' })
 
-    // 2. Status check — only completed/archived workshops are eligible.
-    if (workshop.status !== 'complete' && workshop.status !== 'archived') {
+    // 2. Status check — workshops are eligible once they've ended (awaiting_recording, complete, archived).
+    if (
+      workshop.status !== 'awaiting_recording' &&
+      workshop.status !== 'complete' &&
+      workshop.status !== 'archived'
+    ) {
       return res.status(403).json({ error: 'Workshop not yet complete' })
     }
 

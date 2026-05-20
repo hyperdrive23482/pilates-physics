@@ -119,7 +119,12 @@ export default function WorkshopCatalog() {
 
   const published = workshops.filter((w) => w.status !== 'draft' && w.kind !== 'tool')
   const upcoming = published.filter((w) => w.status === 'upcoming' || w.status === 'live')
-  const past = published.filter((w) => w.status === 'complete' || w.status === 'archived')
+  const past = published.filter(
+    (w) =>
+      w.status === 'awaiting_recording' ||
+      w.status === 'complete' ||
+      w.status === 'archived'
+  )
 
   return (
     <div>

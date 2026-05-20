@@ -19,7 +19,10 @@ export function useWorkshopContent(workshopId, workshopStatus) {
       .order('sort_order', { ascending: true })
       .then(({ data, error }) => {
         if (!error) {
-          const isPostWorkshop = workshopStatus === 'complete' || workshopStatus === 'archived'
+          const isPostWorkshop =
+            workshopStatus === 'awaiting_recording' ||
+            workshopStatus === 'complete' ||
+            workshopStatus === 'archived'
           const filtered = (data || []).filter(
             (item) => item.available_after === 'always' || isPostWorkshop
           )
