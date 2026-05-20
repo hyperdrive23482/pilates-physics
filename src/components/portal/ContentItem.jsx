@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react'
-import { Download, FileText, PlayCircle, Gift, Link as LinkIcon, Presentation } from 'lucide-react'
+import { Download, FileText, PlayCircle, Gift, Link as LinkIcon, Presentation, ExternalLink } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 
 const STORAGE_BUCKET = 'webinar-content'
@@ -29,12 +28,7 @@ async function signStoragePath(path) {
 export default function ContentItem({ item }) {
   const { icon: Icon, accent } = typeConfig[item.type] || typeConfig.resource
 
-  // Recordings render as an embedded player
-  if (item.type === 'recording' && item.file_url) {
-    return <RecordingPlayer item={item} Icon={Icon} accent={accent} />
-  }
-
-  // All other content types render as a row with a link
+  // All content types render as a row with a link that opens in a new window
   async function handleClick(e) {
     if (!isStoragePath(item.file_url)) return
     e.preventDefault()
@@ -99,99 +93,9 @@ export default function ContentItem({ item }) {
       {item.type === 'download' && (
         <Download size={16} style={{ color: 'var(--color-ink-muted)', flexShrink: 0 }} />
       )}
-    </a>
-  )
-}
-
-function RecordingPlayer({ item, Icon, accent }) {
-  const [src, setSrc] = useState(isStoragePath(item.file_url) ? null : item.file_url)
-  const [err, setErr] = useState(null)
-
-  useEffect(() => {
-    if (!isStoragePath(item.file_url)) {
-      setSrc(item.file_url)
-      return
-    }
-    let cancelled = false
-    signStoragePath(item.file_url)
-      .then((url) => {
-        if (!cancelled) setSrc(url)
-      })
-      .catch((e) => {
-        if (!cancelled) setErr(e.message ?? 'Could not load recording')
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [item.file_url])
-
-  return (
-    <div
-      style={{
-        background: 'var(--color-surface)',
-        border: '1px solid var(--color-rule)',
-        overflow: 'hidden',
-      }}
-    >
-      <div
-        style={{
-          padding: '1rem 1.25rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          borderBottom: '1px solid var(--color-rule)',
-        }}
-      >
-        <Icon size={16} style={{ color: accent, flexShrink: 0 }} />
-        <span style={{ fontSize: '0.9rem', fontWeight: '500', color: 'var(--color-ink)' }}>
-          {item.title}
-        </span>
-      </div>
-      <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
-        {src ? (
-          <iframe
-            src={src}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              border: 'none',
-            }}
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowFullScreen
-            title={item.title}
-          />
-        ) : (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '0.85rem',
-              color: 'var(--color-ink-muted)',
-            }}
-          >
-            {err ? err : 'Loading recording…'}
-          </div>
-        )}
-      </div>
-      {item.description && (
-        <p
-          style={{
-            padding: '0.75rem 1.25rem',
-            fontSize: '0.85rem',
-            color: 'var(--color-ink-muted)',
-            margin: 0,
-            lineHeight: '1.6',
-          }}
-        >
-          {item.description}
-        </p>
+      {item.type === 'recording' && (
+        <ExternalLink size={16} style={{ color: 'var(--color-ink-muted)', flexShrink: 0 }} />
       )}
-    </div>
+    </a>
   )
 }
