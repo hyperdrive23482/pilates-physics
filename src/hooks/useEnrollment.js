@@ -52,10 +52,14 @@ export function useEnrollment() {
     if (error) throw error
   }
 
-  // Finishes a passwordless login with the 6-digit code from the sign-in email.
+  // Finishes a passwordless login with the numeric code from the sign-in email.
+  // Supabase projects differ in which OTP type the emailed code verifies against,
+  // so try 'email' first and fall back to 'magiclink'.
   async function verifyEmailCode(email, token) {
-    const { error } = await supabase.auth.verifyOtp({ email, token, type: 'email' })
-    if (error) throw error
+    const first = await supabase.auth.verifyOtp({ email, token, type: 'email' })
+    if (!first.error) return
+    const second = await supabase.auth.verifyOtp({ email, token, type: 'magiclink' })
+    if (second.error) throw second.error
   }
 
   async function setPassword(password) {

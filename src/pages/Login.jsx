@@ -80,7 +80,7 @@ function friendlyAuthError(err, context) {
     return 'That was just sent. Wait a moment before requesting another email.'
   }
   if (context === 'verify' && (raw.includes('expired') || raw.includes('invalid') || raw.includes('token'))) {
-    return "That code didn't work. It may have expired. Use the code from the most recent email, or resend below."
+    return "That code didn't work. Enter the complete code from the most recent email, or get a fresh one below."
   }
   if (context === 'password' && raw.includes('invalid login credentials')) {
     return 'That email and password did not match. If you never set a password, choose "Email me a sign-in link instead" below.'
@@ -194,7 +194,7 @@ export default function Login() {
   }
 
   const cleanEmail = email.trim().toLowerCase()
-  const codeReady = code.length === 6
+  const codeReady = code.length >= 6
   const eyebrow = linkSent ? 'Check Your Inbox' : 'Welcome Back'
   const heading = linkSent ? "You're almost in" : 'Log in to your account'
 
@@ -287,7 +287,7 @@ export default function Login() {
         {mode === 'link' && linkSent && (
           <>
             <p style={introStyle}>
-              We emailed a sign-in link and a 6-digit code to{' '}
+              We emailed a sign-in link and a code to{' '}
               <strong style={{ color: 'var(--color-ink)' }}>{cleanEmail}</strong>. Click the
               link in that email, or enter the code below. If it's not there within a minute,
               check your spam folder.
@@ -295,7 +295,7 @@ export default function Login() {
 
             <form onSubmit={handleVerifyCode}>
               <label htmlFor="login-code" style={labelStyle}>
-                6-digit code
+                Sign-in code
               </label>
               <input
                 id="login-code"
@@ -303,12 +303,12 @@ export default function Login() {
                 inputMode="numeric"
                 autoComplete="one-time-code"
                 pattern="[0-9]*"
-                maxLength={6}
+                maxLength={10}
                 required
                 autoFocus
                 value={code}
                 onChange={(e) => {
-                  setCode(e.target.value.replace(/\D/g, '').slice(0, 6))
+                  setCode(e.target.value.replace(/\D/g, '').slice(0, 10))
                   if (linkError) setLinkError('')
                 }}
                 disabled={linkBusy}
