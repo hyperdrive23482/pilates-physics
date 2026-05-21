@@ -1,11 +1,10 @@
-import crypto from 'node:crypto'
 import { stripe } from '../_lib/stripe.js'
 import { supabaseAdmin } from '../_lib/supabase-admin.js'
-import { tagSubscriber } from '../_lib/kit.js'
-import { sendAuthEmail, sendPurchaseNotification } from '../_lib/resend.js'
+import { sendPurchaseNotification } from '../_lib/resend.js'
+import { provisionPurchase } from '../_lib/provision-purchase.js'
 
-// Vercel pure Node functions don't have the Next.js bodyParser flag —
-// we build the raw body from the stream ourselves for signature verification.
+// Vercel pure Node functions don't have the Next.js bodyParser flag, so we
+// build the raw body from the stream ourselves for signature verification.
 async function readRawBody(req) {
   const chunks = []
   for await (const chunk of req) {
@@ -14,25 +13,14 @@ async function readRawBody(req) {
   return Buffer.concat(chunks)
 }
 
-async function findUserByEmail(email) {
-  // listUsers doesn't accept a direct email filter; page through until found.
-  // For this project's scale, a single page (default 50) is fine; expand if needed.
-  let page = 1
-  const perPage = 200
-  while (true) {
-    const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage })
-    if (error) throw error
-    const hit = data.users.find((u) => u.email?.toLowerCase() === email.toLowerCase())
-    if (hit) return hit
-    if (data.users.length < perPage) return null
-    page += 1
-    if (page > 20) return null
-  }
-}
-
+// Audit log and idempotency record. Upsert on event_id so a retry of a
+// previously-failed event updates its row instead of colliding with the
+// unique constraint.
 async function logEvent(row) {
-  const { error } = await supabaseAdmin.from('stripe_events').insert(row)
-  if (error) console.error('stripe_events insert error:', error)
+  const { error } = await supabaseAdmin
+    .from('stripe_events')
+    .upsert(row, { onConflict: 'event_id' })
+  if (error) console.error('stripe_events upsert error:', error)
 }
 
 export default async function handler(req, res) {
@@ -51,180 +39,57 @@ export default async function handler(req, res) {
     return res.status(400).send(`Webhook Error: ${err.message}`)
   }
 
-  // Idempotency: exit early if we've already processed this event
+  // Idempotency: short-circuit only if this event already completed
+  // successfully. A 'failed' row must NOT short-circuit, or Stripe's retries
+  // collapse into no-ops and a one-time failure becomes permanent.
   const { data: existingEvent } = await supabaseAdmin
     .from('stripe_events')
-    .select('id')
+    .select('status')
     .eq('event_id', event.id)
     .maybeSingle()
-  if (existingEvent) return res.status(200).json({ received: true, duplicate: true })
+  if (existingEvent?.status === 'processed') {
+    return res.status(200).json({ received: true, duplicate: true })
+  }
 
   if (event.type !== 'checkout.session.completed') {
     return res.status(200).json({ received: true, ignored: event.type })
   }
 
   const session = event.data.object
-  const meta = session.metadata ?? {}
-  const workshopId = meta.webinar_id
-  const firstName = meta.first_name ?? ''
-  const lastName = meta.last_name ?? ''
-
-  // Always trust the Stripe-side email over metadata — user may have edited it at Checkout
-  const email = session.customer_details?.email ?? meta.email
-  if (!email || !workshopId) {
-    await logEvent({
-      event_id: event.id,
-      session_id: session.id,
-      event_type: event.type,
-      webinar_id: workshopId || null,
-      status: 'failed',
-      error: 'Missing email or webinar_id on session',
-      payload: session,
-    })
-    return res.status(200).json({ received: true, error: 'missing_fields' })
-  }
+  const origin = `${req.headers['x-forwarded-proto'] ?? 'https'}://${req.headers.host}`
 
   try {
-    // Look up workshop for kit_tag
-    const { data: workshop, error: webErr } = await supabaseAdmin
-      .from('webinars')
-      .select('id, title, kit_tag, bonus_webinar_id, bonus_starts_at, bonus_ends_at')
-      .eq('id', workshopId)
-      .single()
-    if (webErr) throw webErr
+    const result = await provisionPurchase(session, {
+      siteUrl: origin,
+      purchasedAt: new Date(event.created * 1000),
+    })
 
-    // ---- Three-branch user resolution ----
-    let userId
-    let userState
-    let tokenHash = null
-    const origin = `${req.headers['x-forwarded-proto'] ?? 'https'}://${req.headers.host}`
-
-    if (meta.user_id) {
-      // Branch (a): logged-in purchase — session exists in their browser, no magic link
-      userId = meta.user_id
-      userState = 'logged_in'
-    } else {
-      const existing = await findUserByEmail(email)
-      if (existing) {
-        // Branch (b): returning user, anonymous purchase — send magic link so they can log in
-        userId = existing.id
-        userState = 'returning'
-        // Do NOT update user_metadata — existing account values win over form values
-        const { data: linkData, error: linkErr } = await supabaseAdmin.auth.admin.generateLink({
-          type: 'magiclink',
-          email,
-          options: { redirectTo: `${origin}/auth/callback` },
-        })
-        if (linkErr) throw linkErr
-        tokenHash = linkData.properties.hashed_token
-      } else {
-        // Branch (c): new user — create account + send magic link; AuthCallback routes to /set-password
-        const { data: created, error: createErr } = await supabaseAdmin.auth.admin.createUser({
-          email,
-          password: crypto.randomUUID(),
-          email_confirm: true,
-          user_metadata: {
-            first_name: firstName,
-            last_name: lastName,
-            needs_password: true,
-          },
-        })
-        if (createErr) throw createErr
-        userId = created.user.id
-        userState = 'new'
-        const { data: linkData, error: linkErr } = await supabaseAdmin.auth.admin.generateLink({
-          type: 'magiclink',
-          email,
-          options: { redirectTo: `${origin}/auth/callback` },
-        })
-        if (linkErr) throw linkErr
-        tokenHash = linkData.properties.hashed_token
-      }
-    }
-
-    // ---- Grant entitlement (idempotent via unique user_id+webinar_id) ----
-    const { error: entErr } = await supabaseAdmin
-      .from('user_entitlements')
-      .upsert(
-        { user_id: userId, webinar_id: workshopId, source: 'stripe' },
-        { onConflict: 'user_id,webinar_id', ignoreDuplicates: true }
-      )
-    if (entErr) throw entErr
-
-    // ---- Early-registration bonus (non-fatal; backfill API is the safety net) ----
-    if (
-      workshop.bonus_webinar_id &&
-      workshop.bonus_webinar_id !== workshopId &&
-      workshop.bonus_starts_at &&
-      workshop.bonus_ends_at
-    ) {
-      const purchasedAt = new Date(event.created * 1000)
-      if (
-        purchasedAt >= new Date(workshop.bonus_starts_at) &&
-        purchasedAt <= new Date(workshop.bonus_ends_at)
-      ) {
-        const { error: bonusErr } = await supabaseAdmin
-          .from('user_entitlements')
-          .upsert(
-            { user_id: userId, webinar_id: workshop.bonus_webinar_id, source: 'bonus' },
-            { onConflict: 'user_id,webinar_id', ignoreDuplicates: true }
-          )
-        if (bonusErr) console.error('bonus grant failed:', bonusErr)
-      }
-    }
-
-    // ---- Owner notification (non-fatal — observability only) ----
+    // ---- Owner notification (non-fatal, observability only) ----
     try {
       await sendPurchaseNotification({
-        email,
-        firstName,
-        lastName,
-        workshopTitle: workshop.title,
+        email: result.email,
+        firstName: result.firstName,
+        lastName: result.lastName,
+        workshopTitle: result.workshopTitle,
         amountCents: session.amount_total,
-        userState,
+        userState: result.userState,
         sessionId: session.id,
       })
     } catch (err) {
       console.error('Purchase notification send failed:', err)
     }
 
-    // ---- Magic-link email (non-fatal — entitlement already granted) ----
-    // generateLink only mints the token; sending is on us. Skip for branch (a).
-    let emailStatus = 'skipped'
-    let emailError = null
-    if (tokenHash) {
-      try {
-        await sendAuthEmail({ to: email, kind: 'magiclink', siteURL: origin, tokenHash })
-        emailStatus = 'sent'
-      } catch (err) {
-        emailStatus = 'failed'
-        emailError = err.message
-        console.error('Resend magic-link send failed:', err)
-      }
-    }
-
-    // ---- Kit.com tag (non-fatal) ----
-    let kitError = null
-    if (workshop.kit_tag) {
-      try {
-        await tagSubscriber(email, firstName, workshop.kit_tag)
-      } catch (err) {
-        kitError = err.message
-        console.error('Kit tagging failed:', err)
-      }
-    }
-
     await logEvent({
       event_id: event.id,
       session_id: session.id,
       event_type: event.type,
-      webinar_id: workshopId,
-      user_id: userId,
-      user_state: userState,
-      status: kitError ? 'kit_failed' : 'processed',
-      error: kitError,
-      email_status: emailStatus,
-      email_error: emailError,
+      webinar_id: result.workshopId,
+      user_id: result.userId,
+      user_state: result.userState,
+      status: result.kitError ? 'kit_failed' : 'processed',
+      error: result.kitError,
+      email_status: result.emailStatus,
+      email_error: result.emailError,
       payload: session,
     })
 
@@ -235,12 +100,13 @@ export default async function handler(req, res) {
       event_id: event.id,
       session_id: session.id,
       event_type: event.type,
-      webinar_id: workshopId,
+      webinar_id: session.metadata?.webinar_id ?? null,
       status: 'failed',
       error: err.message,
       payload: session,
     })
-    // Return 500 so Stripe retries — the idempotency check above protects us from duplicate work.
+    // Return 500 so Stripe retries. The idempotency check above only
+    // short-circuits on 'processed', so the retry genuinely re-runs.
     return res.status(500).json({ error: err.message })
   }
 }
