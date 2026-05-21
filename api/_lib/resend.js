@@ -32,7 +32,12 @@ export async function sendAuthEmail({ to, kind, siteURL, tokenHash }) {
 
   const templatePath = path.join(process.cwd(), 'supabase', 'email-templates', meta.file)
   const raw = await fs.readFile(templatePath, 'utf8')
+  // The magic-link template carries a 6-digit code block for Supabase's hosted
+  // email (between the otp-start and otp-end markers). This sender only has the
+  // hashed token, not the raw code, so strip that block. The post-purchase
+  // email stays link-only.
   const html = raw
+    .replace(/<!-- otp-start -->[\s\S]*?<!-- otp-end -->/g, '')
     .replace(/\{\{\s*\.SiteURL\s*\}\}/g, siteURL)
     .replace(/\{\{\s*\.TokenHash\s*\}\}/g, tokenHash)
     .replace(/\{\{\s*\.Email\s*\}\}/g, to)

@@ -7,7 +7,7 @@
   <meta name="color-scheme" content="dark light">
   <meta name="supported-color-schemes" content="dark light">
   <title>Your Pilates Physics sign-in link</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
   <style>
     body, table, td { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
     table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
@@ -17,6 +17,7 @@
       .wrap { width: 100% !important; max-width: 100% !important; }
       .px { padding-left: 24px !important; padding-right: 24px !important; }
       .h1 { font-size: 26px !important; }
+      .code { font-size: 32px !important; letter-spacing: 6px !important; }
     }
   </style>
 </head>
@@ -45,18 +46,18 @@
 
           <tr>
             <td class="px h1" align="left" style="padding: 32px 48px 8px 48px; font-family:'DM Serif Display', Georgia, 'Times New Roman', serif; font-size: 30px; line-height: 1.2; color:#F1EFE8;">
-              Your sign-in link
+              Sign in to Pilates Physics
             </td>
           </tr>
 
           <tr>
             <td class="px" align="left" style="padding: 8px 48px 24px 48px; font-family:'DM Sans', -apple-system, 'Helvetica Neue', Arial, sans-serif; font-size: 16px; line-height: 1.6; color:#F1EFE8;">
-              Tap the button below to sign in to your Pilates Physics account. The link will expire in 1 hour.
+              Tap the button below to sign in to your Pilates Physics account. This link expires in 1 hour.
             </td>
           </tr>
 
           <tr>
-            <td class="px" align="center" style="padding: 8px 48px 32px 48px;">
+            <td class="px" align="center" style="padding: 8px 48px 24px 48px;">
               <table role="presentation" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td align="center" bgcolor="#EF9F27" style="border-radius:6px;">
@@ -69,6 +70,31 @@
             </td>
           </tr>
 
+          <!-- otp-start -->
+          <!--
+            The 6-digit code block below renders only in Supabase's hosted Magic
+            Link email (Supabase fills {{ .Token }}). sendAuthEmail() in
+            api/_lib/resend.js strips everything between the start and end markers,
+            so the post-purchase email sent via Resend stays link-only.
+          -->
+          <tr>
+            <td class="px" align="center" style="padding: 4px 48px 12px 48px; font-family:'DM Sans', -apple-system, Arial, sans-serif; font-size: 14px; line-height: 1.6; color:#888780;">
+              Or enter this 6-digit code on the sign-in page:
+            </td>
+          </tr>
+          <tr>
+            <td class="px" align="center" style="padding: 0 48px 28px 48px;">
+              <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="center" bgcolor="#1C1A17" style="border:1px solid #EF9F27; border-radius:6px; padding: 16px 32px;">
+                    <span class="code" style="font-family:'DM Mono', 'SFMono-Regular', Consolas, 'Courier New', monospace; font-size: 38px; font-weight: 600; letter-spacing: 8px; color:#EF9F27;">{{ .Token }}</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- otp-end -->
+
           <tr>
             <td class="px" align="left" style="padding: 0 48px 24px 48px; font-family:'DM Sans', -apple-system, Arial, sans-serif; font-size: 13px; line-height: 1.6; color:#888780;">
               Trouble with the button? Copy and paste this link into your browser:<br>
@@ -78,7 +104,7 @@
 
           <tr>
             <td class="px" align="left" style="padding: 16px 48px 40px 48px; font-family:'DM Sans', -apple-system, Arial, sans-serif; font-size: 14px; line-height: 1.6; color:#888780;">
-              If you didn't request this link, you can safely ignore this email.
+              If you didn't request this, you can safely ignore this email.
             </td>
           </tr>
         </table>

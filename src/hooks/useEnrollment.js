@@ -38,6 +38,26 @@ export function useEnrollment() {
     if (error) throw error
   }
 
+  // Passwordless login: emails a sign-in link plus a 6-digit code. shouldCreateUser
+  // is false so the login page can never create an account. Accounts come only
+  // from a workshop purchase or the free-course signup.
+  async function signInWithLink(email) {
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: false,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
+    if (error) throw error
+  }
+
+  // Finishes a passwordless login with the 6-digit code from the sign-in email.
+  async function verifyEmailCode(email, token) {
+    const { error } = await supabase.auth.verifyOtp({ email, token, type: 'email' })
+    if (error) throw error
+  }
+
   async function setPassword(password) {
     const { error } = await supabase.auth.updateUser({
       password,
@@ -71,5 +91,5 @@ export function useEnrollment() {
     await supabase.auth.signOut()
   }
 
-  return { user, loading, signUp, signIn, setPassword, resetPasswordRequest, updateProfile, signOut }
+  return { user, loading, signUp, signIn, signInWithLink, verifyEmailCode, setPassword, resetPasswordRequest, updateProfile, signOut }
 }
