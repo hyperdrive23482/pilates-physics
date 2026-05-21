@@ -73,7 +73,7 @@ export default function TroubleLoggingIn() {
             you gave when you bought a workshop or signed up. If you have more than one, try
             each.
           </p>
-          <p style={{ ...pointStyle, marginBottom: 0 }}>
+          <p style={pointStyle}>
             <strong style={leadStyle}>Still stuck?</strong> Email{' '}
             <a href="mailto:hello@pilatesphysics.com" style={linkStyle}>
               hello@pilatesphysics.com
@@ -83,6 +83,11 @@ export default function TroubleLoggingIn() {
               Help page
             </Link>
             , and tell us the email you are trying to use.
+          </p>
+          <p style={{ ...pointStyle, marginBottom: 0 }}>
+            <strong style={leadStyle}>No account?</strong> This portal is available to
+            workshop participants only. An account is created for you when you purchase a
+            workshop.
           </p>
         </div>
       )}

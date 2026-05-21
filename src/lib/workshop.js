@@ -26,3 +26,12 @@ export function formatWorkshopWhen(scheduledAt) {
 
   return `${datePart} ${timePart}`
 }
+
+// Registration is open only while the workshop has a Stripe price wired up and
+// is still upcoming or live. Once it's complete or archived, registration CTAs
+// fall back to the waitlist.
+export function isRegistrationOpen(workshop) {
+  return Boolean(
+    workshop?.stripe_price_id && ['upcoming', 'live'].includes(workshop.status)
+  )
+}

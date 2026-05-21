@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import RegisterCard from '../components/ui/RegisterCard'
 import ArrowSvg from '../components/ui/ArrowSvg'
 import { useWorkshop } from '../hooks/useWorkshops'
+import { isRegistrationOpen } from '../lib/workshop'
 import '../styles/ppv2.css'
 import './Workshop.css'
 
@@ -157,6 +158,7 @@ function TopicDiagram({ kind }) {
 
 export default function PilatesPhysics101() {
   const { workshop } = useWorkshop('PP-101-May-2026')
+  const ctaLabel = isRegistrationOpen(workshop) ? 'Register Now. $99' : 'Join Waitlist'
 
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
@@ -181,7 +183,7 @@ export default function PilatesPhysics101() {
 
             <div className="workshop-hero__cta">
               <a href="#register" className="btn btn--lg">
-                Register Now. $99
+                {ctaLabel}
                 <ArrowSvg />
               </a>
             </div>
@@ -403,7 +405,7 @@ export default function PilatesPhysics101() {
             mechanical framework for the questions you already have.
           </p>
           <a href="#register" className="btn btn--lg">
-            Register Now. $99
+            {ctaLabel}
             <ArrowSvg />
           </a>
         </div>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { supabase } from '../../lib/supabase'
+import { isRegistrationOpen } from '../../lib/workshop'
 import WaitlistForm from './WaitlistForm'
 import ArrowSvg from './ArrowSvg'
 import './RegisterCard.css'
@@ -18,8 +19,7 @@ export default function RegisterCard({ workshop }) {
     ? `$${(workshop.price_cents / 100).toFixed(0)}`
     : 'Free'
 
-  const registrationOpen =
-    workshop.stripe_price_id && ['upcoming', 'live'].includes(workshop.status)
+  const registrationOpen = isRegistrationOpen(workshop)
 
   if (!registrationOpen) {
     return (

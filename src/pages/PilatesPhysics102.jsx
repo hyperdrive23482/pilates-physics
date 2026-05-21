@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import RegisterCard from '../components/ui/RegisterCard'
 import ArrowSvg from '../components/ui/ArrowSvg'
 import { useWorkshop } from '../hooks/useWorkshops'
+import { isRegistrationOpen } from '../lib/workshop'
 import '../styles/ppv2.css'
 import './Workshop.css'
 
@@ -113,6 +114,8 @@ const FAQ = [
 
 export default function PilatesPhysics102() {
   const { workshop } = useWorkshop('PP-102-July-2026')
+  const registrationOpen = isRegistrationOpen(workshop)
+  const ctaLabel = registrationOpen ? 'Register Now. $99' : 'Join Waitlist'
 
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
@@ -135,7 +138,7 @@ export default function PilatesPhysics102() {
 
             <div className="workshop-hero__cta">
               <a href="#register" className="btn btn--lg">
-                Register Now. $99
+                {ctaLabel}
                 <ArrowSvg />
               </a>
             </div>
@@ -350,10 +353,13 @@ export default function PilatesPhysics102() {
           </h2>
           <p className="workshop-cta__lede">
             One focused session. The 101 framework, extended to the cadillac and the
-            chair. Reserve your seat. Registration is open now.
+            chair.{' '}
+            {registrationOpen
+              ? 'Reserve your seat.'
+              : "Join the waitlist and we'll let you know the next time it runs."}
           </p>
           <a href="#register" className="btn btn--lg">
-            Register Now. $99
+            {ctaLabel}
             <ArrowSvg />
           </a>
         </div>

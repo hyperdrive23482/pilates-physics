@@ -451,19 +451,6 @@ export default function Login() {
           </>
         )}
 
-        <div className="pp-card" style={{ marginTop: '1.5rem' }}>
-          <p
-            style={{
-              margin: 0,
-              fontSize: '0.85rem',
-              color: 'var(--color-ink-muted)',
-              lineHeight: '1.55',
-            }}
-          >
-            This portal is available to workshop participants only. An account is created for you when you purchase a workshop.
-          </p>
-        </div>
-
         <TroubleLoggingIn />
       </div>
     </div>
