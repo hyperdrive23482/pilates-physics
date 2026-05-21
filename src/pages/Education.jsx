@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArrowSvg from '../components/ui/ArrowSvg'
+import { useWorkshops } from '../hooks/useWorkshops'
+import { isRegistrationOpen } from '../lib/workshop'
 import '../styles/ppv2.css'
 import './Education.css'
 
@@ -10,7 +12,7 @@ const PATHS = [
     label: '2-HOUR LIVE WORKSHOP',
     title: 'Pilates Physics 101',
     body: 'A focused 2-hour live session on the mechanics behind reformer springs and the equipment variables that change how a body is loaded. New to Pilates Physics? Start here.',
-    meta: 'Next · May 20, 2026',
+    slug: 'PP-101-May-2026',
     ctaLabel: 'Learn more',
     to: '/pilates-physics-101',
   },
@@ -19,7 +21,7 @@ const PATHS = [
     label: '2-HOUR LIVE WORKSHOP',
     title: 'Pilates Physics 102: Chair and Cadillac',
     body: 'A focused 2-hour live session on the mechanics of the Pilates Chair and Cadillac. Explore how spring orientation, lever arms, and body weight interact to load your clients.',
-    meta: 'Next · July 15, 2026',
+    slug: 'PP-102-July-2026',
     ctaLabel: 'Learn more',
     to: '/pilates-physics-102',
   },
@@ -61,6 +63,7 @@ const PATHS = [
 ]
 
 export default function Education() {
+  const { workshops } = useWorkshops()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [interest, setInterest] = useState('')
@@ -87,6 +90,23 @@ export default function Education() {
       setErrorMsg(err.message || 'Something went wrong. Try again.')
       setStatus('error')
     }
+  }
+
+  // Cards with a slug pull their status line from live webinars data so the
+  // date never goes stale: the upcoming date while registration is open, a
+  // waitlist label once the session is complete.
+  function cardMeta(path) {
+    if (!path.slug) return path.meta
+    const workshop = workshops.find((w) => w.slug === path.slug)
+    if (!workshop) return ''
+    if (!isRegistrationOpen(workshop)) return 'Join the waitlist'
+    if (!workshop.scheduled_at) return 'Registration open'
+    const date = new Date(workshop.scheduled_at).toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    })
+    return `Next · ${date}`
   }
 
   return (
@@ -134,7 +154,7 @@ export default function Education() {
                 <h3 className="fcard__title">{p.title}</h3>
                 <p className="fcard__body">{p.body}</p>
                 <div className="fcard__foot">
-                  <span>{p.meta}</span>
+                  <span>{cardMeta(p)}</span>
                   {p.to ? (
                     <Link to={p.to} className="arrow-link">{p.ctaLabel} →</Link>
                   ) : p.href ? (
