@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useEnrollment } from '../hooks/useEnrollment'
+import { friendlyAuthError } from '../lib/authErrors'
+import TroubleLoggingIn from '../components/ui/TroubleLoggingIn'
 
 export default function ForgotPassword() {
   const { resetPasswordRequest } = useEnrollment()
@@ -17,7 +19,7 @@ export default function ForgotPassword() {
       await resetPasswordRequest(email)
       setStatus('success')
     } catch (err) {
-      setErrorMsg(err.message || 'Something went wrong. Try again.')
+      setErrorMsg(friendlyAuthError(err, 'reset'))
       setStatus('error')
     }
   }
@@ -111,6 +113,11 @@ export default function ForgotPassword() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={status === 'loading'}
+              autoComplete="email"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              inputMode="email"
               style={{
                 width: '100%',
                 padding: '0.75rem 1rem',
@@ -168,6 +175,8 @@ export default function ForgotPassword() {
             Log in
           </Link>
         </p>
+
+        <TroubleLoggingIn />
       </div>
     </div>
   )

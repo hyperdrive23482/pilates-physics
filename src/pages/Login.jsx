@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react'
 import { useEnrollment } from '../hooks/useEnrollment'
+import { friendlyAuthError } from '../lib/authErrors'
+import TroubleLoggingIn from '../components/ui/TroubleLoggingIn'
 
 const RESEND_COOLDOWN = 60
 
@@ -67,25 +69,6 @@ const errorStyle = {
   fontSize: '0.8rem',
   color: '#e06c75',
   lineHeight: '1.55',
-}
-
-// Supabase auth errors are terse and technical. Translate the ones a customer
-// can actually hit into plain language that points at the next step.
-function friendlyAuthError(err, context) {
-  const raw = (err?.message || '').toLowerCase()
-  if (raw.includes('signups not allowed') || raw.includes('user not found')) {
-    return "We couldn't find an account for that email. Double-check the spelling, or try the address you signed up with."
-  }
-  if (raw.includes('security purposes') || raw.includes('rate limit')) {
-    return 'That was just sent. Wait a moment before requesting another email.'
-  }
-  if (context === 'verify' && (raw.includes('expired') || raw.includes('invalid') || raw.includes('token'))) {
-    return "That code didn't work. Enter the complete code from the most recent email, or get a fresh one below."
-  }
-  if (context === 'password' && raw.includes('invalid login credentials')) {
-    return 'That email and password did not match. If you never set a password, choose "Email me a sign-in link instead" below.'
-  }
-  return err?.message || 'Something went wrong. Please try again.'
 }
 
 export default function Login() {
@@ -480,6 +463,8 @@ export default function Login() {
             This portal is available to workshop participants only. An account is created for you when you purchase a workshop.
           </p>
         </div>
+
+        <TroubleLoggingIn />
       </div>
     </div>
   )

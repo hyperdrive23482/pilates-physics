@@ -37,7 +37,15 @@ export default function AuthCallback() {
           return
         }
         // verifyOtp failed: the link is expired, already used, or malformed.
+        // A single-use link clicked twice fails here even though the first click
+        // already established a session, so route to the portal instead of a
+        // scary error when one already exists.
         console.error('[auth/callback] verifyOtp failed:', error?.message)
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session) {
+          routeUser('SIGNED_IN', session)
+          return
+        }
         setStatus('error')
         return
       }

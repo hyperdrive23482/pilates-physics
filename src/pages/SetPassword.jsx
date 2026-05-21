@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react'
 import { useEnrollment } from '../hooks/useEnrollment'
 import ExpiredLinkNotice from '../components/ui/ExpiredLinkNotice'
+import TroubleLoggingIn from '../components/ui/TroubleLoggingIn'
+import { friendlyAuthError } from '../lib/authErrors'
 
 export default function SetPassword() {
   const { user, loading, setPassword } = useEnrollment()
@@ -13,6 +15,7 @@ export default function SetPassword() {
   const [showConfirm, setShowConfirm] = useState(false)
   const [status, setStatus] = useState('idle') // idle | loading | error
   const [errorMsg, setErrorMsg] = useState('')
+  const [sessionLost, setSessionLost] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -28,7 +31,14 @@ export default function SetPassword() {
       await setPassword(password)
       navigate('/course', { replace: true })
     } catch (err) {
-      setErrorMsg(err.message || 'Something went wrong. Try again.')
+      // The session can lapse while the form sits open. updateUser() then fails
+      // with "Auth session missing!". Route to the recovery screen instead of
+      // showing a dead-end message.
+      if ((err?.message || '').toLowerCase().includes('session missing')) {
+        setSessionLost(true)
+        return
+      }
+      setErrorMsg(friendlyAuthError(err, 'setpassword'))
       setStatus('error')
     }
   }
@@ -52,10 +62,11 @@ export default function SetPassword() {
     )
   }
 
-  // No session: the link expired, was already used, or was opened in a context
-  // that dropped the session (common with in-app email browsers). updateUser()
-  // would fail with "Auth session missing!", so show a recovery path instead.
-  if (!user) {
+  // No session: the link expired, was already used, was opened in a context that
+  // dropped the session (common with in-app email browsers), or the session
+  // lapsed while the form sat open. Either way updateUser() would fail, so show
+  // a recovery path instead.
+  if (!user || sessionLost) {
     return <ExpiredLinkNotice />
   }
 
@@ -236,6 +247,8 @@ export default function SetPassword() {
             </p>
           )}
         </form>
+
+        <TroubleLoggingIn />
       </div>
     </div>
   )

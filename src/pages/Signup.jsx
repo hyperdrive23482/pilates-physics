@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEnrollment } from '../hooks/useEnrollment'
+import { friendlyAuthError } from '../lib/authErrors'
 
 export default function Signup() {
   const { user, signUp } = useEnrollment()
@@ -24,7 +25,7 @@ export default function Signup() {
       await signUp(email, firstName, lastName)
       setStatus('success')
     } catch (err) {
-      setErrorMsg(err.message || 'Something went wrong. Try again.')
+      setErrorMsg(friendlyAuthError(err, 'signup'))
       setStatus('error')
     }
   }
@@ -155,6 +156,11 @@ export default function Signup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={status === 'loading'}
+              autoComplete="email"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              inputMode="email"
               style={{ ...inputStyle, marginBottom: '1.5rem' }}
             />
 

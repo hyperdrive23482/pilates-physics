@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
+// Customers paste emails with stray spaces or phone-autocapitalized letters.
+// Normalize before every auth call so a casing or whitespace slip never causes
+// a mysterious failure.
+const normalizeEmail = (email) => (email || '').trim().toLowerCase()
+
 export function useEnrollment() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -23,7 +28,7 @@ export function useEnrollment() {
 
   async function signUp(email, firstName, lastName) {
     const { error } = await supabase.auth.signUp({
-      email,
+      email: normalizeEmail(email),
       password: crypto.randomUUID(),
       options: {
         data: { first_name: firstName, last_name: lastName, needs_password: true },
@@ -34,16 +39,19 @@ export function useEnrollment() {
   }
 
   async function signIn(email, password) {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { error } = await supabase.auth.signInWithPassword({
+      email: normalizeEmail(email),
+      password,
+    })
     if (error) throw error
   }
 
-  // Passwordless login: emails a sign-in link plus a 6-digit code. shouldCreateUser
+  // Passwordless login: emails a sign-in link plus a one-time code. shouldCreateUser
   // is false so the login page can never create an account. Accounts come only
   // from a workshop purchase or the free-course signup.
   async function signInWithLink(email) {
     const { error } = await supabase.auth.signInWithOtp({
-      email,
+      email: normalizeEmail(email),
       options: {
         shouldCreateUser: false,
         emailRedirectTo: `${window.location.origin}/auth/callback`,
@@ -56,9 +64,10 @@ export function useEnrollment() {
   // Supabase projects differ in which OTP type the emailed code verifies against,
   // so try 'email' first and fall back to 'magiclink'.
   async function verifyEmailCode(email, token) {
-    const first = await supabase.auth.verifyOtp({ email, token, type: 'email' })
+    const normalized = normalizeEmail(email)
+    const first = await supabase.auth.verifyOtp({ email: normalized, token, type: 'email' })
     if (!first.error) return
-    const second = await supabase.auth.verifyOtp({ email, token, type: 'magiclink' })
+    const second = await supabase.auth.verifyOtp({ email: normalized, token, type: 'magiclink' })
     if (second.error) throw second.error
   }
 
@@ -71,7 +80,7 @@ export function useEnrollment() {
   }
 
   async function resetPasswordRequest(email) {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error } = await supabase.auth.resetPasswordForEmail(normalizeEmail(email), {
       redirectTo: `${window.location.origin}/auth/callback`,
     })
     if (error) throw error
@@ -79,7 +88,7 @@ export function useEnrollment() {
 
   async function updateProfile({ firstName, lastName, email, password }) {
     const updates = {}
-    if (email) updates.email = email
+    if (email) updates.email = normalizeEmail(email)
     if (password) updates.password = password
     if (firstName !== undefined || lastName !== undefined) {
       updates.data = {

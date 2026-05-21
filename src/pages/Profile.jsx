@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react'
 import { useEnrollment } from '../hooks/useEnrollment'
+import { friendlyAuthError } from '../lib/authErrors'
 
 export default function Profile() {
   const { user, loading, updateProfile } = useEnrollment()
@@ -53,7 +54,7 @@ export default function Profile() {
 
     try {
       const updates = { firstName, lastName }
-      if (email !== user.email) updates.email = email
+      if (email.trim().toLowerCase() !== user.email) updates.email = email
       if (newPassword) updates.password = newPassword
 
       await updateProfile(updates)
@@ -61,7 +62,7 @@ export default function Profile() {
       setConfirmPassword('')
       setStatus('success')
     } catch (err) {
-      setErrorMsg(err.message || 'Something went wrong. Try again.')
+      setErrorMsg(friendlyAuthError(err, 'profile'))
       setStatus('error')
     }
   }
@@ -193,6 +194,11 @@ export default function Profile() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={status === 'loading'}
+            autoComplete="email"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            inputMode="email"
             style={inputStyle}
           />
 
@@ -310,7 +316,7 @@ export default function Profile() {
 
           {status === 'success' && (
             <p style={{ marginTop: '0.75rem', fontSize: '0.8rem', color: 'var(--color-accent)' }}>
-              {email !== user.email
+              {email.trim().toLowerCase() !== user.email
                 ? 'Profile updated. Check your new email to confirm the address change.'
                 : 'Profile updated successfully.'}
             </p>

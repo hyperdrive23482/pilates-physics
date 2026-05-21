@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
+import TroubleLoggingIn from './TroubleLoggingIn'
 
 /**
  * Shown when an auth link can't establish a session: expired, already used, or
  * opened in a context that dropped the session (common with in-app email
- * browsers). Routes the user to request a fresh link.
+ * browsers). Routes the user to request a fresh sign-in link.
  */
 export default function ExpiredLinkNotice() {
   return (
@@ -47,7 +48,7 @@ export default function ExpiredLinkNotice() {
         </p>
 
         <Link
-          to="/forgot-password"
+          to="/login"
           style={{
             display: 'block',
             width: '100%',
@@ -65,7 +66,7 @@ export default function ExpiredLinkNotice() {
             boxSizing: 'border-box',
           }}
         >
-          Send me a new link
+          Get a new sign-in link
         </Link>
 
         <p
@@ -75,14 +76,16 @@ export default function ExpiredLinkNotice() {
             color: 'var(--color-ink-muted)',
           }}
         >
-          Already set your password?{' '}
+          Resetting your password instead?{' '}
           <Link
-            to="/login"
+            to="/forgot-password"
             style={{ color: 'var(--color-accent)', textDecoration: 'underline' }}
           >
-            Log in
+            Reset it here
           </Link>
         </p>
+
+        <TroubleLoggingIn />
       </div>
     </div>
   )
