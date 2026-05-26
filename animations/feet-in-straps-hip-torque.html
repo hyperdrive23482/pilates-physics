@@ -947,27 +947,22 @@
     ac.arc(wx(state.foot.x), wy(state.foot.y), 4, 0, Math.PI * 2);
     ac.fill();
 
-    // --- Rope angle arc at the foot ---
+    // --- Rope angle arc at the foot (visual only; numeric label sits with the coil) ---
     if (state.tension > 0) {
       const fx = wx(state.foot.x), fy = wy(state.foot.y);
-      // rope direction in CANVAS coords: from foot toward pulley
       const dxCanvas = wx(PULLEY_X) - fx;
       const dyCanvas = wy(RISER_VERT) - fy;
       const ropeCanvasAngle = Math.atan2(dyCanvas, dxCanvas);
       ac.strokeStyle = C_MUTED;
       ac.lineWidth = 1;
       ac.beginPath();
-      ac.arc(fx, fy, 22, 0, ropeCanvasAngle);   // arc from horizontal (0) to rope direction
+      ac.arc(fx, fy, 22, 0, ropeCanvasAngle);
       ac.stroke();
-      // label rope angle
-      const angleDeg = (state.ropeAngle * 180 / Math.PI).toFixed(1);
-      ac.fillStyle = C_MUTED;
-      ac.font = '11px DM Mono, monospace';
-      ac.textAlign = 'left';
-      ac.fillText(angleDeg + '° rope', fx + 28, fy + 14);
     }
 
-    // --- Force component arrows at the foot ---
+    // --- Force component arrows + labels at the foot ---
+    // Arrows go RIGHT (Tx) and DOWN (Ty) from the foot. Labels stack neatly ABOVE the
+    // foot dot so they never collide with each other, the arrows, the rope, or the leg.
     if (state.tension > 0) {
       const fx = wx(state.foot.x), fy = wy(state.foot.y);
       const txLen = state.Tx * FORCE_PX_PER_LB;
@@ -978,13 +973,12 @@
       // Ty: downward
       arrow(fx, fy, fx, fy + tyLen, C_SPRING, 1.8);
 
-      // Labels
+      // Stacked labels above the foot dot
       ac.fillStyle = C_SPRING;
       ac.font = '11px DM Mono, monospace';
-      ac.textAlign = 'left';
-      ac.fillText('Tx ' + state.Tx.toFixed(1) + ' lb', fx + txLen + 4, fy - 4);
-      ac.textAlign = 'left';
-      ac.fillText('Ty ' + state.Ty.toFixed(1) + ' lb', fx + 6, fy + tyLen + 4);
+      ac.textAlign = 'center';
+      ac.fillText('Tx ' + state.Tx.toFixed(1) + ' lb', fx, fy - 24);
+      ac.fillText('Ty ' + state.Ty.toFixed(1) + ' lb', fx, fy - 12);
     }
 
     // --- Hip pivot dot (drawn after leg so it sits on top) ---
@@ -1002,7 +996,7 @@
     torqueArc(wx(0), wy(0), TORQUE_ARC_RADIUS,      cwSweep,  +1, C_CW);
     torqueArc(wx(0), wy(0), TORQUE_ARC_RADIUS + 14, ccwSweep, -1, C_CCW);
 
-    // --- Text labels: stretch and tension near the coil ---
+    // --- Text labels: stretch, tension, and rope angle near the coil ---
     const labelX = (wx(CARRIAGE_ATTACH) + wx(PULLEY_X)) / 2;
     const labelY = wy(0) + 22;
     ac.fillStyle = C_SPRING;
@@ -1010,14 +1004,14 @@
     ac.textAlign = 'center';
     ac.fillText('stretch ' + state.stretch.toFixed(1) + '"', labelX, labelY);
     ac.fillText('tension ' + state.tension.toFixed(1) + ' lb', labelX, labelY + 16);
+    ac.fillStyle = C_MUTED;
+    ac.fillText('rope ' + (state.ropeAngle * 180 / Math.PI).toFixed(1) + '°', labelX, labelY + 32);
 
-    // --- "Hip" and "Foot" tags ---
+    // --- Hip and pulley tags (foot is recognizable from the leg + force labels) ---
     ac.fillStyle = C_MUTED;
     ac.font = '11px DM Mono, monospace';
     ac.textAlign = 'right';
     ac.fillText('hip', wx(0) - 10, wy(0) + 4);
-    ac.textAlign = 'center';
-    ac.fillText('foot', wx(state.foot.x), wy(state.foot.y) - 12);
     ac.textAlign = 'center';
     ac.fillText('pulley', wx(PULLEY_X), wy(RISER_VERT) - 12);
   }
