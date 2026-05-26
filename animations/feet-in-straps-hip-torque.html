@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hip Torque in Reformer Feet in Straps</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --border: #2a2a2a;
+    --text: #e8e4dc;
+    --muted: #6b6660;
+    --accent-spring: #c8a96e;
+    --accent-cw:     #6e9ec8;   /* CW / hip-flexion torque (blue) */
+    --accent-ccw:    #c8775e;   /* CCW / hip-extension torque (terracotta) */
+    --accent-net:    #EF9F27;   /* net torque (amber) */
+    --track:         #232323;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 400;
+    color: #EF9F27;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  h1 em { font-style: italic; color: var(--accent-spring); }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 28px;
+    max-width: 660px;
+    line-height: 1.65;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Controls panel */
+  .controls-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 28px 20px;
+    margin-bottom: 16px;
+  }
+
+  .controls-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px 32px;
+  }
+  @media (max-width: 720px) {
+    .controls-grid { grid-template-columns: 1fr; }
+  }
+
+  .ctrl-group { display: flex; flex-direction: column; }
+
+  .ctrl-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .ctrl-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .ctrl-readout {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+  }
+
+  /* Slider styling */
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--track);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent-spring);
+    border: none;
+    cursor: pointer;
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent-spring);
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Spring picker */
+  .spring-picker {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+  }
+
+  .spring-picker-head { margin-bottom: 10px; }
+
+  .spring-rows {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 720px) {
+    .spring-rows { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .spring-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .spring-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .spring-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .stepper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .step-btn {
+    width: 24px; height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 0;
+  }
+  .step-btn:hover { border-color: var(--accent-spring); color: var(--accent-spring); }
+  .step-btn:disabled { opacity: 0.3; cursor: not-allowed; border-color: var(--border); color: var(--muted); }
+
+  .step-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--text);
+    min-width: 16px;
+    text-align: center;
+  }
+
+  /* Canvas wrappers */
+  .graph-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    padding: 20px 48px 12px;
+  }
+
+  .apparatus-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 12px 24px 16px;
+  }
+
+  canvas { width: 100%; height: auto; display: block; }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 28px;
+    margin-top: 22px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .legend-swatch { width: 28px; height: 2px; border-radius: 2px; }
+  .legend-swatch.cw  { background: var(--accent-cw); }
+  .legend-swatch.ccw { background: var(--accent-ccw); }
+  .legend-swatch.net { background: var(--accent-net); }
+
+  /* Readout strip */
+  .work-row {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 22px;
+  }
+
+  .work-cell {
+    flex: 1;
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-right: 1px solid var(--border);
+  }
+  .work-cell:last-child { border-right: none; }
+
+  .work-cell.center {
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 220px;
+    background: rgba(255,255,255,0.02);
+  }
+  .work-cell.right { text-align: right; }
+
+  .work-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .work-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    line-height: 1.1;
+  }
+
+  .work-value.cw  { color: var(--accent-cw); }
+  .work-value.ccw { color: var(--accent-ccw); }
+  .work-value.net { color: var(--accent-net); font-size: 26px; }
+
+  /* Notes */
+  .notes {
+    margin-top: 28px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    background: rgba(255,255,255,0.015);
+  }
+
+  .notes-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .notes ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .notes li {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text);
+    padding-left: 18px;
+    position: relative;
+  }
+
+  .notes li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 8px;
+    height: 1px;
+    background: var(--accent-spring);
+  }
+
+  .notes-caveat {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+    font-style: italic;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>Hip Torque in <em>Feet in Straps</em></h1>
+<p class="subtitle">How torque at the hip joint responds to leg length, body weight, spring choice, and hip angle.</p>
+
+<div class="stage">
+
+  <div class="controls-panel">
+    <div class="controls-grid">
+
+      <div class="ctrl-group">
+        <div class="ctrl-head">
+          <span class="ctrl-label">Thigh length</span>
+          <span class="ctrl-readout" id="lbl-thigh">15.5 in</span>
+        </div>
+        <input type="range" id="in-thigh" min="14" max="24" step="0.5" value="15.5">
+      </div>
+
+      <div class="ctrl-group">
+        <div class="ctrl-head">
+          <span class="ctrl-label">Body weight</span>
+          <span class="ctrl-readout" id="lbl-weight">180 lb</span>
+        </div>
+        <input type="range" id="in-weight" min="90" max="260" step="5" value="180">
+      </div>
+
+      <div class="ctrl-group">
+        <div class="ctrl-head">
+          <span class="ctrl-label">Hip angle</span>
+          <span class="ctrl-readout" id="lbl-angle">45&deg;</span>
+        </div>
+        <input type="range" id="in-angle" min="30" max="90" step="1" value="45">
+      </div>
+
+      <div class="spring-picker">
+        <div class="spring-picker-head">
+          <span class="ctrl-label">Springs (Balanced Body)</span>
+        </div>
+        <div class="spring-rows">
+          <div class="spring-row" data-spring="red">
+            <span class="spring-dot" style="background:#C73E3E"></span>
+            <span class="spring-name">Red</span>
+            <div class="stepper">
+              <button class="step-btn" data-act="dec" aria-label="Decrease red">&minus;</button>
+              <span class="step-count" id="cnt-red">2</span>
+              <button class="step-btn" data-act="inc" aria-label="Increase red">+</button>
+            </div>
+          </div>
+          <div class="spring-row" data-spring="green">
+            <span class="spring-dot" style="background:#5FA85E"></span>
+            <span class="spring-name">Green</span>
+            <div class="stepper">
+              <button class="step-btn" data-act="dec" aria-label="Decrease green">&minus;</button>
+              <span class="step-count" id="cnt-green">0</span>
+              <button class="step-btn" data-act="inc" aria-label="Increase green">+</button>
+            </div>
+          </div>
+          <div class="spring-row" data-spring="blue">
+            <span class="spring-dot" style="background:#3E7BC7"></span>
+            <span class="spring-name">Blue</span>
+            <div class="stepper">
+              <button class="step-btn" data-act="dec" aria-label="Decrease blue">&minus;</button>
+              <span class="step-count" id="cnt-blue">0</span>
+              <button class="step-btn" data-act="inc" aria-label="Increase blue">+</button>
+            </div>
+          </div>
+          <div class="spring-row" data-spring="yellow">
+            <span class="spring-dot" style="background:#E8C547"></span>
+            <span class="spring-name">Yellow</span>
+            <div class="stepper">
+              <button class="step-btn" data-act="dec" aria-label="Decrease yellow">&minus;</button>
+              <span class="step-count" id="cnt-yellow">0</span>
+              <button class="step-btn" data-act="inc" aria-label="Increase yellow">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="graph-wrap">
+    <canvas id="graph" width="780" height="380"></canvas>
+  </div>
+  <div class="apparatus-wrap">
+    <canvas id="apparatus" width="780" height="300"></canvas>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch cw"></span> CW torque (rope, flexion)</div>
+    <div class="legend-item"><span class="legend-swatch ccw"></span> CCW torque (gravity + rope, extension)</div>
+    <div class="legend-item"><span class="legend-swatch net"></span> Net hip torque</div>
+  </div>
+
+  <div class="work-row">
+    <div class="work-cell">
+      <span class="work-label">CW torque</span>
+      <span class="work-value cw" id="val-cw">0 in&middot;lb</span>
+    </div>
+    <div class="work-cell center">
+      <span class="work-label">Net hip torque</span>
+      <span class="work-value net" id="val-net">0 in&middot;lb</span>
+    </div>
+    <div class="work-cell right">
+      <span class="work-label">CCW torque</span>
+      <span class="work-value ccw" id="val-ccw">0 in&middot;lb</span>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div class="notes-title">Notes</div>
+    <ul>
+      <li>Leg modeled as one straight rigid segment from hip to ankle. Total leg length is taken as twice the thigh length (thigh and shank are roughly equal).</li>
+      <li>Leg weight is taken as 32% of body weight (both legs together). Center of mass sits 43% of the way down the leg from the hip.</li>
+      <li>Rope tension equals the full Balanced Body spring force at the computed stretch, using F = k&middot;stretch + b per spring.</li>
+      <li>Schematic mirrors the reference diagrams: hip pivot at center, leg drawn up and to the left, riser pulley to the right. CW torque rotates the leg toward flexion, CCW toward extension. Net is the imbalance the hip muscles must counteract.</li>
+    </ul>
+    <p class="notes-caveat">
+      For illustration of how torque at the hip responds to load and geometry. Humans vary, and more precise equations exist. Calibrated against two reference diagrams; the single geometric knob (hip to pulley distance) is tunable in the script.
+    </p>
+  </div>
+
+</div>
+
+<script>
+  // ============================================================
+  //  CALIBRATION CONSTANTS  —  Hip Torque, Feet in Straps
+  // ============================================================
+  //  Coordinate frame: hip at origin (0,0); +x toward the
+  //  riser/pulley; +y up. Leg = one straight rigid segment
+  //  from hip to ankle (the strap sits at the foot).
+  // ------------------------------------------------------------
+
+  //  --- LEG / BODY MODEL ---
+  const LEG_RATIO       = 2.0;    // total leg L = LEG_RATIO * thigh
+  const COM_FRAC        = 0.43;   // leg COM distance from hip = COM_FRAC * L
+  const LEG_WEIGHT_FRAC = 0.32;   // leg weight = LEG_WEIGHT_FRAC * body weight (BOTH legs)
+
+  //  --- FIXED REFORMER GEOMETRY (inches) ---
+  const ROPE_FREE_LEN   = 137;    // rope + spring assembly length at zero spring stretch
+  const RISER_VERT      = 10;     // vertical rope run up the riser; pulley height above hip
+  const CARRIAGE_ATTACH = 31;     // rope's lower end attaches to carriage, this far from hip
+  const PULLEY_X        = 81;     // horizontal hip-to-pulley distance — calibration knob.
+                                  // ~81 reproduces the 45-degree reference diagram.
+
+  //  --- BALANCED BODY SPRING CONSTANTS (k = lb/in, b = preload lb) ---
+  //  Embedded directly; standalone HTML cannot import the JSON.
+  //  Values match src/data/springSpecs.json (Balanced Body block).
+  const SPRINGS = {
+    yellow: { k: 0.33333, b: 4  },
+    blue:   { k: 0.66667, b: 6  },
+    red:    { k: 1.00000, b: 8  },
+    green:  { k: 1.16667, b: 10 }
+  };
+
+  //  --- INPUT RANGES ---
+  const THETA_MIN = 30, THETA_MAX = 90;
+  const SPRING_MAX = 6;
+
+  //  --- DISPLAY (does not affect physics) ---
+  const GW = 780, GH = 380;       // graph canvas
+  const AW = 780, AH = 300;       // apparatus canvas
+  const GRAPH_SAMPLES = 90;       // curve resolution
+
+  // World-to-pixel for the apparatus canvas
+  const APP_ORIGIN = { x: 240, y: 260 };    // hip pivot in canvas px
+  const PX_PER_IN  = 5;                     // apparatus world-to-canvas scale
+
+  const FORCE_PX_PER_LB    = 0.9;           // foot force-arrow scale
+  const TORQUE_ARC_RADIUS  = 38;            // px radius for hip torque arcs
+  const TORQUE_FULL_SCALE  = 2500;          // in·lb that maps to max arc sweep
+
+  // Colors
+  const C_BG     = '#0e0e0e';
+  const C_TEXT   = '#e8e4dc';
+  const C_MUTED  = '#6b6660';
+  const C_SPRING = '#c8a96e';
+  const C_CW     = '#6e9ec8';
+  const C_CCW    = '#c8775e';
+  const C_NET    = '#EF9F27';
+  const C_GRID   = 'rgba(255,255,255,0.045)';
+  const C_ZERO   = 'rgba(255,255,255,0.14)';
+  const C_AXIS   = '#333';
+  const C_FRAME  = '#3a3a3a';
+  const C_ROPE   = '#9b9590';
+
+  // ============================================================
+  //  STATE
+  // ============================================================
+  const springCounts = { red: 2, green: 0, blue: 0, yellow: 0 };
+
+  // ============================================================
+  //  PURE PHYSICS
+  // ============================================================
+  function springTotals(counts) {
+    let k = 0, b = 0;
+    for (const color in counts) {
+      const n = counts[color] | 0;
+      if (n <= 0) continue;
+      k += n * SPRINGS[color].k;
+      b += n * SPRINGS[color].b;
+    }
+    return { kTotal: k, bTotal: b };
+  }
+
+  function solveState(thetaDeg, p) {
+    const theta = thetaDeg * Math.PI / 180;
+    const L     = LEG_RATIO * p.thighLen;
+    const dCom  = COM_FRAC * L;
+    const wLeg  = LEG_WEIGHT_FRAC * p.bodyWeight;
+    const { kTotal, bTotal } = springTotals(p.counts);
+
+    const cT = Math.cos(theta), sT = Math.sin(theta);
+
+    // 1. foot relative to hip (on the -x side; pulley on +x)
+    const foot = { x: -L * cT, y: L * sT };
+    // 2. pulley
+    const pulley = { x: PULLEY_X, y: RISER_VERT };
+    // 3. foot -> pulley vector
+    const Vx = PULLEY_X + L * cT;
+    const Vy = RISER_VERT - L * sT;
+    const D  = Math.max(1e-6, Math.hypot(Vx, Vy));
+    // 4. rope path
+    const ropePath = D + RISER_VERT + (PULLEY_X - CARRIAGE_ATTACH);
+    // 5. spring stretch
+    const stretch = Math.max(0, ropePath - ROPE_FREE_LEN);
+    // 6. tension
+    const tension = stretch > 0 ? kTotal * stretch + bTotal : 0;
+    // 7. rope force components at foot
+    const Tx = tension * Vx / D;
+    const Ty = tension * (-Vy) / D;      // Ty is the DOWNWARD magnitude (foot above pulley => Vy<0)
+    // 8. torques about the hip
+    const cwTorque  = Tx * (L * sT);
+    const ccwTorque = wLeg * (dCom * cT) + Ty * (L * cT);
+    const netTorque = cwTorque - ccwTorque;
+    // 9. rope angle below horizontal (positive = rope points down toward the pulley)
+    const ropeAngle = Math.atan2(-Vy, Vx);
+
+    return {
+      theta, thetaDeg, L, dCom, wLeg, kTotal, bTotal,
+      foot, pulley, D, ropePath, stretch, tension,
+      Tx, Ty, ropeAngle, cwTorque, ccwTorque, netTorque
+    };
+  }
+
+  function sampleCurves(p) {
+    const pts = [];
+    for (let i = 0; i <= GRAPH_SAMPLES; i++) {
+      const th = THETA_MIN + (THETA_MAX - THETA_MIN) * (i / GRAPH_SAMPLES);
+      const s  = solveState(th, p);
+      pts.push({ theta: th, cw: s.cwTorque, ccw: s.ccwTorque, net: s.netTorque });
+    }
+    return pts;
+  }
+
+  // ============================================================
+  //  AXIS / TICK HELPERS
+  // ============================================================
+  function niceStep(raw) {
+    // Snap a raw step to a "nice" value
+    if (raw <= 0) return 1;
+    const exp = Math.floor(Math.log10(raw));
+    const base = Math.pow(10, exp);
+    const m = raw / base;
+    let nice;
+    if      (m < 1.5) nice = 1;
+    else if (m < 3)   nice = 2;
+    else if (m < 7)   nice = 5;
+    else              nice = 10;
+    return nice * base;
+  }
+
+  function niceAxis(samples) {
+    let lo = 0, hi = 0;
+    for (const s of samples) {
+      if (s.cw  < lo) lo = s.cw;
+      if (s.cw  > hi) hi = s.cw;
+      if (s.ccw < lo) lo = s.ccw;
+      if (s.ccw > hi) hi = s.ccw;
+      if (s.net < lo) lo = s.net;
+      if (s.net > hi) hi = s.net;
+    }
+    const span = Math.max(hi - lo, 100);
+    const step = niceStep(span / 5);
+    lo = Math.floor((lo - span * 0.08) / step) * step;
+    hi = Math.ceil ((hi + span * 0.08) / step) * step;
+    if (lo === hi) hi = lo + step;
+    return { lo, hi, step };
+  }
+
+  // ============================================================
+  //  GRAPH CANVAS
+  // ============================================================
+  const GC = document.getElementById('graph');
+  const gc = GC.getContext('2d');
+
+  const gP = { left: 86, right: 24, top: 28, bottom: 60 };
+  const gI = {
+    x: gP.left, y: gP.top,
+    w: GW - gP.left - gP.right,
+    h: GH - gP.top - gP.bottom
+  };
+
+  function angleToX(thDeg) {
+    return gI.x + (thDeg - THETA_MIN) / (THETA_MAX - THETA_MIN) * gI.w;
+  }
+  function torqueToY(t, axis) {
+    return gI.y + gI.h - (t - axis.lo) / (axis.hi - axis.lo) * gI.h;
+  }
+
+  function drawGraphBase(axis) {
+    gc.clearRect(0, 0, GW, GH);
+
+    // Horizontal grid + y-tick labels
+    gc.strokeStyle = C_GRID; gc.lineWidth = 1;
+    gc.font = '12px DM Mono, monospace';
+    gc.fillStyle = C_MUTED; gc.textAlign = 'right';
+    for (let t = axis.lo; t <= axis.hi + 0.001; t += axis.step) {
+      const gy = torqueToY(t, axis);
+      const isZero = Math.abs(t) < 0.001;
+      gc.strokeStyle = isZero ? C_ZERO : C_GRID;
+      gc.beginPath(); gc.moveTo(gI.x, gy); gc.lineTo(gI.x + gI.w, gy); gc.stroke();
+      gc.fillText(Math.round(t).toLocaleString(), gI.x - 8, gy + 4);
+    }
+
+    // Vertical grid + x-tick labels (every 10 degrees)
+    gc.fillStyle = C_MUTED; gc.textAlign = 'center';
+    for (let th = THETA_MIN; th <= THETA_MAX; th += 10) {
+      const gx = angleToX(th);
+      gc.strokeStyle = C_GRID;
+      gc.beginPath(); gc.moveTo(gx, gI.y); gc.lineTo(gx, gI.y + gI.h); gc.stroke();
+      gc.fillText(th + '°', gx, gI.y + gI.h + 18);
+    }
+
+    // Axis frame
+    gc.strokeStyle = C_AXIS; gc.lineWidth = 1.5;
+    gc.beginPath();
+    gc.moveTo(gI.x, gI.y);
+    gc.lineTo(gI.x, gI.y + gI.h);
+    gc.lineTo(gI.x + gI.w, gI.y + gI.h);
+    gc.lineTo(gI.x + gI.w, gI.y);
+    gc.stroke();
+
+    // Axis labels
+    gc.font = '13px DM Mono, monospace';
+    gc.fillStyle = C_MUTED; gc.textAlign = 'center';
+    gc.fillText('Hip angle (degrees)', gI.x + gI.w / 2, gI.y + gI.h + 44);
+
+    gc.save();
+    gc.translate(22, gI.y + gI.h / 2);
+    gc.rotate(-Math.PI / 2);
+    gc.textAlign = 'center';
+    gc.fillStyle = C_MUTED;
+    gc.fillText('Hip torque (in·lb)', 0, 0);
+    gc.restore();
+  }
+
+  function drawCurve(samples, key, color, axis) {
+    gc.strokeStyle = color;
+    gc.lineWidth = 2.5;
+    gc.lineJoin = 'round';
+    gc.beginPath();
+    for (let i = 0; i < samples.length; i++) {
+      const s = samples[i];
+      const x = angleToX(s.theta);
+      const y = torqueToY(s[key], axis);
+      if (i === 0) gc.moveTo(x, y);
+      else         gc.lineTo(x, y);
+    }
+    gc.stroke();
+  }
+
+  function drawTracer(state, thetaNow, axis) {
+    const gx = angleToX(thetaNow);
+    // dashed vertical
+    gc.strokeStyle = 'rgba(255,255,255,0.18)';
+    gc.lineWidth = 1;
+    gc.setLineDash([4, 5]);
+    gc.beginPath(); gc.moveTo(gx, gI.y); gc.lineTo(gx, gI.y + gI.h); gc.stroke();
+    gc.setLineDash([]);
+
+    // Dots + labels for each curve
+    const items = [
+      { v: state.cwTorque,  color: C_CW,  label: 'CW',  align: 'right',  dx:  -8 },
+      { v: state.ccwTorque, color: C_CCW, label: 'CCW', align: 'right',  dx:  -8 },
+      { v: state.netTorque, color: C_NET, label: 'Net', align: 'left',   dx:   8 }
+    ];
+    gc.font = '11px DM Mono, monospace';
+    for (const it of items) {
+      const y = torqueToY(it.v, axis);
+      gc.fillStyle = it.color;
+      gc.beginPath(); gc.arc(gx, y, 5, 0, Math.PI * 2); gc.fill();
+      gc.textAlign = it.align;
+      gc.fillText(
+        it.label + ' ' + Math.round(it.v).toLocaleString(),
+        gx + it.dx, y + 4
+      );
+    }
+  }
+
+  function drawGraph(samples, state, thetaNow) {
+    const axis = niceAxis(samples);
+    drawGraphBase(axis);
+    drawCurve(samples, 'cw',  C_CW,  axis);
+    drawCurve(samples, 'ccw', C_CCW, axis);
+    drawCurve(samples, 'net', C_NET, axis);   // net on top
+    drawTracer(state, thetaNow, axis);
+  }
+
+  // ============================================================
+  //  APPARATUS CANVAS
+  // ============================================================
+  const AC = document.getElementById('apparatus');
+  const ac = AC.getContext('2d');
+
+  function wx(xIn) { return APP_ORIGIN.x + xIn * PX_PER_IN; }
+  function wy(yIn) { return APP_ORIGIN.y - yIn * PX_PER_IN; }
+
+  // Draw an arrow from (x1,y1) to (x2,y2)
+  function arrow(x1, y1, x2, y2, color, lineWidth) {
+    const dx = x2 - x1, dy = y2 - y1;
+    const len = Math.hypot(dx, dy);
+    if (len < 0.5) return;
+    const ux = dx / len, uy = dy / len;
+    const head = Math.min(8, len * 0.5);
+    ac.strokeStyle = color;
+    ac.fillStyle = color;
+    ac.lineWidth = lineWidth;
+    ac.lineCap = 'butt';
+    // shaft (stop short of the tip so the head sits cleanly)
+    ac.beginPath();
+    ac.moveTo(x1, y1);
+    ac.lineTo(x2 - ux * head * 0.7, y2 - uy * head * 0.7);
+    ac.stroke();
+    // head
+    const px = -uy, py = ux;
+    ac.beginPath();
+    ac.moveTo(x2, y2);
+    ac.lineTo(x2 - ux * head + px * head * 0.45, y2 - uy * head + py * head * 0.45);
+    ac.lineTo(x2 - ux * head - px * head * 0.45, y2 - uy * head - py * head * 0.45);
+    ac.closePath();
+    ac.fill();
+  }
+
+  // Draw a curved torque arrow around (cx, cy), centered at the upper-right diagonal of
+  // the hip (canvas angle -π/4 -- away from the leg, which points upper-left). `sweep`
+  // is the arc angle in radians. `dir` = +1 means CW in the world (renders as CCW on
+  // canvas, since canvas y is flipped); dir = -1 means CCW in the world (= CW on canvas).
+  function torqueArc(cx, cy, r, sweep, dir, color) {
+    if (sweep <= 0.001) return;
+    sweep = Math.min(sweep, Math.PI * 0.55);   // cap at ~100° to keep it tidy
+
+    const midAngle = -Math.PI / 4;   // upper-right diagonal, away from the leg
+    // For CW world (dir=+1): sweep CCW on canvas -> from start (right of mid) to end (left of mid).
+    // For CCW world (dir=-1): sweep CW on canvas -> from start (left of mid) to end (right of mid).
+    const startAngle = midAngle + (sweep / 2) * dir;
+    const endAngle   = midAngle - (sweep / 2) * dir;
+    const counterclockwise = dir > 0;
+
+    ac.strokeStyle = color;
+    ac.lineWidth = 2.5;
+    ac.lineCap = 'round';
+    ac.beginPath();
+    ac.arc(cx, cy, r, startAngle, endAngle, counterclockwise);
+    ac.stroke();
+
+    // Arrowhead at the END angle. Tangent direction of travel:
+    //   CCW canvas (dir=+1): tangent = ( sin(a), -cos(a))
+    //   CW  canvas (dir=-1): tangent = (-sin(a),  cos(a))
+    const tipA = endAngle;
+    const tipX = cx + r * Math.cos(tipA);
+    const tipY = cy + r * Math.sin(tipA);
+    const tangX =  Math.sin(tipA) * dir;
+    const tangY = -Math.cos(tipA) * dir;
+    const head = 7;
+    const perpX = -tangY, perpY = tangX;
+    ac.fillStyle = color;
+    ac.beginPath();
+    ac.moveTo(tipX, tipY);
+    ac.lineTo(tipX - tangX * head + perpX * head * 0.5, tipY - tangY * head + perpY * head * 0.5);
+    ac.lineTo(tipX - tangX * head - perpX * head * 0.5, tipY - tangY * head - perpY * head * 0.5);
+    ac.closePath();
+    ac.fill();
+  }
+
+  // Coiled spring drawn between two points along the horizontal x axis
+  function drawHorizontalCoil(x1, y, x2, stretch) {
+    if (x2 <= x1) return;
+    const len = x2 - x1;
+    // amplitude shrinks as stretch grows (taut spring looks flatter); clamp.
+    const stretchNorm = Math.max(0, Math.min(1, stretch / 30));
+    const amp = 5.5 * (1 - 0.55 * stretchNorm);
+    const coils = 22;
+    const steps = coils * 2;
+
+    ac.strokeStyle = C_SPRING;
+    ac.lineWidth = 1.6;
+    ac.lineJoin = 'round';
+    ac.beginPath();
+    ac.moveTo(x1, y);
+    for (let i = 1; i <= steps; i++) {
+      const t = i / steps;
+      const sx = x1 + t * len;
+      const sy = y + (i % 2 === 0 ? -amp : amp);
+      ac.lineTo(sx, sy);
+    }
+    ac.lineTo(x2, y);
+    ac.stroke();
+  }
+
+  function drawApparatus(state) {
+    ac.clearRect(0, 0, AW, AH);
+
+    // --- Carriage (where the hip rests; from x≈-10 to x=CARRIAGE_ATTACH) ---
+    const carrLeft  = wx(-10);
+    const carrRight = wx(CARRIAGE_ATTACH);
+    const carrTop   = wy(0);
+    const carrBot   = wy(-3);
+    ac.fillStyle = '#1e1e1e';
+    ac.strokeStyle = '#484848';
+    ac.lineWidth = 1.5;
+    ac.beginPath();
+    ac.rect(carrLeft, carrTop, carrRight - carrLeft, carrBot - carrTop);
+    ac.fill();
+    ac.stroke();
+
+    // carriage top trim
+    ac.fillStyle = '#2e2e2e';
+    ac.fillRect(carrLeft + 3, carrTop, carrRight - carrLeft - 6, 4);
+
+    // --- Riser post ---
+    ac.strokeStyle = '#666';
+    ac.lineWidth = 5;
+    ac.lineCap = 'round';
+    ac.beginPath();
+    ac.moveTo(wx(PULLEY_X), wy(-1));
+    ac.lineTo(wx(PULLEY_X), wy(12.5));
+    ac.stroke();
+
+    // --- Frame foot under the riser ---
+    ac.fillStyle = '#222';
+    ac.strokeStyle = C_FRAME;
+    ac.lineWidth = 1.2;
+    ac.beginPath();
+    ac.rect(wx(PULLEY_X) - 8, wy(-1), 16, 6);
+    ac.fill();
+    ac.stroke();
+
+    // --- Rope segment (a): foot to pulley ---
+    ac.strokeStyle = C_ROPE;
+    ac.lineWidth = 1.8;
+    ac.lineCap = 'butt';
+    ac.beginPath();
+    ac.moveTo(wx(state.foot.x), wy(state.foot.y));
+    ac.lineTo(wx(PULLEY_X), wy(RISER_VERT));
+    ac.stroke();
+
+    // --- Rope segment (b): pulley down the riser ---
+    ac.beginPath();
+    ac.moveTo(wx(PULLEY_X), wy(RISER_VERT));
+    ac.lineTo(wx(PULLEY_X), wy(0));
+    ac.stroke();
+
+    // --- Spring coil along segment (c): carriage attach to riser base ---
+    drawHorizontalCoil(wx(CARRIAGE_ATTACH), wy(0), wx(PULLEY_X), state.stretch);
+
+    // --- Pulley ---
+    ac.fillStyle = '#bbb';
+    ac.strokeStyle = '#444';
+    ac.lineWidth = 1.5;
+    ac.beginPath();
+    ac.arc(wx(PULLEY_X), wy(RISER_VERT), 6, 0, Math.PI * 2);
+    ac.fill();
+    ac.stroke();
+
+    // --- Leg (hip to foot) ---
+    ac.strokeStyle = C_TEXT;
+    ac.lineWidth = 5;
+    ac.lineCap = 'round';
+    ac.beginPath();
+    ac.moveTo(wx(0), wy(0));
+    ac.lineTo(wx(state.foot.x), wy(state.foot.y));
+    ac.stroke();
+
+    // --- COM tick on the leg (subtle) ---
+    const comX = -state.dCom * Math.cos(state.theta);
+    const comY =  state.dCom * Math.sin(state.theta);
+    ac.fillStyle = C_MUTED;
+    ac.beginPath();
+    ac.arc(wx(comX), wy(comY), 3, 0, Math.PI * 2);
+    ac.fill();
+
+    // --- Foot dot ---
+    ac.fillStyle = C_TEXT;
+    ac.beginPath();
+    ac.arc(wx(state.foot.x), wy(state.foot.y), 4, 0, Math.PI * 2);
+    ac.fill();
+
+    // --- Rope angle arc at the foot ---
+    if (state.tension > 0) {
+      const fx = wx(state.foot.x), fy = wy(state.foot.y);
+      // rope direction in CANVAS coords: from foot toward pulley
+      const dxCanvas = wx(PULLEY_X) - fx;
+      const dyCanvas = wy(RISER_VERT) - fy;
+      const ropeCanvasAngle = Math.atan2(dyCanvas, dxCanvas);
+      ac.strokeStyle = C_MUTED;
+      ac.lineWidth = 1;
+      ac.beginPath();
+      ac.arc(fx, fy, 22, 0, ropeCanvasAngle);   // arc from horizontal (0) to rope direction
+      ac.stroke();
+      // label rope angle
+      const angleDeg = (state.ropeAngle * 180 / Math.PI).toFixed(1);
+      ac.fillStyle = C_MUTED;
+      ac.font = '11px DM Mono, monospace';
+      ac.textAlign = 'left';
+      ac.fillText(angleDeg + '° rope', fx + 28, fy + 14);
+    }
+
+    // --- Force component arrows at the foot ---
+    if (state.tension > 0) {
+      const fx = wx(state.foot.x), fy = wy(state.foot.y);
+      const txLen = state.Tx * FORCE_PX_PER_LB;
+      const tyLen = state.Ty * FORCE_PX_PER_LB;
+
+      // Tx: rightward (toward pulley)
+      arrow(fx, fy, fx + txLen, fy, C_SPRING, 1.8);
+      // Ty: downward
+      arrow(fx, fy, fx, fy + tyLen, C_SPRING, 1.8);
+
+      // Labels
+      ac.fillStyle = C_SPRING;
+      ac.font = '11px DM Mono, monospace';
+      ac.textAlign = 'left';
+      ac.fillText('Tx ' + state.Tx.toFixed(1) + ' lb', fx + txLen + 4, fy - 4);
+      ac.textAlign = 'left';
+      ac.fillText('Ty ' + state.Ty.toFixed(1) + ' lb', fx + 6, fy + tyLen + 4);
+    }
+
+    // --- Hip pivot dot (drawn after leg so it sits on top) ---
+    ac.fillStyle = C_TEXT;
+    ac.beginPath();
+    ac.arc(wx(0), wy(0), 5.5, 0, Math.PI * 2);
+    ac.fill();
+
+    // --- Torque arrows at the hip ---
+    // Fixed-scale magnitude visualization: TORQUE_FULL_SCALE in·lb maps to the maximum
+    // sweep (~100°). Above that the arc is clipped; below, proportional. Position is
+    // upper-right of hip (handled inside torqueArc), out of the leg's way.
+    const cwSweep  = Math.min(state.cwTorque  / TORQUE_FULL_SCALE, 1) * Math.PI * 0.55;
+    const ccwSweep = Math.min(state.ccwTorque / TORQUE_FULL_SCALE, 1) * Math.PI * 0.55;
+    torqueArc(wx(0), wy(0), TORQUE_ARC_RADIUS,      cwSweep,  +1, C_CW);
+    torqueArc(wx(0), wy(0), TORQUE_ARC_RADIUS + 14, ccwSweep, -1, C_CCW);
+
+    // --- Text labels: stretch and tension near the coil ---
+    const labelX = (wx(CARRIAGE_ATTACH) + wx(PULLEY_X)) / 2;
+    const labelY = wy(0) + 22;
+    ac.fillStyle = C_SPRING;
+    ac.font = '12px DM Mono, monospace';
+    ac.textAlign = 'center';
+    ac.fillText('stretch ' + state.stretch.toFixed(1) + '"', labelX, labelY);
+    ac.fillText('tension ' + state.tension.toFixed(1) + ' lb', labelX, labelY + 16);
+
+    // --- "Hip" and "Foot" tags ---
+    ac.fillStyle = C_MUTED;
+    ac.font = '11px DM Mono, monospace';
+    ac.textAlign = 'right';
+    ac.fillText('hip', wx(0) - 10, wy(0) + 4);
+    ac.textAlign = 'center';
+    ac.fillText('foot', wx(state.foot.x), wy(state.foot.y) - 12);
+    ac.textAlign = 'center';
+    ac.fillText('pulley', wx(PULLEY_X), wy(RISER_VERT) - 12);
+  }
+
+  // ============================================================
+  //  CONTROLS WIRING
+  // ============================================================
+  function readParams() {
+    return {
+      thighLen:   parseFloat(document.getElementById('in-thigh').value),
+      bodyWeight: parseFloat(document.getElementById('in-weight').value),
+      counts:     Object.assign({}, springCounts)
+    };
+  }
+
+  function setText(id, text) {
+    document.getElementById(id).textContent = text;
+  }
+
+  function updateControlLabels(params, thetaNow) {
+    setText('lbl-thigh',  params.thighLen.toFixed(1) + ' in');
+    setText('lbl-weight', params.bodyWeight + ' lb');
+    setText('lbl-angle',  thetaNow + '°');
+    setText('cnt-red',    springCounts.red);
+    setText('cnt-green',  springCounts.green);
+    setText('cnt-blue',   springCounts.blue);
+    setText('cnt-yellow', springCounts.yellow);
+    // disable -/+ at clamp edges
+    document.querySelectorAll('.spring-row').forEach((row) => {
+      const color = row.dataset.spring;
+      const n = springCounts[color];
+      row.querySelector('[data-act="dec"]').disabled = n <= 0;
+      row.querySelector('[data-act="inc"]').disabled = n >= SPRING_MAX;
+    });
+  }
+
+  function updateReadouts(state) {
+    setText('val-cw',  Math.round(state.cwTorque).toLocaleString()  + ' in·lb');
+    setText('val-ccw', Math.round(state.ccwTorque).toLocaleString() + ' in·lb');
+    setText('val-net', Math.round(state.netTorque).toLocaleString() + ' in·lb');
+  }
+
+  function recompute() {
+    const params   = readParams();
+    const thetaNow = parseFloat(document.getElementById('in-angle').value);
+    const samples  = sampleCurves(params);
+    const state    = solveState(thetaNow, params);
+
+    updateControlLabels(params, thetaNow);
+    drawGraph(samples, state, thetaNow);
+    drawApparatus(state);
+    updateReadouts(state);
+  }
+
+  // --- slider events ---
+  ['in-thigh', 'in-weight', 'in-angle'].forEach((id) => {
+    document.getElementById(id).addEventListener('input', recompute);
+  });
+
+  // --- stepper events (delegation) ---
+  document.querySelectorAll('.spring-row').forEach((row) => {
+    const color = row.dataset.spring;
+    row.querySelector('[data-act="dec"]').addEventListener('click', () => {
+      if (springCounts[color] > 0) {
+        springCounts[color] -= 1;
+        recompute();
+      }
+    });
+    row.querySelector('[data-act="inc"]').addEventListener('click', () => {
+      if (springCounts[color] < SPRING_MAX) {
+        springCounts[color] += 1;
+        recompute();
+      }
+    });
+  });
+
+  // --- first paint ---
+  recompute();
+
+  // Expose for browser-console spot-checks during calibration.
+  window.solveState   = solveState;
+  window.sampleCurves = sampleCurves;
+</script>
+</body>
+</html>
