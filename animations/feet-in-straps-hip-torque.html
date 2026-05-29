@@ -106,6 +106,13 @@
     color: var(--text);
   }
 
+  .ctrl-derived {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
   /* Slider styling */
   input[type=range] {
     -webkit-appearance: none;
@@ -224,6 +231,7 @@
   }
 
   canvas { width: 100%; height: auto; display: block; }
+  #graph { cursor: ew-resize; touch-action: none; }
 
   /* Legend */
   .legend {
@@ -246,6 +254,10 @@
   .legend-swatch.cw  { background: var(--accent-cw); }
   .legend-swatch.ccw { background: var(--accent-ccw); }
   .legend-swatch.net { background: var(--accent-net); }
+
+  .legend-toggle { cursor: pointer; user-select: none; }
+  .legend-toggle input { accent-color: var(--accent-net); cursor: pointer; margin: 0 2px 0 0; }
+  .legend-toggle.off { opacity: 0.5; }
 
   /* Readout strip */
   .work-row {
@@ -361,10 +373,11 @@
 
       <div class="ctrl-group">
         <div class="ctrl-head">
-          <span class="ctrl-label">Thigh length</span>
-          <span class="ctrl-readout" id="lbl-thigh">15.5 in</span>
+          <span class="ctrl-label">Height</span>
+          <span class="ctrl-readout" id="lbl-height">5'6"</span>
         </div>
-        <input type="range" id="in-thigh" min="14" max="24" step="0.5" value="15.5">
+        <input type="range" id="in-height" min="58" max="78" step="1" value="66">
+        <span class="ctrl-derived" id="lbl-leg">thigh 16.2" &middot; leg 32.4"</span>
       </div>
 
       <div class="ctrl-group">
@@ -434,14 +447,19 @@
     <canvas id="graph" width="780" height="380"></canvas>
   </div>
   <div class="apparatus-wrap">
-    <canvas id="apparatus" width="780" height="300"></canvas>
+    <canvas id="apparatus" width="780" height="325"></canvas>
   </div>
 
   <div class="legend">
     <div class="legend-item"><span class="legend-swatch cw"></span> CW torque (rope, flexion)</div>
     <div class="legend-item"><span class="legend-swatch ccw"></span> CCW torque (gravity + rope, extension)</div>
-    <div class="legend-item"><span class="legend-swatch net"></span> Net hip torque</div>
+    <label class="legend-item legend-toggle off" id="legend-net">
+      <input type="checkbox" id="toggle-net"><span class="legend-swatch net"></span> Net hip torque
+    </label>
   </div>
+  <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;">
+    Tip: drag the dotted line on the graph (or use the hip-angle slider) to change the hip angle.
+  </p>
 
   <div class="work-row">
     <div class="work-cell">
@@ -461,7 +479,7 @@
   <div class="notes">
     <div class="notes-title">Notes</div>
     <ul>
-      <li>Leg modeled as one straight rigid segment from hip to ankle. Total leg length is taken as twice the thigh length (thigh and shank are roughly equal).</li>
+      <li>Leg modeled as one straight rigid segment from hip to ankle. Thigh and total leg length are estimated from height using standard body-segment ratios (thigh is about 0.245 of height, total leg about 0.49 of height).</li>
       <li>Leg weight is taken as 32% of body weight (both legs together). Center of mass sits 43% of the way down the leg from the hip.</li>
       <li>Rope tension equals the full Balanced Body spring force at the computed stretch, using F = k&middot;stretch + b per spring.</li>
       <li>Schematic mirrors the reference diagrams: hip pivot at center, leg drawn up and to the left, riser pulley to the right. CW torque rotates the leg toward flexion, CCW toward extension. Net is the imbalance the hip muscles must counteract.</li>
@@ -483,7 +501,11 @@
   // ------------------------------------------------------------
 
   //  --- LEG / BODY MODEL ---
-  const LEG_RATIO       = 2.0;    // total leg L = LEG_RATIO * thigh
+  //  Segment lengths are estimated from standing height using standard
+  //  body-segment ratios (Winter / Drillis & Contini).
+  const THIGH_FRAC      = 0.245;  // thigh length (hip to knee)  = THIGH_FRAC * height
+  const SHANK_FRAC      = 0.246;  // shank length (knee to ankle) = SHANK_FRAC * height
+  // total leg L (hip to ankle) = (THIGH_FRAC + SHANK_FRAC) * height ≈ 0.49 * height
   const COM_FRAC        = 0.43;   // leg COM distance from hip = COM_FRAC * L
   const LEG_WEIGHT_FRAC = 0.32;   // leg weight = LEG_WEIGHT_FRAC * body weight (BOTH legs)
 
@@ -510,12 +532,14 @@
 
   //  --- DISPLAY (does not affect physics) ---
   const GW = 780, GH = 380;       // graph canvas
-  const AW = 780, AH = 300;       // apparatus canvas
+  const AW = 780, AH = 325;       // apparatus canvas
   const GRAPH_SAMPLES = 90;       // curve resolution
 
   // World-to-pixel for the apparatus canvas
-  const APP_ORIGIN = { x: 240, y: 260 };    // hip pivot in canvas px
-  const PX_PER_IN  = 5;                     // apparatus world-to-canvas scale
+  const APP_ORIGIN = { x: 255, y: 255 };    // hip pivot in canvas px
+  const PX_PER_IN  = 4.6;                   // apparatus world-to-canvas scale
+  const LEFT_FRAME_X  = -42;                // left end of the fixed reformer frame (springs anchor here)
+  const CARRIAGE_LEFT = -12;                // left edge of the sliding carriage
 
   const FORCE_PX_PER_LB    = 0.9;           // foot force-arrow scale
   const TORQUE_ARC_RADIUS  = 38;            // px radius for hip torque arcs
@@ -556,7 +580,7 @@
 
   function solveState(thetaDeg, p) {
     const theta = thetaDeg * Math.PI / 180;
-    const L     = LEG_RATIO * p.thighLen;
+    const L     = (THIGH_FRAC + SHANK_FRAC) * p.height;   // hip-to-ankle, from height
     const dCom  = COM_FRAC * L;
     const wLeg  = LEG_WEIGHT_FRAC * p.bodyWeight;
     const { kTotal, bTotal } = springTotals(p.counts);
@@ -621,15 +645,17 @@
     return nice * base;
   }
 
-  function niceAxis(samples) {
+  function niceAxis(samples, showNet) {
     let lo = 0, hi = 0;
     for (const s of samples) {
       if (s.cw  < lo) lo = s.cw;
       if (s.cw  > hi) hi = s.cw;
       if (s.ccw < lo) lo = s.ccw;
       if (s.ccw > hi) hi = s.ccw;
-      if (s.net < lo) lo = s.net;
-      if (s.net > hi) hi = s.net;
+      if (showNet) {
+        if (s.net < lo) lo = s.net;
+        if (s.net > hi) hi = s.net;
+      }
     }
     const span = Math.max(hi - lo, 100);
     const step = niceStep(span / 5);
@@ -721,11 +747,11 @@
     gc.stroke();
   }
 
-  function drawTracer(state, thetaNow, axis) {
+  function drawTracer(state, thetaNow, axis, showNet) {
     const gx = angleToX(thetaNow);
-    // dashed vertical
-    gc.strokeStyle = 'rgba(255,255,255,0.18)';
-    gc.lineWidth = 1;
+    // dashed vertical (the drag handle)
+    gc.strokeStyle = 'rgba(255,255,255,0.30)';
+    gc.lineWidth = 1.5;
     gc.setLineDash([4, 5]);
     gc.beginPath(); gc.moveTo(gx, gI.y); gc.lineTo(gx, gI.y + gI.h); gc.stroke();
     gc.setLineDash([]);
@@ -733,9 +759,9 @@
     // Dots + labels for each curve
     const items = [
       { v: state.cwTorque,  color: C_CW,  label: 'CW',  align: 'right',  dx:  -8 },
-      { v: state.ccwTorque, color: C_CCW, label: 'CCW', align: 'right',  dx:  -8 },
-      { v: state.netTorque, color: C_NET, label: 'Net', align: 'left',   dx:   8 }
+      { v: state.ccwTorque, color: C_CCW, label: 'CCW', align: 'right',  dx:  -8 }
     ];
+    if (showNet) items.push({ v: state.netTorque, color: C_NET, label: 'Net', align: 'left', dx: 8 });
     gc.font = '11px DM Mono, monospace';
     for (const it of items) {
       const y = torqueToY(it.v, axis);
@@ -749,13 +775,13 @@
     }
   }
 
-  function drawGraph(samples, state, thetaNow) {
-    const axis = niceAxis(samples);
+  function drawGraph(samples, state, thetaNow, showNet) {
+    const axis = niceAxis(samples, showNet);
     drawGraphBase(axis);
     drawCurve(samples, 'cw',  C_CW,  axis);
     drawCurve(samples, 'ccw', C_CCW, axis);
-    drawCurve(samples, 'net', C_NET, axis);   // net on top
-    drawTracer(state, thetaNow, axis);
+    if (showNet) drawCurve(samples, 'net', C_NET, axis);   // net on top
+    drawTracer(state, thetaNow, axis, showNet);
   }
 
   // ============================================================
@@ -862,8 +888,25 @@
   function drawApparatus(state) {
     ac.clearRect(0, 0, AW, AH);
 
-    // --- Carriage (where the hip rests; from x≈-10 to x=CARRIAGE_ATTACH) ---
-    const carrLeft  = wx(-10);
+    // --- Fixed reformer frame: bottom rail spanning left end to the riser ---
+    ac.strokeStyle = C_FRAME;
+    ac.lineWidth = 2;
+    ac.lineCap = 'round';
+    ac.beginPath();
+    ac.moveTo(wx(LEFT_FRAME_X), wy(-3.8));
+    ac.lineTo(wx(PULLEY_X),     wy(-3.8));
+    ac.stroke();
+
+    // left end post of the fixed frame (springs anchor here)
+    ac.strokeStyle = '#666';
+    ac.lineWidth = 5;
+    ac.beginPath();
+    ac.moveTo(wx(LEFT_FRAME_X), wy(2.5));
+    ac.lineTo(wx(LEFT_FRAME_X), wy(-4.5));
+    ac.stroke();
+
+    // --- Sliding carriage (where the hip rests) ---
+    const carrLeft  = wx(CARRIAGE_LEFT);
     const carrRight = wx(CARRIAGE_ATTACH);
     const carrTop   = wy(0);
     const carrBot   = wy(-3);
@@ -874,27 +917,22 @@
     ac.rect(carrLeft, carrTop, carrRight - carrLeft, carrBot - carrTop);
     ac.fill();
     ac.stroke();
-
     // carriage top trim
     ac.fillStyle = '#2e2e2e';
     ac.fillRect(carrLeft + 3, carrTop, carrRight - carrLeft - 6, 4);
 
-    // --- Riser post ---
+    // --- Springs: coil from the LEFT frame post to the carriage's left edge ---
+    // (Carriage is held to the fixed left end of the frame by the springs; the rope
+    //  pulls it toward the pulley on the right, stretching the springs.)
+    drawHorizontalCoil(wx(LEFT_FRAME_X), wy(-1.5), wx(CARRIAGE_LEFT), state.stretch);
+
+    // --- Riser post (right) ---
     ac.strokeStyle = '#666';
     ac.lineWidth = 5;
     ac.lineCap = 'round';
     ac.beginPath();
     ac.moveTo(wx(PULLEY_X), wy(-1));
     ac.lineTo(wx(PULLEY_X), wy(12.5));
-    ac.stroke();
-
-    // --- Frame foot under the riser ---
-    ac.fillStyle = '#222';
-    ac.strokeStyle = C_FRAME;
-    ac.lineWidth = 1.2;
-    ac.beginPath();
-    ac.rect(wx(PULLEY_X) - 8, wy(-1), 16, 6);
-    ac.fill();
     ac.stroke();
 
     // --- Rope segment (a): foot to pulley ---
@@ -912,8 +950,16 @@
     ac.lineTo(wx(PULLEY_X), wy(0));
     ac.stroke();
 
-    // --- Spring coil along segment (c): carriage attach to riser base ---
-    drawHorizontalCoil(wx(CARRIAGE_ATTACH), wy(0), wx(PULLEY_X), state.stretch);
+    // --- Rope segment (c): riser base to the carriage attach point (plain rope) ---
+    ac.beginPath();
+    ac.moveTo(wx(PULLEY_X), wy(0));
+    ac.lineTo(wx(CARRIAGE_ATTACH), wy(0));
+    ac.stroke();
+    // attach nub where the rope meets the carriage
+    ac.fillStyle = C_ROPE;
+    ac.beginPath();
+    ac.arc(wx(CARRIAGE_ATTACH), wy(0), 2.5, 0, Math.PI * 2);
+    ac.fill();
 
     // --- Pulley ---
     ac.fillStyle = '#bbb';
@@ -996,9 +1042,9 @@
     torqueArc(wx(0), wy(0), TORQUE_ARC_RADIUS,      cwSweep,  +1, C_CW);
     torqueArc(wx(0), wy(0), TORQUE_ARC_RADIUS + 14, ccwSweep, -1, C_CCW);
 
-    // --- Text labels: stretch, tension, and rope angle near the coil ---
-    const labelX = (wx(CARRIAGE_ATTACH) + wx(PULLEY_X)) / 2;
-    const labelY = wy(0) + 22;
+    // --- Text labels: stretch, tension, rope angle (stacked under the springs) ---
+    const labelX = wx((LEFT_FRAME_X + CARRIAGE_LEFT) / 2);
+    const labelY = wy(0) + 30;
     ac.fillStyle = C_SPRING;
     ac.font = '12px DM Mono, monospace';
     ac.textAlign = 'center';
@@ -1007,9 +1053,11 @@
     ac.fillStyle = C_MUTED;
     ac.fillText('rope ' + (state.ropeAngle * 180 / Math.PI).toFixed(1) + '°', labelX, labelY + 32);
 
-    // --- Hip and pulley tags (foot is recognizable from the leg + force labels) ---
+    // --- Tags: springs, hip, pulley (foot is clear from the leg + force labels) ---
     ac.fillStyle = C_MUTED;
     ac.font = '11px DM Mono, monospace';
+    ac.textAlign = 'center';
+    ac.fillText('springs', wx((LEFT_FRAME_X + CARRIAGE_LEFT) / 2), wy(-1.5) - 14);
     ac.textAlign = 'right';
     ac.fillText('hip', wx(0) - 10, wy(0) + 4);
     ac.textAlign = 'center';
@@ -1021,7 +1069,7 @@
   // ============================================================
   function readParams() {
     return {
-      thighLen:   parseFloat(document.getElementById('in-thigh').value),
+      height:     parseFloat(document.getElementById('in-height').value),
       bodyWeight: parseFloat(document.getElementById('in-weight').value),
       counts:     Object.assign({}, springCounts)
     };
@@ -1031,8 +1079,17 @@
     document.getElementById(id).textContent = text;
   }
 
+  function formatHeight(inches) {
+    const ft = Math.floor(inches / 12);
+    const inch = Math.round(inches - ft * 12);
+    return ft + "'" + inch + '"';
+  }
+
   function updateControlLabels(params, thetaNow) {
-    setText('lbl-thigh',  params.thighLen.toFixed(1) + ' in');
+    const thigh = THIGH_FRAC * params.height;
+    const leg   = (THIGH_FRAC + SHANK_FRAC) * params.height;
+    setText('lbl-height', formatHeight(params.height));
+    setText('lbl-leg',    'thigh ' + thigh.toFixed(1) + '" · leg ' + leg.toFixed(1) + '"');
     setText('lbl-weight', params.bodyWeight + ' lb');
     setText('lbl-angle',  thetaNow + '°');
     setText('cnt-red',    springCounts.red);
@@ -1057,17 +1114,18 @@
   function recompute() {
     const params   = readParams();
     const thetaNow = parseFloat(document.getElementById('in-angle').value);
+    const showNet  = document.getElementById('toggle-net').checked;
     const samples  = sampleCurves(params);
     const state    = solveState(thetaNow, params);
 
     updateControlLabels(params, thetaNow);
-    drawGraph(samples, state, thetaNow);
+    drawGraph(samples, state, thetaNow, showNet);
     drawApparatus(state);
     updateReadouts(state);
   }
 
   // --- slider events ---
-  ['in-thigh', 'in-weight', 'in-angle'].forEach((id) => {
+  ['in-height', 'in-weight', 'in-angle'].forEach((id) => {
     document.getElementById(id).addEventListener('input', recompute);
   });
 
@@ -1087,6 +1145,38 @@
       }
     });
   });
+
+  // --- net-torque line toggle ---
+  const netToggle = document.getElementById('toggle-net');
+  netToggle.addEventListener('change', () => {
+    document.getElementById('legend-net').classList.toggle('off', !netToggle.checked);
+    recompute();
+  });
+
+  // --- drag the dotted line on the graph to set the hip angle ---
+  const angleSlider = document.getElementById('in-angle');
+  function graphXToAngle(clientX) {
+    const rect = GC.getBoundingClientRect();
+    const canvasX = (clientX - rect.left) / rect.width * GW;   // CSS px -> internal px
+    const frac = (canvasX - gI.x) / gI.w;
+    const angle = THETA_MIN + frac * (THETA_MAX - THETA_MIN);
+    return Math.max(THETA_MIN, Math.min(THETA_MAX, Math.round(angle)));
+  }
+  let graphDragging = false;
+  GC.addEventListener('pointerdown', (e) => {
+    graphDragging = true;
+    GC.setPointerCapture(e.pointerId);
+    angleSlider.value = graphXToAngle(e.clientX);
+    recompute();
+  });
+  GC.addEventListener('pointermove', (e) => {
+    if (!graphDragging) return;
+    angleSlider.value = graphXToAngle(e.clientX);
+    recompute();
+  });
+  const endGraphDrag = () => { graphDragging = false; };
+  GC.addEventListener('pointerup', endGraphDrag);
+  GC.addEventListener('pointercancel', endGraphDrag);
 
   // --- first paint ---
   recompute();
