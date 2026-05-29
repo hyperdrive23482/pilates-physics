@@ -671,7 +671,7 @@
   const GC = document.getElementById('graph');
   const gc = GC.getContext('2d');
 
-  const gP = { left: 86, right: 24, top: 28, bottom: 60 };
+  const gP = { left: 86, right: 24, top: 42, bottom: 60 };
   const gI = {
     x: gP.left, y: gP.top,
     w: GW - gP.left - gP.right,
@@ -775,6 +775,46 @@
     }
   }
 
+  function roundRectPath(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y,     x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x,     y + h, r);
+    ctx.arcTo(x,     y + h, x,     y,     r);
+    ctx.arcTo(x,     y,     x + w, y,     r);
+    ctx.closePath();
+  }
+
+  // Interpretation badge in the graph's top margin: reads off the sign of the net
+  // torque (the value shown in the "Net hip torque" cell) and says which way the
+  // net effort goes. net > 0 => working to lower the legs; net < 0 => to lift them.
+  function drawInterpretationBadge(net) {
+    const THRESH = 25;   // in·lb dead-band so it doesn't flicker near zero
+    let text, color;
+    if (net > THRESH)       { text = 'Net effort: pulling the legs DOWN  ↓'; color = C_NET; }
+    else if (net < -THRESH) { text = 'Net effort: pulling the legs UP  ↑';   color = C_NET; }
+    else                    { text = 'Net effort: balanced';                 color = C_MUTED; }
+
+    gc.font = '13px DM Mono, monospace';
+    const tw = gc.measureText(text).width;
+    const bw = tw + 24, bh = 24;
+    const bx = gI.x + gI.w / 2 - bw / 2;
+    const by = 7;
+
+    gc.fillStyle = 'rgba(20,20,20,0.9)';
+    gc.strokeStyle = color;
+    gc.lineWidth = 1;
+    roundRectPath(gc, bx, by, bw, bh, 6);
+    gc.fill();
+    gc.stroke();
+
+    gc.fillStyle = color;
+    gc.textAlign = 'center';
+    gc.textBaseline = 'middle';
+    gc.fillText(text, gI.x + gI.w / 2, by + bh / 2 + 1);
+    gc.textBaseline = 'alphabetic';
+  }
+
   function drawGraph(samples, state, thetaNow, showNet) {
     const axis = niceAxis(samples, showNet);
     drawGraphBase(axis);
@@ -782,6 +822,7 @@
     drawCurve(samples, 'ccw', C_CCW, axis);
     if (showNet) drawCurve(samples, 'net', C_NET, axis);   // net on top
     drawTracer(state, thetaNow, axis, showNet);
+    drawInterpretationBadge(state.netTorque);
   }
 
   // ============================================================
