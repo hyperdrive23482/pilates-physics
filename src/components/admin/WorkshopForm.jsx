@@ -156,7 +156,30 @@ export default function WorkshopForm({
             required
           />
         </Field>
-        <Field label="Slug *" hint="URL path: /workshops/{slug}">
+        <Field
+          label="Slug *"
+          hint="URL identifier. Prefix with PP-101- or PP-102- to link to that landing page."
+          tooltip={
+            <>
+              <strong style={{ display: 'block', marginBottom: '0.4rem' }}>
+                Linking to a landing page
+              </strong>
+              Begin the slug with a series prefix and that page features it as the
+              next upcoming workshop:
+              <span style={{ display: 'block', marginTop: '0.35rem' }}>
+                • <code>PP-101-…</code> → Pilates Physics 101
+              </span>
+              <span style={{ display: 'block' }}>
+                • <code>PP-102-…</code> → Pilates Physics 102
+              </span>
+              <span style={{ display: 'block', marginBottom: '0.4rem' }}>
+                • <code>PP-201-…</code> → Pilates Physics 201 (once that page is live)
+              </span>
+              Example: <code>PP-101-Aug-2026</code>. Any other slug appears on the
+              generic workshops page.
+            </>
+          }
+        >
           <input
             type="text"
             value={form.slug}
@@ -460,11 +483,13 @@ function Row({ children }) {
   return <div className="pp-grid-2">{children}</div>
 }
 
-function Field({ label, hint, children }) {
+function Field({ label, hint, tooltip, children }) {
   return (
     <label style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
       <span
         style={{
+          display: 'inline-flex',
+          alignItems: 'center',
           fontSize: '0.7rem',
           fontWeight: 600,
           letterSpacing: '0.1em',
@@ -473,12 +498,76 @@ function Field({ label, hint, children }) {
         }}
       >
         {label}
+        {tooltip ? <InfoTip>{tooltip}</InfoTip> : null}
       </span>
       {children}
       {hint ? (
         <span style={{ fontSize: '0.72rem', color: 'var(--color-ink-muted)' }}>{hint}</span>
       ) : null}
     </label>
+  )
+}
+
+// Small hover tooltip for field labels. Anchored to the right of the icon so it
+// extends left into the form (avoids overflowing the right edge on the second
+// grid column). Hover-only, which is fine for an internal admin tool.
+function InfoTip({ children }) {
+  const [show, setShow] = useState(false)
+  return (
+    <span
+      style={{ position: 'relative', display: 'inline-flex', marginLeft: '0.4rem' }}
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+    >
+      <span
+        aria-hidden="true"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '15px',
+          height: '15px',
+          borderRadius: '50%',
+          border: '1px solid var(--color-ink-muted)',
+          fontFamily: 'Georgia, serif',
+          fontStyle: 'italic',
+          fontWeight: 700,
+          fontSize: '0.62rem',
+          lineHeight: 1,
+          letterSpacing: 0,
+          textTransform: 'none',
+          cursor: 'help',
+        }}
+      >
+        i
+      </span>
+      {show ? (
+        <span
+          role="tooltip"
+          style={{
+            position: 'absolute',
+            bottom: 'calc(100% + 8px)',
+            right: 0,
+            zIndex: 30,
+            width: '260px',
+            padding: '0.65rem 0.8rem',
+            background: 'var(--color-surface)',
+            color: 'var(--color-ink)',
+            border: '1px solid var(--color-rule)',
+            boxShadow: '0 6px 20px rgba(0, 0, 0, 0.28)',
+            fontFamily: 'var(--font-serif)',
+            fontWeight: 400,
+            fontSize: '0.72rem',
+            lineHeight: 1.55,
+            letterSpacing: 0,
+            textTransform: 'none',
+            whiteSpace: 'normal',
+          }}
+        >
+          {children}
+        </span>
+      ) : null}
+    </span>
   )
 }
 
