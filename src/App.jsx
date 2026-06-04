@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom'
 import PageWrapper from './components/layout/PageWrapper'
+import { workshopUrl } from './lib/workshop'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -57,6 +58,20 @@ import AdminBlogPostEdit from './pages/admin/AdminBlogPostEdit'
 import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
 
+// Any /workshops/PP-101-* or /workshops/PP-102-* URL (e.g. a Stripe cancel
+// return) bounces to the branded landing page; everything else renders the
+// generic sales page. workshopUrl is the single source of truth for the mapping.
+function BrandedWorkshopRedirect() {
+  const { slug } = useParams()
+  const url = workshopUrl(slug)
+  if (url.startsWith('/pilates-physics')) return <Navigate to={url} replace />
+  return (
+    <PageWrapper>
+      <WorkshopSalesPage />
+    </PageWrapper>
+  )
+}
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -78,12 +93,6 @@ export default function App() {
             </PageWrapper>
           }
         />
-        {/* Static program redirect must come BEFORE the dynamic /workshops/:slug route */}
-        <Route
-          path="/workshops/PP-101-May-2026"
-          element={<Navigate to="/pilates-physics-101" replace />}
-        />
-
         {/* New top-level pages */}
         <Route
           path="/education"
@@ -123,14 +132,10 @@ export default function App() {
           element={<Navigate to="/survey/PP-101-May-2026" replace />}
         />
 
-        {/* Keep the dynamic workshop surface for any non-PP-101 workshop admin creates */}
+        {/* PP-101/PP-102 slugs redirect to their branded page; any other workshop renders the generic sales page */}
         <Route
           path="/workshops/:slug"
-          element={
-            <PageWrapper>
-              <WorkshopSalesPage />
-            </PageWrapper>
-          }
+          element={<BrandedWorkshopRedirect />}
         />
         <Route
           path="/workshops/:slug/success"

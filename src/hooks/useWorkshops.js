@@ -64,6 +64,59 @@ export function useNextWorkshop() {
   return { workshop, loading }
 }
 
+// Resolves the workshop a branded landing page should show: the soonest
+// upcoming/live session in the future whose slug matches a series prefix
+// (e.g. 'PP-101' → 'PP-101-Aug-2026'). Mirrors useNextWorkshop but scoped to a
+// series, so creating a new cohort and marking it 'upcoming' is all it takes to
+// point the page at the new price ID and kit tag. Returns null (not an error)
+// when nothing is upcoming, so the page can fall back to the waitlist.
+export function useCurrentWorkshop(seriesPrefix) {
+  const [workshop, setWorkshop] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!seriesPrefix) {
+      setLoading(false)
+      return
+    }
+    let cancelled = false
+    let timer
+
+    async function fetchCurrent() {
+      const { data, error } = await supabase
+        .from('webinars')
+        .select('*')
+        .ilike('slug', `${seriesPrefix}-%`)
+        .eq('kind', 'webinar')
+        .in('status', ['upcoming', 'live'])
+        .gt('scheduled_at', new Date().toISOString())
+        .order('scheduled_at', { ascending: true })
+        .limit(1)
+        .maybeSingle()
+
+      if (cancelled) return
+      if (!error) {
+        setWorkshop(data || null)
+        // Re-resolve right after the shown session starts so the page rolls
+        // forward to the next cohort without a reload.
+        if (data?.scheduled_at) {
+          const ms = new Date(data.scheduled_at).getTime() - Date.now()
+          if (ms > 0) timer = setTimeout(fetchCurrent, ms + 1000)
+        }
+      }
+      setLoading(false)
+    }
+
+    fetchCurrent()
+    return () => {
+      cancelled = true
+      if (timer) clearTimeout(timer)
+    }
+  }, [seriesPrefix])
+
+  return { workshop, loading }
+}
+
 export function useWorkshop(slug) {
   const [workshop, setWorkshop] = useState(null)
   const [loading, setLoading] = useState(true)

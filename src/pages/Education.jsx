@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArrowSvg from '../components/ui/ArrowSvg'
 import { useWorkshops } from '../hooks/useWorkshops'
-import { isRegistrationOpen } from '../lib/workshop'
 import '../styles/ppv2.css'
 import './Education.css'
 
@@ -12,7 +11,7 @@ const PATHS = [
     label: '2-HOUR LIVE WORKSHOP',
     title: 'Pilates Physics 101',
     body: 'A focused 2-hour live session on the mechanics behind reformer springs and the equipment variables that change how a body is loaded. New to Pilates Physics? Start here.',
-    slug: 'PP-101-May-2026',
+    seriesPrefix: 'PP-101',
     ctaLabel: 'Learn more',
     to: '/pilates-physics-101',
   },
@@ -21,7 +20,7 @@ const PATHS = [
     label: '2-HOUR LIVE WORKSHOP',
     title: 'Pilates Physics 102: Chair and Cadillac',
     body: 'A focused 2-hour live session on the mechanics of the Pilates Chair and Cadillac. Explore how spring orientation, lever arms, and body weight interact to load your clients.',
-    slug: 'PP-102-July-2026',
+    seriesPrefix: 'PP-102',
     ctaLabel: 'Learn more',
     to: '/pilates-physics-102',
   },
@@ -96,12 +95,20 @@ export default function Education() {
   // date never goes stale: the upcoming date while registration is open, a
   // waitlist label once the session is complete.
   function cardMeta(path) {
-    if (!path.slug) return path.meta
-    const workshop = workshops.find((w) => w.slug === path.slug)
-    if (!workshop) return ''
-    if (!isRegistrationOpen(workshop)) return 'Join the waitlist'
-    if (!workshop.scheduled_at) return 'Registration open'
-    const date = new Date(workshop.scheduled_at).toLocaleDateString('en-US', {
+    if (!path.seriesPrefix) return path.meta
+    const now = Date.now()
+    const next = workshops
+      .filter(
+        (w) =>
+          w.slug?.startsWith(`${path.seriesPrefix}-`) &&
+          w.kind !== 'tool' &&
+          ['upcoming', 'live'].includes(w.status) &&
+          w.scheduled_at &&
+          new Date(w.scheduled_at).getTime() > now,
+      )
+      .sort((a, b) => new Date(a.scheduled_at) - new Date(b.scheduled_at))[0]
+    if (!next) return 'Join the waitlist'
+    const date = new Date(next.scheduled_at).toLocaleDateString('en-US', {
       month: 'long',
       day: 'numeric',
       year: 'numeric',

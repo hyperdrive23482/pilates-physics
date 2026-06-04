@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
 import RegisterCard from '../components/ui/RegisterCard'
+import WaitlistForm from '../components/ui/WaitlistForm'
 import ArrowSvg from '../components/ui/ArrowSvg'
-import { useWorkshop } from '../hooks/useWorkshops'
-import { isRegistrationOpen } from '../lib/workshop'
+import { useCurrentWorkshop } from '../hooks/useWorkshops'
+import { isRegistrationOpen, formatWorkshopWhen } from '../lib/workshop'
 import '../styles/ppv2.css'
 import './Workshop.css'
 
@@ -46,15 +47,6 @@ const TOPICS = [
     title: 'From feeling to vector resolution.',
     body: 'Far more important on the chair and cadillac than on the reformer. We go deeper into it here.',
   },
-]
-
-const SPECS = [
-  { k: 'Date', v: 'Wednesday, July 15, 2026' },
-  { k: 'Time', v: '11am PDT / 2pm EDT' },
-  { k: 'Duration', v: '2 hours' },
-  { k: 'Format', v: 'Live via Zoom · recording included' },
-  { k: 'NPCP CECs', v: '2.0' },
-  { k: 'Price', v: '$99' },
 ]
 
 const INCLUDED = [
@@ -113,9 +105,28 @@ const FAQ = [
 ]
 
 export default function PilatesPhysics102() {
-  const { workshop } = useWorkshop('PP-102-July-2026')
+  const { workshop, loading } = useCurrentWorkshop('PP-102')
   const registrationOpen = isRegistrationOpen(workshop)
-  const ctaLabel = registrationOpen ? 'Register Now. $99' : 'Join Waitlist'
+  const price = workshop?.price_cents ? `$${(workshop.price_cents / 100).toFixed(0)}` : null
+  const dateLong = workshop?.scheduled_at
+    ? new Date(workshop.scheduled_at).toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    : 'To be announced'
+  const specs = [
+    { k: 'Date', v: dateLong },
+    { k: 'Time', v: '11am PDT / 2pm EDT' },
+    { k: 'Duration', v: '2 hours' },
+    { k: 'Format', v: 'Live via Zoom · recording included' },
+    { k: 'NPCP CECs', v: '2.0' },
+    { k: 'Price', v: price || 'To be announced' },
+  ]
+  const ctaLabel = registrationOpen
+    ? `Register Now.${price ? ` ${price}` : ''}`
+    : 'Join Waitlist'
 
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
@@ -143,7 +154,10 @@ export default function PilatesPhysics102() {
               </a>
             </div>
             <p className="workshop-hero__meta">
-              <span className="workshop-hero__meta-k">Live</span>Wed Jul 15 · 11am PDT · recording included
+              <span className="workshop-hero__meta-k">Live</span>
+              {workshop?.scheduled_at
+                ? `${formatWorkshopWhen(workshop.scheduled_at)} · recording included`
+                : 'recording included'}
             </p>
           </div>
         </div>
@@ -238,7 +252,7 @@ export default function PilatesPhysics102() {
               <h2 className="workshop-details__head">The <span className="italic accent">specs.</span></h2>
 
               <dl className="spec-list">
-                {SPECS.map((s) => (
+                {specs.map((s) => (
                   <div className="spec-list__row" key={s.k}>
                     <dt className="spec-list__k">{s.k}</dt>
                     <dd className="spec-list__v">{s.v}</dd>
@@ -248,10 +262,18 @@ export default function PilatesPhysics102() {
             </div>
 
             <div id="register" className="workshop-details__register">
-              {workshop ? (
+              {loading ? (
+                <p className="workshop-state__msg">Loading registration…</p>
+              ) : workshop ? (
                 <RegisterCard workshop={workshop} />
               ) : (
-                <p className="workshop-state__msg">Loading registration…</p>
+                <div className="register-card">
+                  <h3 className="register-card__title">Registration opens soon</h3>
+                  <p className="register-card__body">
+                    Join the waitlist and we'll notify you as soon as registration opens.
+                  </p>
+                  <WaitlistForm />
+                </div>
               )}
             </div>
           </div>
