@@ -482,10 +482,11 @@
       <li>Leg modeled as one straight rigid segment from hip to ankle. Thigh and total leg length are estimated from height using standard body-segment ratios (thigh is about 0.245 of height, total leg about 0.49 of height).</li>
       <li>Leg weight is taken as 32% of body weight (both legs together). Center of mass sits 43% of the way down the leg from the hip.</li>
       <li>Rope tension equals the full Balanced Body spring force at the computed stretch, using F = k&middot;stretch + b per spring.</li>
-      <li>Schematic mirrors the reference diagrams: hip pivot at center, leg drawn up and to the left, riser pulley to the right. CW torque rotates the leg toward flexion, CCW toward extension. Net is the imbalance the hip muscles must counteract.</li>
+      <li>Spring stretch is the carriage's travel, not the foot's. The student rides the carriage, and the rope (foot over the pulley to the carriage) holds a fixed length, so lowering the legs drags the carriage toward the pulley. Because the hip travels with it, the spring sees much less motion than the foot does.</li>
+      <li>Schematic is a side view: a fixed pulley on the right, the sliding carriage with the hip on it to the left, and the springs anchored at the far left. CW torque rotates the leg toward flexion, CCW toward extension. Net is the imbalance the hip muscles must counteract.</li>
     </ul>
     <p class="notes-caveat">
-      For illustration of how torque at the hip responds to load and geometry. Humans vary, and more precise equations exist. Calibrated against two reference diagrams; the single geometric knob (hip to pulley distance) is tunable in the script.
+      For illustration of how torque at the hip responds to load and geometry. Humans vary, and more precise equations exist. Calibrated to a measured setup: pulley 10" above the carriage and 48" from the hip at 90 degrees, rope tie-on 24" from the hip, and about 17" of spring stretch at 90 degrees for a 5'9" student. Those are tunable constants in the script.
     </p>
   </div>
 
@@ -510,11 +511,24 @@
   const LEG_WEIGHT_FRAC = 0.32;   // leg weight = LEG_WEIGHT_FRAC * body weight (BOTH legs)
 
   //  --- FIXED REFORMER GEOMETRY (inches) ---
-  const ROPE_FREE_LEN   = 137;    // rope + spring assembly length at zero spring stretch
-  const RISER_VERT      = 10;     // vertical rope run up the riser; pulley height above hip
-  const CARRIAGE_ATTACH = 31;     // rope's lower end attaches to carriage, this far from hip
-  const PULLEY_X        = 81;     // horizontal hip-to-pulley distance — calibration knob.
-                                  // ~81 reproduces the 45-degree reference diagram.
+  //  The pulley sits at the world origin (0,0); +x points toward the pulley/riser, +y up.
+  //  The student lies on the carriage, which rides HIP_Y below the pulley and slides
+  //  HORIZONTALLY. The rope runs foot -> over the pulley -> down to a tie-on point on the
+  //  carriage. The rope is inextensible (constant total length), so as the legs lower the
+  //  carriage is dragged toward the pulley, and that carriage travel IS the spring stretch.
+  //  Calibrated to a measured setup: a 5'9" student at 90deg has the hip 48" from the
+  //  pulley with ~17" of spring stretch, the pulley 10" above the carriage, and the rope
+  //  tying to the carriage 24" from the hip.
+  const PULLEY_ABOVE     = 10;    // pulley height above the carriage top (= above the hip)
+  const TIE_FROM_HIP     = 24;    // rope ties to the carriage this far from the hip toward the pulley
+  const HIP_TO_PULLEY_90 = 48;    // measured horizontal hip-to-pulley at 90deg (calibration ref)
+  const STRETCH_AT_90    = 17;    // measured spring stretch at 90deg (calibration ref)
+  const CAL_HEIGHT       = 69;    // calibration reference height (5'9")
+  const HIP_Y            = -PULLEY_ABOVE;   // carriage/hip height relative to the pulley
+  //  Derived & fixed: the rope length, and the carriage "home" (free-spring) hip position.
+  const ROPE_LEN   = Math.hypot(HIP_TO_PULLEY_90, (THIGH_FRAC + SHANK_FRAC) * CAL_HEIGHT - PULLEY_ABOVE)
+                   + Math.hypot(TIE_FROM_HIP, PULLEY_ABOVE);
+  const HIP_HOME_X = -HIP_TO_PULLEY_90 - STRETCH_AT_90;   // hip x where the spring is free (stretch 0)
 
   //  --- BALANCED BODY SPRING CONSTANTS (k = lb/in, b = preload lb) ---
   //  Embedded directly; standalone HTML cannot import the JSON.
@@ -535,11 +549,13 @@
   const AW = 780, AH = 325;       // apparatus canvas
   const GRAPH_SAMPLES = 90;       // curve resolution
 
-  // World-to-pixel for the apparatus canvas
-  const APP_ORIGIN = { x: 255, y: 255 };    // hip pivot in canvas px
-  const PX_PER_IN  = 4.6;                   // apparatus world-to-canvas scale
-  const LEFT_FRAME_X  = -42;                // left end of the fixed reformer frame (springs anchor here)
-  const CARRIAGE_LEFT = -12;                // left edge of the sliding carriage
+  // World-to-pixel for the apparatus canvas (pulley anchored at the world origin).
+  const APP_ORIGIN = { x: 634, y: 194 };    // world (0,0) = pulley, in canvas px
+  const PX_PER_IN  = 5.8;                    // apparatus world-to-canvas scale
+  const CARRIAGE_HALF_LEFT = 22;            // carriage extends this far left of the hip
+  const CARRIAGE_RIGHT     = 28;            // ... and this far toward the pulley (head end)
+  const SPRING_FREE        = 12;            // drawn spring length at zero stretch
+  const ANCHOR_X = HIP_HOME_X - CARRIAGE_HALF_LEFT - SPRING_FREE;   // fixed spring-anchor x
 
   const FORCE_PX_PER_LB    = 0.9;           // foot force-arrow scale
   const TORQUE_ARC_RADIUS  = 38;            // px radius for hip torque arcs
@@ -587,33 +603,53 @@
 
     const cT = Math.cos(theta), sT = Math.sin(theta);
 
-    // 1. foot relative to hip (on the -x side; pulley on +x)
-    const foot = { x: -L * cT, y: L * sT };
-    // 2. pulley
-    const pulley = { x: PULLEY_X, y: RISER_VERT };
-    // 3. foot -> pulley vector
-    const Vx = PULLEY_X + L * cT;
-    const Vy = RISER_VERT - L * sT;
+    // --- Solve for the carriage position (the heart of the model) -------------------
+    // The pulley is fixed at the world origin. The hip rides the carriage at height
+    // HIP_Y, and the rope ties onto the carriage TIE_FROM_HIP toward the pulley. The
+    // rope is inextensible: |foot->pulley| + |pulley->tie-on| = ROPE_LEN. For a given
+    // hip angle this pins the carriage's horizontal position hipX. As the legs lower,
+    // the carriage is dragged toward the pulley; its travel from HIP_HOME_X is the
+    // spring stretch. ropeTotal is monotonic-decreasing for hipX in
+    // [HIP_HOME_X, -TIE_FROM_HIP] (tie-on still left of the pulley), so bisection is safe.
+    const ropeTotal = (hx) =>
+          Math.hypot(hx - L * cT, HIP_Y + L * sT) +     // foot   -> pulley
+          Math.hypot(hx + TIE_FROM_HIP, HIP_Y);         // pulley -> tie-on
+    let hipX;
+    if (ropeTotal(HIP_HOME_X) <= ROPE_LEN) {
+      hipX = HIP_HOME_X;                                // rope slack: carriage rests at home
+    } else {
+      let lo = HIP_HOME_X, hi = -TIE_FROM_HIP;
+      for (let i = 0; i < 60; i++) {
+        const m = (lo + hi) / 2;
+        if (ropeTotal(m) > ROPE_LEN) lo = m; else hi = m;
+      }
+      hipX = (lo + hi) / 2;
+    }
+    const stretch = Math.max(0, hipX - HIP_HOME_X);
+
+    // --- World positions (pulley at origin) -----------------------------------------
+    const hip    = { x: hipX,                y: HIP_Y };
+    const foot   = { x: hipX - L * cT,       y: HIP_Y + L * sT };
+    const tieOn  = { x: hipX + TIE_FROM_HIP, y: HIP_Y };
+    const pulley = { x: 0,                   y: 0 };
+
+    // --- Rope force at the foot (vector foot -> pulley) ------------------------------
+    const Vx = pulley.x - foot.x;        // = L*cT - hipX  (> 0, toward the pulley)
+    const Vy = pulley.y - foot.y;        // < 0 while the foot is above the pulley
     const D  = Math.max(1e-6, Math.hypot(Vx, Vy));
-    // 4. rope path
-    const ropePath = D + RISER_VERT + (PULLEY_X - CARRIAGE_ATTACH);
-    // 5. spring stretch
-    const stretch = Math.max(0, ropePath - ROPE_FREE_LEN);
-    // 6. tension
     const tension = stretch > 0 ? kTotal * stretch + bTotal : 0;
-    // 7. rope force components at foot
-    const Tx = tension * Vx / D;
-    const Ty = tension * (-Vy) / D;      // Ty is the DOWNWARD magnitude (foot above pulley => Vy<0)
-    // 8. torques about the hip
+    const Tx = tension * Vx / D;         // rightward, toward the pulley
+    const Ty = tension * (-Vy) / D;      // downward magnitude (foot above pulley => Vy<0)
+
+    // --- Torques about the hip (moment arms use the foot RELATIVE to the hip) --------
     const cwTorque  = Tx * (L * sT);
     const ccwTorque = wLeg * (dCom * cT) + Ty * (L * cT);
     const netTorque = cwTorque - ccwTorque;
-    // 9. rope angle below horizontal (positive = rope points down toward the pulley)
     const ropeAngle = Math.atan2(-Vy, Vx);
 
     return {
       theta, thetaDeg, L, dCom, wLeg, kTotal, bTotal,
-      foot, pulley, D, ropePath, stretch, tension,
+      hipX, hip, foot, tieOn, pulley, D, stretch, tension,
       Tx, Ty, ropeAngle, cwTorque, ccwTorque, netTorque
     };
   }
@@ -929,77 +965,72 @@
   function drawApparatus(state) {
     ac.clearRect(0, 0, AW, AH);
 
-    // --- Fixed reformer frame: bottom rail spanning left end to the riser ---
+    const hip = state.hip, foot = state.foot, tie = state.tieOn, pulley = state.pulley;
+    const carriageLeft  = hip.x - CARRIAGE_HALF_LEFT;
+    const carriageRight = hip.x + CARRIAGE_RIGHT;
+
+    // --- Fixed frame: bottom rail spanning the spring anchor across to the riser ---
     ac.strokeStyle = C_FRAME;
     ac.lineWidth = 2;
     ac.lineCap = 'round';
     ac.beginPath();
-    ac.moveTo(wx(LEFT_FRAME_X), wy(-3.8));
-    ac.lineTo(wx(PULLEY_X),     wy(-3.8));
+    ac.moveTo(wx(ANCHOR_X), wy(-15));
+    ac.lineTo(wx(2),        wy(-15));
     ac.stroke();
 
-    // left end post of the fixed frame (springs anchor here)
-    ac.strokeStyle = '#666';
-    ac.lineWidth = 5;
-    ac.beginPath();
-    ac.moveTo(wx(LEFT_FRAME_X), wy(2.5));
-    ac.lineTo(wx(LEFT_FRAME_X), wy(-4.5));
-    ac.stroke();
-
-    // --- Sliding carriage (where the hip rests) ---
-    const carrLeft  = wx(CARRIAGE_LEFT);
-    const carrRight = wx(CARRIAGE_ATTACH);
-    const carrTop   = wy(0);
-    const carrBot   = wy(-3);
-    ac.fillStyle = '#1e1e1e';
-    ac.strokeStyle = '#484848';
-    ac.lineWidth = 1.5;
-    ac.beginPath();
-    ac.rect(carrLeft, carrTop, carrRight - carrLeft, carrBot - carrTop);
-    ac.fill();
-    ac.stroke();
-    // carriage top trim
-    ac.fillStyle = '#2e2e2e';
-    ac.fillRect(carrLeft + 3, carrTop, carrRight - carrLeft - 6, 4);
-
-    // --- Springs: coil from the LEFT frame post to the carriage's left edge ---
-    // (Carriage is held to the fixed left end of the frame by the springs; the rope
-    //  pulls it toward the pulley on the right, stretching the springs.)
-    drawHorizontalCoil(wx(LEFT_FRAME_X), wy(-1.5), wx(CARRIAGE_LEFT), state.stretch);
-
-    // --- Riser post (right) ---
+    // --- Fixed spring-anchor post (left) ---
     ac.strokeStyle = '#666';
     ac.lineWidth = 5;
     ac.lineCap = 'round';
     ac.beginPath();
-    ac.moveTo(wx(PULLEY_X), wy(-1));
-    ac.lineTo(wx(PULLEY_X), wy(12.5));
+    ac.moveTo(wx(ANCHOR_X), wy(-15));
+    ac.lineTo(wx(ANCHOR_X), wy(-3));
     ac.stroke();
 
-    // --- Rope segment (a): foot to pulley ---
+    // --- Springs: coil from the fixed anchor to the (moving) carriage left edge ---
+    // As the legs lower, the carriage slides toward the pulley and the springs stretch.
+    drawHorizontalCoil(wx(ANCHOR_X), wy(HIP_Y), wx(carriageLeft), state.stretch);
+
+    // --- Sliding carriage (the student lies on it; the hip rides here) ---
+    const cl = wx(carriageLeft), cr = wx(carriageRight);
+    const carrTop = wy(HIP_Y), carrBot = wy(HIP_Y - 3);
+    ac.fillStyle = '#1e1e1e';
+    ac.strokeStyle = '#484848';
+    ac.lineWidth = 1.5;
+    ac.beginPath();
+    ac.rect(cl, carrTop, cr - cl, carrBot - carrTop);
+    ac.fill();
+    ac.stroke();
+    ac.fillStyle = '#2e2e2e';
+    ac.fillRect(cl + 3, carrTop, cr - cl - 6, 4);
+
+    // --- Fixed riser post (right) ---
+    ac.strokeStyle = '#666';
+    ac.lineWidth = 5;
+    ac.lineCap = 'round';
+    ac.beginPath();
+    ac.moveTo(wx(0), wy(-15));
+    ac.lineTo(wx(0), wy(3));
+    ac.stroke();
+
+    // --- Rope segment (a): foot -> pulley ---
     ac.strokeStyle = C_ROPE;
     ac.lineWidth = 1.8;
     ac.lineCap = 'butt';
     ac.beginPath();
-    ac.moveTo(wx(state.foot.x), wy(state.foot.y));
-    ac.lineTo(wx(PULLEY_X), wy(RISER_VERT));
+    ac.moveTo(wx(foot.x), wy(foot.y));
+    ac.lineTo(wx(pulley.x), wy(pulley.y));
     ac.stroke();
 
-    // --- Rope segment (b): pulley down the riser ---
+    // --- Rope segment (b): pulley -> tie-on on the carriage ---
     ac.beginPath();
-    ac.moveTo(wx(PULLEY_X), wy(RISER_VERT));
-    ac.lineTo(wx(PULLEY_X), wy(0));
+    ac.moveTo(wx(pulley.x), wy(pulley.y));
+    ac.lineTo(wx(tie.x), wy(tie.y));
     ac.stroke();
-
-    // --- Rope segment (c): riser base to the carriage attach point (plain rope) ---
-    ac.beginPath();
-    ac.moveTo(wx(PULLEY_X), wy(0));
-    ac.lineTo(wx(CARRIAGE_ATTACH), wy(0));
-    ac.stroke();
-    // attach nub where the rope meets the carriage
+    // tie-on nub where the rope meets the carriage
     ac.fillStyle = C_ROPE;
     ac.beginPath();
-    ac.arc(wx(CARRIAGE_ATTACH), wy(0), 2.5, 0, Math.PI * 2);
+    ac.arc(wx(tie.x), wy(tie.y), 2.5, 0, Math.PI * 2);
     ac.fill();
 
     // --- Pulley ---
@@ -1007,7 +1038,7 @@
     ac.strokeStyle = '#444';
     ac.lineWidth = 1.5;
     ac.beginPath();
-    ac.arc(wx(PULLEY_X), wy(RISER_VERT), 6, 0, Math.PI * 2);
+    ac.arc(wx(pulley.x), wy(pulley.y), 6, 0, Math.PI * 2);
     ac.fill();
     ac.stroke();
 
@@ -1016,13 +1047,13 @@
     ac.lineWidth = 5;
     ac.lineCap = 'round';
     ac.beginPath();
-    ac.moveTo(wx(0), wy(0));
-    ac.lineTo(wx(state.foot.x), wy(state.foot.y));
+    ac.moveTo(wx(hip.x), wy(hip.y));
+    ac.lineTo(wx(foot.x), wy(foot.y));
     ac.stroke();
 
     // --- COM tick on the leg (subtle) ---
-    const comX = -state.dCom * Math.cos(state.theta);
-    const comY =  state.dCom * Math.sin(state.theta);
+    const comX = hip.x - state.dCom * Math.cos(state.theta);
+    const comY = hip.y + state.dCom * Math.sin(state.theta);
     ac.fillStyle = C_MUTED;
     ac.beginPath();
     ac.arc(wx(comX), wy(comY), 3, 0, Math.PI * 2);
@@ -1031,36 +1062,19 @@
     // --- Foot dot ---
     ac.fillStyle = C_TEXT;
     ac.beginPath();
-    ac.arc(wx(state.foot.x), wy(state.foot.y), 4, 0, Math.PI * 2);
+    ac.arc(wx(foot.x), wy(foot.y), 4, 0, Math.PI * 2);
     ac.fill();
 
-    // --- Rope angle arc at the foot (visual only; numeric label sits with the coil) ---
-    if (state.tension > 0) {
-      const fx = wx(state.foot.x), fy = wy(state.foot.y);
-      const dxCanvas = wx(PULLEY_X) - fx;
-      const dyCanvas = wy(RISER_VERT) - fy;
-      const ropeCanvasAngle = Math.atan2(dyCanvas, dxCanvas);
-      ac.strokeStyle = C_MUTED;
-      ac.lineWidth = 1;
-      ac.beginPath();
-      ac.arc(fx, fy, 22, 0, ropeCanvasAngle);
-      ac.stroke();
-    }
-
     // --- Force component arrows + labels at the foot ---
-    // Arrows go RIGHT (Tx) and DOWN (Ty) from the foot. Labels stack neatly ABOVE the
-    // foot dot so they never collide with each other, the arrows, the rope, or the leg.
+    // Arrows go RIGHT (Tx) and DOWN (Ty) from the foot. Labels stack ABOVE the foot dot.
     if (state.tension > 0) {
-      const fx = wx(state.foot.x), fy = wy(state.foot.y);
+      const fx = wx(foot.x), fy = wy(foot.y);
       const txLen = state.Tx * FORCE_PX_PER_LB;
       const tyLen = state.Ty * FORCE_PX_PER_LB;
 
-      // Tx: rightward (toward pulley)
-      arrow(fx, fy, fx + txLen, fy, C_SPRING, 1.8);
-      // Ty: downward
-      arrow(fx, fy, fx, fy + tyLen, C_SPRING, 1.8);
+      arrow(fx, fy, fx + txLen, fy, C_SPRING, 1.8);   // Tx: rightward (toward pulley)
+      arrow(fx, fy, fx, fy + tyLen, C_SPRING, 1.8);   // Ty: downward
 
-      // Stacked labels above the foot dot
       ac.fillStyle = C_SPRING;
       ac.font = '11px DM Mono, monospace';
       ac.textAlign = 'center';
@@ -1071,21 +1085,20 @@
     // --- Hip pivot dot (drawn after leg so it sits on top) ---
     ac.fillStyle = C_TEXT;
     ac.beginPath();
-    ac.arc(wx(0), wy(0), 5.5, 0, Math.PI * 2);
+    ac.arc(wx(hip.x), wy(hip.y), 5.5, 0, Math.PI * 2);
     ac.fill();
 
     // --- Torque arrows at the hip ---
     // Fixed-scale magnitude visualization: TORQUE_FULL_SCALE in·lb maps to the maximum
-    // sweep (~100°). Above that the arc is clipped; below, proportional. Position is
-    // upper-right of hip (handled inside torqueArc), out of the leg's way.
+    // sweep (~100°). Above that the arc is clipped; below, proportional.
     const cwSweep  = Math.min(state.cwTorque  / TORQUE_FULL_SCALE, 1) * Math.PI * 0.55;
     const ccwSweep = Math.min(state.ccwTorque / TORQUE_FULL_SCALE, 1) * Math.PI * 0.55;
-    torqueArc(wx(0), wy(0), TORQUE_ARC_RADIUS,      cwSweep,  +1, C_CW);
-    torqueArc(wx(0), wy(0), TORQUE_ARC_RADIUS + 14, ccwSweep, -1, C_CCW);
+    torqueArc(wx(hip.x), wy(hip.y), TORQUE_ARC_RADIUS,      cwSweep,  +1, C_CW);
+    torqueArc(wx(hip.x), wy(hip.y), TORQUE_ARC_RADIUS + 14, ccwSweep, -1, C_CCW);
 
     // --- Text labels: stretch, tension, rope angle (stacked under the springs) ---
-    const labelX = wx((LEFT_FRAME_X + CARRIAGE_LEFT) / 2);
-    const labelY = wy(0) + 30;
+    const labelX = wx((ANCHOR_X + carriageLeft) / 2);
+    const labelY = wy(HIP_Y) + 30;
     ac.fillStyle = C_SPRING;
     ac.font = '12px DM Mono, monospace';
     ac.textAlign = 'center';
@@ -1094,15 +1107,16 @@
     ac.fillStyle = C_MUTED;
     ac.fillText('rope ' + (state.ropeAngle * 180 / Math.PI).toFixed(1) + '°', labelX, labelY + 32);
 
-    // --- Tags: springs, hip, pulley (foot is clear from the leg + force labels) ---
+    // --- Tags: springs, carriage, hip, pulley ---
     ac.fillStyle = C_MUTED;
     ac.font = '11px DM Mono, monospace';
     ac.textAlign = 'center';
-    ac.fillText('springs', wx((LEFT_FRAME_X + CARRIAGE_LEFT) / 2), wy(-1.5) - 14);
+    ac.fillText('springs', wx((ANCHOR_X + carriageLeft) / 2), wy(HIP_Y) - 14);
+    ac.fillText('carriage slides →', wx(hip.x), carrBot + 14);
     ac.textAlign = 'right';
-    ac.fillText('hip', wx(0) - 10, wy(0) + 4);
+    ac.fillText('hip', wx(hip.x) - 10, wy(hip.y) + 4);
     ac.textAlign = 'center';
-    ac.fillText('pulley', wx(PULLEY_X), wy(RISER_VERT) - 12);
+    ac.fillText('pulley', wx(pulley.x), wy(pulley.y) - 12);
   }
 
   // ============================================================
