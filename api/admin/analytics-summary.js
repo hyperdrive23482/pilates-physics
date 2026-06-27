@@ -15,7 +15,7 @@ export default async function handler(req, res) {
       supabaseAdmin.from('webinars').select('id, title, slug, status, price_cents, scheduled_at'),
       supabaseAdmin.from('user_entitlements').select('id, webinar_id, source'),
       supabaseAdmin.from('webinar_questions').select('id, webinar_id, is_answered'),
-      supabaseAdmin.from('stripe_events').select('webinar_id, status, event_type'),
+      supabaseAdmin.from('stripe_events').select('webinar_id, status, event_type, payload'),
       supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
     ])
 
@@ -34,7 +34,21 @@ export default async function handler(req, res) {
       const wEnt = entitlements.filter((e) => e.webinar_id === w.id)
       const paidEnt = wEnt.filter((e) => e.source === 'stripe')
       const wQuestions = questions.filter((q) => q.webinar_id === w.id)
-      const revenueCents = paidEnt.length * (w.price_cents ?? 0)
+      // Actual revenue: sum the real charged amount (Stripe Checkout
+      // `amount_total`, in cents) from each successful purchase event, rather
+      // than price × count — so promo-code discounts and past price changes are
+      // reflected. 'processed' and 'kit_failed' both mean the sale completed
+      // (kit_failed = only Kit.com tagging failed); 'failed' rows are excluded
+      // (provisioning errors to reconcile manually). Amounts are treated as USD
+      // cents; revisit if Adaptive Pricing foreign-currency sales become common.
+      const revenueCents = events
+        .filter(
+          (e) =>
+            e.webinar_id === w.id &&
+            e.event_type === 'checkout.session.completed' &&
+            (e.status === 'processed' || e.status === 'kit_failed')
+        )
+        .reduce((sum, e) => sum + (e.payload?.amount_total ?? 0), 0)
       return {
         id: w.id,
         title: w.title,

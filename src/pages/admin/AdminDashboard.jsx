@@ -105,6 +105,9 @@ export default function AdminDashboard() {
                           gap: '0.75rem',
                         }}
                       >
+                        <span style={{ color: 'var(--color-ink)', fontFamily: 'ui-monospace, SFMono-Regular, monospace' }}>
+                          {formatCents(w.revenue_cents)}
+                        </span>
                         {w.enrollments} enrolled
                         {w.scheduled_at ? ` · ${new Date(w.scheduled_at).toLocaleString()}` : ''}
                         <ArrowRight size={14} />

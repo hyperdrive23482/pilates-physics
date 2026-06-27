@@ -1,14 +1,36 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Plus, Trash2, Edit3 } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAllWorkshops } from '../../hooks/admin/useAllWorkshops'
+import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import { supabase } from '../../lib/supabase'
 import AdminNav from '../../components/admin/AdminNav'
+
+function formatCents(cents) {
+  return `$${((cents ?? 0) / 100).toFixed(2)}`
+}
 
 export default function AdminWorkshops() {
   const { user, signOut } = useEnrollment()
   const { workshops: allWorkshops, loading, refetch } = useAllWorkshops()
+  const { request } = useAdminAPI()
+  const [revenueByWorkshop, setRevenueByWorkshop] = useState({})
   const workshops = allWorkshops.filter((w) => w.kind !== 'tool')
+
+  // Per-workshop revenue lives on the analytics-summary endpoint (the same
+  // source the dashboard and analytics pages use); merge it in by id.
+  useEffect(() => {
+    request('/api/admin/analytics-summary')
+      .then((data) => {
+        const map = {}
+        for (const w of data?.per_workshop ?? []) {
+          map[w.id] = w.revenue_cents
+        }
+        setRevenueByWorkshop(map)
+      })
+      .catch(() => {})
+  }, [request])
 
   async function deleteWorkshop(id, title) {
     if (!confirm(`Delete "${title}"? This cascades to its content and entitlements.`)) return
@@ -76,6 +98,7 @@ export default function AdminWorkshops() {
                   <Th>Status</Th>
                   <Th>Scheduled</Th>
                   <Th>Price</Th>
+                  <Th align="right">Revenue</Th>
                   <Th align="right">Actions</Th>
                 </tr>
               </thead>
@@ -95,6 +118,9 @@ export default function AdminWorkshops() {
                     </Td>
                     <Td mono>
                       {w.price_cents != null ? `$${(w.price_cents / 100).toFixed(2)}` : '—'}
+                    </Td>
+                    <Td align="right" mono>
+                      {formatCents(revenueByWorkshop[w.id])}
                     </Td>
                     <Td align="right">
                       <div style={{ display: 'inline-flex', gap: '0.4rem' }}>
