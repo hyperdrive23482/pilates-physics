@@ -254,6 +254,68 @@
   border: 1px solid var(--rule);
 }
 
+/* ── Image lightbox (click any post image to enlarge) ─────────────────────── */
+.ppv2 .blog-body img,
+.ppv2 .blog-zoomable {
+  cursor: zoom-in;
+}
+
+/* Portaled to <body>, so these rules live outside the .ppv2 scope and use
+ * literal token values rather than var(--…). */
+.blog-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(8, 7, 5, 0.93);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: zoom-out;
+  animation: blog-lightbox-in 160ms ease-out;
+}
+.blog-lightbox__img {
+  max-width: 95vw;
+  max-height: 92vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border: 1px solid rgba(227, 227, 227, 0.18);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+}
+.blog-lightbox__close {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 1px solid rgba(227, 227, 227, 0.25);
+  color: #e3e3e3;
+  cursor: pointer;
+}
+.blog-lightbox__close:hover {
+  border-color: #f09f26;
+  color: #f09f26;
+}
+.blog-lightbox__close:focus-visible {
+  outline: 2px solid #f09f26;
+  outline-offset: 2px;
+}
+
+@keyframes blog-lightbox-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blog-lightbox { animation: none; }
+}
+
 /* ── Not-found / loading ──────────────────────────────────────────────────── */
 .ppv2 .blog-state {
   padding: 96px 0;
