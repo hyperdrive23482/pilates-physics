@@ -17,6 +17,7 @@ const TABS = [
   { id: 'questions', label: 'Pre-workshop Q&A' },
   { id: 'survey', label: 'Post-workshop survey' },
   { id: 'feedback', label: 'Feedback' },
+  { id: 'enrolled', label: 'Enrolled users' },
 ]
 
 export default function AdminWorkshopEdit() {
@@ -187,6 +188,8 @@ export default function AdminWorkshopEdit() {
         {!isNew && tab === 'survey' && <SurveyTab workshop={workshop} onSaved={refetch} />}
 
         {!isNew && tab === 'feedback' && <FeedbackTab workshop={workshop} />}
+
+        {!isNew && tab === 'enrolled' && <EnrolledUsersTab workshopId={workshop?.id} />}
       </main>
     </div>
   )
@@ -324,6 +327,112 @@ function QuestionsList({ workshopId }) {
           <p style={{ margin: '0.2rem 0 0', fontSize: '0.75rem', color: 'var(--color-ink-muted)' }}>
             {new Date(q.submitted_at).toLocaleString()} · {q.is_answered ? 'answered' : 'unanswered'}
           </p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function enrolleeName(e) {
+  const full = `${e.first_name ?? ''} ${e.last_name ?? ''}`.trim()
+  if (full) return full
+  return e.email || '(unknown user)'
+}
+
+function EnrolledUsersTab({ workshopId }) {
+  const { request } = useAdminAPI()
+  const [rows, setRows] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    if (!workshopId) return
+    let cancelled = false
+    setLoading(true)
+    setError(null)
+    request(`/api/admin/workshop-enrollments?webinar_id=${encodeURIComponent(workshopId)}`)
+      .then((data) => {
+        if (cancelled) return
+        setRows(data?.enrollments ?? [])
+        setLoading(false)
+      })
+      .catch((err) => {
+        if (cancelled) return
+        setError(err.message)
+        setRows([])
+        setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [workshopId, request])
+
+  if (loading) return <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>Loading…</p>
+  if (error) return <p style={{ color: '#ff7d7d', fontSize: '0.85rem' }}>{error}</p>
+  if (rows.length === 0) {
+    return <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>No one is enrolled yet.</p>
+  }
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+      <p style={{ margin: '0 0 0.2rem', fontSize: '0.8rem', color: 'var(--color-ink-muted)' }}>
+        {rows.length} enrolled
+      </p>
+      {rows.map((e) => (
+        <div
+          key={e.id}
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            gap: '1rem',
+            background: 'var(--color-surface)',
+            border: '1px solid var(--color-rule)',
+            padding: '0.9rem 1rem',
+            fontSize: '0.9rem',
+            color: 'var(--color-ink)',
+          }}
+        >
+          <div style={{ minWidth: 0 }}>
+            <p style={{ margin: 0 }}>{enrolleeName(e)}</p>
+            {e.email && (
+              <p
+                style={{
+                  margin: '0.25rem 0 0',
+                  fontSize: '0.8rem',
+                  color: 'var(--color-ink-muted)',
+                  wordBreak: 'break-all',
+                }}
+              >
+                {e.email}
+              </p>
+            )}
+          </div>
+          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+            <span
+              style={{
+                display: 'inline-block',
+                fontSize: '0.7rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+                color: 'var(--color-ink-muted)',
+                border: '1px solid var(--color-rule)',
+                borderRadius: '999px',
+                padding: '0.1rem 0.5rem',
+              }}
+            >
+              {e.source}
+            </span>
+            {e.granted_at && (
+              <p style={{ margin: '0.35rem 0 0', fontSize: '0.75rem', color: 'var(--color-ink-muted)' }}>
+                Enrolled {new Date(e.granted_at).toLocaleDateString()}
+              </p>
+            )}
+            {e.expires_at && (
+              <p style={{ margin: '0.2rem 0 0', fontSize: '0.75rem', color: 'var(--color-ink-muted)' }}>
+                Expires {new Date(e.expires_at).toLocaleDateString()}
+              </p>
+            )}
+          </div>
         </div>
       ))}
     </div>
