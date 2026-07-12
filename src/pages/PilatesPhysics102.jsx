@@ -79,10 +79,11 @@ const FAQ = [
     q: 'Do I need to have taken Pilates Physics 101?',
     a: (
       <>
-        I recommend taking Pilates Physics 101, which introduces the framework
-        and physics on the reformer before this course. It's often easier to
-        understand the concepts on equipment you are <i>very</i> familiar with,
-        which for most of us is the reformer.
+        No. 101 and 102 teach the same framework applied to different loading
+        scenarios, so you can start with either one. Many people find it easiest
+        to meet the concepts on the reformer first in 101, since it's the
+        equipment they know <i>very</i> well, but 102 stands on its own if the
+        chair and cadillac are where you'd rather begin.
       </>
     ),
   },
@@ -92,7 +93,7 @@ const FAQ = [
   },
   {
     q: 'Do I need a cadillac and chair in my studio?',
-    a: 'No. The workshop is conceptual. We cover cross-brand variation on the chair (Wunda, EXO/HiPro, Combo) so the principles apply wherever you teach.',
+    a: 'No. The workshop is conceptual so the principles apply wherever you teach.',
   },
   {
     q: 'Is this for classical or contemporary instructors?',

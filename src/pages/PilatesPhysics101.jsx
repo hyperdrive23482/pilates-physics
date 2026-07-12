@@ -85,7 +85,7 @@ const INCLUDED = [
 const FAQ = [
   {
     q: "I've never taken a course on Pilates Physics before, where should I start?",
-    a: 'Here! Pilates Physics 101 introduces the framework for adapting each exercise, the factors to consider when evaluating the load scenario, and practical examples even the most math-averse Pilates instructor can grasp. After this course you can take Pilates Physics 102: Chair and Cadillac, and Pilates Physics 201: Advanced Loading Concepts.',
+    a: 'Here! Pilates Physics 101 introduces the framework for adapting each exercise, the factors to consider when evaluating the load scenario, and practical examples even the most math-averse Pilates instructor can grasp. All based on the reformer. Pilates Physics 102 covers the same framework with the different loading applications of the chair and cadillac.',
   },
   {
     q: 'Do I need an engineering background?',
@@ -106,6 +106,29 @@ const FAQ = [
   {
     q: "What if I can't make the live session?",
     a: 'The recording is included with every registration. You can submit questions ahead of time. Of course, a big value of the workshop is the live Q&A, but I understand the difficulties of scheduling.',
+  },
+]
+
+const TESTIMONIALS = [
+  {
+    name: 'Jaylene',
+    quote:
+      "This workshop was some of the best money I've ever spent. What you taught us was so incredibly valuable and insightful and will forever change how I teach. I can't recommend it enough for every instructor. Thank you!",
+  },
+  {
+    name: 'Becca',
+    quote:
+      "I really appreciate that you're putting this kind of content out there and you are a fantastic teacher. You break it down into very simple ideas, and most importantly, tell us how we can apply it to our work in the studio.",
+  },
+  {
+    name: 'Suzanne',
+    quote:
+      "You took an intimidating topic (Physics!) and made it so understandable in a Pilates application. This workshop is a MUST! We will be recommending this to our teacher trainers, new instructors, AND our maintenance technician students! Loved it!",
+  },
+  {
+    name: 'Amanda',
+    quote:
+      "I feel empowered to make more equipment modifications to better fit MY body's needs rather than just following along with a room full of completely different bodies than mine.",
   },
 ]
 
@@ -226,11 +249,29 @@ export default function PilatesPhysics101() {
         </div>
       </section>
 
-      {/* ── § 03 Framework ───────────────────────────────────────────────── */}
+      {/* ── § 03 Testimonials ────────────────────────────────────────────── */}
+      <section className="section-pad section--inset workshop-testimonials">
+        <div className="container">
+          <div className="kicker">§ 03 · What attendees are saying</div>
+          <h2 className="workshop-testimonials__head">
+            From the people who <span className="italic accent">took it.</span>
+          </h2>
+          <div className="workshop-testimonials__grid">
+            {TESTIMONIALS.map((t) => (
+              <figure className="quote-card" key={t.name}>
+                <p>"{t.quote}"</p>
+                <figcaption className="quote-card__name mono accent">{t.name}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── § 04 Framework ───────────────────────────────────────────────── */}
       <section className="section-pad section--inset workshop-framework">
         <div className="container">
           <div className="workshop-framework__head-wrap">
-            <div className="kicker">§ 03 · The Framework</div>
+            <div className="kicker">§ 04 · The Framework</div>
             <h2 className="workshop-framework__head">
               A three-part lens. For <span className="italic accent">every exercise.</span>
             </h2>
@@ -261,11 +302,11 @@ export default function PilatesPhysics101() {
         </div>
       </section>
 
-      {/* ── § 04 Five components of reformer physics ─────────────────────── */}
+      {/* ── § 05 Five components of reformer physics ─────────────────────── */}
       <section className="section-pad-l section--inset workshop-topics">
         <div className="container">
           <div className="workshop-topics__head">
-            <div className="kicker">§ 04 · What you'll learn</div>
+            <div className="kicker">§ 05 · What you'll learn</div>
             <h2 className="workshop-topics__title">
               Five mechanical components. One <span className="italic accent">working model.</span>
             </h2>
@@ -292,12 +333,12 @@ export default function PilatesPhysics101() {
         </div>
       </section>
 
-      {/* ── § 05 Details + Register ──────────────────────────────────────── */}
+      {/* ── § 06 Details + Register ──────────────────────────────────────── */}
       <section className="section-pad section--inset workshop-details">
         <div className="container">
           <div className="workshop-details__grid">
             <div>
-              <div className="kicker">§ 05 · Details</div>
+              <div className="kicker">§ 06 · Details</div>
               <h2 className="workshop-details__head">The <span className="italic accent">specs.</span></h2>
 
               <dl className="spec-list">
@@ -329,7 +370,7 @@ export default function PilatesPhysics101() {
         </div>
       </section>
 
-      {/* ── § 06 Instructor ──────────────────────────────────────────────── */}
+      {/* ── § 07 Instructor ──────────────────────────────────────────────── */}
       <section className="section-pad section--inset workshop-instructor">
         <div className="container">
           <div className="workshop-instructor__grid">
@@ -342,7 +383,7 @@ export default function PilatesPhysics101() {
             </div>
 
             <div className="workshop-instructor__body">
-              <div className="kicker">§ 06 · Your Instructor</div>
+              <div className="kicker">§ 07 · Your Instructor</div>
               <h2 className="workshop-instructor__head">
                 Meet <span className="italic accent">Kaleen.</span>
               </h2>
@@ -366,10 +407,10 @@ export default function PilatesPhysics101() {
         </div>
       </section>
 
-      {/* ── § 07 What's included ─────────────────────────────────────────── */}
+      {/* ── § 08 What's included ─────────────────────────────────────────── */}
       <section className="section-pad section--inset workshop-included">
         <div className="container">
-          <div className="kicker">§ 07 · What's included</div>
+          <div className="kicker">§ 08 · What's included</div>
           <h2 className="workshop-included__head">
             Every registration <span className="italic accent">includes.</span>
           </h2>
@@ -390,10 +431,10 @@ export default function PilatesPhysics101() {
         </div>
       </section>
 
-      {/* ── § 08 FAQ ─────────────────────────────────────────────────────── */}
+      {/* ── § 09 FAQ ─────────────────────────────────────────────────────── */}
       <section className="section-pad section--inset workshop-faq">
         <div className="container container--narrow">
-          <div className="kicker">§ 08 · Common questions</div>
+          <div className="kicker">§ 09 · Common questions</div>
           <h2 className="workshop-faq__head">
             Frequently <span className="italic accent">asked.</span>
           </h2>
@@ -415,10 +456,10 @@ export default function PilatesPhysics101() {
         </div>
       </section>
 
-      {/* ── § 09 Final CTA ───────────────────────────────────────────────── */}
+      {/* ── § 10 Final CTA ───────────────────────────────────────────────── */}
       <section className="workshop-cta section--inset">
         <div className="container container--narrow">
-          <div className="kicker">§ 09 · Register</div>
+          <div className="kicker">§ 10 · Register</div>
           <h2 className="workshop-cta__head">
             Live. Interactive. Built for <span className="italic accent">working instructors.</span>
           </h2>
