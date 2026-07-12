@@ -13,6 +13,7 @@ const SLUG_TO_FILE = {
   'animation-elastic-plastic': 'elastic-plastic-animation.html',
   'animation-bridge-knee-torque': 'bridge-knee-torque.html',
   'animation-feet-in-straps-hip-torque': 'feet-in-straps-hip-torque.html',
+  'animation-chair-pedal-force': 'chair-pedal-force.html',
 }
 
 // Returns the raw HTML for an animation tool, gated on user entitlement.

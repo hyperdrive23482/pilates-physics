@@ -19,6 +19,7 @@ const REGISTRY = {
   'animation-elastic-plastic': animation('animation-elastic-plastic'),
   'animation-bridge-knee-torque': animation('animation-bridge-knee-torque'),
   'animation-feet-in-straps-hip-torque': animation('animation-feet-in-straps-hip-torque'),
+  'animation-chair-pedal-force': animation('animation-chair-pedal-force'),
 }
 
 export default function ToolHost({ workshop }) {

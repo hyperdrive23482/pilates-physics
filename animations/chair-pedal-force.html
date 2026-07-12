@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Force a Chair Pedal Delivers Through Its Arc</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --border: #2a2a2a;
+    --text: #e8e4dc;
+    --muted: #6b6660;
+    --accent-spring: #c8a96e;   /* spring force */
+    --accent-deliv: #6e9ec8;    /* delivered / tangential */
+    --accent-vert: #EF9F27;     /* vertical component */
+    --accent-rad: #c8775e;      /* radial, lost to hinge */
+    --track: #232323;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 400;
+    color: #EF9F27;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  h1 em { font-style: italic; color: var(--accent-spring); }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 28px;
+    max-width: 660px;
+    line-height: 1.65;
+  }
+
+  /* Controls panel */
+  .controls-panel {
+    width: 100%;
+    max-width: 900px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 28px 20px;
+    margin-bottom: 16px;
+  }
+
+  .controls-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px 32px;
+  }
+  @media (max-width: 720px) {
+    .controls-grid { grid-template-columns: 1fr; }
+  }
+
+  .ctrl-group { display: flex; flex-direction: column; }
+
+  .ctrl-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .ctrl-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .ctrl-readout {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+  }
+
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--track);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent-spring);
+    border: none;
+    cursor: pointer;
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent-spring);
+    border: none;
+    cursor: pointer;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .graph-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    padding: 20px 40px 12px;
+  }
+
+  .mech-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 12px 40px 16px;
+  }
+
+  canvas { width: 100%; height: auto; display: block; }
+
+  .legend {
+    display: flex;
+    gap: 28px;
+    margin-top: 22px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .legend-swatch { width: 30px; height: 3px; border-radius: 2px; }
+  .legend-swatch.spring { background: var(--accent-spring); }
+  .legend-swatch.deliv  { background: var(--accent-deliv); }
+  .legend-swatch.vert   { background: var(--accent-vert); }
+  .legend-swatch.rad    {
+    background: repeating-linear-gradient(90deg, var(--accent-rad) 0 5px, transparent 5px 9px);
+    height: 2px;
+  }
+
+  .scrub-row {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .scrub-row .ctrl-label { white-space: nowrap; }
+  .scrub-row input[type=range] { flex: 1; }
+
+  .controls {
+    display: flex;
+    gap: 14px;
+    margin-top: 20px;
+    justify-content: center;
+  }
+
+  button {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 12px 32px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  button:hover { border-color: var(--accent-spring); color: var(--accent-spring); }
+
+  button.primary {
+    background: var(--accent-spring);
+    border-color: var(--accent-spring);
+    color: #0e0e0e;
+    font-weight: 500;
+  }
+
+  button.primary:hover { background: #d4b87a; }
+
+  .work-row {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 22px;
+  }
+
+  .work-cell {
+    flex: 1;
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border-right: 1px solid var(--border);
+  }
+
+  .work-cell:last-child { border-right: none; }
+
+  .work-cell.center {
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 180px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .work-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .work-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    line-height: 1.1;
+  }
+
+  .work-value .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: 6px;
+    letter-spacing: 0.04em;
+  }
+
+  .work-value.spring { color: var(--accent-spring); }
+  .work-value.deliv  { color: var(--accent-deliv); }
+  .work-value.vert   { color: var(--accent-vert); }
+  .work-value.horiz  { color: var(--text); }
+  .work-value.pct    { color: var(--text); }
+  .work-value.center-val { color: var(--text); font-size: 26px; }
+
+  .notes {
+    width: 100%;
+    max-width: 900px;
+    margin-top: 28px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    background: rgba(255,255,255,0.015);
+  }
+
+  .notes-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .notes ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .notes li {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text);
+    padding-left: 18px;
+    position: relative;
+  }
+
+  .notes li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 8px;
+    height: 1px;
+    background: var(--accent-spring);
+  }
+
+  .notes-caveat {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+    font-style: italic;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>Force a Chair Pedal <em>Delivers</em> Through Its Arc</h1>
+<p class="subtitle">The spring pulls along a fixed line, but only the part aimed along the pedal's direction of travel reaches the body. Watch how much of the spring force is delivered, and where the lift peaks, as the pedal sweeps its arc.</p>
+
+<div class="controls-panel">
+  <div class="controls-grid">
+    <div class="ctrl-group">
+      <div class="ctrl-head"><span class="ctrl-label">Pedal arm length R</span><span class="ctrl-readout" id="ro-R">14.0 in</span></div>
+      <input type="range" id="sl-R" min="8" max="22" step="0.5" value="14">
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-head"><span class="ctrl-label">Spring mount X</span><span class="ctrl-readout" id="ro-Mx">6.0 in</span></div>
+      <input type="range" id="sl-Mx" min="-14" max="16" step="0.5" value="6">
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-head"><span class="ctrl-label">Spring mount Y</span><span class="ctrl-readout" id="ro-My">-12.0 in</span></div>
+      <input type="range" id="sl-My" min="-20" max="6" step="0.5" value="-12">
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-head"><span class="ctrl-label">Rest length L&#8320;</span><span class="ctrl-readout" id="ro-L0">10.0 in</span></div>
+      <input type="range" id="sl-L0" min="2" max="16" step="0.5" value="10">
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-head"><span class="ctrl-label">Spring constant k</span><span class="ctrl-readout" id="ro-k">4.0 lb/in</span></div>
+      <input type="range" id="sl-k" min="0.5" max="12" step="0.5" value="4">
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-head"><span class="ctrl-label">Initial tension b</span><span class="ctrl-readout" id="ro-b">3.0 lb</span></div>
+      <input type="range" id="sl-b" min="0" max="15" step="0.5" value="3">
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="graph-wrap">
+    <canvas id="graph" width="780" height="360"></canvas>
+  </div>
+  <div class="mech-wrap">
+    <canvas id="mech" width="780" height="420"></canvas>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-swatch spring"></span> Spring force</div>
+  <div class="legend-item"><span class="legend-swatch deliv"></span> Delivered (tangential)</div>
+  <div class="legend-item"><span class="legend-swatch vert"></span> Vertical component</div>
+  <div class="legend-item"><span class="legend-swatch rad"></span> Lost to hinge (radial)</div>
+</div>
+
+<div class="scrub-row">
+  <span class="ctrl-label">Arm angle &#966;</span>
+  <input type="range" id="sl-phi" min="2" max="50" step="0.1" value="2">
+  <span class="ctrl-readout" id="ro-phi">2.0&#176;</span>
+</div>
+
+<div class="controls">
+  <button class="primary" id="btn-play">Play</button>
+  <button id="btn-reset">Reset</button>
+</div>
+
+<div class="work-row">
+  <div class="work-cell">
+    <span class="work-label">Spring force</span>
+    <span class="work-value spring" id="val-spring">22.3 lb</span>
+  </div>
+  <div class="work-cell center">
+    <span class="work-label">Arm angle &#966;</span>
+    <span class="work-value center-val" id="val-phi">2.0&#176;</span>
+  </div>
+  <div class="work-cell">
+    <span class="work-label">Delivered force</span>
+    <span class="work-value deliv" id="val-deliv">18.4 lb</span>
+  </div>
+</div>
+
+<div class="work-row" style="margin-top:0; border-top:none; border-radius:0 0 8px 8px;">
+  <div class="work-cell">
+    <span class="work-label">Vertical force</span>
+    <span class="work-value vert" id="val-vert">18.3 lb</span>
+  </div>
+  <div class="work-cell">
+    <span class="work-label">Horizontal force</span>
+    <span class="work-value horiz" id="val-horiz">0.6 lb</span>
+  </div>
+  <div class="work-cell">
+    <span class="work-label">Delivered % of spring</span>
+    <span class="work-value pct" id="val-pct">82%</span>
+  </div>
+</div>
+
+<div class="notes">
+  <div class="notes-title">What you are seeing</div>
+  <ul>
+    <li>The delivered (tangential) force is the spring force projected onto the pedal's line of travel, so it is always less than or equal to the spring force. The gap is force lost into the hinge.</li>
+    <li>The angle between the spring line and the tangent sets what fraction of the spring is delivered. The right-angle mark at the pedal shows the tangent is always perpendicular to the arm.</li>
+    <li>Vertical force equals the delivered force times cos&#966;. Low in the arc the travel points nearly straight up, but the delivered force is smaller, while higher in the arc the delivered force grows yet cos&#966; shrinks. Those two effects trade off, so the lift peaks in the middle of the travel.</li>
+  </ul>
+  <p class="notes-caveat">
+    These numbers illustrate how a spring's line of pull and the pedal's geometry decide how much support reaches the body and where it peaks. Real apparatus varies, and a full model would also account for the body's own leverage.
+  </p>
+</div>
+
+<script>
+  // ---- Canvases ----
+  const GC = document.getElementById('graph'), gc = GC.getContext('2d');
+  const MC = document.getElementById('mech'),  mc = MC.getContext('2d');
+  const GW = 780, GH = 360;
+  const MW = 780, MH = 420;
+
+  // ---- Colors (mirror the CSS custom properties for canvas use) ----
+  const C_SPRING = '#c8a96e';
+  const C_DELIV  = '#6e9ec8';
+  const C_VERT   = '#EF9F27';
+  const C_RAD    = '#c8775e';
+  const C_GRID   = 'rgba(255,255,255,0.045)';
+  const C_MUTED  = '#6b6660';
+  const C_TEXT   = '#e8e4dc';
+  const C_ARM    = '#4a4640';
+
+  // ---- Sweep range (degrees) ----
+  const PHI_MIN = 2, PHI_MAX = 50;
+
+  // ---- Parameters ----
+  const DEFAULTS = { R: 14, Mx: 6, My: -12, L0: 10, k: 4, b: 3 };
+  let params = { ...DEFAULTS };
+
+  // =====================================================================
+  //  THE PHYSICS  ── one pure function, implemented exactly to spec.
+  //  Standard math axes here (x right, y up); the y-flip happens only at
+  //  draw time. Hinge / pivot sits at the origin.
+  // =====================================================================
+  function computePedalForce(phiDeg, p) {
+    const phi = phiDeg * Math.PI / 180;
+    const cos = Math.cos(phi), sin = Math.sin(phi);
+
+    // Pedal position on the arc.
+    const P = { x: p.R * cos, y: p.R * sin };
+
+    // Spring vector: from pedal toward the fixed mount.
+    const S = { x: p.Mx - P.x, y: p.My - P.y };
+    const Smag = Math.hypot(S.x, S.y);
+
+    // Stretch (a spring cannot push) and Hooke's law with initial tension.
+    const stretch = Math.max(0, Smag - p.L0);
+    const Fspring = p.k * stretch + p.b;
+
+    // Spring force vector on the pedal, pointing toward the mount.
+    const Sunit = Smag > 0 ? { x: S.x / Smag, y: S.y / Smag } : { x: 0, y: 0 };
+    const Fvec = { x: Fspring * Sunit.x, y: Fspring * Sunit.y };
+
+    // Tangent = direction of travel (perpendicular to the arm). Arm = radial.
+    const tan = { x: -sin, y: cos };
+    const arm = { x: cos, y: sin };
+
+    // Delivered force: spring force projected onto the tangent. Sign tells
+    // assisting (+) vs resisting (-).
+    const Ftang = Fvec.x * tan.x + Fvec.y * tan.y;
+    const FtangVec = { x: Ftang * tan.x, y: Ftang * tan.y };
+
+    // Body-facing components of the delivered vector.
+    const Fvertical   = FtangVec.y;              // = Ftang * cos(phi)
+    const Fhorizontal = FtangVec.x;              // = Ftang * (-sin(phi))
+
+    // Force lost into the hinge: spring force projected onto the arm.
+    const Fradial = Fvec.x * arm.x + Fvec.y * arm.y;
+
+    const deliveredPct = Fspring > 0 ? (Ftang / Fspring) * 100 : 0;
+
+    return {
+      phiDeg, phi, P, S, Smag, stretch, Fspring, Fvec,
+      tan, arm, Ftang, FtangVec, Fvertical, Fhorizontal, Fradial, deliveredPct
+    };
+  }
+
+  // Scan the sweep and return the angle of largest |vertical force|.
+  function verticalPeakPhi(p) {
+    let best = -1, bestPhi = PHI_MIN;
+    for (let phi = PHI_MIN; phi <= PHI_MAX + 1e-9; phi += 0.25) {
+      const v = Math.abs(computePedalForce(phi, p).Fvertical);
+      if (v > best) { best = v; bestPhi = phi; }
+    }
+    return bestPhi;
+  }
+
+  // Largest spring force over the sweep (used to scale the graph y-axis).
+  function maxSpringForce(p) {
+    let m = 0;
+    for (let phi = PHI_MIN; phi <= PHI_MAX + 1e-9; phi += 0.5) {
+      m = Math.max(m, computePedalForce(phi, p).Fspring);
+    }
+    return m;
+  }
+
+  function niceCeil(v) {
+    if (v <= 0) return 10;
+    const pow = Math.pow(10, Math.floor(Math.log10(v)));
+    const n = v / pow;
+    const step = n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10;
+    return step * pow;
+  }
+
+  // ---- Current derived state (recomputed on any parameter change) ----
+  let phi = PHI_MIN;
+  let yMax = 60;            // graph force axis top
+  let peakPhi = 26;        // vertical-force peak angle
+
+  function recomputeDerived() {
+    yMax = niceCeil(maxSpringForce(params) * 1.08);
+    peakPhi = verticalPeakPhi(params);
+  }
+
+  // =====================================================================
+  //  GRAPH  (force vs. arm angle)
+  // =====================================================================
+  const gP = { left: 62, right: 24, top: 26, bottom: 52 };
+  const gI = { x: gP.left, y: gP.top, w: GW - gP.left - gP.right, h: GH - gP.top - gP.bottom };
+
+  const phiToGraph = (d) => gI.x + ((d - PHI_MIN) / (PHI_MAX - PHI_MIN)) * gI.w;
+  const forceToGraph = (f) => gI.y + gI.h - (f / yMax) * gI.h;
+
+  function drawGraphBase() {
+    gc.clearRect(0, 0, GW, GH);
+
+    // horizontal grid + y ticks (force, lb)
+    gc.font = '11px "DM Mono", monospace';
+    gc.textBaseline = 'middle';
+    const yStep = yMax / 5;
+    for (let f = 0; f <= yMax + 1e-9; f += yStep) {
+      const y = forceToGraph(f);
+      gc.strokeStyle = C_GRID; gc.lineWidth = 1;
+      gc.beginPath(); gc.moveTo(gI.x, y); gc.lineTo(gI.x + gI.w, y); gc.stroke();
+      gc.fillStyle = C_MUTED; gc.textAlign = 'right';
+      gc.fillText(Math.round(f), gI.x - 10, y);
+    }
+
+    // vertical grid + x ticks (angle, deg)
+    gc.textBaseline = 'top'; gc.textAlign = 'center';
+    [2, 10, 20, 30, 40, 50].forEach((d) => {
+      const x = phiToGraph(d);
+      gc.strokeStyle = C_GRID; gc.lineWidth = 1;
+      gc.beginPath(); gc.moveTo(x, gI.y); gc.lineTo(x, gI.y + gI.h); gc.stroke();
+      gc.fillStyle = C_MUTED;
+      gc.fillText(d + '°', x, gI.y + gI.h + 8);
+    });
+
+    // axis titles
+    gc.fillStyle = C_MUTED;
+    gc.font = '11px "DM Mono", monospace';
+    gc.textAlign = 'center'; gc.textBaseline = 'top';
+    gc.fillText('ARM ANGLE φ', gI.x + gI.w / 2, gI.y + gI.h + 26);
+    gc.save();
+    gc.translate(16, gI.y + gI.h / 2);
+    gc.rotate(-Math.PI / 2);
+    gc.textBaseline = 'middle';
+    gc.fillText('FORCE (LB)', 0, 0);
+    gc.restore();
+  }
+
+  // Plot a curve of magnitudes across the sweep.
+  function drawCurve(fn, color, width) {
+    gc.strokeStyle = color; gc.lineWidth = width;
+    gc.beginPath();
+    let first = true;
+    for (let d = PHI_MIN; d <= PHI_MAX + 1e-9; d += 0.5) {
+      const x = phiToGraph(d);
+      const y = forceToGraph(Math.min(fn(d), yMax));
+      if (first) { gc.moveTo(x, y); first = false; } else { gc.lineTo(x, y); }
+    }
+    gc.stroke();
+  }
+
+  function drawGraph() {
+    drawGraphBase();
+
+    const springAt = (d) => computePedalForce(d, params).Fspring;
+    const delivAt  = (d) => Math.abs(computePedalForce(d, params).Ftang);
+    const vertAt   = (d) => Math.abs(computePedalForce(d, params).Fvertical);
+
+    drawCurve(springAt, C_SPRING, 2.4);
+    drawCurve(delivAt,  C_DELIV,  2.4);
+    drawCurve(vertAt,   C_VERT,   2.4);
+
+    // vertical-force peak marker
+    const px = phiToGraph(peakPhi);
+    const py = forceToGraph(Math.min(vertAt(peakPhi), yMax));
+    gc.strokeStyle = 'rgba(239,159,39,0.35)'; gc.lineWidth = 1; gc.setLineDash([3, 4]);
+    gc.beginPath(); gc.moveTo(px, gI.y + gI.h); gc.lineTo(px, py); gc.stroke();
+    gc.setLineDash([]);
+    gc.fillStyle = C_VERT;
+    gc.beginPath(); gc.arc(px, py, 4, 0, Math.PI * 2); gc.fill();
+    gc.font = '10px "DM Mono", monospace'; gc.fillStyle = C_VERT;
+    gc.textAlign = px > GW - 90 ? 'right' : 'left'; gc.textBaseline = 'bottom';
+    gc.fillText('peak ' + peakPhi.toFixed(0) + '°', px + (px > GW - 90 ? -8 : 8), py - 8);
+
+    // current-angle tracer
+    const tx = phiToGraph(phi);
+    gc.strokeStyle = 'rgba(255,255,255,0.28)'; gc.lineWidth = 1; gc.setLineDash([2, 3]);
+    gc.beginPath(); gc.moveTo(tx, gI.y); gc.lineTo(tx, gI.y + gI.h); gc.stroke();
+    gc.setLineDash([]);
+    [[springAt, C_SPRING], [delivAt, C_DELIV], [vertAt, C_VERT]].forEach(([fn, col]) => {
+      const y = forceToGraph(Math.min(fn(phi), yMax));
+      gc.fillStyle = col;
+      gc.beginPath(); gc.arc(tx, y, 3.5, 0, Math.PI * 2); gc.fill();
+    });
+  }
+
+  // =====================================================================
+  //  MECHANISM  (side profile)
+  // =====================================================================
+  // World -> screen transform fitted to the current parameters, y flipped.
+  function makeTransform() {
+    const reach = params.R;
+    const minX = Math.min(0, params.Mx, reach) - 3;
+    const maxX = Math.max(0, params.Mx, reach) + 7;
+    const topY = reach * Math.sin(PHI_MAX * Math.PI / 180) + 3;
+    const minY = Math.min(0, params.My, -1) - 3;
+    const maxY = Math.max(topY, 3);
+    const pad = 34;
+    const s = Math.min((MW - 2 * pad) / (maxX - minX), (MH - 2 * pad) / (maxY - minY));
+    const usedW = (maxX - minX) * s, usedH = (maxY - minY) * s;
+    const ox = pad + (MW - 2 * pad - usedW) / 2 - minX * s;
+    const oy = pad + (MH - 2 * pad - usedH) / 2 + maxY * s;
+    return {
+      s,
+      X: (x) => ox + x * s,
+      Y: (y) => oy - y * s,
+    };
+  }
+
+  function drawArrow(sx, sy, dx, dy, color, opts = {}) {
+    const len = Math.hypot(dx, dy);
+    if (len < 0.5) return;
+    const ux = dx / len, uy = dy / len;
+    const ex = sx + dx, ey = sy + dy;
+    mc.strokeStyle = color; mc.fillStyle = color;
+    mc.lineWidth = opts.width || 2.5;
+    if (opts.dashed) mc.setLineDash([5, 4]);
+    mc.beginPath(); mc.moveTo(sx, sy); mc.lineTo(ex, ey); mc.stroke();
+    mc.setLineDash([]);
+    // arrowhead
+    const h = opts.head || 9, w = (opts.head || 9) * 0.55;
+    const px = -uy, py = ux;
+    mc.beginPath();
+    mc.moveTo(ex, ey);
+    mc.lineTo(ex - ux * h + px * w, ey - uy * h + py * w);
+    mc.lineTo(ex - ux * h - px * w, ey - uy * h - py * w);
+    mc.closePath(); mc.fill();
+  }
+
+  // Coil spring rendered between two screen points; coils spread as it stretches.
+  function drawCoil(ax, ay, bx, by, color) {
+    const dx = bx - ax, dy = by - ay, len = Math.hypot(dx, dy);
+    if (len < 1) return;
+    const ux = dx / len, uy = dy / len;
+    const px = -uy, py = ux;
+    const lead = Math.min(16, len * 0.18);
+    const coils = 9, amp = 6;
+    const midLen = len - 2 * lead;
+    mc.strokeStyle = color; mc.lineWidth = 2; mc.setLineDash([]);
+    mc.beginPath();
+    mc.moveTo(ax, ay);
+    const s0x = ax + ux * lead, s0y = ay + uy * lead;
+    mc.lineTo(s0x, s0y);
+    const steps = coils * 12;
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const off = Math.sin(t * coils * Math.PI * 2) * amp;
+      const cx = s0x + ux * (t * midLen) + px * off;
+      const cy = s0y + uy * (t * midLen) + py * off;
+      mc.lineTo(cx, cy);
+    }
+    mc.lineTo(bx, by);
+    mc.stroke();
+  }
+
+  function drawMechanism() {
+    mc.clearRect(0, 0, MW, MH);
+    const T = makeTransform();
+    const st = computePedalForce(phi, params);
+
+    // ground / frame suggestion
+    const groundY = T.Y(Math.min(0, params.My) - 1.5);
+    mc.strokeStyle = 'rgba(255,255,255,0.05)'; mc.lineWidth = 1;
+    mc.beginPath(); mc.moveTo(30, groundY); mc.lineTo(MW - 30, groundY); mc.stroke();
+
+    const hx = T.X(0), hy = T.Y(0);
+    const mx = T.X(params.Mx), my = T.Y(params.My);
+
+    // faint arc guide (full pedal path across the sweep)
+    mc.strokeStyle = 'rgba(255,255,255,0.10)'; mc.lineWidth = 1.5; mc.setLineDash([3, 4]);
+    mc.beginPath();
+    for (let d = PHI_MIN; d <= PHI_MAX + 1e-9; d += 1) {
+      const r = d * Math.PI / 180;
+      const x = T.X(params.R * Math.cos(r)), y = T.Y(params.R * Math.sin(r));
+      if (d === PHI_MIN) mc.moveTo(x, y); else mc.lineTo(x, y);
+    }
+    mc.stroke(); mc.setLineDash([]);
+
+    // mount anchor
+    mc.fillStyle = C_MUTED;
+    mc.beginPath(); mc.arc(mx, my, 4, 0, Math.PI * 2); mc.fill();
+    mc.font = '10px "DM Mono", monospace'; mc.fillStyle = C_MUTED;
+    mc.textAlign = 'center'; mc.textBaseline = 'top';
+    mc.fillText('mount', mx, my + 8);
+
+    // spring coil (mount -> pedal)
+    const px = T.X(st.P.x), py = T.Y(st.P.y);
+    drawCoil(mx, my, px, py, C_SPRING);
+
+    // arm (hinge -> pedal)
+    mc.strokeStyle = C_ARM; mc.lineWidth = 4; mc.lineCap = 'round';
+    mc.beginPath(); mc.moveTo(hx, hy); mc.lineTo(px, py); mc.stroke();
+    mc.lineCap = 'butt';
+
+    // hinge
+    mc.fillStyle = C_TEXT;
+    mc.beginPath(); mc.arc(hx, hy, 5, 0, Math.PI * 2); mc.fill();
+    mc.strokeStyle = '#0e0e0e'; mc.lineWidth = 2; mc.stroke();
+    mc.fillStyle = C_MUTED; mc.font = '10px "DM Mono", monospace';
+    mc.textAlign = 'right'; mc.textBaseline = 'middle';
+    mc.fillText('hinge', hx - 10, hy);
+
+    // pedal plate (perpendicular to the arm)
+    const armS = { x: Math.cos(st.phi), y: -Math.sin(st.phi) };   // arm dir in screen space
+    const tanS = { x: -Math.sin(st.phi), y: -Math.cos(st.phi) };  // tangent dir in screen space
+    const plate = 15;
+    mc.strokeStyle = C_TEXT; mc.lineWidth = 5; mc.lineCap = 'round';
+    mc.beginPath();
+    mc.moveTo(px - tanS.x * plate, py - tanS.y * plate);
+    mc.lineTo(px + tanS.x * plate, py + tanS.y * plate);
+    mc.stroke(); mc.lineCap = 'butt';
+
+    // right-angle mark between arm and tangent at the pedal
+    const m = 11;
+    // corner uses inward arm direction (toward hinge) and tangent
+    const aInx = -armS.x, aIny = -armS.y;
+    mc.strokeStyle = 'rgba(255,255,255,0.4)'; mc.lineWidth = 1;
+    mc.beginPath();
+    mc.moveTo(px + aInx * m, py + aIny * m);
+    mc.lineTo(px + aInx * m + tanS.x * m, py + aIny * m + tanS.y * m);
+    mc.lineTo(px + tanS.x * m, py + tanS.y * m);
+    mc.stroke();
+
+    // ---- force vectors from the pedal (screen dy flips sign) ----
+    const VSCALE = 1.9;   // px per lb
+    // radial (lost to hinge) - muted dashed, drawn first/behind
+    drawArrow(px, py, st.Fvec.x * VSCALE - st.Ftang * st.tan.x * VSCALE,
+                       -(st.Fvec.y * VSCALE - st.Ftang * st.tan.y * VSCALE),
+              C_RAD, { dashed: true, width: 2 });
+    // spring force (toward mount)
+    drawArrow(px, py, st.Fvec.x * VSCALE, -st.Fvec.y * VSCALE, C_SPRING, { width: 2.75 });
+    // delivered / tangential
+    drawArrow(px, py, st.FtangVec.x * VSCALE, -st.FtangVec.y * VSCALE, C_DELIV, { width: 2.75 });
+    // vertical component (from pedal, straight up/down)
+    drawArrow(px, py, 0, -st.Fvertical * VSCALE, C_VERT, { width: 2.75 });
+
+    // pedal dot on top
+    mc.fillStyle = C_TEXT;
+    mc.beginPath(); mc.arc(px, py, 3, 0, Math.PI * 2); mc.fill();
+  }
+
+  // =====================================================================
+  //  READOUTS
+  // =====================================================================
+  const $ = (id) => document.getElementById(id);
+  function fmt(v) { return (v >= 0 ? '' : '−') + Math.abs(v).toFixed(1); }
+
+  function updateReadouts() {
+    const st = computePedalForce(phi, params);
+    const tag = (v) => v < 0 ? ' <span class="tag">resisting</span>'
+                             : ' <span class="tag">assisting</span>';
+    $('val-spring').textContent = st.Fspring.toFixed(1) + ' lb';
+    $('val-phi').innerHTML = phi.toFixed(1) + '°';
+    $('val-deliv').innerHTML = fmt(st.Ftang) + ' lb' + tag(st.Ftang);
+    $('val-vert').innerHTML  = fmt(st.Fvertical) + ' lb';
+    $('val-horiz').innerHTML = fmt(st.Fhorizontal) + ' lb';
+    $('val-pct').textContent = Math.round(Math.abs(st.deliveredPct)) + '%';
+    $('ro-phi').textContent = phi.toFixed(1) + '°';
+    $('sl-phi').value = phi;
+  }
+
+  function drawAll() {
+    drawGraph();
+    drawMechanism();
+    updateReadouts();
+  }
+
+  // =====================================================================
+  //  ANIMATION  (oscillate phi from 2deg to 50deg and back)
+  // =====================================================================
+  let playing = false, dir = 1, rafId = null, lastTime = 0;
+  const SWEEP_MS = 2600;   // one-way sweep duration
+  const speed = (PHI_MAX - PHI_MIN) / SWEEP_MS;   // deg per ms
+
+  function frame(ts) {
+    if (!lastTime) lastTime = ts;
+    const dt = ts - lastTime; lastTime = ts;
+    phi += dir * speed * dt;
+    if (phi >= PHI_MAX) { phi = PHI_MAX; dir = -1; }
+    if (phi <= PHI_MIN) { phi = PHI_MIN; dir = 1; }
+    drawAll();
+    if (playing) rafId = requestAnimationFrame(frame);
+  }
+
+  function play() {
+    playing = true; lastTime = 0;
+    $('btn-play').textContent = 'Pause';
+    rafId = requestAnimationFrame(frame);
+  }
+  function pause() {
+    playing = false;
+    if (rafId) cancelAnimationFrame(rafId);
+    $('btn-play').textContent = 'Play';
+  }
+
+  // =====================================================================
+  //  CONTROLS
+  // =====================================================================
+  const SLIDERS = [
+    { id: 'R',  key: 'R',  unit: ' in',    dec: 1 },
+    { id: 'Mx', key: 'Mx', unit: ' in',    dec: 1 },
+    { id: 'My', key: 'My', unit: ' in',    dec: 1 },
+    { id: 'L0', key: 'L0', unit: ' in',    dec: 1 },
+    { id: 'k',  key: 'k',  unit: ' lb/in', dec: 1 },
+    { id: 'b',  key: 'b',  unit: ' lb',    dec: 1 },
+  ];
+
+  function syncSliderReadout(sp) {
+    $('ro-' + sp.id).textContent = params[sp.key].toFixed(sp.dec) + sp.unit;
+  }
+
+  SLIDERS.forEach((sp) => {
+    const el = $('sl-' + sp.id);
+    el.addEventListener('input', () => {
+      params[sp.key] = parseFloat(el.value);
+      syncSliderReadout(sp);
+      recomputeDerived();
+      drawAll();
+    });
+  });
+
+  $('sl-phi').addEventListener('input', (e) => {
+    pause();
+    phi = parseFloat(e.target.value);
+    dir = 1;
+    drawAll();
+  });
+
+  $('btn-play').addEventListener('click', () => { playing ? pause() : play(); });
+
+  $('btn-reset').addEventListener('click', () => {
+    pause();
+    params = { ...DEFAULTS };
+    phi = PHI_MIN; dir = 1;
+    SLIDERS.forEach((sp) => { $('sl-' + sp.id).value = params[sp.key]; syncSliderReadout(sp); });
+    recomputeDerived();
+    drawAll();
+  });
+
+  // ---- Init ----
+  recomputeDerived();
+  drawAll();
+</script>
+</body>
+</html>
