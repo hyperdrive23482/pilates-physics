@@ -345,28 +345,28 @@
 <div class="controls-panel">
   <div class="controls-grid">
     <div class="ctrl-group">
-      <div class="ctrl-head"><span class="ctrl-label">Pedal arm length R</span><span class="ctrl-readout" id="ro-R">14.0 in</span></div>
-      <input type="range" id="sl-R" min="8" max="22" step="0.5" value="14">
+      <div class="ctrl-head"><span class="ctrl-label">Pedal arm length R</span><span class="ctrl-readout" id="ro-R">17.0 in</span></div>
+      <input type="range" id="sl-R" min="8" max="24" step="0.5" value="17">
     </div>
     <div class="ctrl-group">
-      <div class="ctrl-head"><span class="ctrl-label">Spring mount X</span><span class="ctrl-readout" id="ro-Mx">6.0 in</span></div>
-      <input type="range" id="sl-Mx" min="-14" max="16" step="0.5" value="6">
+      <div class="ctrl-head"><span class="ctrl-label">Spring mount X</span><span class="ctrl-readout" id="ro-Mx">-8.0 in</span></div>
+      <input type="range" id="sl-Mx" min="-20" max="14" step="0.5" value="-8">
     </div>
     <div class="ctrl-group">
-      <div class="ctrl-head"><span class="ctrl-label">Spring mount Y</span><span class="ctrl-readout" id="ro-My">-12.0 in</span></div>
-      <input type="range" id="sl-My" min="-20" max="6" step="0.5" value="-12">
+      <div class="ctrl-head"><span class="ctrl-label">Spring mount Y</span><span class="ctrl-readout" id="ro-My">20.0 in</span></div>
+      <input type="range" id="sl-My" min="-16" max="30" step="0.5" value="20">
     </div>
     <div class="ctrl-group">
-      <div class="ctrl-head"><span class="ctrl-label">Rest length L&#8320;</span><span class="ctrl-readout" id="ro-L0">10.0 in</span></div>
-      <input type="range" id="sl-L0" min="2" max="16" step="0.5" value="10">
+      <div class="ctrl-head"><span class="ctrl-label">Rest length L&#8320;</span><span class="ctrl-readout" id="ro-L0">19.0 in</span></div>
+      <input type="range" id="sl-L0" min="2" max="30" step="0.5" value="19">
     </div>
     <div class="ctrl-group">
-      <div class="ctrl-head"><span class="ctrl-label">Spring constant k</span><span class="ctrl-readout" id="ro-k">4.0 lb/in</span></div>
-      <input type="range" id="sl-k" min="0.5" max="12" step="0.5" value="4">
+      <div class="ctrl-head"><span class="ctrl-label">Spring constant k</span><span class="ctrl-readout" id="ro-k">4.3 lb/in</span></div>
+      <input type="range" id="sl-k" min="0.5" max="12" step="0.1" value="4.3">
     </div>
     <div class="ctrl-group">
-      <div class="ctrl-head"><span class="ctrl-label">Initial tension b</span><span class="ctrl-readout" id="ro-b">3.0 lb</span></div>
-      <input type="range" id="sl-b" min="0" max="15" step="0.5" value="3">
+      <div class="ctrl-head"><span class="ctrl-label">Initial tension b</span><span class="ctrl-readout" id="ro-b">18.0 lb</span></div>
+      <input type="range" id="sl-b" min="0" max="30" step="0.5" value="18">
     </div>
   </div>
 </div>
@@ -401,7 +401,7 @@
 <div class="work-row">
   <div class="work-cell">
     <span class="work-label">Spring force</span>
-    <span class="work-value spring" id="val-spring">22.3 lb</span>
+    <span class="work-value spring" id="val-spring">72.4 lb</span>
   </div>
   <div class="work-cell center">
     <span class="work-label">Arm angle &#966;</span>
@@ -409,22 +409,22 @@
   </div>
   <div class="work-cell">
     <span class="work-label">Delivered force</span>
-    <span class="work-value deliv" id="val-deliv">18.4 lb</span>
+    <span class="work-value deliv" id="val-deliv">46.3 lb</span>
   </div>
 </div>
 
 <div class="work-row" style="margin-top:0; border-top:none; border-radius:0 0 8px 8px;">
   <div class="work-cell">
     <span class="work-label">Vertical force</span>
-    <span class="work-value vert" id="val-vert">18.3 lb</span>
+    <span class="work-value vert" id="val-vert">46.3 lb</span>
   </div>
   <div class="work-cell">
     <span class="work-label">Horizontal force</span>
-    <span class="work-value horiz" id="val-horiz">0.6 lb</span>
+    <span class="work-value horiz" id="val-horiz">−1.6 lb</span>
   </div>
   <div class="work-cell">
     <span class="work-label">Delivered % of spring</span>
-    <span class="work-value pct" id="val-pct">82%</span>
+    <span class="work-value pct" id="val-pct">64%</span>
   </div>
 </div>
 
@@ -433,7 +433,8 @@
   <ul>
     <li>The delivered (tangential) force is the spring force projected onto the pedal's line of travel, so it is always less than or equal to the spring force. The gap is force lost into the hinge.</li>
     <li>The angle between the spring line and the tangent sets what fraction of the spring is delivered. The right-angle mark at the pedal shows the tangent is always perpendicular to the arm.</li>
-    <li>Vertical force equals the delivered force times cos&#966;. Low in the arc the travel points nearly straight up, but the delivered force is smaller, while higher in the arc the delivered force grows yet cos&#966; shrinks. Those two effects trade off, so the lift peaks in the middle of the travel.</li>
+    <li>Vertical force equals the delivered force times cos&#966;. Two effects compete as the pedal rises: the spring line aligns better with the travel, so a larger fraction is delivered, but the spring also unstretches and cos&#966; shrinks. Where the vertical lift peaks depends on the spring and the geometry, and it is marked live on the graph.</li>
+    <li>The pedal cannot rise past the angle where the spring reaches its rest length, since a spring cannot be compressed. That top angle is set by the geometry, so it shifts when you move the anchor or change the rest length. It is marked "spring at rest" on both the graph and the mechanism.</li>
   </ul>
   <p class="notes-caveat">
     These numbers illustrate how a spring's line of pull and the pedal's geometry decide how much support reaches the body and where it peaks. Real apparatus varies, and a full model would also account for the body's own leverage.
@@ -458,10 +459,17 @@
   const C_ARM    = '#4a4640';
 
   // ---- Sweep range (degrees) ----
-  const PHI_MIN = 2, PHI_MAX = 50;
+  // The low end is fixed (pedal home). The HIGH end is a physical limit, not a
+  // constant: the pedal cannot rise past the angle where the spring reaches its
+  // rest length, because a spring cannot be compressed. It is computed from the
+  // current parameters in restAnglePhi and shifts when the anchor or rest length
+  // change.
+  const PHI_MIN = 2;
+  const PHI_CAP = 88;   // mechanical ceiling if the spring never reaches rest in range
+  let phiMax = 50;      // dynamic max, recomputed from the parameters
 
   // ---- Parameters ----
-  const DEFAULTS = { R: 14, Mx: 6, My: -12, L0: 10, k: 4, b: 3 };
+  const DEFAULTS = { R: 17, Mx: -8, My: 20, L0: 19, k: 4.3, b: 18 };
   let params = { ...DEFAULTS };
 
   // =====================================================================
@@ -512,10 +520,35 @@
     };
   }
 
+  // The largest arm angle the pedal can reach: the spring returns to its rest
+  // length there (stretch = 0) and cannot be compressed past it. Scanned upward
+  // from PHI_MIN for the first angle where the stretch hits zero; if the spring
+  // never unstretches within the mechanical ceiling, that ceiling is the limit.
+  function restAnglePhi(p) {
+    const stretchAt = (d) => {
+      const phi = d * Math.PI / 180;
+      const P = { x: p.R * Math.cos(phi), y: p.R * Math.sin(phi) };
+      return Math.hypot(p.Mx - P.x, p.My - P.y) - p.L0;
+    };
+    if (stretchAt(PHI_MIN) <= 0) return PHI_MIN + 1;   // already slack at the low end
+    const STEP = 0.25;
+    for (let d = PHI_MIN + STEP; d <= PHI_CAP + 1e-9; d += STEP) {
+      if (stretchAt(d) <= 0) {
+        let lo = d - STEP, hi = d;                       // refine the crossing
+        for (let i = 0; i < 30; i++) {
+          const mid = (lo + hi) / 2;
+          if (stretchAt(mid) > 0) lo = mid; else hi = mid;
+        }
+        return (lo + hi) / 2;
+      }
+    }
+    return PHI_CAP;
+  }
+
   // Scan the sweep and return the angle of largest |vertical force|.
   function verticalPeakPhi(p) {
     let best = -1, bestPhi = PHI_MIN;
-    for (let phi = PHI_MIN; phi <= PHI_MAX + 1e-9; phi += 0.25) {
+    for (let phi = PHI_MIN; phi <= phiMax + 1e-9; phi += 0.25) {
       const v = Math.abs(computePedalForce(phi, p).Fvertical);
       if (v > best) { best = v; bestPhi = phi; }
     }
@@ -525,7 +558,7 @@
   // Largest spring force over the sweep (used to scale the graph y-axis).
   function maxSpringForce(p) {
     let m = 0;
-    for (let phi = PHI_MIN; phi <= PHI_MAX + 1e-9; phi += 0.5) {
+    for (let phi = PHI_MIN; phi <= phiMax + 1e-9; phi += 0.5) {
       m = Math.max(m, computePedalForce(phi, p).Fspring);
     }
     return m;
@@ -545,6 +578,10 @@
   let peakPhi = 26;        // vertical-force peak angle
 
   function recomputeDerived() {
+    phiMax = Math.max(restAnglePhi(params), PHI_MIN + 1);
+    const sl = document.getElementById('sl-phi');
+    sl.max = phiMax.toFixed(2);
+    if (phi > phiMax) phi = phiMax;
     yMax = niceCeil(maxSpringForce(params) * 1.08);
     peakPhi = verticalPeakPhi(params);
   }
@@ -555,7 +592,7 @@
   const gP = { left: 62, right: 24, top: 26, bottom: 52 };
   const gI = { x: gP.left, y: gP.top, w: GW - gP.left - gP.right, h: GH - gP.top - gP.bottom };
 
-  const phiToGraph = (d) => gI.x + ((d - PHI_MIN) / (PHI_MAX - PHI_MIN)) * gI.w;
+  const phiToGraph = (d) => gI.x + ((d - PHI_MIN) / (phiMax - PHI_MIN)) * gI.w;
   const forceToGraph = (f) => gI.y + gI.h - (f / yMax) * gI.h;
 
   function drawGraphBase() {
@@ -573,15 +610,24 @@
       gc.fillText(Math.round(f), gI.x - 10, y);
     }
 
-    // vertical grid + x ticks (angle, deg)
+    // vertical grid + x ticks (angle, deg); the last tick is the rest-angle limit
     gc.textBaseline = 'top'; gc.textAlign = 'center';
-    [2, 10, 20, 30, 40, 50].forEach((d) => {
+    const ticks = [PHI_MIN];
+    for (let d = 10; d <= phiMax - 3; d += 10) ticks.push(d);
+    ticks.push(phiMax);
+    ticks.forEach((d, i) => {
+      const last = i === ticks.length - 1;
       const x = phiToGraph(d);
       gc.strokeStyle = C_GRID; gc.lineWidth = 1;
       gc.beginPath(); gc.moveTo(x, gI.y); gc.lineTo(x, gI.y + gI.h); gc.stroke();
-      gc.fillStyle = C_MUTED;
-      gc.fillText(d + '°', x, gI.y + gI.h + 8);
+      gc.fillStyle = last ? C_SPRING : C_MUTED;
+      gc.fillText(Math.round(d) + '°', x, gI.y + gI.h + 8);
     });
+    // the right edge is exactly where the spring reaches rest (stretch = 0)
+    gc.fillStyle = C_SPRING; gc.font = '10px "DM Mono", monospace';
+    gc.textAlign = 'right'; gc.textBaseline = 'top';
+    gc.fillText('spring at rest', gI.x + gI.w - 2, gI.y + 2);
+    gc.font = '11px "DM Mono", monospace';
 
     // axis titles
     gc.fillStyle = C_MUTED;
@@ -601,7 +647,7 @@
     gc.strokeStyle = color; gc.lineWidth = width;
     gc.beginPath();
     let first = true;
-    for (let d = PHI_MIN; d <= PHI_MAX + 1e-9; d += 0.5) {
+    for (let d = PHI_MIN; d <= phiMax + 1e-9; d += 0.5) {
       const x = phiToGraph(d);
       const y = forceToGraph(Math.min(fn(d), yMax));
       if (first) { gc.moveTo(x, y); first = false; } else { gc.lineTo(x, y); }
@@ -652,7 +698,7 @@
     const reach = params.R;
     const minX = Math.min(0, params.Mx, reach) - 3;
     const maxX = Math.max(0, params.Mx, reach) + 7;
-    const topY = reach * Math.sin(PHI_MAX * Math.PI / 180) + 3;
+    const topY = reach * Math.sin(phiMax * Math.PI / 180) + 3;
     const minY = Math.min(0, params.My, -1) - 3;
     const maxY = Math.max(topY, 3);
     const pad = 34;
@@ -729,12 +775,23 @@
     // faint arc guide (full pedal path across the sweep)
     mc.strokeStyle = 'rgba(255,255,255,0.10)'; mc.lineWidth = 1.5; mc.setLineDash([3, 4]);
     mc.beginPath();
-    for (let d = PHI_MIN; d <= PHI_MAX + 1e-9; d += 1) {
+    for (let d = PHI_MIN; d <= phiMax + 1e-9; d += 1) {
       const r = d * Math.PI / 180;
       const x = T.X(params.R * Math.cos(r)), y = T.Y(params.R * Math.sin(r));
       if (d === PHI_MIN) mc.moveTo(x, y); else mc.lineTo(x, y);
     }
     mc.stroke(); mc.setLineDash([]);
+
+    // pedal's rest position (top of travel: the spring is unstretched here)
+    {
+      const rr = phiMax * Math.PI / 180;
+      const rx = T.X(params.R * Math.cos(rr)), ry = T.Y(params.R * Math.sin(rr));
+      mc.strokeStyle = C_SPRING; mc.lineWidth = 1.5;
+      mc.beginPath(); mc.arc(rx, ry, 5, 0, Math.PI * 2); mc.stroke();
+      mc.fillStyle = C_SPRING; mc.font = '10px "DM Mono", monospace';
+      mc.textAlign = 'left'; mc.textBaseline = 'bottom';
+      mc.fillText('spring at rest (' + Math.round(phiMax) + '°)', rx + 8, ry - 4);
+    }
 
     // mount anchor
     mc.fillStyle = C_MUTED;
@@ -829,14 +886,14 @@
   //  ANIMATION  (oscillate phi from 2deg to 50deg and back)
   // =====================================================================
   let playing = false, dir = 1, rafId = null, lastTime = 0;
-  const SWEEP_MS = 2600;   // one-way sweep duration
-  const speed = (PHI_MAX - PHI_MIN) / SWEEP_MS;   // deg per ms
+  const SWEEP_MS = 2600;   // duration of one full sweep across the live range
 
   function frame(ts) {
     if (!lastTime) lastTime = ts;
     const dt = ts - lastTime; lastTime = ts;
+    const speed = (phiMax - PHI_MIN) / SWEEP_MS;   // deg per ms, over the current range
     phi += dir * speed * dt;
-    if (phi >= PHI_MAX) { phi = PHI_MAX; dir = -1; }
+    if (phi >= phiMax) { phi = phiMax; dir = -1; }
     if (phi <= PHI_MIN) { phi = PHI_MIN; dir = 1; }
     drawAll();
     if (playing) rafId = requestAnimationFrame(frame);
@@ -898,6 +955,8 @@
   });
 
   // ---- Init ----
+  SLIDERS.forEach((sp) => { $('sl-' + sp.id).value = params[sp.key]; syncSliderReadout(sp); });
+  $('sl-phi').value = phi;
   recomputeDerived();
   drawAll();
 </script>
