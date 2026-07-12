@@ -426,6 +426,10 @@
     <span class="work-label">Delivered % of spring</span>
     <span class="work-value pct" id="val-pct">64%</span>
   </div>
+  <div class="work-cell">
+    <span class="work-label">Pedal height</span>
+    <span class="work-value horiz" id="val-height">0.6&#8243;</span>
+  </div>
 </div>
 
 <div class="notes">
@@ -514,9 +518,14 @@
 
     const deliveredPct = Fspring > 0 ? (Ftang / Fspring) * 100 : 0;
 
+    // Pedal height above the floor. The floor is taken level with the hinge, so
+    // this is just the pedal's y-coordinate, R * sin(phi).
+    const heightAboveFloor = P.y;
+
     return {
       phiDeg, phi, P, S, Smag, stretch, Fspring, Fvec,
-      tan, arm, Ftang, FtangVec, Fvertical, Fhorizontal, Fradial, deliveredPct
+      tan, arm, Ftang, FtangVec, Fvertical, Fhorizontal, Fradial, deliveredPct,
+      heightAboveFloor
     };
   }
 
@@ -872,6 +881,7 @@
     $('val-vert').innerHTML  = fmt(st.Fvertical) + ' lb';
     $('val-horiz').innerHTML = fmt(st.Fhorizontal) + ' lb';
     $('val-pct').textContent = Math.round(Math.abs(st.deliveredPct)) + '%';
+    $('val-height').textContent = st.heightAboveFloor.toFixed(1) + '″';
     $('ro-phi').textContent = phi.toFixed(1) + '°';
     $('sl-phi').value = phi;
   }
