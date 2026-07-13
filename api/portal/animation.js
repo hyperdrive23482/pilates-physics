@@ -14,6 +14,7 @@ const SLUG_TO_FILE = {
   'animation-bridge-knee-torque': 'bridge-knee-torque.html',
   'animation-feet-in-straps-hip-torque': 'feet-in-straps-hip-torque.html',
   'animation-chair-pedal-force': 'chair-pedal-force.html',
+  'animation-push-through-bar-force': 'push-through-bar-force.html',
 }
 
 // Returns the raw HTML for an animation tool, gated on user entitlement.
