@@ -1,0 +1,133 @@
+/* Springs 101 lead magnet landing page — v2 design system.
+ * Free primer + spring calculator signup.
+ */
+
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
+.ppv2 .springs101-hero {
+  position: relative;
+  padding: 110px 0 112px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
+}
+.ppv2 .springs101-hero__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 880px;
+}
+.ppv2 .springs101-hero__title {
+  font-size: clamp(48px, 5.8vw, 96px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  margin: 18px 0 24px;
+  font-weight: 400;
+  color: var(--ink);
+}
+.ppv2 .springs101-hero__lede {
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0 0 32px;
+  max-width: 56ch;
+}
+
+/* ── What you get ─────────────────────────────────────────────────────────── */
+.ppv2 .springs101-get__head {
+  margin-bottom: 56px;
+}
+.ppv2 .springs101-get__title {
+  font-size: clamp(40px, 4.6vw, 72px);
+  line-height: 1.04;
+  letter-spacing: -0.012em;
+  margin: 18px 0 0;
+  font-weight: 400;
+  max-width: 22ch;
+}
+.ppv2 .springs101-get__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+.ppv2 .springs101-get .fcard {
+  min-height: 240px;
+}
+.ppv2 .springs101-get .fcard__body {
+  margin-top: 14px;
+}
+
+/* ── How it works ─────────────────────────────────────────────────────────── */
+.ppv2 .springs101-how__list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+.ppv2 .springs101-how__step-n {
+  font-family: var(--pp-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 10px;
+}
+.ppv2 .springs101-how__step-body {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* ── Signup form ──────────────────────────────────────────────────────────── */
+.ppv2 .springs101-signup__head {
+  font-size: clamp(36px, 4vw, 56px);
+  line-height: 1.04;
+  letter-spacing: -0.012em;
+  margin: 18px 0 16px;
+  font-weight: 400;
+  max-width: 22ch;
+}
+.ppv2 .springs101-signup__lede {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0 0 40px;
+  max-width: 62ch;
+}
+.ppv2 .springs101-signup__success {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ppv2 .springs101-signup__success-head {
+  font-family: var(--pp-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+.ppv2 .springs101-signup__success-body {
+  font-family: var(--pp-font-serif);
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0;
+  max-width: 56ch;
+}
+.ppv2 .springs101-signup__note {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 16px 0 0;
+}
+.ppv2 .springs101-signup__note a {
+  color: var(--accent);
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .ppv2 .springs101-get__grid { grid-template-columns: 1fr; }
+  .ppv2 .springs101-how__list { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .ppv2 .springs101-hero { padding: 84px 0 88px; }
+}

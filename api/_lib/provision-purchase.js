@@ -5,7 +5,8 @@ import { sendAuthEmail } from './resend.js'
 
 // listUsers has no email filter, so page through the user list until we find a
 // match. 20 pages of 200 covers 4,000 users, ample at the current scale.
-async function findUserByEmail(email) {
+// Exported for reuse by the Springs 101 lead-magnet endpoint.
+export async function findUserByEmail(email) {
   const perPage = 200
   for (let page = 1; page <= 20; page += 1) {
     const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage })

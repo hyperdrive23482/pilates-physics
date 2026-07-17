@@ -3,6 +3,9 @@
     "api/stripe/webhook.js": {
       "includeFiles": "supabase/email-templates/**"
     },
+    "api/springs101.js": {
+      "includeFiles": "supabase/email-templates/**"
+    },
     "api/admin/animations-list.js": {
       "includeFiles": "animations/**"
     },
