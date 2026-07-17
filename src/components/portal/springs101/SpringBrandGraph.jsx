@@ -5,8 +5,8 @@ import { UNITS, forceValue, lengthValue, ticksForMax } from './graphUtils'
 // The y-scale (maxForce, in lbs) is shared across every brand in the same
 // apparatus so the lineups compare honestly card to card.
 
-const VB_W = 560
-const VB_H = 300
+const VB_W = 820
+const VB_H = 320
 const GRAPH = { left: 64, right: 24, top: 20, bottom: 56 }
 const AREA = {
   x: GRAPH.left,
@@ -57,7 +57,7 @@ export default function SpringBrandGraph({ brand, maxTravel, xTicks, maxForce, u
         xmlns="http://www.w3.org/2000/svg"
         role="img"
         aria-label={`${brand.name} spring force versus extension graph`}
-        style={{ width: '100%', maxWidth: '560px', display: 'block' }}
+        style={{ width: '100%', display: 'block' }}
       >
         {/* Grid */}
         {yTicks.map((lb) => {

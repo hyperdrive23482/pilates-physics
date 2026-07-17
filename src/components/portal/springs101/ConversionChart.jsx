@@ -1,29 +1,22 @@
 import springSpecs from '../../../data/springSpecs.json'
-import { luminance } from './graphUtils'
 
 // Color-grid conversion chart: columns are rough equivalence tiers, rows are
 // brands, chips are the physical springs in their real colors. Modeled on the
 // conversion grid from the "A Spring Is Not One Weight" blog post.
 
 function Chip({ spring }) {
-  const light = luminance(spring.displayColor) > 140
   return (
     <span
+      title={spring.label}
       style={{
         display: 'inline-block',
-        padding: '3px 8px',
+        width: '48px',
+        height: '16px',
         borderRadius: '2px',
         background: spring.displayColor,
         border: '1px solid var(--color-rule)',
-        color: light ? '#1C1A17' : '#F1EFE8',
-        fontSize: '0.72rem',
-        fontWeight: 600,
-        lineHeight: 1.3,
-        whiteSpace: 'nowrap',
       }}
-    >
-      {spring.label}
-    </span>
+    />
   )
 }
 
