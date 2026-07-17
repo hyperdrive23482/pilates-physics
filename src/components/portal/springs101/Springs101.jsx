@@ -216,7 +216,12 @@ export default function Springs101() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 {apparatus.brands.map((brand) => (
                   <div key={brand.id} className="pp-card" style={{ padding: '1.5rem' }}>
-                    <h4 style={{ ...sectionLabelStyle, marginBottom: '1.25rem' }}>{brand.name}</h4>
+                    <h4 style={{ ...sectionLabelStyle, marginBottom: '1.25rem' }}>
+                      {brand.name}{' '}
+                      <span style={{ color: 'var(--color-ink-muted)', fontWeight: 400 }}>
+                        ({apparatus.name})
+                      </span>
+                    </h4>
                     <SpringBrandGraph
                       brand={brand}
                       maxTravel={apparatus.maxTravel}
@@ -281,7 +286,7 @@ export default function Springs101() {
             margin: 0,
           }}
         >
-          See it move
+          See and compare exact weights
         </h2>
         <p style={{ ...proseStyle, margin: 0, maxWidth: '480px' }}>
           The Spring Load Calculator charts every spring on this page. Pick a brand, stack
@@ -292,8 +297,8 @@ export default function Springs101() {
         </Link>
         <p style={{ ...proseStyle, margin: 0, fontSize: '0.85rem' }}>
           Want the full picture, from spring physics to machine setup?{' '}
-          <Link to="/pilates-physics-101" style={{ color: 'var(--color-accent)' }}>
-            Explore Pilates Physics 101
+          <Link to="/education" style={{ color: 'var(--color-accent)' }}>
+            Explore Workshops
           </Link>
         </p>
       </div>

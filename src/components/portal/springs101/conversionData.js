@@ -24,19 +24,19 @@ export const CONVERSION_CHARTS = [
   },
   {
     apparatusId: 'tower',
-    columns: ['Arm', 'Leg', 'Push-Thru', 'Trapeze'],
+    columns: ['Arm (Short)', 'Arm (Long)', 'Leg', 'Push-Thru', 'Trapeze'],
     rows: [
       {
         brandId: 'balanced-body',
-        cells: [['yellow-long', 'yellow-short'], ['purple-long'], ['blue-short', 'red-short'], ['black-short']],
+        cells: [['yellow-short'], ['yellow-long'], ['purple-long'], ['blue-short', 'red-short'], ['black-short']],
       },
       {
         brandId: 'merrithew',
-        cells: [['arm', 'roll-down'], ['leg', 'leg-enhanced'], ['push-thru'], ['trapeze']],
+        cells: [['arm', 'roll-down'], [], ['leg', 'leg-enhanced'], ['push-thru'], ['trapeze']],
       },
       {
         brandId: 'basi',
-        cells: [['yellow-short', 'yellow-long'], ['purple-long'], ['blue-short', 'red-short'], ['black']],
+        cells: [['yellow-short'], ['yellow-long'], ['purple-long'], ['blue-short', 'red-short'], ['black']],
       },
     ],
     note: 'Tower springs group by job rather than weight. Merrithew’s Roll-Down spring is listed with the arm springs, where its load curve sits closest.',

@@ -1,4 +1,4 @@
-import { UNITS, forceValue, lengthValue, rateValue, ticksForMax } from './graphUtils'
+import { UNITS, forceValue, lengthValue, ticksForMax } from './graphUtils'
 
 // One plotted force-vs-extension graph per brand, drawn with the same visual
 // language as the Spring Load Calculator (grid, axes, mono tick labels).
@@ -171,9 +171,6 @@ export default function SpringBrandGraph({ brand, maxTravel, xTicks, maxForce, u
                   {spring.tensionLabel ? (
                     <span style={{ fontWeight: 400, color: 'var(--color-ink-muted)' }}> · {spring.tensionLabel}</span>
                   ) : null}
-                </span>
-                <span style={{ fontFamily: MONO, fontSize: '0.68rem', color: 'var(--color-ink-muted)' }}>
-                  starts at {forceValue(spring.b, unit).toFixed(1)} {UNITS[unit].force} · +{rateValue(spring.k, unit).toFixed(2)} {UNITS[unit].perLength}
                 </span>
               </div>
             </div>

@@ -114,18 +114,6 @@ export default function ConversionChart({ chart }) {
           })}
         </div>
       </div>
-      {chart.note && (
-        <p
-          style={{
-            fontSize: '0.8rem',
-            lineHeight: 1.6,
-            color: 'var(--color-ink-muted)',
-            margin: '1rem 0 0',
-          }}
-        >
-          {chart.note}
-        </p>
-      )}
     </div>
   )
 }
