@@ -1,7 +1,11 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import springSpecs from '../../../data/springSpecs.json'
-import SpringCoilIllustration from './SpringCoilIllustration'
+import SpringBrandGraph from './SpringBrandGraph'
+import ConversionChart from './ConversionChart'
+import { CONVERSION_CHARTS } from './conversionData'
+import { UNITS, UNIT_OPTIONS, forceValue, niceMaxForce } from './graphUtils'
 
 const sectionLabelStyle = {
   fontSize: '0.7rem',
@@ -33,6 +37,49 @@ function Section({ label, children }) {
   )
 }
 
+// Same visual pattern as the calculator's segmented radiogroup.
+function UnitToggle({ value, onChange }) {
+  return (
+    <div
+      style={{
+        display: 'inline-flex',
+        border: '1px solid var(--color-rule)',
+        borderRadius: '2px',
+        background: 'var(--color-bg)',
+      }}
+      role="radiogroup"
+      aria-label="Units"
+    >
+      {UNIT_OPTIONS.map((opt) => {
+        const active = opt.value === value
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            onClick={() => onChange(opt.value)}
+            style={{
+              padding: '0.5rem 1rem',
+              fontSize: '0.8rem',
+              fontFamily: 'var(--font-serif)',
+              fontWeight: '500',
+              letterSpacing: '0.02em',
+              color: active ? 'var(--color-accent-ink)' : 'var(--color-ink-muted)',
+              background: active ? 'var(--color-accent)' : 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {opt.label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 // Pull the Peak vs Align contrast numbers from the specs at render time so
 // the prose never drifts from the calculator's data.
 function reformerBrand(id) {
@@ -42,15 +89,33 @@ function reformerBrand(id) {
 }
 
 export default function Springs101() {
+  const [unit, setUnit] = useState('imperial')
+  const forceUnit = UNITS[unit].force
+  const fmtForce = (lbs) => `${Math.round(forceValue(lbs, unit))} ${forceUnit}`
+
   const peakRed = reformerBrand('peak-pilates').springs.find((s) => s.color === 'red')
   const alignGreen = reformerBrand('align-pilates').springs.find((s) => s.color === 'green')
   const bbRed = reformerBrand('balanced-body').springs.find((s) => s.color === 'red')
   const reformerTravel = springSpecs.apparatuses.find((a) => a.id === 'reformer').maxTravel
-  const alignGreenEnd = Math.round(alignGreen.b + alignGreen.k * reformerTravel)
-  const bbRedEnd = Math.round(bbRed.b + bbRed.k * reformerTravel)
+  const alignGreenEnd = alignGreen.b + alignGreen.k * reformerTravel
+  const bbRedEnd = bbRed.b + bbRed.k * reformerTravel
 
   return (
     <div style={{ maxWidth: '760px', margin: '0 auto' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: '1rem',
+          flexWrap: 'wrap',
+          marginBottom: '2rem',
+        }}
+      >
+        <span style={{ ...sectionLabelStyle, marginBottom: 0 }}>Units</span>
+        <UnitToggle value={unit} onChange={setUnit} />
+      </div>
+
       <p
         style={{
           fontFamily: 'var(--font-serif)',
@@ -60,7 +125,7 @@ export default function Springs101() {
           margin: '0 0 3rem',
         }}
       >
-        A red spring is not a thing. Not really. A spring is not one weight, and no two brands
+        A red spring is not a single weight. A spring is not one weight at all, and no two brands
         build theirs alike. This primer covers the physics you need to read any spring, on any
         machine, from any manufacturer.
       </p>
@@ -90,8 +155,8 @@ export default function Springs101() {
           pulls before the carriage moves. <span style={strongStyle}>k</span> is the rate, how fast
           the load climbs for every inch of travel. <span style={strongStyle}>Stretch</span> is how
           far the spring is pulled, which depends on the movement and the machine. A Balanced Body
-          red runs from about {bbRed.b} pounds at engagement to about {bbRedEnd} pounds at full
-          stretch. Same spring, same rep, several times heavier at the end than at the start.
+          red runs from about {fmtForce(bbRed.b)} at engagement to about {fmtForce(bbRedEnd)} at
+          full stretch. Same spring, same rep, several times heavier at the end than at the start.
         </Prose>
       </Section>
 
@@ -99,10 +164,11 @@ export default function Springs101() {
         <Prose>
           Brands separate themselves with two design choices: how much starting tension they build
           in, and how steeply the load climbs. Peak is the high starting tension brand. A Peak red
-          already pulls about {peakRed.b} pounds at the home position, more than double a Balanced
-          Body red at {bbRed.b}, but its line climbs gently from there. Align is the opposite. Its
-          springs start light, then ramp hard. Its strong green starts near {alignGreen.b} pounds
-          and finishes around {alignGreenEnd}, higher than anything else in its class.
+          already pulls about {fmtForce(peakRed.b)} at the home position, more than double a
+          Balanced Body red at {fmtForce(bbRed.b)}, but its line climbs gently from there. Align
+          is the opposite. Its springs start light, then ramp hard. Its strong green starts near{' '}
+          {fmtForce(alignGreen.b)} and finishes around {fmtForce(alignGreenEnd)}, higher than
+          anything else in its class.
         </Prose>
         <Prose>
           Two springs can match in the middle of the stroke and disagree at both ends. That is why
@@ -122,14 +188,19 @@ export default function Springs101() {
 
       <Section label="The spring lineups">
         <Prose>
-          Here is every spring in the calculator's dataset, brand by brand, drawn to a common
-          scale. Thicker wire means a steeper rate, so a thicker coil loads faster as it
-          stretches. The stat line under each spring gives its starting tension and its rate.
+          Here is every spring in the calculator's dataset, plotted brand by brand. Each line is
+          one spring: where it meets the left axis is its starting tension, and how steeply it
+          climbs is its rate. Within each apparatus every graph shares the same scale, so you can
+          compare brands card to card. When a brand paints two springs the same color, the second
+          line is dashed.
         </Prose>
         {springSpecs.apparatuses.map((apparatus) => {
-          const maxK = Math.max(
-            ...apparatus.brands.flatMap((brand) => brand.springs.map((s) => s.k))
+          const peak = Math.max(
+            ...apparatus.brands.flatMap((brand) =>
+              brand.springs.map((s) => s.k * apparatus.maxTravel + s.b)
+            )
           )
+          const maxForce = niceMaxForce(peak)
           return (
             <div key={apparatus.id} style={{ marginBottom: '2.5rem' }}>
               <h3
@@ -146,21 +217,13 @@ export default function Springs101() {
                 {apparatus.brands.map((brand) => (
                   <div key={brand.id} className="pp-card" style={{ padding: '1.5rem' }}>
                     <h4 style={{ ...sectionLabelStyle, marginBottom: '1.25rem' }}>{brand.name}</h4>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-                        gap: '1.5rem 2rem',
-                      }}
-                    >
-                      {brand.springs.map((spring) => (
-                        <SpringCoilIllustration
-                          key={spring.color}
-                          spring={spring}
-                          maxK={maxK}
-                        />
-                      ))}
-                    </div>
+                    <SpringBrandGraph
+                      brand={brand}
+                      maxTravel={apparatus.maxTravel}
+                      xTicks={apparatus.xTicks}
+                      maxForce={maxForce}
+                      unit={unit}
+                    />
                   </div>
                 ))}
               </div>
@@ -171,12 +234,20 @@ export default function Springs101() {
 
       <Section label="About conversion charts">
         <Prose>
-          People always want the cheat sheet: what is a Balanced Body red on a Merrithew?
-          Conversion charts are genuinely useful for getting in the ballpark when you switch
-          equipment, but know what they are. A chart picks one point in the stretch and says
-          "these match there." Because every spring has its own starting tension and its own rate,
-          springs that match in the middle will not match at the ends. A conversion chart is a
-          translator, not a guarantee. It gets you close. It does not make two springs equal.
+          People always want the cheat sheet: what is a Balanced Body red on a Merrithew? Fair
+          question, and a conversion chart is a good place to start. The charts below line up
+          each brand's springs with their rough equivalents for the reformer, tower, and chair.
+        </Prose>
+        {CONVERSION_CHARTS.map((chart) => (
+          <ConversionChart key={chart.apparatusId} chart={chart} />
+        ))}
+        <Prose>
+          Two things to keep in mind as you use these. Springs that share a column are rough
+          equivalents, not twins: each one has its own starting tension and rate, so a pair that
+          matches in the middle of the stroke drifts apart at the ends. And machine dimensions
+          change how far the same spring stretches, so even a perfect match can load differently
+          from one reformer to the next. My recommendation is simple: try the same exercise on
+          every piece of equipment you teach on, and let your body verify the chart.
         </Prose>
       </Section>
 

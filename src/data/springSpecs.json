@@ -128,8 +128,8 @@
           "name": "Balanced Body",
           "shortName": "BB",
           "springs": [
-            { "color": "white-short", "label": "White - Short", "tensionLabel": "Light Chair", "displayColor": "#E8E4D8", "k": 2.50000, "b": 16 },
-            { "color": "black-short", "label": "Black - Short", "tensionLabel": "Heavy Chair", "displayColor": "#3A3833", "k": 4.33333, "b": 18 }
+            { "color": "white-short", "label": "White", "tensionLabel": "Light", "displayColor": "#E8E4D8", "k": 2.50000, "b": 16 },
+            { "color": "black-short", "label": "Black", "tensionLabel": "Heavy", "displayColor": "#3A3833", "k": 4.33333, "b": 18 }
           ]
         },
         {
@@ -137,8 +137,8 @@
           "name": "Merrithew",
           "shortName": "Merrithew",
           "springs": [
-            { "color": "push-thru", "label": "Push-Thru Spring", "tensionLabel": "Light Chair", "displayColor": "#3E7BC7", "k": 1.15700, "b": 6.5 },
-            { "color": "trapeze",   "label": "Trapeze Spring",   "tensionLabel": "Heavy Chair", "displayColor": "#C73E3E", "k": 3.88800, "b": 14.75 }
+            { "color": "push-thru", "label": "Blue", "tensionLabel": "Light", "displayColor": "#3E7BC7", "k": 1.15700, "b": 6.5 },
+            { "color": "trapeze",   "label": "Red",  "tensionLabel": "Heavy", "displayColor": "#C73E3E", "k": 3.88800, "b": 14.75 }
           ]
         },
         {
@@ -146,8 +146,8 @@
           "name": "BASI",
           "shortName": "BASI",
           "springs": [
-            { "color": "yellow-short", "label": "Yellow - Short", "tensionLabel": "", "displayColor": "#E8C547", "k": 0.43000, "b": 3.3075 },
-            { "color": "black",        "label": "Black",          "tensionLabel": "Chair", "displayColor": "#3A3833", "k": 5.46000, "b": 4 }
+            { "color": "yellow-short", "label": "Yellow", "tensionLabel": "Light", "displayColor": "#E8C547", "k": 0.43000, "b": 3.3075 },
+            { "color": "black",        "label": "Black",  "tensionLabel": "Heavy", "displayColor": "#3A3833", "k": 5.46000, "b": 4 }
           ]
         }
       ]
