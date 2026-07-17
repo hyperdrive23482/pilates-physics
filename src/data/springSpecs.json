@@ -1,67 +1,155 @@
 {
-  "apparatus": "reformer",
-  "maxTravel": 32,
-  "brands": [
+  "apparatuses": [
     {
-      "id": "balanced-body",
-      "name": "Balanced Body",
-      "shortName": "BB",
-      "springs": [
-        { "color": "yellow", "label": "Yellow", "tensionLabel": "Very Light", "displayColor": "#E8C547", "k": 0.33333, "b": 4 },
-        { "color": "blue",   "label": "Blue",   "tensionLabel": "Light",      "displayColor": "#3E7BC7", "k": 0.66667, "b": 6 },
-        { "color": "red",    "label": "Red",    "tensionLabel": "Medium",     "displayColor": "#C73E3E", "k": 1.00000, "b": 8 },
-        { "color": "green",  "label": "Green",  "tensionLabel": "Heavy",      "displayColor": "#5FA85E", "k": 1.16667, "b": 10 }
+      "id": "reformer",
+      "name": "Reformer",
+      "maxTravel": 32,
+      "xTicks": [0, 8, 16, 24, 32],
+      "brands": [
+        {
+          "id": "balanced-body",
+          "name": "Balanced Body",
+          "shortName": "BB",
+          "springs": [
+            { "color": "yellow", "label": "Yellow", "tensionLabel": "Very Light", "displayColor": "#E8C547", "k": 0.33333, "b": 4 },
+            { "color": "blue",   "label": "Blue",   "tensionLabel": "Light",      "displayColor": "#3E7BC7", "k": 0.66667, "b": 6 },
+            { "color": "red",    "label": "Red",    "tensionLabel": "Medium",     "displayColor": "#C73E3E", "k": 1.00000, "b": 8 },
+            { "color": "green",  "label": "Green",  "tensionLabel": "Heavy",      "displayColor": "#5FA85E", "k": 1.16667, "b": 10 }
+          ]
+        },
+        {
+          "id": "stott",
+          "name": "Stott",
+          "shortName": "Stott",
+          "springs": [
+            { "color": "white", "label": "White", "tensionLabel": "25%",  "displayColor": "#E8E4D8", "k": 0.37800, "b": 2.75 },
+            { "color": "blue",  "label": "Blue",  "tensionLabel": "50%",  "displayColor": "#3E7BC7", "k": 0.62500, "b": 3.5 },
+            { "color": "red",   "label": "Red",   "tensionLabel": "100%", "displayColor": "#C73E3E", "k": 1.25000, "b": 6.75 },
+            { "color": "black", "label": "Black", "tensionLabel": "125%", "displayColor": "#3A3833", "k": 1.56000, "b": 9 }
+          ]
+        },
+        {
+          "id": "align-pilates",
+          "name": "Align Pilates",
+          "shortName": "Align",
+          "springs": [
+            { "color": "yellow", "label": "Yellow", "tensionLabel": "25%",  "displayColor": "#E8C547", "k": 0.46203, "b": 1 },
+            { "color": "blue",   "label": "Blue",   "tensionLabel": "50%",  "displayColor": "#3E7BC7", "k": 0.90712, "b": 4 },
+            { "color": "red",    "label": "Red",    "tensionLabel": "100%", "displayColor": "#C73E3E", "k": 1.21415, "b": 6 },
+            { "color": "green",  "label": "Green",  "tensionLabel": "125%", "displayColor": "#5FA85E", "k": 2.03055, "b": 10 }
+          ]
+        },
+        {
+          "id": "peak-pilates",
+          "name": "Peak Pilates",
+          "shortName": "Peak",
+          "springs": [
+            { "color": "green",  "label": "Green",  "tensionLabel": "Very Light", "displayColor": "#5FA85E", "k": 0.47222, "b": 4.1 },
+            { "color": "blue",   "label": "Blue",   "tensionLabel": "Light",      "displayColor": "#3E7BC7", "k": 0.72222, "b": 9 },
+            { "color": "yellow", "label": "Yellow", "tensionLabel": "Medium",     "displayColor": "#E8C547", "k": 0.97222, "b": 13 },
+            { "color": "red",    "label": "Red",    "tensionLabel": "Heavy",      "displayColor": "#C73E3E", "k": 1.16667, "b": 17 }
+          ]
+        },
+        {
+          "id": "basi",
+          "name": "BASI",
+          "shortName": "BASI",
+          "springs": [
+            { "color": "yellow", "label": "Yellow", "tensionLabel": "Light",  "displayColor": "#E8C547", "k": 0.42552, "b": 3.3075 },
+            { "color": "blue",   "label": "Blue",   "tensionLabel": "Medium", "displayColor": "#3E7BC7", "k": 0.69428, "b": 4.41 },
+            { "color": "red",    "label": "Red",    "tensionLabel": "Heavy",  "displayColor": "#C73E3E", "k": 1.21498, "b": 6.615 }
+          ]
+        },
+        {
+          "id": "gratz",
+          "name": "Gratz",
+          "shortName": "Gratz",
+          "springs": [
+            { "color": "standard", "label": "Reformer", "tensionLabel": "", "displayColor": "#B0B0B0", "k": 1.30, "b": 6.3 }
+          ]
+        }
       ]
     },
     {
-      "id": "stott",
-      "name": "Stott",
-      "shortName": "Stott",
-      "springs": [
-        { "color": "white", "label": "White", "tensionLabel": "25%",  "displayColor": "#E8E4D8", "k": 0.37800, "b": 2.75 },
-        { "color": "blue",  "label": "Blue",  "tensionLabel": "50%",  "displayColor": "#3E7BC7", "k": 0.62500, "b": 3.5 },
-        { "color": "red",   "label": "Red",   "tensionLabel": "100%", "displayColor": "#C73E3E", "k": 1.25000, "b": 6.75 },
-        { "color": "black", "label": "Black", "tensionLabel": "125%", "displayColor": "#3A3833", "k": 1.56000, "b": 9 }
+      "id": "tower",
+      "name": "Tower",
+      "maxTravel": 36,
+      "xTicks": [0, 6, 12, 18, 24, 30, 36],
+      "brands": [
+        {
+          "id": "balanced-body",
+          "name": "Balanced Body",
+          "shortName": "BB",
+          "springs": [
+            { "color": "yellow-long",  "label": "Yellow - Long",  "tensionLabel": "Arm Spring",       "displayColor": "#E8C547", "k": 0.41667, "b": 3 },
+            { "color": "yellow-short", "label": "Yellow - Short", "tensionLabel": "Arm Spring",       "displayColor": "#E8C547", "k": 0.44444, "b": 3 },
+            { "color": "blue-short",   "label": "Blue - Short",   "tensionLabel": "Push-Thru Spring", "displayColor": "#3E7BC7", "k": 0.69444, "b": 5 },
+            { "color": "red-short",    "label": "Red - Short",    "tensionLabel": "Push-Thru Spring", "displayColor": "#C73E3E", "k": 1.08333, "b": 8 },
+            { "color": "purple-long",  "label": "Purple - Long",  "tensionLabel": "Leg Spring",       "displayColor": "#8E6FB0", "k": 0.51389, "b": 7.5 },
+            { "color": "black-short",  "label": "Black - Short",  "tensionLabel": "Trapeze Spring",   "displayColor": "#3A3833", "k": 4.33333, "b": 18 }
+          ]
+        },
+        {
+          "id": "merrithew",
+          "name": "Merrithew",
+          "shortName": "Merrithew",
+          "springs": [
+            { "color": "arm",          "label": "Arm Spring",          "tensionLabel": "", "displayColor": "#E8C547", "k": 0.37800, "b": 2.7 },
+            { "color": "leg",          "label": "Leg Spring",          "tensionLabel": "", "displayColor": "#E8E4D8", "k": 0.62500, "b": 4 },
+            { "color": "leg-enhanced", "label": "Leg Spring - Enhanced", "tensionLabel": "", "displayColor": "#5FA85E", "k": 0.62500, "b": 3.5 },
+            { "color": "roll-down",    "label": "Roll Down Spring",    "tensionLabel": "", "displayColor": "#6B6862", "k": 0.49500, "b": 3.4 },
+            { "color": "push-thru",    "label": "Push-Thru Spring",    "tensionLabel": "", "displayColor": "#3E7BC7", "k": 1.15700, "b": 6.5 },
+            { "color": "trapeze",      "label": "Trapeze Spring",      "tensionLabel": "", "displayColor": "#C73E3E", "k": 3.88800, "b": 14.75 }
+          ]
+        },
+        {
+          "id": "basi",
+          "name": "BASI",
+          "shortName": "BASI",
+          "springs": [
+            { "color": "yellow-short", "label": "Yellow - Short", "tensionLabel": "Arm Spring",       "displayColor": "#E8C547", "k": 0.43000, "b": 3.3075 },
+            { "color": "yellow-long",  "label": "Yellow - Long",  "tensionLabel": "Arm Spring",       "displayColor": "#E8C547", "k": 0.52000, "b": 1 },
+            { "color": "blue-short",   "label": "Blue - Short",   "tensionLabel": "Push-Thru Spring", "displayColor": "#3E7BC7", "k": 0.69000, "b": 4.41 },
+            { "color": "red-short",    "label": "Red - Short",    "tensionLabel": "Push-Thru Spring", "displayColor": "#C73E3E", "k": 1.22000, "b": 6.615 },
+            { "color": "purple-long",  "label": "Purple - Long",  "tensionLabel": "Leg Spring",       "displayColor": "#8E6FB0", "k": 0.54000, "b": 0.5 },
+            { "color": "black",        "label": "Black",          "tensionLabel": "Trapeze Spring",   "displayColor": "#3A3833", "k": 5.46000, "b": 4 }
+          ]
+        }
       ]
     },
     {
-      "id": "align-pilates",
-      "name": "Align Pilates",
-      "shortName": "Align",
-      "springs": [
-        { "color": "yellow", "label": "Yellow", "tensionLabel": "25%",  "displayColor": "#E8C547", "k": 0.46203, "b": 1 },
-        { "color": "blue",   "label": "Blue",   "tensionLabel": "50%",  "displayColor": "#3E7BC7", "k": 0.90712, "b": 4 },
-        { "color": "red",    "label": "Red",    "tensionLabel": "100%", "displayColor": "#C73E3E", "k": 1.21415, "b": 6 },
-        { "color": "green",  "label": "Green",  "tensionLabel": "125%", "displayColor": "#5FA85E", "k": 2.03055, "b": 10 }
-      ]
-    },
-    {
-      "id": "peak-pilates",
-      "name": "Peak Pilates",
-      "shortName": "Peak",
-      "springs": [
-        { "color": "green",  "label": "Green",  "tensionLabel": "Very Light", "displayColor": "#5FA85E", "k": 0.47222, "b": 4.1 },
-        { "color": "blue",   "label": "Blue",   "tensionLabel": "Light",      "displayColor": "#3E7BC7", "k": 0.72222, "b": 9 },
-        { "color": "yellow", "label": "Yellow", "tensionLabel": "Medium",     "displayColor": "#E8C547", "k": 0.97222, "b": 13 },
-        { "color": "red",    "label": "Red",    "tensionLabel": "Heavy",      "displayColor": "#C73E3E", "k": 1.16667, "b": 17 }
-      ]
-    },
-    {
-      "id": "basi",
-      "name": "BASI",
-      "shortName": "BASI",
-      "springs": [
-        { "color": "yellow", "label": "Yellow", "tensionLabel": "Light",  "displayColor": "#E8C547", "k": 0.42552, "b": 3.3075 },
-        { "color": "blue",   "label": "Blue",   "tensionLabel": "Medium", "displayColor": "#3E7BC7", "k": 0.69428, "b": 4.41 },
-        { "color": "red",    "label": "Red",    "tensionLabel": "Heavy",  "displayColor": "#C73E3E", "k": 1.21498, "b": 6.615 }
-      ]
-    },
-    {
-      "id": "gratz",
-      "name": "Gratz",
-      "shortName": "Gratz",
-      "springs": [
-        { "color": "standard", "label": "Reformer", "tensionLabel": "", "displayColor": "#B0B0B0", "k": 1.30, "b": 6.3 }
+      "id": "chair",
+      "name": "Chair",
+      "maxTravel": 12,
+      "xTicks": [0, 3, 6, 9, 12],
+      "brands": [
+        {
+          "id": "balanced-body",
+          "name": "Balanced Body",
+          "shortName": "BB",
+          "springs": [
+            { "color": "white-short", "label": "White - Short", "tensionLabel": "Light Chair", "displayColor": "#E8E4D8", "k": 2.50000, "b": 16 },
+            { "color": "black-short", "label": "Black - Short", "tensionLabel": "Heavy Chair", "displayColor": "#3A3833", "k": 4.33333, "b": 18 }
+          ]
+        },
+        {
+          "id": "merrithew",
+          "name": "Merrithew",
+          "shortName": "Merrithew",
+          "springs": [
+            { "color": "push-thru", "label": "Push-Thru Spring", "tensionLabel": "Light Chair", "displayColor": "#3E7BC7", "k": 1.15700, "b": 6.5 },
+            { "color": "trapeze",   "label": "Trapeze Spring",   "tensionLabel": "Heavy Chair", "displayColor": "#C73E3E", "k": 3.88800, "b": 14.75 }
+          ]
+        },
+        {
+          "id": "basi",
+          "name": "BASI",
+          "shortName": "BASI",
+          "springs": [
+            { "color": "yellow-short", "label": "Yellow - Short", "tensionLabel": "", "displayColor": "#E8C547", "k": 0.43000, "b": 3.3075 },
+            { "color": "black",        "label": "Black",          "tensionLabel": "Chair", "displayColor": "#3A3833", "k": 5.46000, "b": 4 }
+          ]
+        }
       ]
     }
   ]

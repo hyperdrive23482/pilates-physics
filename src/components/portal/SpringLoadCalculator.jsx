@@ -5,7 +5,6 @@ import springSpecs from '../../data/springSpecs.json'
 import { expandSelections, combinedConstants, selectionKey } from '../../lib/springMath'
 
 // ----- constants -----
-const MAX_TRAVEL = springSpecs.maxTravel // inches
 const INITIAL_POS = 1 / 3
 const VB_W = 560
 const VB_H = 336
@@ -15,6 +14,25 @@ const AREA = {
   y: GRAPH.top,
   w: VB_W - GRAPH.left - GRAPH.right,
   h: VB_H - GRAPH.top - GRAPH.bottom,
+}
+
+// ----- units -----
+// All k/b data is stored in lb/in and lb. Units are a display-only concern:
+// the graph geometry is ratio-based, so we only convert the numbers we render.
+const LB_TO_KG = 0.45359237
+const IN_TO_CM = 2.54
+const UNITS = {
+  imperial: { force: 'lbs', length: 'inches', lengthShort: '"' },
+  metric: { force: 'kg', length: 'cm', lengthShort: ' cm' },
+}
+
+/** Convert a force in lbs to the active unit's number. */
+function forceValue(lbs, unit) {
+  return unit === 'metric' ? lbs * LB_TO_KG : lbs
+}
+/** Convert an extension in inches to the active unit's number. */
+function lengthValue(inches, unit) {
+  return unit === 'metric' ? inches * IN_TO_CM : inches
 }
 
 // ----- helpers -----
@@ -33,25 +51,22 @@ function ticksForMax(maxForce) {
   return out
 }
 
-function toGraph(x, force, maxForce) {
+function toGraph(x, force, maxForce, maxTravel) {
   return {
-    x: AREA.x + (x / MAX_TRAVEL) * AREA.w,
+    x: AREA.x + (x / maxTravel) * AREA.w,
     y: AREA.y + AREA.h - (force / maxForce) * AREA.h,
   }
 }
 
-function linePath(kTotal, bTotal, maxForce) {
-  const start = toGraph(0, bTotal, maxForce)
-  const end = toGraph(MAX_TRAVEL, kTotal * MAX_TRAVEL + bTotal, maxForce)
+function linePath(kTotal, bTotal, maxForce, maxTravel) {
+  const start = toGraph(0, bTotal, maxForce, maxTravel)
+  const end = toGraph(maxTravel, kTotal * maxTravel + bTotal, maxForce, maxTravel)
   return `M${start.x.toFixed(1)},${start.y.toFixed(1)} L${end.x.toFixed(1)},${end.y.toFixed(1)}`
 }
 
-// ----- sub: Mode toggle -----
-function ModeToggle({ mode, onChange }) {
-  const options = [
-    { value: 'sum', label: 'Sum' },
-    { value: 'compare', label: 'Compare' },
-  ]
+// ----- sub: Segmented toggle -----
+// Reusable segmented radiogroup used for mode (Sum/Compare), apparatus, and units.
+function SegmentedToggle({ value, onChange, options, ariaLabel }) {
   return (
     <div
       style={{
@@ -61,10 +76,10 @@ function ModeToggle({ mode, onChange }) {
         background: 'var(--color-bg)',
       }}
       role="radiogroup"
-      aria-label="Calculator mode"
+      aria-label={ariaLabel}
     >
       {options.map((opt) => {
-        const active = opt.value === mode
+        const active = opt.value === value
         return (
           <button
             key={opt.value}
@@ -82,6 +97,7 @@ function ModeToggle({ mode, onChange }) {
               background: active ? 'var(--color-accent)' : 'transparent',
               border: 'none',
               cursor: 'pointer',
+              whiteSpace: 'nowrap',
             }}
           >
             {opt.label}
@@ -92,9 +108,18 @@ function ModeToggle({ mode, onChange }) {
   )
 }
 
+const MODE_OPTIONS = [
+  { value: 'sum', label: 'Sum' },
+  { value: 'compare', label: 'Compare' },
+]
+const UNIT_OPTIONS = [
+  { value: 'imperial', label: 'lbs · in' },
+  { value: 'metric', label: 'kg · cm' },
+]
+
 // ----- sub: Spring selector row -----
-function SpringSelectorRow({ selection, onChange, onRemove }) {
-  const brand = springSpecs.brands.find((b) => b.id === selection.brandId)
+function SpringSelectorRow({ selection, onChange, onRemove, brands }) {
+  const brand = brands.find((b) => b.id === selection.brandId)
   const selectStyle = {
     width: '100%',
     padding: '0.5rem 0.65rem',
@@ -124,12 +149,12 @@ function SpringSelectorRow({ selection, onChange, onRemove }) {
         aria-label="Brand"
         value={selection.brandId}
         onChange={(e) => {
-          const nextBrand = springSpecs.brands.find((b) => b.id === e.target.value)
+          const nextBrand = brands.find((b) => b.id === e.target.value)
           onChange({ ...selection, brandId: nextBrand.id, spring: nextBrand.springs[0] })
         }}
         style={selectStyle}
       >
-        {springSpecs.brands.map((b) => (
+        {brands.map((b) => (
           <option key={b.id} value={b.id}>
             {b.name}
           </option>
@@ -189,9 +214,21 @@ function SpringSelectorRow({ selection, onChange, onRemove }) {
 }
 
 // ----- sub: Selector panel -----
-function SpringSelectorPanel({ selections, setSelections, mode, setMode }) {
+function SpringSelectorPanel({
+  selections,
+  setSelections,
+  mode,
+  setMode,
+  apparatus,
+  apparatusId,
+  setApparatusId,
+  unit,
+  setUnit,
+  apparatusOptions,
+}) {
+  const brands = apparatus.brands
   function addSpring() {
-    const brand = springSpecs.brands[0]
+    const brand = brands[0]
     const usedColors = new Set(
       selections.filter((s) => s.brandId === brand.id).map((s) => s.spring.color)
     )
@@ -209,6 +246,47 @@ function SpringSelectorPanel({ selections, setSelections, mode, setMode }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem 1.5rem', flexWrap: 'wrap' }}>
+        <label style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+          <span
+            style={{
+              fontSize: '0.7rem',
+              fontWeight: '600',
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              color: 'var(--color-ink-muted)',
+            }}
+          >
+            Apparatus
+          </span>
+          <SegmentedToggle
+            value={apparatusId}
+            onChange={setApparatusId}
+            options={apparatusOptions}
+            ariaLabel="Apparatus"
+          />
+        </label>
+        <label style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+          <span
+            style={{
+              fontSize: '0.7rem',
+              fontWeight: '600',
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              color: 'var(--color-ink-muted)',
+            }}
+          >
+            Units
+          </span>
+          <SegmentedToggle
+            value={unit}
+            onChange={setUnit}
+            options={UNIT_OPTIONS}
+            ariaLabel="Units"
+          />
+        </label>
+      </div>
+
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
         <p
           style={{
@@ -222,7 +300,12 @@ function SpringSelectorPanel({ selections, setSelections, mode, setMode }) {
         >
           Your Springs
         </p>
-        <ModeToggle mode={mode} onChange={setMode} />
+        <SegmentedToggle
+          value={mode}
+          onChange={setMode}
+          options={MODE_OPTIONS}
+          ariaLabel="Calculator mode"
+        />
       </div>
 
       {selections.length === 0 ? (
@@ -247,6 +330,7 @@ function SpringSelectorPanel({ selections, setSelections, mode, setMode }) {
               selection={sel}
               onChange={(next) => updateAt(i, next)}
               onRemove={() => removeAt(i)}
+              brands={brands}
             />
           ))}
         </div>
@@ -279,7 +363,7 @@ function SpringSelectorPanel({ selections, setSelections, mode, setMode }) {
 }
 
 // ----- sub: Force graph -----
-function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove, onPointerUp, svgRef }) {
+function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove, onPointerUp, svgRef, maxTravel, xTicks, unit, brands }) {
   // Compute lines based on mode
   const lines = useMemo(() => {
     if (mode === 'sum') {
@@ -305,7 +389,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
       const key = selectionKey(sel)
       if (seen.has(key)) continue
       seen.add(key)
-      const brand = springSpecs.brands.find((b) => b.id === sel.brandId)
+      const brand = brands.find((b) => b.id === sel.brandId)
       const prefix = brand?.shortName || brand?.name || ''
       out.push({
         id: key,
@@ -317,24 +401,23 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
       })
     }
     return out
-  }, [selections, mode])
+  }, [selections, mode, brands])
 
   // Auto-scale y-axis
   const peakForce = useMemo(() => {
     let max = 20
     for (const ln of lines) {
-      const end = ln.k * MAX_TRAVEL + ln.b
+      const end = ln.k * maxTravel + ln.b
       if (end > max) max = end
     }
     return max
-  }, [lines])
+  }, [lines, maxTravel])
 
   const maxForce = niceMaxForce(peakForce)
   const yTicks = ticksForMax(maxForce)
-  const xTicks = [0, 8, 16, 24, 32]
 
   const cursorX = AREA.x + pos * AREA.w
-  const cursorExtension = pos * MAX_TRAVEL
+  const cursorExtension = pos * maxTravel
 
   return (
     <svg
@@ -353,7 +436,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
         )
       })}
       {xTicks.map((inch) => {
-        const gx = AREA.x + (inch / MAX_TRAVEL) * AREA.w
+        const gx = AREA.x + (inch / maxTravel) * AREA.w
         return (
           <line key={`xg-${inch}`} x1={gx} y1={AREA.y} x2={gx} y2={AREA.y + AREA.h} stroke="#2E2B26" strokeWidth="1" />
         )
@@ -373,7 +456,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
         fontFamily="JetBrains Mono, ui-monospace, monospace"
         transform={`rotate(-90, 18, ${AREA.y + AREA.h / 2})`}
       >
-        Force (lbs)
+        Force ({UNITS[unit].force})
       </text>
 
       {/* Y ticks */}
@@ -381,7 +464,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
         const gy = AREA.y + AREA.h - (lb / maxForce) * AREA.h
         return (
           <text key={`yt-${lb}`} x={AREA.x - 8} y={gy + 4} textAnchor="end" fill="#888780" fontSize="10" fontFamily="JetBrains Mono, ui-monospace, monospace">
-            {lb}
+            {Math.round(forceValue(lb, unit))}
           </text>
         )
       })}
@@ -395,17 +478,17 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
         fontSize="11"
         fontFamily="JetBrains Mono, ui-monospace, monospace"
       >
-        Spring extension (inches)
+        Spring extension ({UNITS[unit].length})
       </text>
 
       {/* X ticks */}
       {xTicks.map((inch) => {
-        const gx = AREA.x + (inch / MAX_TRAVEL) * AREA.w
+        const gx = AREA.x + (inch / maxTravel) * AREA.w
         return (
           <g key={`xt-${inch}`}>
             <line x1={gx} y1={AREA.y + AREA.h} x2={gx} y2={AREA.y + AREA.h + 5} stroke="#F1EFE8" strokeWidth="1" />
             <text x={gx} y={AREA.y + AREA.h + 18} textAnchor="middle" fill="#888780" fontSize="10" fontFamily="JetBrains Mono, ui-monospace, monospace">
-              {inch}&quot;
+              {unit === 'metric' ? Math.round(lengthValue(inch, unit)) : `${inch}"`}
             </text>
           </g>
         )
@@ -427,7 +510,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
 
       {/* Force lines */}
       {lines.map((ln) => {
-        const d = linePath(ln.k, ln.b, maxForce)
+        const d = linePath(ln.k, ln.b, maxForce, maxTravel)
         return (
           <path
             key={ln.id}
@@ -443,7 +526,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
       {/* Intersection dots + readouts */}
       {lines.map((ln, i) => {
         const force = ln.k * cursorExtension + ln.b
-        const pt = toGraph(cursorExtension, force, maxForce)
+        const pt = toGraph(cursorExtension, force, maxForce, maxTravel)
         // Multi-line readouts stack at top-left, left-aligned.
         // Single-line readout floats above the dot, right-anchored just LEFT of
         // the cursor line so it never sits on top of the curve.
@@ -464,7 +547,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
               fontFamily="JetBrains Mono, ui-monospace, monospace"
               fontWeight="600"
             >
-              {ln.label}: {force.toFixed(1)} lbs
+              {ln.label}: {forceValue(force, unit).toFixed(1)} {UNITS[unit].force}
             </text>
           </g>
         )
@@ -481,7 +564,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
           fontFamily="JetBrains Mono, ui-monospace, monospace"
           fontWeight="600"
         >
-          {cursorExtension.toFixed(1)}&quot; extension
+          {lengthValue(cursorExtension, unit).toFixed(1)}{UNITS[unit].lengthShort} extension
         </text>
       )}
 
@@ -564,8 +647,9 @@ const FAQ_ITEMS = [
           two new Gratz Reformer springs done by Kaleen.
         </p>
         <p style={{ margin: 0 }}>
-          Brands currently included: Balanced Body, Stott, Align Pilates, Peak
-          Pilates, BASI, and Gratz.
+          Reformer brands: Balanced Body, Stott, Align Pilates, Peak Pilates,
+          BASI, and Gratz. Tower and Chair brands: Balanced Body, Merrithew, and
+          BASI.
         </p>
       </>
     ),
@@ -641,9 +725,23 @@ const FAQ_ITEMS = [
     q: 'What apparatus are these springs for?',
     a: (
       <p style={{ margin: 0 }}>
-        All values currently apply to <strong>Reformer</strong> springs only.
-        Cadillac, Tower, Wunda Chair, Trap Table, and arm springs use different
-        stiffness profiles and aren&apos;t covered here yet.
+        Use the <strong>Apparatus</strong> toggle to switch between{' '}
+        <strong>Reformer</strong>, <strong>Tower</strong>, and{' '}
+        <strong>Chair</strong> springs. Each apparatus has its own spring set and
+        extension range, since the springs and their travel differ. Other
+        apparatus are not covered here yet.
+      </p>
+    ),
+  },
+  {
+    id: 'units',
+    q: 'Can I see loads in kilograms instead of pounds?',
+    a: (
+      <p style={{ margin: 0 }}>
+        Yes. Use the <strong>Units</strong> toggle to switch the whole graph
+        between pounds and inches (lbs · in) and kilograms and centimeters
+        (kg · cm). The curves stay the same, only the numbers and axis labels
+        change.
       </p>
     ),
   },
@@ -751,12 +849,29 @@ function FAQ() {
 }
 
 // ----- main -----
+const APPARATUS_OPTIONS = springSpecs.apparatuses.map((a) => ({ value: a.id, label: a.name }))
+
 export default function SpringLoadCalculator() {
   const svgRef = useRef(null)
   const [selections, setSelections] = useState([])
   const [mode, setMode] = useState('sum')
+  const [apparatusId, setApparatusId] = useState(springSpecs.apparatuses[0].id)
+  const [unit, setUnit] = useState('imperial')
   const [isDragging, setIsDragging] = useState(false)
   const [hasInteracted, setHasInteracted] = useState(false)
+
+  const apparatus = useMemo(
+    () => springSpecs.apparatuses.find((a) => a.id === apparatusId) || springSpecs.apparatuses[0],
+    [apparatusId]
+  )
+
+  // Spring sets differ per apparatus, so any carried-over selections would be
+  // invalid. Clear them when the apparatus changes.
+  function changeApparatus(nextId) {
+    if (nextId === apparatusId) return
+    setApparatusId(nextId)
+    setSelections([])
+  }
 
   const motionPos = useSpring(INITIAL_POS, { stiffness: 120, damping: 18, mass: 0.8 })
   const [pos, setPos] = useState(INITIAL_POS)
@@ -825,6 +940,10 @@ export default function SpringLoadCalculator() {
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
+          maxTravel={apparatus.maxTravel}
+          xTicks={apparatus.xTicks}
+          unit={unit}
+          brands={apparatus.brands}
         />
         <SpringCoils selections={selections} pos={pos} />
       </section>
@@ -835,6 +954,12 @@ export default function SpringLoadCalculator() {
           setSelections={setSelections}
           mode={mode}
           setMode={setMode}
+          apparatus={apparatus}
+          apparatusId={apparatusId}
+          setApparatusId={changeApparatus}
+          unit={unit}
+          setUnit={setUnit}
+          apparatusOptions={APPARATUS_OPTIONS}
         />
       </aside>
 
