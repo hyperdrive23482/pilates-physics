@@ -51,7 +51,7 @@ function BaseChart({ forceTitleColor = TICK, xTitleColor = TICK, faintLine = fal
 
       {/* Y ticks + labels */}
       {Y_TICKS.map((f) => (
-        <text key={`yt-${f}`} x={A.x - 10} y={gy(f) + 4} textAnchor="end" fill={TICK} fontSize="11" fontFamily={MONO}>
+        <text key={`yt-${f}`} x={A.x - 10} y={gy(f) + 5} textAnchor="end" fill={TICK} fontSize="15" fontFamily={MONO}>
           {f}
         </text>
       ))}
@@ -59,7 +59,7 @@ function BaseChart({ forceTitleColor = TICK, xTitleColor = TICK, faintLine = fal
       {X_TICKS.map((x) => (
         <g key={`xt-${x}`}>
           <line x1={gx(x)} y1={A.y + A.h} x2={gx(x)} y2={A.y + A.h + 5} stroke={AXIS} strokeWidth="1" />
-          <text x={gx(x)} y={A.y + A.h + 20} textAnchor="middle" fill={TICK} fontSize="11" fontFamily={MONO}>
+          <text x={gx(x)} y={A.y + A.h + 22} textAnchor="middle" fill={TICK} fontSize="15" fontFamily={MONO}>
             {x}&quot;
           </text>
         </g>
@@ -71,13 +71,13 @@ function BaseChart({ forceTitleColor = TICK, xTitleColor = TICK, faintLine = fal
         y={A.y + A.h / 2}
         textAnchor="middle"
         fill={forceTitleColor}
-        fontSize="12.5"
+        fontSize="16"
         fontFamily={MONO}
         transform={`rotate(-90, 20, ${A.y + A.h / 2})`}
       >
         Force, the weight you feel (lb)
       </text>
-      <text x={A.x + A.w / 2} y={H - 8} textAnchor="middle" fill={xTitleColor} fontSize="12.5" fontFamily={MONO}>
+      <text x={A.x + A.w / 2} y={H - 8} textAnchor="middle" fill={xTitleColor} fontSize="16" fontFamily={MONO}>
         Stretch, how far it is pulled (inches)
       </text>
 
@@ -125,10 +125,10 @@ function EquationDiagram() {
         {/* k — steepness, shown as a rise-over-run step under the line */}
         <line x1={gx(16)} y1={gy(24)} x2={gx(24)} y2={gy(24)} stroke={C_K} strokeWidth="1.5" strokeDasharray="3 3" />
         <line x1={gx(24)} y1={gy(24)} x2={gx(24)} y2={gy(32)} stroke={C_K} strokeWidth="1.5" strokeDasharray="3 3" />
-        <text x={(gx(16) + gx(24)) / 2} y={gy(24) + 15} textAnchor="middle" fill={C_K} fontSize="10.5" fontFamily={MONO}>
+        <text x={(gx(16) + gx(24)) / 2} y={gy(24) + 16} textAnchor="middle" fill={C_K} fontSize="13" fontFamily={MONO}>
           8&quot;
         </text>
-        <text x={gx(24) + 8} y={(gy(24) + gy(32)) / 2 + 4} fill={C_K} fontSize="10.5" fontFamily={MONO}>
+        <text x={gx(24) + 8} y={(gy(24) + gy(32)) / 2 + 4} fill={C_K} fontSize="13" fontFamily={MONO}>
           +8 lb
         </text>
         <text x={gx(24) + 30} y={gy(30)} fill={C_K} fontSize="14" fontWeight="700" fontFamily={MONO}>
@@ -142,10 +142,10 @@ function EquationDiagram() {
         </text>
 
         {/* Force / Stretch are the axes themselves; small arrows point at them */}
-        <text x={A.x + 8} y={A.y + 4} fill={C_F} fontSize="12.5" fontFamily={MONO}>
+        <text x={A.x + 8} y={A.y + 4} fill={C_F} fontSize="16" fontFamily={MONO}>
           ↑ Force
         </text>
-        <text x={A.x + A.w - 8} y={A.y + A.h - 10} textAnchor="end" fill={C_X} fontSize="12.5" fontFamily={MONO}>
+        <text x={A.x + A.w - 8} y={A.y + A.h - 12} textAnchor="end" fill={C_X} fontSize="16" fontFamily={MONO}>
           Stretch →
         </text>
       </BaseChart>
@@ -171,7 +171,7 @@ function ReadOffDiagram() {
       <BaseChart faintLine>
         {/* Start marker on the x-axis at 12" (always visible) */}
         <circle cx={px} cy={bottom} r="4.5" fill={C_X} stroke="#1C1A17" strokeWidth="1.5" />
-        <text x={px} y={bottom + 38} textAnchor="middle" fill={C_X} fontSize="12" fontFamily={MONO}>
+        <text x={px} y={bottom + 40} textAnchor="middle" fill={C_X} fontSize="15" fontFamily={MONO}>
           Start: 12&quot;
         </text>
 
@@ -219,7 +219,7 @@ function ReadOffDiagram() {
           <animate attributeName="opacity" dur={DUR} repeatCount="indefinite" keyTimes="0;0.52;0.54;0.86;0.92;1" values="0;0;1;1;0;0" />
           <polygon points={`${A.x + 9},${py - 5} ${A.x + 9},${py + 5} ${A.x},${py}`} fill={AXIS} />
           <circle cx={A.x} cy={py} r="4.5" fill={RED} stroke="#1C1A17" strokeWidth="1.5" />
-          <text x={A.x - 12} y={py - 8} textAnchor="end" fill={INK} fontSize="15" fontWeight="700" fontFamily={MONO}>
+          <text x={A.x + 12} y={py - 12} textAnchor="start" fill={INK} fontSize="18" fontWeight="700" fontFamily={MONO}>
             ≈ 20 lb
           </text>
         </g>

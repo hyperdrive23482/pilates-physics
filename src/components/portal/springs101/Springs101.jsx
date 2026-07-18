@@ -25,6 +25,15 @@ const proseStyle = {
 
 const strongStyle = { color: 'var(--color-ink)', fontWeight: 600 }
 
+// Fixed y-axis maximum (in lbs) for apparatuses whose auto-scale would squash
+// the light springs. Anything above the cap is clipped by SpringBrandGraph.
+const Y_AXIS_MAX = { reformer: 60, tower: 60 }
+
+// Trim the plotted x-axis (inches) for some apparatuses without touching the
+// real maxTravel in springSpecs (prose and the calculator still use 32").
+// The reformer's interesting spread lives in the first two feet of stroke.
+const X_AXIS = { reformer: { max: 24, ticks: [0, 8, 16, 24] } }
+
 function Prose({ children }) {
   return <p style={proseStyle}>{children}</p>
 }
@@ -244,15 +253,22 @@ export default function Springs101() {
           drawn to a common scale. Each line is one spring: where it meets the left axis is its
           starting tension, and how steeply it climbs is its spring constant (stiffness). Within
           each apparatus every graph shares the same scale, so you can compare brands card to card.
-          When a brand paints two springs the same color, the second line is dashed.
+          When a brand paints two springs the same color, the shorter one is dashed so you can
+          tell them apart.
         </Prose>
         {springSpecs.apparatuses.map((apparatus) => {
+          const graphTravel = X_AXIS[apparatus.id]?.max ?? apparatus.maxTravel
+          const graphXTicks = X_AXIS[apparatus.id]?.ticks ?? apparatus.xTicks
           const peak = Math.max(
             ...apparatus.brands.flatMap((brand) =>
-              brand.springs.map((s) => s.k * apparatus.maxTravel + s.b)
+              brand.springs.map((s) => s.k * graphTravel + s.b)
             )
           )
-          const maxForce = niceMaxForce(peak)
+          // Cap a couple of apparatus axes below their true peak so the many
+          // light springs spread out and stay readable; the few very heavy
+          // springs (tower trapeze) run off the top of the pane, which the
+          // graph clips. Others auto-scale to fit every line.
+          const maxForce = Y_AXIS_MAX[apparatus.id] ?? niceMaxForce(peak)
           return (
             <div key={apparatus.id} style={{ marginBottom: '2.5rem' }}>
               <h3
@@ -276,8 +292,8 @@ export default function Springs101() {
                     </h4>
                     <SpringBrandGraph
                       brand={brand}
-                      maxTravel={apparatus.maxTravel}
-                      xTicks={apparatus.xTicks}
+                      maxTravel={graphTravel}
+                      xTicks={graphXTicks}
                       maxForce={maxForce}
                       unit={unit}
                     />

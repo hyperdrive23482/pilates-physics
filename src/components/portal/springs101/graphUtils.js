@@ -47,11 +47,23 @@ export function luminance(hex) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b
 }
 
-/** Evenly spaced y-axis tick values (in lbs) for a given axis maximum. */
+/** Evenly spaced y-axis tick values (in lbs) for a given axis maximum.
+ *  Prefers a round step (…5, 10, 20, 25, 50…) that yields 3-5 intervals, so
+ *  axis maxima like 60 or 80 read 0/20/40/60 instead of 0/12/24/36/48/60. */
 export function ticksForMax(maxForce) {
-  const count = 5
-  const step = maxForce / count
+  const steps = [5, 10, 20, 25, 50, 100, 200, 500]
+  for (const step of steps) {
+    if (maxForce % step === 0) {
+      const n = maxForce / step
+      if (n >= 3 && n <= 5) {
+        const out = []
+        for (let i = 0; i <= n; i++) out.push(i * step)
+        return out
+      }
+    }
+  }
+  const step = maxForce / 5
   const out = []
-  for (let i = 0; i <= count; i++) out.push(Math.round(i * step))
+  for (let i = 0; i <= 5; i++) out.push(Math.round(i * step))
   return out
 }

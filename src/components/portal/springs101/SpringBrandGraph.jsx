@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import { UNITS, forceValue, lengthValue, ticksForMax } from './graphUtils'
 
 // One plotted force-vs-extension graph per brand, drawn with the same visual
@@ -41,14 +42,22 @@ function isDark(hex) {
 }
 
 // Some brands paint two springs the same color (Yellow - Long / Yellow - Short).
-// The second occurrence of a color gets a dash so the lines stay tellable apart.
+// When a color repeats, the two lines need to stay tellable apart: the "Short"
+// spring is dashed and the "Long" spring stays solid, consistently across
+// brands (BB and BASI list the pair in opposite order, so we key on the label,
+// not position). Any other repeated color falls back to dashing the later one.
 function dashFor(spring, index, springs) {
+  const sameColor = springs.filter((s) => s.displayColor === spring.displayColor)
+  if (sameColor.length < 2) return undefined
+  if (/short/i.test(spring.label)) return '7 5'
+  if (/long/i.test(spring.label)) return undefined
   const firstIdx = springs.findIndex((s) => s.displayColor === spring.displayColor)
   return firstIdx !== index ? '7 5' : undefined
 }
 
 export default function SpringBrandGraph({ brand, maxTravel, xTicks, maxForce, unit }) {
   const yTicks = ticksForMax(maxForce)
+  const clipId = useId()
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -83,7 +92,7 @@ export default function SpringBrandGraph({ brand, maxTravel, xTicks, maxForce, u
           y={AREA.y + AREA.h / 2}
           textAnchor="middle"
           fill="#888780"
-          fontSize="11"
+          fontSize="16"
           fontFamily={MONO}
           transform={`rotate(-90, 18, ${AREA.y + AREA.h / 2})`}
         >
@@ -94,7 +103,7 @@ export default function SpringBrandGraph({ brand, maxTravel, xTicks, maxForce, u
         {yTicks.map((lb) => {
           const gy = AREA.y + AREA.h - (lb / maxForce) * AREA.h
           return (
-            <text key={`yt-${lb}`} x={AREA.x - 8} y={gy + 4} textAnchor="end" fill="#888780" fontSize="10" fontFamily={MONO}>
+            <text key={`yt-${lb}`} x={AREA.x - 8} y={gy + 5} textAnchor="end" fill="#888780" fontSize="14" fontFamily={MONO}>
               {Math.round(forceValue(lb, unit))}
             </text>
           )
@@ -103,10 +112,10 @@ export default function SpringBrandGraph({ brand, maxTravel, xTicks, maxForce, u
         {/* X axis label */}
         <text
           x={AREA.x + AREA.w / 2}
-          y={AREA.y + AREA.h + 42}
+          y={AREA.y + AREA.h + 44}
           textAnchor="middle"
           fill="#888780"
-          fontSize="11"
+          fontSize="16"
           fontFamily={MONO}
         >
           Spring extension ({UNITS[unit].length})
@@ -118,33 +127,43 @@ export default function SpringBrandGraph({ brand, maxTravel, xTicks, maxForce, u
           return (
             <g key={`xt-${inch}`}>
               <line x1={gx} y1={AREA.y + AREA.h} x2={gx} y2={AREA.y + AREA.h + 5} stroke="#F1EFE8" strokeWidth="1" />
-              <text x={gx} y={AREA.y + AREA.h + 18} textAnchor="middle" fill="#888780" fontSize="10" fontFamily={MONO}>
+              <text x={gx} y={AREA.y + AREA.h + 20} textAnchor="middle" fill="#888780" fontSize="14" fontFamily={MONO}>
                 {unit === 'metric' ? Math.round(lengthValue(inch, unit)) : `${inch}"`}
               </text>
             </g>
           )
         })}
 
+        {/* Clip force lines to the plot area so springs heavier than the axis
+            max (e.g. tower trapeze) run off the top instead of over the labels. */}
+        <defs>
+          <clipPath id={clipId}>
+            <rect x={AREA.x} y={AREA.y} width={AREA.w} height={AREA.h} />
+          </clipPath>
+        </defs>
+
         {/* Force lines */}
-        {brand.springs.map((spring, i) => {
-          const d = linePath(spring.k, spring.b, maxForce, maxTravel)
-          const dash = dashFor(spring, i, brand.springs)
-          return (
-            <g key={spring.color}>
-              {isDark(spring.displayColor) && (
-                <path d={d} stroke="#E8E4D8" strokeWidth="4.5" fill="none" strokeLinecap="round" opacity="0.35" strokeDasharray={dash} />
-              )}
-              <path
-                d={d}
-                stroke={spring.displayColor}
-                strokeWidth="2.5"
-                fill="none"
-                strokeLinecap="round"
-                strokeDasharray={dash}
-              />
-            </g>
-          )
-        })}
+        <g clipPath={`url(#${clipId})`}>
+          {brand.springs.map((spring, i) => {
+            const d = linePath(spring.k, spring.b, maxForce, maxTravel)
+            const dash = dashFor(spring, i, brand.springs)
+            return (
+              <g key={spring.color}>
+                {isDark(spring.displayColor) && (
+                  <path d={d} stroke="#E8E4D8" strokeWidth="4.5" fill="none" strokeLinecap="round" opacity="0.35" strokeDasharray={dash} />
+                )}
+                <path
+                  d={d}
+                  stroke={spring.displayColor}
+                  strokeWidth="2.5"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeDasharray={dash}
+                />
+              </g>
+            )
+          })}
+        </g>
       </svg>
 
       {/* Legend with per-spring stats */}
