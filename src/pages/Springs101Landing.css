@@ -8,6 +8,22 @@
   padding: 110px 0 112px;
   border-bottom: 1px solid var(--rule);
   color: var(--ink);
+  isolation: isolate;
+  background-color: var(--bg);
+  /* Single left-to-right scrim, matching the education hero: darker over the
+     copy on the left, fading to reveal the springs photo on the right. */
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(15, 13, 10, 0.82) 0%,
+      rgba(15, 13, 10, 0.58) 36%,
+      rgba(15, 13, 10, 0.28) 70%,
+      rgba(15, 13, 10, 0.18) 100%
+    ),
+    url('/images/homepage/hero-image-3.jpg');
+  background-size: cover;
+  background-position: center 62%;
+  background-repeat: no-repeat;
 }
 .ppv2 .springs101-hero__inner {
   position: relative;
@@ -55,6 +71,14 @@
 }
 
 /* ── How it works ─────────────────────────────────────────────────────────── */
+.ppv2 .springs101-how__title {
+  font-size: clamp(40px, 4.6vw, 72px);
+  line-height: 1.04;
+  letter-spacing: -0.012em;
+  margin: 18px 0 0;
+  font-weight: 400;
+  max-width: 22ch;
+}
 .ppv2 .springs101-how__grid {
   display: grid;
   grid-template-columns: minmax(0, 320px) 1fr;

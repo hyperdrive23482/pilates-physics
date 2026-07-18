@@ -116,9 +116,9 @@ export default function Springs101Landing() {
               A red spring is not <span className="italic accent">a single weight.</span>
             </h1>
             <p className="springs101-hero__lede">
-              A spring is not one weight. It gets heavier the more you stretch it, and every
-              manufacturer builds theirs differently. Get the free Springs 101 primer and the
-              interactive Spring Load Calculator, and see for yourself.
+              Get the free Springs 101 primer and the interactive Spring Load Calculator to learn
+              the basics of how springs work, compare spring specs across brands, and why this
+              matters for your teaching.
             </p>
             <a href="#signup" className="btn btn--lg">
               Get free access <ArrowSvg />
@@ -160,6 +160,9 @@ export default function Springs101Landing() {
       <section className="section-pad section--inset springs101-how">
         <div className="container">
           <div className="kicker">§ 03 · How It Works</div>
+          <h2 className="springs101-how__title">
+            Get access in <span className="italic accent">3 easy steps.</span>
+          </h2>
           <div className="springs101-how__grid">
             <button
               type="button"
