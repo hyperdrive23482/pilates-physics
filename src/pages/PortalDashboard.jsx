@@ -38,12 +38,15 @@ export default function PortalDashboard() {
   const firstName = user.user_metadata?.first_name || ''
 
   const tools = workshops.filter((w) => w.kind === 'tool')
-  const nonTools = workshops.filter((w) => w.kind !== 'tool')
-  const upcoming = nonTools.filter((w) => w.status === 'upcoming' || w.status === 'live')
-  const completed = nonTools.filter(
+  const resources = workshops.filter((w) => w.kind === 'resource')
+  // Only actual workshops get bucketed by lifecycle status; tools and
+  // resources have their own sections above.
+  const workshopsOnly = workshops.filter((w) => w.kind === 'webinar')
+  const upcoming = workshopsOnly.filter((w) => w.status === 'upcoming' || w.status === 'live')
+  const completed = workshopsOnly.filter(
     (w) => w.status === 'complete' || w.status === 'awaiting_recording'
   )
-  const archived = nonTools.filter((w) => w.status === 'archived')
+  const archived = workshopsOnly.filter((w) => w.status === 'archived')
 
   return (
     <div style={{ minHeight: '100vh' }}>
@@ -120,6 +123,20 @@ export default function PortalDashboard() {
                 </h2>
                 <div className="portal-grid">
                   {tools.map((w) => (
+                    <WorkshopCard key={w.id} workshop={w} linkTo={`/portal/${w.slug}`} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Resources */}
+            {resources.length > 0 && (
+              <section>
+                <h2 className="pp-section-label" style={{ marginBottom: '1.25rem' }}>
+                  Resources
+                </h2>
+                <div className="portal-grid">
+                  {resources.map((w) => (
                     <WorkshopCard key={w.id} workshop={w} linkTo={`/portal/${w.slug}`} />
                   ))}
                 </div>

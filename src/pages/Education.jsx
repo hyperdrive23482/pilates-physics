@@ -101,7 +101,7 @@ export default function Education() {
       .filter(
         (w) =>
           w.slug?.startsWith(`${path.seriesPrefix}-`) &&
-          w.kind !== 'tool' &&
+          w.kind === 'webinar' &&
           ['upcoming', 'live'].includes(w.status) &&
           w.scheduled_at &&
           new Date(w.scheduled_at).getTime() > now,

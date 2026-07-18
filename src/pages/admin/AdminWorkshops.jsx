@@ -16,7 +16,7 @@ export default function AdminWorkshops() {
   const { workshops: allWorkshops, loading, refetch } = useAllWorkshops()
   const { request } = useAdminAPI()
   const [revenueByWorkshop, setRevenueByWorkshop] = useState({})
-  const workshops = allWorkshops.filter((w) => w.kind !== 'tool')
+  const workshops = allWorkshops.filter((w) => w.kind === 'webinar')
 
   // Per-workshop revenue lives on the analytics-summary endpoint (the same
   // source the dashboard and analytics pages use); merge it in by id.

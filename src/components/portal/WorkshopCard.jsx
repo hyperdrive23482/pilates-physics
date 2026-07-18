@@ -39,7 +39,13 @@ export default function WorkshopCard({ workshop, linkTo }) {
         />
       )}
 
-      <StatusBadge status={workshop.kind === 'tool' ? 'tool' : workshop.status} />
+      <StatusBadge
+        status={
+          workshop.kind === 'tool' || workshop.kind === 'resource'
+            ? workshop.kind
+            : workshop.status
+        }
+      />
 
       <h3
         style={{
@@ -100,6 +106,8 @@ export default function WorkshopCard({ workshop, linkTo }) {
       >
         {workshop.kind === 'tool'
           ? 'Open Tool'
+          : workshop.kind === 'resource'
+          ? 'Open Resource'
           : workshop.status === 'complete'
           ? 'View Recording'
           : workshop.status === 'awaiting_recording'

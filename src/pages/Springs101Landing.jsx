@@ -10,7 +10,7 @@ const GET = [
   {
     n: '01',
     label: 'FREE PRIMER',
-    title: 'Springs 101',
+    title: 'Pilates Springs 101: A Primer',
     body: 'The physics of Pilates springs in one sitting from one Pilates instructor to another: how springs work, how to read manufacturer spring specs, and illustrated spring lineups for major brands across reformer, tower, and chair so you can see for yourself how they compare.',
   },
   {

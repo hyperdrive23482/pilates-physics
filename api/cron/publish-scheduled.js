@@ -68,7 +68,7 @@ export default async function handler(req, res) {
       .from('webinars')
       .update({ status: 'awaiting_recording' })
       .eq('status', 'upcoming')
-      .neq('kind', 'tool')
+      .eq('kind', 'webinar')
       .not('scheduled_at', 'is', null)
       .lte('scheduled_at', oneHourAgo)
       .select('id, slug')

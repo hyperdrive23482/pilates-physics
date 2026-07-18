@@ -1,4 +1,4 @@
-import { Calendar, Radio, PlayCircle, Archive, Sparkles, Clock } from 'lucide-react'
+import { Calendar, Radio, PlayCircle, Archive, Sparkles, Clock, BookOpen } from 'lucide-react'
 
 const config = {
   upcoming: { label: 'Upcoming', color: '#5B9BD5', icon: Calendar },
@@ -7,6 +7,7 @@ const config = {
   complete: { label: 'Recording Available', color: 'var(--color-accent)', icon: PlayCircle },
   archived: { label: 'Archived', color: 'var(--color-ink-muted)', icon: Archive },
   tool: { label: 'Interactive Tool', color: 'var(--color-accent)', icon: Sparkles },
+  resource: { label: 'Free Resource', color: 'var(--color-accent)', icon: BookOpen },
 }
 
 export default function StatusBadge({ status }) {

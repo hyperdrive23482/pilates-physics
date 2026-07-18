@@ -10,8 +10,10 @@ import BulkGrantModal from '../../components/admin/BulkGrantModal'
 export default function AdminTools() {
   const { user, signOut } = useEnrollment()
   const { workshops: allWorkshops, loading, refetch } = useAllWorkshops()
-  const tools = allWorkshops.filter((w) => w.kind === 'tool')
-  const sourceWorkshops = allWorkshops.filter((w) => w.kind !== 'tool' && w.status !== 'draft')
+  // Tools and resources are both interactive, entitlement-granted portal items,
+  // managed together here. Grant sources are actual workshops only.
+  const tools = allWorkshops.filter((w) => w.kind === 'tool' || w.kind === 'resource')
+  const sourceWorkshops = allWorkshops.filter((w) => w.kind === 'webinar' && w.status !== 'draft')
 
   const [bulkOpen, setBulkOpen] = useState(false)
 
@@ -40,7 +42,7 @@ export default function AdminTools() {
                 margin: 0,
               }}
             >
-              Tools
+              Tools &amp; Resources
             </h1>
             <p
               style={{
@@ -49,7 +51,7 @@ export default function AdminTools() {
                 marginTop: '0.35rem',
               }}
             >
-              Interactive tools assignable to members via entitlements.
+              Interactive tools and resources assignable to members via entitlements.
             </p>
           </div>
           <button

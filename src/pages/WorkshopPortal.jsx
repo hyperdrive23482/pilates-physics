@@ -109,15 +109,17 @@ export default function WorkshopPortal() {
     )
   }
 
-  const isTool = workshop.kind === 'tool'
-  const isPreWorkshop = !isTool && (workshop.status === 'upcoming' || workshop.status === 'live')
+  // Tools and resources both render through ToolHost (a React component keyed
+  // by slug) and skip the workshop chrome (dates, recordings, downloads).
+  const isInteractive = workshop.kind === 'tool' || workshop.kind === 'resource'
+  const isPreWorkshop = !isInteractive && (workshop.status === 'upcoming' || workshop.status === 'live')
   const isPostWorkshop =
-    !isTool &&
+    !isInteractive &&
     (workshop.status === 'awaiting_recording' ||
       workshop.status === 'complete' ||
       workshop.status === 'archived')
   const hasRecording =
-    !isTool && (workshop.status === 'complete' || workshop.status === 'archived')
+    !isInteractive && (workshop.status === 'complete' || workshop.status === 'archived')
 
   const recordings = content.filter((c) => c.type === 'recording')
   const downloads = content.filter((c) => c.type === 'download' || c.type === 'slide_deck')
@@ -141,7 +143,7 @@ export default function WorkshopPortal() {
       <main
         className="pp-main"
         style={{
-          maxWidth: isTool ? '1080px' : '760px',
+          maxWidth: isInteractive ? '1080px' : '760px',
           margin: '0 auto',
         }}
       >
@@ -163,7 +165,7 @@ export default function WorkshopPortal() {
 
         {/* Header */}
         <div style={{ marginBottom: '2.5rem' }}>
-          <StatusBadge status={isTool ? 'tool' : workshop.status} />
+          <StatusBadge status={isInteractive ? workshop.kind : workshop.status} />
           <h1
             style={{
               fontFamily: 'var(--font-serif)',
@@ -187,7 +189,7 @@ export default function WorkshopPortal() {
               {workshop.subtitle}
             </p>
           )}
-          {!isTool && date && (
+          {!isInteractive && date && (
             <p
               style={{
                 fontSize: '0.85rem',
@@ -203,7 +205,7 @@ export default function WorkshopPortal() {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           {/* Tool body (replaces the standard workshop sections) */}
-          {isTool && <ToolHost workshop={workshop} />}
+          {isInteractive && <ToolHost workshop={workshop} />}
 
           {/* Zoom info (pre-workshop only) */}
           {isPreWorkshop && <ZoomInfo workshop={workshop} />}
@@ -311,7 +313,7 @@ export default function WorkshopPortal() {
           )}
 
           {/* Downloads */}
-          {!isTool && downloads.length > 0 && (
+          {!isInteractive && downloads.length > 0 && (
             <section>
               <h2
                 style={{
@@ -334,7 +336,7 @@ export default function WorkshopPortal() {
           )}
 
           {/* Bonus content & resources */}
-          {!isTool && bonusAndResources.length > 0 && (
+          {!isInteractive && bonusAndResources.length > 0 && (
             <section>
               <h2
                 style={{
@@ -360,7 +362,7 @@ export default function WorkshopPortal() {
           {isPreWorkshop && <QuestionForm workshopId={workshop.id} userId={user.id} />}
 
           {/* Description */}
-          {!isTool && workshop.description && (
+          {!isInteractive && workshop.description && (
             <section>
               <h2
                 style={{
