@@ -114,12 +114,13 @@ export default function Footer() {
             <Link to="/about" style={colLinkStyle}>About Kaleen</Link>
             <Link to="/education" style={colLinkStyle}>Education</Link>
             <Link to="/blog" style={colLinkStyle}>Blog</Link>
-            <Link to="/help" style={colLinkStyle}>Help</Link>
+            <Link to="/springs-101" style={colLinkStyle}>Springs 101</Link>
           </div>
 
           <div className="pp-footer-col">
             <div style={eyebrowStyle}>Admin</div>
             <Link to="/login" style={colLinkStyle}>Login</Link>
+            <Link to="/help" style={colLinkStyle}>Help</Link>
             <Link to="/terms" style={colLinkStyle}>Terms</Link>
             <Link to="/privacy" style={colLinkStyle}>Privacy</Link>
           </div>
