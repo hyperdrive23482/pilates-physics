@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import springSpecs from '../../../data/springSpecs.json'
 import SpringBrandGraph from './SpringBrandGraph'
+import { GraphPartsFigure, ReadOffFigure } from './GraphReadingGuide'
 import ConversionChart from './ConversionChart'
 import { CONVERSION_CHARTS } from './conversionData'
-import { UNITS, UNIT_OPTIONS, forceValue, niceMaxForce } from './graphUtils'
+import { UNITS, UNIT_OPTIONS, forceValue, lengthValue, niceMaxForce } from './graphUtils'
 
 const sectionLabelStyle = {
   fontSize: '0.7rem',
@@ -92,6 +93,8 @@ export default function Springs101() {
   const [unit, setUnit] = useState('imperial')
   const forceUnit = UNITS[unit].force
   const fmtForce = (lbs) => `${Math.round(forceValue(lbs, unit))} ${forceUnit}`
+  const fmtLength = (inch) =>
+    unit === 'metric' ? `${Math.round(lengthValue(inch, unit))} cm` : `${inch} inches`
 
   const peakRed = reformerBrand('peak-pilates').springs.find((s) => s.color === 'red')
   const alignGreen = reformerBrand('align-pilates').springs.find((s) => s.color === 'green')
@@ -125,17 +128,24 @@ export default function Springs101() {
           margin: '0 0 3rem',
         }}
       >
-        A red spring is not a single weight. A spring is not one weight at all, and no two brands
-        build theirs alike. This primer covers the physics you need to read any spring, on any
-        machine, from any manufacturer.
+        A single spring is not a single weight. I wish it was! I really do! Our teaching lives
+        would be simpler. But, we trade that simplicity for uniqueness, practicality, and even some
+        biomechanical advantage. This primer covers the physics you need to understand how your
+        Pilates springs work, on any machine, from any manufacturer.
       </p>
 
-      <Section label="A spring is a slope, not a number">
+      <Section label="A spring is a range of weights, not a single one">
         <Prose>
-          We talk about springs the way we talk about dumbbells. A 10 pound dumbbell is 10 pounds
-          wherever you hold it, so we assume "two reds and a blue" is a fixed amount of resistance
-          you can carry from studio to studio. It is not. A spring gets heavier the more you
-          stretch it. Its resistance is not a single value, it is a line that climbs.
+          We want to talk about springs the way we talk about dumbbells. A 10 pound dumbbell is 10
+          pounds wherever you hold it, so wouldn't it be nice if "two reds and a blue" was a fixed
+          number too? While we're dreaming, "two reds and a blue" would be the same no matter what
+          brand of equipment you taught on.
+        </Prose>
+        <Prose>Unfortunately, it's not that simple.</Prose>
+        <Prose>
+          A spring gets heavier the more you stretch it. Its resistance is not a single value, it
+          is a variable that scales linearly. This principle is called Hooke's Law. You can even
+          represent it with a mathematical equation:
         </Prose>
         <div
           className="pp-card"
@@ -148,15 +158,58 @@ export default function Springs101() {
             color: 'var(--color-ink)',
           }}
         >
-          Force = (k × stretch) + b
+          Spring Force = (k × x) + b
         </div>
         <Prose>
-          <span style={strongStyle}>b</span> is the starting tension, the load the spring already
-          pulls before the carriage moves. <span style={strongStyle}>k</span> is the rate, how fast
-          the load climbs for every inch of travel. <span style={strongStyle}>Stretch</span> is how
-          far the spring is pulled, which depends on the movement and the machine. A Balanced Body
-          red runs from about {fmtForce(bbRed.b)} at engagement to about {fmtForce(bbRedEnd)} at
-          full stretch. Same spring, same rep, several times heavier at the end than at the start.
+          Here, <span style={strongStyle}>b</span> is the initial tension, the load the spring
+          already pulls before the carriage moves. <span style={strongStyle}>k</span> is the spring
+          constant (sometimes referred to as stiffness), and indicates how fast the load climbs for
+          every inch of travel. <span style={strongStyle}>x</span> is how far the spring is
+          stretched, which depends on the movement and the machine.
+        </Prose>
+        <Prose>
+          For example, a Balanced Body red reformer spring starts at about {fmtForce(bbRed.b)} when
+          closed, and scales to about {fmtForce(bbRedEnd)} at {fmtLength(reformerTravel)} of
+          stretch. Same spring color, but a whole range of possible resistances.
+        </Prose>
+      </Section>
+
+      <Section label="How to read these graphs">
+        <Prose>
+          If graphs and equations are not your thing, stay with me, this part is easier than it
+          looks, and it is the key to everything below.
+        </Prose>
+        <Prose>
+          First, let's look at the 4 parts of the graph. The diagonal line across the middle
+          represents the spring force. The fact that it goes up and to the right means that the
+          spring gets heavier as it stretches.
+        </Prose>
+        <Prose>
+          Then, there are the axes. The horizontal axis (aka x-axis) that runs along the bottom is
+          how far the spring is stretched. The weight you feel from the spring runs up the side on
+          the vertical axis (aka y-axis).
+        </Prose>
+        <Prose>
+          The initial tension is simply where the line of the spring crosses 0 spring stretch. On
+          most graphs, that's the vertical axis. The other two describe the line itself: where it
+          starts, and how steeply it rises.
+        </Prose>
+        <Prose>
+          Finally, the spring constant (stiffness) is just the slope of the line. For every one
+          inch the spring stretches, the spring resistance increases a set amount.
+        </Prose>
+        <GraphPartsFigure />
+        <Prose>
+          Okay, so now that you know the anatomy of a graph (see what I did there?) let's review how
+          to read the graph. Here's how you figure out how much resistance a Balanced Body red
+          spring provides at 12".
+        </Prose>
+        <ReadOffFigure />
+        <Prose>
+          First, go to 12" on the horizontal axis. Then draw a line straight up until you hit the
+          spring force line (the diagonal one across the middle). Then, immediately pivot and go
+          straight left to the vertical axis. Wherever your dotted line crosses the vertical axis
+          is how heavy the spring is at that amount of stretch.
         </Prose>
       </Section>
 
@@ -180,19 +233,18 @@ export default function Springs101() {
         <Prose>
           Green is the heaviest spring Balanced Body and Align make, and the lightest spring Peak
           makes. Yellow is the lightest spring on a Balanced Body and a middle spring on a Peak.
-          Red is a medium for Balanced Body, Align, and Merrithew, but a heavy for Peak and BASI.
-          The colors are not a language. They are just paint. When a client says they "used a red
-          spring" somewhere else, the honest answer is: it depends on the machine.
+          Red is a medium for Balanced Body, Align, and Merrithew, but heavy for Peak and BASI.
+          The colors are not a language. They are just paint.
         </Prose>
       </Section>
 
       <Section label="The spring lineups">
         <Prose>
-          Here is every spring in the calculator's dataset, plotted brand by brand. Each line is
-          one spring: where it meets the left axis is its starting tension, and how steeply it
-          climbs is its rate. Within each apparatus every graph shares the same scale, so you can
-          compare brands card to card. When a brand paints two springs the same color, the second
-          line is dashed.
+          Here is every spring I've found published data for (and one I haven't) brand by brand,
+          drawn to a common scale. Each line is one spring: where it meets the left axis is its
+          starting tension, and how steeply it climbs is its spring constant (stiffness). Within
+          each apparatus every graph shares the same scale, so you can compare brands card to card.
+          When a brand paints two springs the same color, the second line is dashed.
         </Prose>
         {springSpecs.apparatuses.map((apparatus) => {
           const peak = Math.max(
@@ -248,11 +300,14 @@ export default function Springs101() {
         ))}
         <Prose>
           Two things to keep in mind as you use these. Springs that share a column are rough
-          equivalents, not twins: each one has its own starting tension and rate, so a pair that
-          matches in the middle of the stroke drifts apart at the ends. And machine dimensions
-          change how far the same spring stretches, so even a perfect match can load differently
-          from one reformer to the next. My recommendation is simple: try the same exercise on
-          every piece of equipment you teach on, and let your body verify the chart.
+          equivalents, not twins: each one has its own starting tension and rate, so they may or
+          may not feel "the same."
+        </Prose>
+        <Prose>
+          Plus, machine dimensions change how far the same spring stretches, so even a perfect
+          spring spec match can load the student differently from one model of reformer to the
+          next. My recommendation is simple: try the same exercise on every piece of equipment you
+          teach on, and let your body verify the chart. Sometimes it won't feel the way you expect.
         </Prose>
       </Section>
 
