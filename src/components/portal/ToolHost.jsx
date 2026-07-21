@@ -2,6 +2,7 @@ import SpringLoadCalculator from './SpringLoadCalculator'
 import AnimationTool from './AnimationTool'
 import ReformerForceModeler from './reformer/ReformerForceModeler'
 import Springs101 from './springs101/Springs101'
+import ClassSimulator from './classSimulator/ClassSimulator'
 
 const animation = (slug) => () => <AnimationTool slug={slug} />
 
@@ -11,6 +12,7 @@ const REGISTRY = {
   'spring-load-calculator': SpringLoadCalculator,
   'springs-101': Springs101,
   'reformer-force-modeler': ReformerForceModeler,
+  'class-simulator': ClassSimulator,
   'animation-spring': animation('animation-spring'),
   'animation-bicep-curl': animation('animation-bicep-curl'),
   'animation-bicep-curl-vertical': animation('animation-bicep-curl-vertical'),
