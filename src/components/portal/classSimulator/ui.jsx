@@ -1,13 +1,15 @@
 // Small shared controls for the Class Simulator, styled to match
 // SpringLoadCalculator's segmented toggle.
 
-export function SegmentedToggle({ value, onChange, options, ariaLabel, size = 'md' }) {
-  const pad = size === 'sm' ? '0.35rem 0.6rem' : '0.5rem 1rem'
+export function SegmentedToggle({ value, onChange, options, ariaLabel, size = 'md', fullWidth }) {
+  const pad = size === 'sm' ? '0.35rem 0.5rem' : '0.5rem 1rem'
   const font = size === 'sm' ? '0.72rem' : '0.8rem'
   return (
     <div
       style={{
-        display: 'inline-flex',
+        display: fullWidth ? 'flex' : 'inline-flex',
+        width: fullWidth ? '100%' : undefined,
+        boxSizing: 'border-box',
         border: '1px solid var(--color-rule)',
         borderRadius: '2px',
         background: 'var(--color-bg)',
@@ -25,6 +27,8 @@ export function SegmentedToggle({ value, onChange, options, ariaLabel, size = 'm
             aria-checked={active}
             onClick={() => onChange(opt.value)}
             style={{
+              flex: fullWidth ? 1 : undefined,
+              minWidth: 0,
               padding: pad,
               fontSize: font,
               fontFamily: 'var(--font-serif)',
@@ -35,6 +39,8 @@ export function SegmentedToggle({ value, onChange, options, ariaLabel, size = 'm
               border: 'none',
               cursor: 'pointer',
               whiteSpace: 'nowrap',
+              overflow: fullWidth ? 'hidden' : undefined,
+              textOverflow: fullWidth ? 'ellipsis' : undefined,
             }}
           >
             {opt.label}

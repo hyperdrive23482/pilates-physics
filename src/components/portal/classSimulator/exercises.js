@@ -33,12 +33,23 @@ export function springSummary(counts) {
 
 // Stretch deltas (inches) for equipment variations.
 export const FOOTBAR_DELTA = { low: -3, middle: 0, high: 3 }
+export const GEAR_DELTA = { 1: 0, 2: -3, 3: -6 }
 export const GRIP_OFFSET = { long: 0, short: 4, choked: 11 }
+
+// When an exercise pulls the straps while riding the carriage, the carriage
+// travels toward the pulleys as the ropes pay out, so the springs stretch
+// half the distance the hands or feet move.
+export const STRAP_CARRIAGE_FACTOR = 0.5
 
 export const FOOTBAR_OPTIONS = [
   { value: 'low', label: 'Low' },
   { value: 'middle', label: 'Middle' },
   { value: 'high', label: 'High' },
+]
+export const GEAR_OPTIONS = [
+  { value: 1, label: 'Gear 1' },
+  { value: 2, label: 'Gear 2' },
+  { value: 3, label: 'Gear 3' },
 ]
 export const GRIP_OPTIONS = [
   { value: 'long', label: 'Long loops' },
@@ -54,14 +65,14 @@ export const EXERCISES = [
     name: 'Footwork',
     behavior: 'Resistive',
     resistanceType: 'Springs only',
-    equipment: 'footbar',
+    controls: ['footbar', 'gear'],
     defaultSprings: { red: 2, green: 1 },
-    defaults: { footbar: 'middle' },
+    defaults: { footbar: 'middle', gear: 1 },
     toggles: [],
-    copy: 'Full press-out distance depends on leg length, so taller students stretch the springs farther and meet a heavier peak load on the same setting.',
+    copy: 'Full press-out distance depends on leg length, so taller students stretch the springs farther and meet a heavier peak load on the same setting. Each gear beyond 1 removes 3 inches of stretch.',
     compute(student, cfg) {
       const springs = expandCounts(cfg.springs)
-      const delta = FOOTBAR_DELTA[cfg.footbar] ?? 0
+      const delta = (FOOTBAR_DELTA[cfg.footbar] ?? 0) + (GEAR_DELTA[cfg.gear] ?? 0)
       const xMax = Math.max(0, 0.82 * student.heightIn - 40 + delta)
       return {
         rows: [
@@ -72,6 +83,7 @@ export const EXERCISES = [
             sub: `at ${round1(xMax)}" press-out`,
           },
         ],
+        bodyRows: [],
         extras: [],
       }
     },
@@ -81,7 +93,7 @@ export const EXERCISES = [
     name: 'Bridging',
     behavior: 'Supportive',
     resistanceType: 'Springs + body weight',
-    equipment: null,
+    controls: [],
     defaultSprings: { red: 2, blue: 1 },
     defaults: {},
     toggles: [],
@@ -98,12 +110,8 @@ export const EXERCISES = [
             sub: 'at 3" of stretch',
           },
         ],
-        extras: [
-          {
-            id: 'bodyWeight',
-            text: `Lifting ${round1(bodyLbs)} lbs of thighs, abdomen and pelvis against gravity`,
-          },
-        ],
+        bodyRows: [{ label: 'Lifting', lbs: round1(bodyLbs), sub: 'of body weight' }],
+        extras: [],
       }
     },
   },
@@ -112,32 +120,29 @@ export const EXERCISES = [
     name: 'Supine Arms in Straps',
     behavior: 'Resistive',
     resistanceType: 'Springs + body weight',
-    equipment: 'straps',
+    controls: ['grip'],
     defaultSprings: { red: 1, yellow: 1 },
     defaults: { grip: 'short' },
     toggles: [
       { id: 'abCurl', label: 'Add ab curl' },
       { id: 'legExtension', label: 'Extend legs 30°' },
     ],
-    copy: 'Arm length sets the stroke, so longer arms travel farther into the springs. The leg center of mass sits about 34% down from the hip, so extending the legs lengthens that moment arm and adds work the springs never see.',
+    copy: 'Arm length sets the stroke, so longer arms travel farther into the springs, though the carriage rides toward the pulleys as the ropes pay out, so the springs only stretch half the distance the hands move. The leg center of mass sits about 34% down from the hip, so extending the legs lengthens that moment arm and adds work the springs never see.',
     compute(student, cfg) {
       const springs = expandCounts(cfg.springs)
       const offset = GRIP_OFFSET[cfg.grip] ?? 0
-      const xMin = offset
-      const xMax = offset + armLength(student)
-      const extras = []
+      const xMin = offset * STRAP_CARRIAGE_FACTOR
+      const xMax = (offset + armLength(student)) * STRAP_CARRIAGE_FACTOR
+      const bodyRows = []
       if (cfg.toggles?.abCurl) {
         const seg = ANTHRO[student.gender].seg
         // Ab curl lifts head/neck plus roughly the top third of the ribcage.
         const lbs = student.weightLb * (seg.headNeck + seg.thorax / 3)
-        extras.push({
-          id: 'abCurl',
-          text: `+ holding ${round1(lbs)} lbs of head, neck and chest in the air`,
-        })
+        bodyRows.push({ label: 'Holding', lbs: round1(lbs), sub: 'of head, neck and chest' })
       }
       if (cfg.toggles?.legExtension) {
         const lbs = segmentWeight(student, ['leg', 'leg'])
-        extras.push({ id: 'legExtension', text: `+ holding ${round1(lbs)} lbs of legs in the air` })
+        bodyRows.push({ label: 'Holding', lbs: round1(lbs), sub: 'of legs in the air' })
       }
       return {
         rows: [
@@ -152,7 +157,8 @@ export const EXERCISES = [
             sub: `full press, ${round1(xMax)}" stretch`,
           },
         ],
-        extras,
+        bodyRows,
+        extras: [],
       }
     },
   },
