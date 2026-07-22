@@ -1,0 +1,74 @@
+# Voice and Messaging
+
+The final word on how Pilates Physics writes. Run every draft against this before
+you ship it.
+
+> **Source of truth note.** Where this file and
+> [../design-system.md](../design-system.md) disagree on how copy should read,
+> this file wins. In particular, the design system's copy section says "em dashes
+> for asides." That is superseded here: **do not use em dashes.**
+
+---
+
+## The voice in one line
+
+A knowledgeable friend who makes intimidating science feel simple, and who
+respects that you already know your craft.
+
+## Voice traits
+
+- **Warm and encouraging.** Students describe the teaching as reassuring, not
+  gatekept. Copy should feel like an invitation, never a lecture.
+- **Makes hard things simple.** The single most repeated compliment is that a
+  scary topic was made understandable. Lead with the plain-language idea, let the
+  rigor sit underneath.
+- **Why, not just how.** Always connect a rule to the reason behind it. That is
+  the whole promise of the brand.
+- **Respects the reader's experience.** Teachers are not beginners. Honor what
+  they already do well, then offer the layer underneath it.
+- **Direct and second person.** Talk to one person as "you." No corporate "we
+  help instructors" distance.
+- **Confident, not hyped.** State the value plainly. The work speaks for itself,
+  so it does not need exclamation points or superlatives.
+
+## Copy conventions
+
+- **No em dashes.** Use a period or a comma instead. Rework the sentence if
+  needed. This overrides the design system.
+- **Sentence case for headings,** never title case.
+- **Avoid exclamation marks.** Let strong ideas carry the emphasis.
+- **One rhetorical payoff per heading.** In the v2 visual system this is the
+  single italic-accent phrase (see the design system). Never two per heading.
+- **Plain words over jargon.** If a physics term is unavoidable, define it in
+  plain language in the same breath.
+- **Real student language beats clever language.** Pull from
+  [customer-language.md](customer-language.md) before inventing a phrase.
+- **Set expectations honestly.** This is the physics, applied. Do not imply it is
+  a live movement class or a quick trick. The watch-out in
+  [icp-profiles.md](icp-profiles.md) exists because expectations slipped.
+
+## Do
+
+- Name the exact frustration before offering the fix (Problem before Answer).
+- Honor that memorizing the settings was the right starting point.
+- Promise understanding and confidence, and the language to pass it to clients.
+- Use concrete Pilates specifics: springs, footbar, gear, load, body position,
+  angle, tall vs short, heavier vs lighter bodies.
+- Keep the math promise gentle: reachable, no background required.
+
+## Do not
+
+- Do not imply a teacher's training failed them. The training was the foundation.
+- Do not lean on fear of the math. Disarm it, do not amplify it.
+- Do not overpromise a hands-on class or an instant hack.
+- Do not use em dashes, title case, or exclamation marks.
+- Do not bury the why. If a line states a rule, it should hint at the reason.
+
+## A quick before-and-after
+
+**Off-voice:** "Master advanced spring mechanics and transform your teaching
+today! Our proven system makes physics easy."
+
+**On-voice:** "You were taught which springs to set, but never why. Once you can
+see what is happening between the body and the machine, you stop guessing and
+start adjusting with intention."
