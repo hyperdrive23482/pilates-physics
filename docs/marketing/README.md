@@ -18,7 +18,10 @@ speaks to a real person, grounded in what actual students told us.
 4. **Check the voice.** Run the draft against
    [voice-and-messaging.md](voice-and-messaging.md) before you ship it. That file
    is the final word on tone and copy conventions.
-5. **Match the visuals.** For layout, type, color, and components, use the
+5. **Lay out the page.** For the section order of a landing or marketing page
+   (hero, stakes, value, guide, plan, footer) and an audit checklist, use
+   [website-structure.md](website-structure.md).
+6. **Match the visuals.** For layout, type, color, and components, use the
    visual companion, [../design-system.md](../design-system.md).
 
 ## Files in this folder
@@ -28,6 +31,7 @@ speaks to a real person, grounded in what actual students told us.
 | [icp-profiles.md](icp-profiles.md) | The 3 ideal customer profiles, the 5 messaging pillars, and the data behind them |
 | [peace-framework.md](peace-framework.md) | The PEACE messaging soundbites (Problem, Empathy, Answer, Change, End Result), plus the Pilates Physics application of Miller's principles |
 | [soundbite-principles.md](soundbite-principles.md) | Donald Miller's general soundbite principles (survival framing, cognitive load, controlling idea, the three silent questions) |
+| [website-structure.md](website-structure.md) | The StoryBrand page layout, section by section (hero, stakes, value, guide, plan, footer), with craft tips and an audit checklist. Use it to lay out or audit a page |
 | [voice-and-messaging.md](voice-and-messaging.md) | Voice, tone, and copy rules. The source of truth for how we write |
 | [customer-language.md](customer-language.md) | Voice-of-customer swipe file: real student quotes by theme |
 
