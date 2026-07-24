@@ -28,6 +28,14 @@ const ghostButtonStyle = {
   transition: 'border-color 0.15s ease',
 }
 
+const filledButtonStyle = {
+  ...ghostButtonStyle,
+  color: 'var(--color-accent-ink)',
+  background: 'var(--color-accent)',
+  border: '1px solid var(--color-accent)',
+  transition: 'background 0.15s ease, border-color 0.15s ease',
+}
+
 export default function Navbar({ hasAnnouncement = true }) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -70,16 +78,25 @@ export default function Navbar({ hasAnnouncement = true }) {
           <NavLink to="/about" className="nav-link">About Kaleen</NavLink>
         </nav>
 
-        {/* Desktop login */}
-        <Link
-          to="/login"
-          className="hidden md:inline-flex"
-          style={ghostButtonStyle}
-          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-ink)' }}
-          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--color-rule)' }}
-        >
-          Login
-        </Link>
+        {/* Desktop actions */}
+        <div className="hidden md:flex items-center" style={{ gap: '12px' }}>
+          <Link
+            to="/login"
+            style={ghostButtonStyle}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-ink)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--color-rule)' }}
+          >
+            Login
+          </Link>
+          <Link
+            to="/springs-101"
+            style={filledButtonStyle}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-accent-warm)'; e.currentTarget.style.borderColor = 'var(--color-accent-warm)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-accent)'; e.currentTarget.style.borderColor = 'var(--color-accent)' }}
+          >
+            Start learning free
+          </Link>
+        </div>
 
         {/* Mobile hamburger */}
         <button
@@ -107,6 +124,13 @@ export default function Navbar({ hasAnnouncement = true }) {
             <NavLink to="/blog" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Blog</NavLink>
             <NavLink to="/about" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>About Kaleen</NavLink>
             <NavLink to="/login" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Login</NavLink>
+            <Link
+              to="/springs-101"
+              onClick={() => setMobileOpen(false)}
+              style={{ ...filledButtonStyle, marginTop: '8px', justifyContent: 'center' }}
+            >
+              Start learning free
+            </Link>
           </nav>
         </div>
       )}

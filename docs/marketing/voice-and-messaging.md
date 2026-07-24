@@ -50,10 +50,11 @@ respects that you already know your craft.
 ## Do
 
 - Name the exact frustration before offering the fix (Problem before Answer).
-- Honor that memorizing the settings was the right starting point.
-- Promise understanding and confidence, and the language to pass it to clients.
+- Honor that memorizing the settings and the script was the right starting point.
+- Promise personalization: the cues, options, and settings that fit the body in
+  front of them, plus the language to pass it to clients.
 - Use concrete Pilates specifics: springs, footbar, gear, load, body position,
-  angle, tall vs short, heavier vs lighter bodies.
+  angle, cues, tall vs short, heavier vs lighter bodies.
 - Keep the math promise gentle: reachable, no background required.
 
 ## Do not
@@ -69,6 +70,6 @@ respects that you already know your craft.
 **Off-voice:** "Master advanced spring mechanics and transform your teaching
 today! Our proven system makes physics easy."
 
-**On-voice:** "You were taught which springs to set, but never why. Once you can
-see what is happening between the body and the machine, you stop guessing and
-start adjusting with intention."
+**On-voice:** "You were handed the settings and the script, but never the why. The
+same setting is a different workout for every body. Once you can see why, you stop
+guessing and start building each class around the body in front of you."

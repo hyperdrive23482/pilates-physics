@@ -125,6 +125,18 @@
 .ppv2 .btn--block { width: 100%; justify-content: center; }
 .ppv2 .btn--lg { padding: 18px 30px 17px; font-size: 13px; }
 
+/* Outlined / secondary button — pairs with .btn for transitional CTAs */
+.ppv2 .btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--rule);
+}
+.ppv2 .btn--ghost:hover {
+  background: transparent;
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
 .ppv2 .arrow-link {
   font-family: var(--pp-font-mono);
   font-size: 12.5px;
@@ -185,7 +197,8 @@
   flex-direction: column;
   min-height: 160px;
 }
-.ppv2 .fcard:hover { border-color: var(--accent); }
+/* No hover state by design: fcards are static content, not links. Matches
+ * .quote-card, so every card on the site reads the same. */
 .ppv2 .fcard__head {
   display: flex;
   align-items: center;

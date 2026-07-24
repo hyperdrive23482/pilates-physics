@@ -26,13 +26,13 @@ Harry Potter is the cleanest illustration of the seven beats:
 
 | SB7 beat | In Harry Potter | On our page |
 |----------|-----------------|-------------|
-| **Character (Hero)** | Harry, the boy who wants to belong and survive | The instructor who wants to teach any body with confidence |
-| **Problem** | Death Eaters attack; good versus evil. External threat, internal fear for his friends, philosophical stakes | Taught what springs to set but never why. External (a body does not fit the setting), internal (feeling exposed), philosophical (students deserve a teacher who knows why) |
+| **Character (Hero)** | Harry, the boy who wants to belong and survive | The instructor who wants to personalize class for every body |
+| **Problem** | Death Eaters attack; good versus evil. External threat, internal fear for his friends, philosophical stakes | The same setting is a different workout for every body, and no one taught the why. External (the standard setting does not fit the body), internal (teaching blind, feeling exposed), philosophical (students deserve a teacher who can adapt to them) |
 | **Guide** | Hagrid and Dumbledore. Trusted mentors who have been there before | Pilates Physics. Empathy plus authority, the Yoda not the Luke |
 | **Plan** | The steps and lessons Harry follows to be ready | Our simple 3-step path to registering and learning |
 | **Call to Action** | Harry realizes he is the one who must act | Register now / join the waitlist |
-| **Failure (Stakes)** | Voldemort takes over the Wizarding World | Keep defaulting to spring swaps, keep guessing, blend in with every rote teacher |
-| **Success** | If Harry succeeds, there is harmony | Teach with intention, adapt to any body, explain the why |
+| **Failure (Stakes)** | Voldemort takes over the Wizarding World | Keep running one script for the whole room, keep guessing, blend in with every rote teacher |
+| **Success** | If Harry succeeds, there is harmony | Every student gets a class built for their body, and you can explain the why |
 
 The reason this matters: human brains are wired to follow story structure. When a
 page does not follow it, people disengage. The layout below is just these seven
@@ -115,7 +115,8 @@ jobs, in this order:
 - Use the customer's real words. Our swipe file is
   [customer-language.md](customer-language.md).
 - **Our fill:** the **Empathy** beat, then the authority proof. "Memorizing the
-  settings is exactly where you start. The nuance is where you grow."
+  settings and the script is exactly where you start. Personalizing them is where
+  you grow."
 
 ### 5. Plan
 
@@ -199,6 +200,38 @@ brand.
 - Every section needs a header that means something on its own, because visitors
   skim, not read.
 
+### The headline scan test
+
+The practical way to check the point above. Strip the page down to its headlines,
+read them in order, and nothing else. That list is what a skimmer actually
+consumes, so it has to work as a standalone story.
+
+Run it like this:
+
+1. Write out every section headline in page order, hero first.
+2. Read only that list. Ask: does it move Problem, to Stakes, to Empathy, to
+   Change, to Guide, to Plan, to the End Result close?
+3. Mark any headline that makes you feel nothing. Those are **dead beats.**
+
+A headline is a dead beat when it describes the *format* of its section instead
+of making the section's *claim*. "Three components" is a dead beat: it tells you
+the section has three of something and nothing else. "The missing piece isn't
+your choreography. It's the load." is the same section making an argument, so it
+survives the scan.
+
+Two failure modes to watch for:
+
+- **Label headlines.** "Our process," "What's included," "Three components."
+  These name a container. Replace them with the sentence you would say out loud
+  to convince someone.
+- **Repeated construction.** If four headlines in a row use the same shape ("X
+  isn't Y"), the scan reads as a tic rather than a build. One or two is a motif,
+  more is monotony. Vary the sentence shape, not the message.
+
+Section headings that are genuinely just labels are fine when the content under
+them is self-evident (a person's name over a bio, for example). The test is
+whether a skimmer who reads only headlines still gets the argument.
+
 **Calls to action:**
 - Two types: **direct** (Register, Buy, Schedule) and **transitional** (Download
   the free guide, Watch the demo). Use both on the page.
@@ -279,6 +312,8 @@ Run any page against this:
 - [ ] Nav has five links or fewer; the rest is in the footer.
 - [ ] The **customer is the hero** throughout, not the brand.
 - [ ] Every section header carries meaning on its own for skimmers.
+- [ ] **Headline scan test passes:** reading only the headlines, in order, tells
+      the story with no dead beats and no repeated sentence construction.
 
 ---
 

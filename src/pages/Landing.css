@@ -2,8 +2,59 @@
  *
  * Shared v2 primitives live in src/styles/ppv2.css.
  * This file contains only landing-page-specific sections:
- *   .hero, .spring-chart, .understanding, .framework, .meet, .cta
+ *   .hero, .spring-chart, .stakes, .understanding, .shifts,
+ *   .framework, .meet, .plan, .cta
+ *
+ * ── Headline width rule ──────────────────────────────────────────────────
+ * A section headline is sized by what sits NEXT TO it, not by taste:
+ *
+ *   1. Content BELOW it (full-width sections: .stakes, .shifts, .plan)
+ *      → no max-width. Let it span the container and use the shared
+ *        clamp(34px, 4.2vw, 64px) scale. h2 already has text-wrap: balance,
+ *        which handles the line breaks. Capping these is what makes a
+ *        headline look scrunched against empty space on the right.
+ *
+ *   2. Content BESIDE it (two-column sections: .understanding, .meet)
+ *      → no max-width either. The grid column is already the constraint,
+ *        so an extra cap only double-constrains it.
+ *
+ *   3. The hero h1 (.hero__title)
+ *      → its own larger scale, no cap. The only headline above the shared
+ *        section scale, because it is the page title.
+ *
+ *   4. Centered sections (.cta__head)
+ *      → constrained by .container--narrow, no cap.
+ *
+ * Short version: never put a max-width on a section headline. Control it
+ * with the container or the grid column instead.
  */
+
+/* ── Shared section-headline scale ────────────────────────────────────────
+ * Every section headline (h2) on this page uses ONE scale, so scanning the
+ * page reads as a sequence of equal-weight statements rather than a few
+ * shouting and a few whispering. Only .hero__title (the h1) sits above this
+ * scale, because it is the page title, not a section headline.
+ * Per-section rules below set margins only. Do not reintroduce font-size
+ * there, or the sizes drift apart again.
+ */
+.ppv2 .stakes__head,
+.ppv2 .understanding__head,
+.ppv2 .shifts__title,
+.ppv2 .framework__title,
+.ppv2 .meet__head,
+.ppv2 .plan__title,
+.ppv2 .cta__head {
+  font-size: clamp(34px, 4.2vw, 64px);
+  line-height: 1.06;
+  letter-spacing: -0.018em;
+  font-weight: 400;
+  /* Override the h2 default of text-wrap: balance. Balance equalizes line
+   * lengths, which shrinks each headline to its own narrow block, so every
+   * section wraps at a different width and the page stops looking cohesive.
+   * `pretty` still avoids orphans but lets every headline run to the same
+   * boundary: its container or grid column. */
+  text-wrap: pretty;
+}
 
 /* ── HERO ─────────────────────────────────────────────────────────────────── */
 .ppv2 .hero {
@@ -43,9 +94,9 @@
 }
 
 .ppv2 .hero__title {
-  font-size: clamp(64px, 7.2vw, 124px);
-  line-height: 0.96;
-  letter-spacing: -0.025em;
+  font-size: clamp(44px, 5vw, 80px);
+  line-height: 1;
+  letter-spacing: -0.022em;
   margin: 0 0 32px;
   font-weight: 400;
 }
@@ -65,6 +116,12 @@
   display: flex;
   align-items: flex-start;
   gap: 32px;
+  flex-wrap: wrap;
+}
+.ppv2 .hero__buttons {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   flex-wrap: wrap;
 }
 .ppv2 .hero__meta {
@@ -144,12 +201,7 @@
   gap: 96px;
   align-items: start;
 }
-.ppv2 .understanding__head {
-  font-size: clamp(36px, 3.6vw, 56px);
-  line-height: 1.04;
-  letter-spacing: -0.015em;
-  margin: 18px 0 0;
-}
+.ppv2 .understanding__head { margin: 18px 0 0; }
 .ppv2 .understanding__right p {
   font-size: 19px;
   line-height: 1.55;
@@ -178,22 +230,88 @@
   background: var(--accent);
 }
 
+/* ── STAKES ───────────────────────────────────────────────────────────────── */
+.ppv2 .stakes__head { margin: 18px 0 0; }
+.ppv2 .stakes__body { margin-top: 44px; }
+.ppv2 .stakes__cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px 72px;
+}
+.ppv2 .stakes__cols p {
+  font-size: 19px;
+  line-height: 1.6;
+  margin: 0;
+  color: var(--ink);
+}
+.ppv2 .stakes__philo {
+  margin: 48px 0 0;
+  font-size: 21px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  border-left: 2px solid var(--accent);
+  padding-left: 24px;
+  max-width: 72ch;
+}
+
+/* ── WHAT SHIFTS (value stack) ────────────────────────────────────────────── */
+.ppv2 .shifts__head { margin-bottom: 56px; }
+.ppv2 .shifts__title { margin: 18px 0 0; }
+/* Cards reuse the shared .fcard primitive (see ppv2.css) so this section
+ * matches the framework and testimonial cards. */
+.ppv2 .shifts__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+/* ── PLAN (three steps) ───────────────────────────────────────────────────── */
+.ppv2 .plan__head { margin-bottom: 56px; }
+.ppv2 .plan__title { margin: 18px 0 0; }
+.ppv2 .plan__steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  counter-reset: plan;
+}
+.ppv2 .pstep {
+  border-top: 1px solid var(--accent);
+  padding-top: 22px;
+}
+.ppv2 .pstep__n {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+.ppv2 .pstep__h {
+  font-size: 22px;
+  line-height: 1.22;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+.ppv2 .pstep__p {
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
 /* ── FRAMEWORK ────────────────────────────────────────────────────────────── */
 .ppv2 .framework__head {
   display: block;
   margin-bottom: 64px;
 }
-.ppv2 .framework__title {
-  font-size: clamp(64px, 8vw, 124px);
-  line-height: 0.94;
-  letter-spacing: -0.022em;
-  margin: 16px 0 24px;
-  font-weight: 400;
-}
+.ppv2 .framework__title { margin: 18px 0 24px; }
+/* Three quarters of the container above tablet, full width at tablet and below
+ * (see the 1100px media query). A ch-based cap left too much dead space on the
+ * right under a full-width headline. */
 .ppv2 .framework__lede {
   font-size: 19px;
   line-height: 1.55;
-  max-width: 60ch;
+  max-width: 75%;
   color: var(--ink);
   margin: 0;
 }
@@ -216,13 +334,7 @@
   align-items: start;
 }
 
-.ppv2 .meet__head {
-  font-size: clamp(56px, 6vw, 96px);
-  line-height: 0.96;
-  letter-spacing: -0.02em;
-  margin: 16px 0 12px;
-  font-weight: 400;
-}
+.ppv2 .meet__head { margin: 18px 0 12px; }
 .ppv2 .meet__role {
   font-size: 12px;
   letter-spacing: 0.08em;
@@ -260,13 +372,7 @@
 /* ── CTA ──────────────────────────────────────────────────────────────────── */
 .ppv2 .cta { padding: 132px 0 144px; }
 .ppv2 .cta__inner { text-align: center; }
-.ppv2 .cta__head {
-  font-size: clamp(48px, 5.6vw, 84px);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  margin: 24px 0 28px;
-  font-weight: 400;
-}
+.ppv2 .cta__head { margin: 24px 0 28px; }
 .ppv2 .cta__lede {
   font-size: 19px;
   line-height: 1.55;
@@ -278,18 +384,38 @@
   padding: 18px 30px 17px;
   font-size: 13px;
 }
+.ppv2 .cta__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.ppv2 .cta__lockup {
+  margin-top: 32px;
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
 
 /* ── RESPONSIVE (landing-specific) ────────────────────────────────────────── */
 @media (max-width: 1100px) {
   .ppv2 .hero__grid { grid-template-columns: 1fr; gap: 56px; }
   .ppv2 .hero__visual { display: none; }
   .ppv2 .understanding__grid { grid-template-columns: 1fr; gap: 32px; }
+  .ppv2 .stakes__cols { grid-template-columns: 1fr; gap: 24px; }
+  .ppv2 .framework__lede { max-width: 100%; }
   .ppv2 .framework__cards { grid-template-columns: 1fr; }
+  .ppv2 .plan__steps { grid-template-columns: 1fr; gap: 0; }
+  .ppv2 .pstep { border-top: none; border-left: 1px solid var(--accent); padding: 4px 0 4px 22px; }
+  .ppv2 .pstep + .pstep { margin-top: 28px; }
   .ppv2 .meet__grid { grid-template-columns: 1fr; gap: 48px; }
   .ppv2 .meet__t-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 700px) {
-  .ppv2 .hero__title { font-size: 56px !important; }
+  .ppv2 .hero__title { font-size: 44px !important; }
+  .ppv2 .shifts__grid { grid-template-columns: 1fr; }
   .ppv2 .cta { padding: 72px 0 80px; }
   .ppv2 .meet__t-grid { grid-template-columns: 1fr; }
 }
