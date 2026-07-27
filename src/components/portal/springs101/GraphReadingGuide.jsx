@@ -3,6 +3,12 @@
 // k = 1.0 lb/in, 32 in reformer) as the real lineup graphs, so what people
 // learn here transfers directly. Figure 1 names the four parts of Hooke's
 // law on the graph; Figure 2 animates the up-then-left read-off.
+//
+// Geometry stays in the canonical imperial values (b = 8 lb, k = 1 lb/in,
+// 32 in stroke); the `unit` prop only re-labels ticks and callouts, matching
+// how SpringBrandGraph handles the kg/cm toggle.
+
+import { UNITS, forceValue, lengthValue } from './graphUtils'
 
 const W = 640
 const H = 400
@@ -34,7 +40,7 @@ const Y_TICKS = [0, 10, 20, 30, 40]
 const LINE_START = { x: gx(0), y: gy(8) }
 const LINE_END = { x: gx(MAXX), y: gy(40) }
 
-function BaseChart({ forceTitleColor = TICK, xTitleColor = TICK, faintLine = false, children }) {
+function BaseChart({ forceTitleColor = TICK, xTitleColor = TICK, faintLine = false, unit = 'imperial', children }) {
   return (
     <>
       {/* Grid */}
@@ -60,7 +66,7 @@ function BaseChart({ forceTitleColor = TICK, xTitleColor = TICK, faintLine = fal
         <g key={`xt-${x}`}>
           <line x1={gx(x)} y1={A.y + A.h} x2={gx(x)} y2={A.y + A.h + 5} stroke={AXIS} strokeWidth="1" />
           <text x={gx(x)} y={A.y + A.h + 22} textAnchor="middle" fill={TICK} fontSize="15" fontFamily={MONO}>
-            {x}&quot;
+            {unit === 'metric' ? Math.round(lengthValue(x, unit)) : `${x}"`}
           </text>
         </g>
       ))}
@@ -75,10 +81,10 @@ function BaseChart({ forceTitleColor = TICK, xTitleColor = TICK, faintLine = fal
         fontFamily={MONO}
         transform={`rotate(-90, 20, ${A.y + A.h / 2})`}
       >
-        Force, the weight you feel (lb)
+        Force, the weight you feel ({UNITS[unit].force})
       </text>
       <text x={A.x + A.w / 2} y={H - 8} textAnchor="middle" fill={xTitleColor} fontSize="16" fontFamily={MONO}>
-        Stretch, how far it is pulled (inches)
+        Stretch, how far it is pulled ({UNITS[unit].length})
       </text>
 
       {/* The spring line */}
@@ -99,7 +105,10 @@ function BaseChart({ forceTitleColor = TICK, xTitleColor = TICK, faintLine = fal
 }
 
 // ── Figure 1: the four parts of the equation, pointed out on the line ──────
-function EquationDiagram() {
+function EquationDiagram({ unit }) {
+  // Rise/run callout for k: run = 8 units of stretch, rise = +8 lb of force.
+  const runLabel = unit === 'metric' ? `${Math.round(lengthValue(8, unit))} cm` : '8"'
+  const riseLabel = `+${Math.round(forceValue(8, unit))} ${UNITS[unit].force}`
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
@@ -108,7 +117,7 @@ function EquationDiagram() {
       aria-label="A Balanced Body red spring line with the four parts of the equation labelled: Force on the vertical axis, stretch on the horizontal axis, b where the line starts, and k as its steepness."
       style={{ width: '100%', maxWidth: `${W}px`, display: 'block', margin: '0 auto' }}
     >
-      <BaseChart forceTitleColor={C_F} xTitleColor={C_X}>
+      <BaseChart forceTitleColor={C_F} xTitleColor={C_X} unit={unit}>
         {/* b — starting tension, at the y-intercept */}
         <circle cx={LINE_START.x} cy={LINE_START.y} r="5" fill={C_B} stroke="#1C1A17" strokeWidth="1.5" />
         <line x1={LINE_START.x} y1={LINE_START.y} x2={148} y2={214} stroke={C_B} strokeWidth="1.2" strokeDasharray="3 3" />
@@ -126,10 +135,10 @@ function EquationDiagram() {
         <line x1={gx(16)} y1={gy(24)} x2={gx(24)} y2={gy(24)} stroke={C_K} strokeWidth="1.5" strokeDasharray="3 3" />
         <line x1={gx(24)} y1={gy(24)} x2={gx(24)} y2={gy(32)} stroke={C_K} strokeWidth="1.5" strokeDasharray="3 3" />
         <text x={(gx(16) + gx(24)) / 2} y={gy(24) + 16} textAnchor="middle" fill={C_K} fontSize="13" fontFamily={MONO}>
-          8&quot;
+          {runLabel}
         </text>
         <text x={gx(24) + 8} y={(gy(24) + gy(32)) / 2 + 4} fill={C_K} fontSize="13" fontFamily={MONO}>
-          +8 lb
+          {riseLabel}
         </text>
         <text x={gx(24) + 30} y={gy(30)} fill={C_K} fontSize="14" fontWeight="700" fontFamily={MONO}>
           k
@@ -154,25 +163,31 @@ function EquationDiagram() {
 }
 
 // ── Figure 2: the up-then-left read-off, animated on a loop ────────────────
-function ReadOffDiagram() {
+function ReadOffDiagram({ unit }) {
   const px = gx(12)
   const py = gy(20)
   const bottom = A.y + A.h
   const DUR = '5s'
+  const metric = unit === 'metric'
+  // Read-off is at 12 units of stretch → ≈ 20 lb of force on the BB red line.
+  const startLabel = metric ? `${Math.round(lengthValue(12, unit))} cm` : '12"'
+  const startAria = metric ? `${Math.round(lengthValue(12, unit))} centimeters` : '12 inches'
+  const answerLabel = `≈ ${Math.round(forceValue(20, unit))} ${UNITS[unit].force}`
+  const answerAria = metric ? `${Math.round(forceValue(20, unit))} kilograms` : '20 pounds'
 
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="Animated read-off: a dotted line rises from 12 inches on the bottom axis up to the spring line, then runs left to the side axis, landing at about 20 pounds."
+      aria-label={`Animated read-off: a dotted line rises from ${startAria} on the bottom axis up to the spring line, then runs left to the side axis, landing at about ${answerAria}.`}
       style={{ width: '100%', maxWidth: `${W}px`, display: 'block', margin: '0 auto' }}
     >
-      <BaseChart faintLine>
+      <BaseChart faintLine unit={unit}>
         {/* Start marker on the x-axis at 12" (always visible) */}
         <circle cx={px} cy={bottom} r="4.5" fill={C_X} stroke="#1C1A17" strokeWidth="1.5" />
         <text x={px} y={bottom + 40} textAnchor="middle" fill={C_X} fontSize="15" fontFamily={MONO}>
-          Start: 12&quot;
+          Start: {startLabel}
         </text>
 
         {/* 1) dotted line grows UP from the axis to the spring line */}
@@ -220,7 +235,7 @@ function ReadOffDiagram() {
           <polygon points={`${A.x + 9},${py - 5} ${A.x + 9},${py + 5} ${A.x},${py}`} fill={AXIS} />
           <circle cx={A.x} cy={py} r="4.5" fill={RED} stroke="#1C1A17" strokeWidth="1.5" />
           <text x={A.x + 12} y={py - 12} textAnchor="start" fill={INK} fontSize="18" fontWeight="700" fontFamily={MONO}>
-            ≈ 20 lb
+            {answerLabel}
           </text>
         </g>
 
@@ -235,18 +250,18 @@ function ReadOffDiagram() {
 
 // Exported as two separate figures so the page can place explanatory prose
 // between the "parts of the graph" diagram and the animated read-off.
-export function GraphPartsFigure() {
+export function GraphPartsFigure({ unit = 'imperial' }) {
   return (
     <figure style={{ margin: '1.75rem 0' }}>
-      <EquationDiagram />
+      <EquationDiagram unit={unit} />
     </figure>
   )
 }
 
-export function ReadOffFigure() {
+export function ReadOffFigure({ unit = 'imperial' }) {
   return (
     <figure style={{ margin: '1.75rem 0' }}>
-      <ReadOffDiagram />
+      <ReadOffDiagram unit={unit} />
     </figure>
   )
 }
