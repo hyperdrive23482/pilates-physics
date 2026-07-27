@@ -18,6 +18,29 @@ export async function findUserByEmail(email) {
   return null
 }
 
+// Fill in blank name fields on an existing account from the name supplied at
+// Checkout. Never overwrites a value the account already has, so a returning
+// customer's real name always wins. This is how a first-name-only Springs 101
+// signup gets a complete name (needed for an accurate certificate) once they
+// buy a workshop. Non-fatal: a failure here must not break provisioning.
+async function backfillName(userId, firstName, lastName) {
+  if (!firstName && !lastName) return
+  try {
+    const { data, error } = await supabaseAdmin.auth.admin.getUserById(userId)
+    if (error || !data?.user) return
+    const md = data.user.user_metadata ?? {}
+    const patch = {}
+    if (firstName && !md.first_name) patch.first_name = firstName
+    if (lastName && !md.last_name) patch.last_name = lastName
+    if (Object.keys(patch).length === 0) return
+    await supabaseAdmin.auth.admin.updateUserById(userId, {
+      user_metadata: { ...md, ...patch },
+    })
+  } catch (err) {
+    console.error('name backfill failed:', err)
+  }
+}
+
 // Has the magic-link email already gone out for this checkout session? Gates
 // re-sends when provisionPurchase runs more than once for one session (a Stripe
 // retry, the success-page self-heal, or the reconciliation cron).
@@ -67,13 +90,16 @@ export async function provisionPurchase(session, { siteUrl, purchasedAt } = {}) 
     // Purchase made while authenticated, so their browser already holds a session.
     userId = meta.user_id
     userState = 'logged_in'
+    // Backfill only blank name fields (e.g. a first-name-only Springs 101 account).
+    await backfillName(userId, firstName, lastName)
   } else {
     const existing = await findUserByEmail(email)
     if (existing) {
-      // Returning user, anonymous purchase. Do NOT overwrite user_metadata:
-      // existing account values win over whatever was typed at Checkout.
+      // Returning user, anonymous purchase. Existing account values always win;
+      // we only fill in blanks (never overwrite) from the Checkout name.
       userId = existing.id
       userState = 'returning'
+      await backfillName(userId, firstName, lastName)
     } else {
       // New user: create a confirmed account flagged to set its own password.
       const { data: created, error: createErr } = await supabaseAdmin.auth.admin.createUser({

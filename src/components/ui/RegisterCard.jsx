@@ -21,6 +21,11 @@ export default function RegisterCard({ workshop }) {
 
   const registrationOpen = isRegistrationOpen(workshop)
 
+  // A logged-in buyer whose account has no last name (e.g. a first-name-only
+  // Springs 101 signup). Prompt for it so their certificate of completion is
+  // accurate; provisioning backfills the blank last_name from what they enter.
+  const needsLastName = Boolean(user) && !String(user?.user_metadata?.last_name ?? '').trim()
+
   if (!registrationOpen) {
     return (
       <div className="register-card">
@@ -36,6 +41,11 @@ export default function RegisterCard({ workshop }) {
 
   async function handleSubmit(e) {
     e?.preventDefault()
+    if (needsLastName && !lastName.trim()) {
+      setStatus('error')
+      setErrorMsg('Please add your last name so we can print it on your certificate.')
+      return
+    }
     setStatus('loading')
     setErrorMsg('')
 
@@ -48,7 +58,7 @@ export default function RegisterCard({ workshop }) {
       }
 
       const body = user
-        ? { slug: workshop.slug }
+        ? (needsLastName ? { slug: workshop.slug, lastName } : { slug: workshop.slug })
         : { slug: workshop.slug, email, firstName, lastName }
 
       const res = await fetch('/api/checkout/create-session', {
@@ -108,6 +118,22 @@ export default function RegisterCard({ workshop }) {
               Not you? Log out
             </button>
           </p>
+          {needsLastName && (
+            <div className="pp-form__field">
+              <label className="pp-form__label">Last name</label>
+              <input
+                type="text"
+                required
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                disabled={status === 'loading'}
+                className="pp-form__input"
+              />
+              <p className="pp-form__help">
+                We'll add this to your certificate of completion.
+              </p>
+            </div>
+          )}
           <button
             type="button"
             onClick={handleSubmit}
