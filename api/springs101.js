@@ -7,11 +7,19 @@ import { tagSubscriber } from './_lib/kit.js'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-const TOOL_SLUGS = ['spring-load-calculator', 'springs-101']
+const TOOL_SLUGS = ['spring-load-calculator']
 
-// Springs 101 lead magnet: create (or find) a free account, grant the
-// spring calculator + Springs 101 entitlements, email a sign-in link,
-// and tag the subscriber in Kit. Mirrors provisionPurchase minus Stripe.
+// Spring Load Calculator lead magnet: create (or find) a free account, grant
+// the calculator entitlement, email a sign-in link, and tag the subscriber in
+// Kit. Mirrors provisionPurchase minus Stripe.
+//
+// Two historical names are kept on purpose. This file is still springs101.js
+// because the landing page bundle in a stale browser tab would POST to a 404
+// otherwise, and vercel.json pins email templates to this path. The Kit tag on
+// the calculator row is still "springs-101" because the six-email nurture
+// sequence in Kit is triggered by it. The Springs 101 primer itself is no
+// longer granted here: it stays entitled for everyone who already claimed it,
+// and is preserved for use elsewhere.
 //
 // Idempotent: resubmitting the same email re-sends a fresh magic link and
 // the entitlement upserts no-op, so "I lost the email, submit again" works.
@@ -62,7 +70,7 @@ export default async function handler(req, res) {
       normalizedEmail = trimmedEmail.toLowerCase()
     }
 
-    // ---- Fetch both tool rows; fail loudly if the seed migration is missing ----
+    // ---- Fetch the tool row; fail loudly if the seed migration is missing ----
     const { data: tools, error: toolsErr } = await supabaseAdmin
       .from('webinars')
       .select('id, slug, kit_tag')
@@ -98,7 +106,7 @@ export default async function handler(req, res) {
       }
     }
 
-    // ---- Grant both entitlements (idempotent; never touches existing rows) ----
+    // ---- Grant the entitlement (idempotent; never touches existing rows) ----
     const { error: entErr } = await supabaseAdmin
       .from('user_entitlements')
       .upsert(
@@ -131,10 +139,10 @@ export default async function handler(req, res) {
     }
 
     // ---- Kit tag (non-fatal) ----
-    const springsRow = tools.find((t) => t.slug === 'springs-101')
-    if (springsRow?.kit_tag) {
+    const calculatorRow = tools.find((t) => t.slug === 'spring-load-calculator')
+    if (calculatorRow?.kit_tag) {
       try {
-        await tagSubscriber(normalizedEmail, trimmedFirst, springsRow.kit_tag)
+        await tagSubscriber(normalizedEmail, trimmedFirst, calculatorRow.kit_tag)
       } catch (err) {
         console.error('springs101 Kit tagging failed:', err)
       }

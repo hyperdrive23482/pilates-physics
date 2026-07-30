@@ -3,46 +3,19 @@ import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import springSpecs from '../../../data/springSpecs.json'
 import SpringBrandGraph from './SpringBrandGraph'
-import { GraphPartsFigure, ReadOffFigure } from './GraphReadingGuide'
 import ConversionChart from './ConversionChart'
 import { CONVERSION_CHARTS } from './conversionData'
-import { UNITS, UNIT_OPTIONS, forceValue, lengthValue, niceMaxForce } from './graphUtils'
-
-const sectionLabelStyle = {
-  fontSize: '0.7rem',
-  textTransform: 'uppercase',
-  letterSpacing: '0.15em',
-  color: 'var(--color-ink-muted)',
-  marginBottom: '1rem',
-}
-
-const proseStyle = {
-  fontSize: '0.95rem',
-  lineHeight: '1.75',
-  color: 'var(--color-ink-muted)',
-  margin: '0 0 1.1rem',
-}
-
-const strongStyle = { color: 'var(--color-ink)', fontWeight: 600 }
-
-// Section titles: large serif in full ink so they read as skimmable anchors,
-// not the small uppercase eyebrow used for minor labels (Units, brand names).
-const sectionHeadingStyle = {
-  fontFamily: 'var(--font-serif)',
-  fontSize: '1.85rem',
-  lineHeight: '1.2',
-  fontWeight: 600,
-  color: 'var(--color-ink)',
-  margin: '0 0 1.1rem',
-}
+import { UNIT_OPTIONS, forceValue, lengthValue, niceMaxForce } from './graphUtils'
+import SpringBasics from './SpringBasics'
+import { Prose, Section } from './prose'
+import { BASICS_SECTIONS, proseStyle, sectionLabelStyle } from './proseStyles'
 
 // One entry per teaching section, in order. Drives the "On this page"
 // contents list; each Section below is given the matching id so the
-// jump links land on it.
+// jump links land on it. The first three come from SpringBasics, which the
+// Spring Load Calculator also renders.
 const SECTIONS = [
-  { id: 'range', label: 'A spring is a range of weights, not a single one' },
-  { id: 'read-graphs', label: "A spring's full range is one line on a graph" },
-  { id: 'two-numbers', label: 'Two numbers define every spring' },
+  ...BASICS_SECTIONS,
   { id: 'no-standard', label: "There's no industry standard spring spec" },
   { id: 'lineups', label: 'Spring specs from the manufacturers' },
   { id: 'conversion', label: 'Spring conversion charts are only a starting point' },
@@ -57,58 +30,6 @@ const Y_AXIS_MAX = { reformer: 60, tower: 60 }
 // real maxTravel in springSpecs (prose and the calculator still use 32").
 // The reformer's interesting spread lives in the first two feet of stroke.
 const X_AXIS = { reformer: { max: 24, ticks: [0, 8, 16, 24] } }
-
-function Prose({ children }) {
-  return <p style={proseStyle}>{children}</p>
-}
-
-function Section({ id, label, takeaway, children }) {
-  return (
-    <section id={id} style={{ marginBottom: '3rem', scrollMarginTop: '1.5rem' }}>
-      <h2 style={sectionHeadingStyle}>{label}</h2>
-      {takeaway ? <Takeaway>{takeaway}</Takeaway> : null}
-      {children}
-    </section>
-  )
-}
-
-// One-line "the gist" callout under a section heading, so someone skimming
-// gets the point before deciding whether to read the full prose.
-function Takeaway({ children }) {
-  return (
-    <div
-      style={{
-        borderLeft: '3px solid var(--color-accent)',
-        padding: '0.1rem 0 0.1rem 1rem',
-        margin: '0 0 1.5rem',
-      }}
-    >
-      <div
-        style={{
-          fontSize: '0.65rem',
-          textTransform: 'uppercase',
-          letterSpacing: '0.15em',
-          fontWeight: 600,
-          color: 'var(--color-accent)',
-          marginBottom: '0.35rem',
-        }}
-      >
-        tldr;
-      </div>
-      <p
-        style={{
-          fontFamily: 'var(--font-serif)',
-          fontSize: '1.05rem',
-          lineHeight: '1.5',
-          color: 'var(--color-ink)',
-          margin: 0,
-        }}
-      >
-        {children}
-      </p>
-    </div>
-  )
-}
 
 // Opening anecdote: two clients, identical footwork springs, very different
 // loads. Grounds the whole primer before any physics shows up. Numbers come
@@ -246,29 +167,8 @@ function UnitToggle({ value, onChange }) {
   )
 }
 
-// Pull the Peak vs Align contrast numbers from the specs at render time so
-// the prose never drifts from the calculator's data.
-function reformerBrand(id) {
-  return springSpecs.apparatuses
-    .find((a) => a.id === 'reformer')
-    .brands.find((b) => b.id === id)
-}
-
 export default function Springs101() {
   const [unit, setUnit] = useState('imperial')
-  const forceUnit = UNITS[unit].force
-  const fmtForce = (lbs) => `${Math.round(forceValue(lbs, unit))} ${forceUnit}`
-  const fmtLength = (inch) =>
-    unit === 'metric' ? `${Math.round(lengthValue(inch, unit))} cm` : `${inch} inches`
-  // Singular unit word for prose like "for every inch of travel".
-  const lenWord = unit === 'metric' ? 'centimeter' : 'inch'
-
-  const peakRed = reformerBrand('peak-pilates').springs.find((s) => s.color === 'red')
-  const alignGreen = reformerBrand('align-pilates').springs.find((s) => s.color === 'green')
-  const bbRed = reformerBrand('balanced-body').springs.find((s) => s.color === 'red')
-  const reformerTravel = springSpecs.apparatuses.find((a) => a.id === 'reformer').maxTravel
-  const alignGreenEnd = alignGreen.b + alignGreen.k * reformerTravel
-  const bbRedEnd = bbRed.b + bbRed.k * reformerTravel
 
   return (
     <div style={{ maxWidth: '760px', margin: '0 auto' }}>
@@ -305,112 +205,7 @@ export default function Springs101() {
 
       <Contents />
 
-      <Section
-        id="range"
-        label="A spring is a range of weights, not a single one"
-        takeaway="Stretch a spring farther and it gets heavier. One spring color isn't one weight, it's a whole range."
-      >
-        <Prose>
-          We want to talk about springs the way we talk about dumbbells. A {fmtForce(10)} dumbbell
-          is {fmtForce(10)} wherever you hold it, so wouldn't it be nice if "two reds and a blue"
-          was a fixed number too? While we're dreaming, "two reds and a blue" would be the same no
-          matter what brand of equipment you taught on.
-        </Prose>
-        <Prose>Unfortunately, it's not that simple.</Prose>
-        <Prose>
-          A spring gets heavier the more you stretch it. Its resistance is not a single value, it
-          is a variable that scales linearly. This principle is called Hooke's Law. You can even
-          represent it with a mathematical equation:
-        </Prose>
-        <div
-          className="pp-card"
-          style={{
-            padding: '1.5rem 2rem',
-            margin: '0 0 1.1rem',
-            textAlign: 'center',
-            fontFamily: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
-            fontSize: '1.05rem',
-            color: 'var(--color-ink)',
-          }}
-        >
-          Spring Force = (k × x) + b
-        </div>
-        <Prose>
-          Here, <span style={strongStyle}>b</span> is the initial tension, the load the spring
-          already pulls before the carriage moves. <span style={strongStyle}>k</span> is the spring
-          constant (sometimes referred to as stiffness), and indicates how fast the load climbs for
-          every {lenWord} of travel. <span style={strongStyle}>x</span> is how far the spring is
-          stretched, which depends on the movement and the machine.
-        </Prose>
-        <Prose>
-          For example, a Balanced Body red reformer spring starts at about {fmtForce(bbRed.b)} when
-          closed, and scales to about {fmtForce(bbRedEnd)} at {fmtLength(reformerTravel)} of
-          stretch. Same spring color, but a whole range of possible resistances.
-        </Prose>
-      </Section>
-
-      <Section
-        id="read-graphs"
-        label="A spring's full range is one line on a graph"
-        takeaway="Find the stretch along the bottom, go straight up to the line, then read the weight off the left."
-      >
-        <Prose>
-          If graphs and equations are not your thing, stay with me, this part is easier than it
-          looks, and it is the key to everything below.
-        </Prose>
-        <Prose>
-          First, let's look at the 4 parts of the graph. The diagonal line across the middle
-          represents the spring force. The fact that it goes up and to the right means that the
-          spring gets heavier as it stretches.
-        </Prose>
-        <Prose>
-          Then, there are the axes. The horizontal axis (aka x-axis) that runs along the bottom is
-          how far the spring is stretched. The weight you feel from the spring runs up the side on
-          the vertical axis (aka y-axis).
-        </Prose>
-        <Prose>
-          The initial tension is simply where the line of the spring crosses 0 spring stretch. On
-          most graphs, that's the vertical axis. The other two describe the line itself: where it
-          starts, and how steeply it rises.
-        </Prose>
-        <Prose>
-          Finally, the spring constant (stiffness) is just the slope of the line. For every one
-          {' '}{lenWord} the spring stretches, the spring resistance increases a set amount.
-        </Prose>
-        <GraphPartsFigure unit={unit} />
-        <Prose>
-          Okay, so now that you know the anatomy of a graph (see what I did there?) let's review how
-          to read the graph. Here's how you figure out how much resistance a Balanced Body red
-          spring provides at {fmtLength(12)}.
-        </Prose>
-        <ReadOffFigure unit={unit} />
-        <Prose>
-          First, go to {fmtLength(12)} on the horizontal axis. Then draw a line straight up until you hit the
-          spring force line (the diagonal one across the middle). Then, immediately pivot and go
-          straight left to the vertical axis. Wherever your dotted line crosses the vertical axis
-          is how heavy the spring is at that amount of stretch.
-        </Prose>
-      </Section>
-
-      <Section
-        id="two-numbers"
-        label="Two numbers define every spring"
-        takeaway="Starting tension and stiffness (the slope) define a spring together. No single number or color can."
-      >
-        <Prose>
-          Brands separate themselves with two design choices: how much starting tension they build
-          in, and how steeply the load climbs. Peak is the high starting tension brand. A Peak red
-          already pulls about {fmtForce(peakRed.b)} at the home position, more than double a
-          Balanced Body red at {fmtForce(bbRed.b)}, but its line climbs gently from there. Align
-          is the opposite. Its springs start light, then ramp hard. Its strong green starts near{' '}
-          {fmtForce(alignGreen.b)} and finishes around {fmtForce(alignGreenEnd)}, higher than
-          anything else in its class.
-        </Prose>
-        <Prose>
-          Two springs can match in the middle of the stroke and disagree at both ends. That is why
-          no single number, and no color, can tell you what a spring does.
-        </Prose>
-      </Section>
+      <SpringBasics unit={unit} />
 
       <Section
         id="no-standard"

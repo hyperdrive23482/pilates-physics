@@ -18,7 +18,7 @@ function RedirectWithSlug({ to }) {
 import Landing from './pages/Landing'
 import About from './pages/About'
 import Education from './pages/Education'
-import Springs101Landing from './pages/Springs101Landing'
+import SpringCalculatorLanding from './pages/SpringCalculatorLanding'
 import PilatesPhysics101 from './pages/PilatesPhysics101'
 import PilatesPhysics102 from './pages/PilatesPhysics102'
 import Survey from './pages/Survey'
@@ -96,13 +96,16 @@ export default function App() {
         />
         {/* New top-level pages */}
         <Route
-          path="/springs-101"
+          path="/spring-calculator"
           element={
             <PageWrapper>
-              <Springs101Landing />
+              <SpringCalculatorLanding />
             </PageWrapper>
           }
         />
+        {/* The lead magnet used to lead with the Springs 101 primer. Old links
+            from emails and social still land here. */}
+        <Route path="/springs-101" element={<Navigate to="/spring-calculator" replace />} />
         <Route
           path="/education"
           element={

@@ -6,7 +6,7 @@ import { workshopUrl, formatWorkshopWhen } from '../lib/workshop'
 import '../styles/ppv2.css'
 import './Landing.css'
 
-const SPRINGS_URL = '/springs-101'
+const SPRINGS_URL = '/spring-calculator'
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000
 
 // ─── § 03 What shifts — value stack (Change beat) ────────────────────────────
@@ -40,8 +40,8 @@ const FRAMEWORK_DATA = [
 const PLAN = [
   {
     n: '01',
-    h: 'Grab Springs 101, free.',
-    p: 'The short guide to how springs actually load the body. Start here.',
+    h: 'Grab the spring calculator, free.',
+    p: 'See what any spring actually weighs through the whole stroke. Start here.',
   },
   {
     n: '02',
@@ -99,10 +99,10 @@ export default function Landing() {
   const heroWhen = nextWorkshop ? formatWorkshopWhen(nextWorkshop.scheduled_at) : ' '
 
   // ── Auto-rotating CTA rule ────────────────────────────────────────────────
-  // Within 30 days of the next workshop, registration leads and Springs 101 is
-  // the transitional catch. More than 30 days out (or nothing scheduled),
-  // Springs 101 leads and registration steps back. The nav button stays constant
-  // on Springs 101. Uses the existing useNextWorkshop hook + scheduled_at.
+  // Within 30 days of the next workshop, registration leads and the spring
+  // calculator is the transitional catch. More than 30 days out (or nothing
+  // scheduled), the calculator leads and registration steps back. The nav button
+  // stays constant on the calculator. Uses useNextWorkshop + scheduled_at.
   const msUntilNext = nextWorkshop?.scheduled_at
     ? new Date(nextWorkshop.scheduled_at).getTime() - Date.now()
     : Infinity
@@ -112,7 +112,7 @@ export default function Landing() {
     to: workshopUrl(nextWorkshop?.slug),
     label: nextWorkshop ? 'Register Now' : 'See Upcoming Workshops',
   }
-  const springsCta = { to: SPRINGS_URL, label: 'Start Learning Free' }
+  const springsCta = { to: SPRINGS_URL, label: 'Free Spring Calculator' }
   const primaryCta = registrationLeads ? registerCta : springsCta
   const secondaryCta = registrationLeads ? springsCta : registerCta
 

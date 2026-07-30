@@ -3,6 +3,7 @@ import { useSpring } from 'framer-motion'
 import { Plus, X, ChevronDown } from 'lucide-react'
 import springSpecs from '../../data/springSpecs.json'
 import { expandSelections, combinedConstants, selectionKey } from '../../lib/springMath'
+import SpringBasics from './springs101/SpringBasics'
 
 // ----- constants -----
 const INITIAL_POS = 1 / 3
@@ -963,6 +964,10 @@ export default function SpringLoadCalculator() {
         />
       </aside>
 
+      <section className="spring-calc-basics">
+        <SpringBasics unit={unit} />
+      </section>
+
       <FAQ />
 
       <style>{`
@@ -981,6 +986,13 @@ export default function SpringLoadCalculator() {
         .spring-calc-panel {
           width: 100%;
           max-width: 720px;
+        }
+        /* The three shared Springs 101 sections. Same column width as the
+           selector panel and FAQ so the page reads as one measure. */
+        .spring-calc-basics {
+          width: 100%;
+          max-width: 720px;
+          margin-top: 1rem;
         }
         .spring-calc-faq {
           width: 100%;

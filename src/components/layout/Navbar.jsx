@@ -72,7 +72,6 @@ export default function Navbar({ hasAnnouncement = true }) {
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center" style={{ gap: '28px' }}>
           <NavLink to="/" className="nav-link" end>Home</NavLink>
-          <NavLink to="/springs-101" className="nav-link">Springs 101</NavLink>
           <NavLink to="/education" className="nav-link">Education</NavLink>
           <NavLink to="/blog" className="nav-link">Blog</NavLink>
           <NavLink to="/about" className="nav-link">About Kaleen</NavLink>
@@ -89,12 +88,12 @@ export default function Navbar({ hasAnnouncement = true }) {
             Login
           </Link>
           <Link
-            to="/springs-101"
+            to="/spring-calculator"
             style={filledButtonStyle}
             onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-accent-warm)'; e.currentTarget.style.borderColor = 'var(--color-accent-warm)' }}
             onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-accent)'; e.currentTarget.style.borderColor = 'var(--color-accent)' }}
           >
-            Start learning free
+            Free spring calculator
           </Link>
         </div>
 
@@ -119,17 +118,16 @@ export default function Navbar({ hasAnnouncement = true }) {
         >
           <nav className="flex flex-col px-6 py-4 gap-2">
             <NavLink to="/" className="nav-link" end onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Home</NavLink>
-            <NavLink to="/springs-101" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Springs 101</NavLink>
             <NavLink to="/education" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Education</NavLink>
             <NavLink to="/blog" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Blog</NavLink>
             <NavLink to="/about" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>About Kaleen</NavLink>
             <NavLink to="/login" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Login</NavLink>
             <Link
-              to="/springs-101"
+              to="/spring-calculator"
               onClick={() => setMobileOpen(false)}
               style={{ ...filledButtonStyle, marginTop: '8px', justifyContent: 'center' }}
             >
-              Start learning free
+              Free spring calculator
             </Link>
           </nav>
         </div>
