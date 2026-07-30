@@ -123,7 +123,7 @@ export default function Landing() {
         <span className="cross tl"></span>
         <span className="cross tr"></span>
 
-        <div className="container container--wide hero__inner">
+        <div className="container hero__inner">
           <div className="hero__grid">
             <div className="hero__copy">
               <h1 className="hero__title">
