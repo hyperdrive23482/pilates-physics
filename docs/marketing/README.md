@@ -34,6 +34,7 @@ speaks to a real person, grounded in what actual students told us.
 | [website-structure.md](website-structure.md) | The StoryBrand page layout, section by section (hero, stakes, value, guide, plan, footer), with craft tips and an audit checklist. Use it to lay out or audit a page |
 | [voice-and-messaging.md](voice-and-messaging.md) | Voice, tone, and copy rules. The source of truth for how we write |
 | [customer-language.md](customer-language.md) | Voice-of-customer swipe file: real student quotes by theme |
+| [nurture-springs-101.md](nurture-springs-101.md) | The six-email evergreen nurture sequence that follows the Springs 101 lead magnet, mapped to the PEACE beats |
 
 ## Source of truth notes
 
