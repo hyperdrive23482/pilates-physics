@@ -248,14 +248,19 @@
   margin: 0;
   color: var(--ink);
 }
+/* The section's closing statement. Full width with a hairline rule above,
+ * not a capped pull-quote: this is the payoff of § 01, so it sits at full
+ * --ink and one step below the h2 scale, using the same ink + accent-italic
+ * antithesis as .stakes__head. Do not add a max-width here. The container is
+ * already the constraint, and capping it strands the line in the left half. */
 .ppv2 .stakes__philo {
-  margin: 48px 0 0;
-  font-size: 21px;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  border-left: 2px solid var(--accent);
-  padding-left: 24px;
-  max-width: 72ch;
+  margin: 56px 0 0;
+  padding-top: 40px;
+  border-top: 1px solid var(--rule);
+  font-size: clamp(24px, 2.6vw, 34px);
+  line-height: 1.24;
+  letter-spacing: -0.012em;
+  color: var(--ink);
 }
 
 /* ── WHAT SHIFTS (value stack) ────────────────────────────────────────────── */

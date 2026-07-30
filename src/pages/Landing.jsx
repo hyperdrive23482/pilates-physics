@@ -203,7 +203,8 @@ export default function Landing() {
             </div>
             <p className="stakes__philo">
               Your students deserve a teacher who can give them a personalized,
-              effective workout, not regurgitate a teacher training manual.
+              effective workout,{' '}
+              <span className="italic accent">not just a recitation of the manual.</span>
             </p>
           </div>
         </div>
