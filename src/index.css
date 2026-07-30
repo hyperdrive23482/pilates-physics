@@ -163,6 +163,23 @@ h1, h2, h3, h4 {
   color: var(--color-accent);
 }
 
+/* Navbar and footer sit outside the .ppv2 wrapper, so they cannot use the
+ * .container class directly. This mirrors its max-width and its responsive
+ * padding exactly, so the nav, every page section, and the footer all share
+ * one content grid. Keep these numbers in sync with .ppv2 .container in
+ * src/styles/ppv2.css. */
+.pp-shell-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+@media (max-width: 1100px) {
+  .pp-shell-inner { padding: 0 32px; }
+}
+@media (max-width: 700px) {
+  .pp-shell-inner { padding: 0 22px; }
+}
+
 .nav-link {
   color: var(--color-ink-muted);
   text-decoration: none;

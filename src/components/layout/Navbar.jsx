@@ -47,7 +47,7 @@ export default function Navbar({ hasAnnouncement = true }) {
         borderBottom: '1px solid var(--color-rule)',
       }}
     >
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="pp-shell-inner h-16 flex items-center justify-between">
         {/* Brand */}
         <Link
           to="/"
@@ -116,7 +116,7 @@ export default function Navbar({ hasAnnouncement = true }) {
             borderTop: '1px solid var(--color-rule)',
           }}
         >
-          <nav className="flex flex-col px-6 py-4 gap-2">
+          <nav className="pp-shell-inner flex flex-col py-4 gap-2">
             <NavLink to="/" className="nav-link" end onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Home</NavLink>
             <NavLink to="/education" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Education</NavLink>
             <NavLink to="/blog" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Blog</NavLink>

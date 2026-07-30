@@ -26,10 +26,35 @@
   background-position: center 62%;
   background-repeat: no-repeat;
 }
-.ppv2 .springs101-hero__inner {
+/* Copy left, looping calculator demo right. The hero scrim above is already
+   built to sit darkest over the copy and lift toward the right, so the video
+   lands on the lighter half. */
+.ppv2 .springs101-hero__grid {
   position: relative;
   z-index: 1;
-  max-width: 880px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+  gap: 64px;
+  align-items: center;
+}
+/* No max-width on the copy: the grid column IS the measure. Capping it here
+   (or on the lede) opens a dead strip between the text and the video that
+   reads as a broken gap rather than a deliberate one. */
+.ppv2 .springs101-hero__inner {
+  max-width: none;
+}
+.ppv2 .springs101-hero__media {
+  border: 1px solid var(--rule);
+  background: var(--bg-2);
+  line-height: 0;
+}
+.ppv2 .springs101-hero__video {
+  display: block;
+  width: 100%;
+  /* Source is square (720x720); pin the box so nothing reflows on load. */
+  aspect-ratio: 1 / 1;
+  height: auto;
+  object-fit: cover;
 }
 .ppv2 .springs101-hero__title {
   font-size: clamp(44px, 5vw, 80px);
@@ -44,7 +69,9 @@
   line-height: 1.55;
   color: var(--ink-soft);
   margin: 0 0 32px;
-  max-width: 56ch;
+  /* Fills the grid column (~62ch, still a comfortable measure) so the text
+     block ends where the gap begins. Only narrows once the hero stacks. */
+  max-width: none;
 }
 
 /* ── Shared section-headline scale ────────────────────────────────────────
@@ -114,68 +141,19 @@
 .ppv2 .springs101-how__title {
   margin: 18px 0 0;
 }
+/* One card per step, same fcard pattern as "What You Get" so the two
+   sections scan as the same kind of thing. */
 .ppv2 .springs101-how__grid {
   display: grid;
-  grid-template-columns: minmax(0, 320px) 1fr;
-  gap: 48px;
-  align-items: center;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
   margin-top: 40px;
 }
-.ppv2 .springs101-how__media {
-  position: relative;
-  display: block;
-  width: 100%;
-  padding: 0;
-  border: 1px solid var(--rule);
-  background: var(--bg-2);
-  line-height: 0;
-  cursor: zoom-in;
-  font: inherit;
-  color: inherit;
+.ppv2 .springs101-how .fcard {
+  min-height: 200px;
 }
-.ppv2 .springs101-how__media:hover { border-color: var(--accent); }
-.ppv2 .springs101-how__media:hover .springs101-how__zoom { opacity: 1; }
-.ppv2 .springs101-how__video {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.ppv2 .springs101-how__zoom {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  font-family: var(--pp-font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.62);
-  opacity: 0.85;
-  transition: opacity 0.15s ease;
-  pointer-events: none;
-}
-.ppv2 .springs101-how__list {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-.ppv2 .springs101-how__step-n {
-  font-family: var(--pp-font-mono);
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  color: var(--accent);
-  display: block;
-  margin-bottom: 10px;
-}
-.ppv2 .springs101-how__step-body {
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--ink-soft);
-  margin: 0;
+.ppv2 .springs101-how .fcard__body {
+  margin-top: 14px;
 }
 
 /* ── Signup form ──────────────────────────────────────────────────────────── */
@@ -232,14 +210,22 @@
 @media (max-width: 1100px) {
   .ppv2 .springs101-get__grid { grid-template-columns: 1fr; }
 }
+@media (max-width: 960px) {
+  /* Video drops under the copy rather than squeezing the headline. */
+  .ppv2 .springs101-hero__grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  /* Stacked: restore a reading measure, since the column no longer caps it. */
+  .ppv2 .springs101-hero__lede { max-width: 60ch; }
+  .ppv2 .springs101-hero__media { max-width: 440px; }
+}
 @media (max-width: 760px) {
   .ppv2 .springs101-how__grid {
     grid-template-columns: 1fr;
-    gap: 32px;
-    justify-items: center;
+    gap: 20px;
   }
-  .ppv2 .springs101-how__media { max-width: 320px; }
-  .ppv2 .springs101-how__list { width: 100%; }
+  .ppv2 .springs101-how .fcard { min-height: 0; }
 }
 @media (max-width: 700px) {
   .ppv2 .springs101-hero { padding: 84px 0 88px; }

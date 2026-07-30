@@ -22,28 +22,18 @@ const GET = [
 ]
 
 const STEPS = [
-  { n: '01', body: 'Enter your name and email below.' },
-  { n: '02', body: 'We create your free Pilates Physics account and send a sign-in link to your inbox.' },
-  { n: '03', body: 'Click the link. The Spring Load Calculator is waiting in your portal, forever.' },
+  { n: '01', label: 'SIGN UP', body: 'Enter your name and email below.' },
+  {
+    n: '02',
+    label: 'CHECK YOUR INBOX',
+    body: 'We create your free Pilates Physics account and send a sign-in link to your inbox.',
+  },
+  {
+    n: '03',
+    label: 'START EXPLORING',
+    body: 'Click the link. The Spring Load Calculator is waiting in your portal, forever.',
+  },
 ]
-
-function ExpandSvg() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-    </svg>
-  )
-}
-
-// Open the demo video fullscreen. Uses the iOS-only webkitEnterFullscreen on the
-// <video> itself, since iOS Safari does not support element.requestFullscreen.
-function openVideoFullscreen(e) {
-  const video = e.currentTarget.querySelector('video')
-  if (!video) return
-  if (video.webkitEnterFullscreen) video.webkitEnterFullscreen()
-  else if (e.currentTarget.requestFullscreen) e.currentTarget.requestFullscreen()
-  else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen()
-}
 
 export default function SpringCalculatorLanding() {
   const { user, loading: authLoading } = useEnrollment()
@@ -109,21 +99,39 @@ export default function SpringCalculatorLanding() {
         <span className="cross tr"></span>
 
         <div className="container">
-          <div className="springs101-hero__inner">
-            <div className="kicker">§ 01 · FREE RESOURCE</div>
-            <h1 className="springs101-hero__title">
-              A red spring is not <span className="italic accent">a single weight.</span>
-            </h1>
-            <p className="springs101-hero__lede">
-              You already read the body in front of you: how it moves, where it strains, what
-              your cue changes. But a Pilates spring does not load like a dumbbell, and the
-              resistance your client actually meets shapes everything you watch for. The Spring
-              Load Calculator shows you how springs really load, so what you see starts to make
-              sense. Free, and yours to keep.
-            </p>
-            <a href="#signup" className="btn btn--lg">
-              Get free access <ArrowSvg />
-            </a>
+          <div className="springs101-hero__grid">
+            <div className="springs101-hero__inner">
+              <div className="kicker">§ 01 · FREE RESOURCE</div>
+              <h1 className="springs101-hero__title">
+                A red spring is not <span className="italic accent">a single weight.</span>
+              </h1>
+              <p className="springs101-hero__lede">
+                You already read the body in front of you: how it moves, where it strains, what
+                your cue changes. But a Pilates spring does not load like a dumbbell, and the
+                resistance your client actually meets shapes everything you watch for. The Spring
+                Load Calculator shows you how springs really load, so what you see starts to make
+                sense.
+              </p>
+              <a href="#signup" className="btn btn--lg">
+                Get free access <ArrowSvg />
+              </a>
+            </div>
+
+            {/* Silent autoplaying loop, no controls: it is a moving screenshot of
+                the offer, not a video the visitor is meant to operate. */}
+            <div className="springs101-hero__media">
+              <video
+                className="springs101-hero__video"
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                aria-label="Screen recording of the Spring Load Calculator: picking a brand, selecting a spring color, and dragging to read the load at any point in the stroke."
+              >
+                <source src="/images/springs101/spring-calc.mp4" type="video/mp4" />
+              </video>
+            </div>
           </div>
         </div>
 
@@ -191,10 +199,10 @@ export default function SpringCalculatorLanding() {
             <p className="springs101-guide__body">
               The setting you were taught was the right place to start. Certification hands
               every instructor a spring for the exercise, and that baseline is the foundation
-              good teaching is built on. Springs 101 adds the layer on top of it: once you
-              understand how the spring loads, that starting setting stops being a rule you
-              follow and becomes something you can adjust with reason, for the body actually in
-              front of you.
+              good teaching is built on. The Spring Load Calculator adds the layer on top of it:
+              once you understand how your springs load, that starting setting stops being a
+              rule you follow and becomes something you can adjust with reason, for the body
+              actually in front of you.
             </p>
             <a href="#signup" className="btn btn--lg springs101-guide__cta">
               Get free access <ArrowSvg />
@@ -211,35 +219,16 @@ export default function SpringCalculatorLanding() {
             Get access in <span className="italic accent">three steps.</span>
           </h2>
           <div className="springs101-how__grid">
-            <button
-              type="button"
-              className="springs101-how__media"
-              onClick={openVideoFullscreen}
-              aria-label="Enlarge the Spring Load Calculator demo video to fullscreen"
-            >
-              <video
-                className="springs101-how__video"
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="metadata"
-                aria-label="Screen recording of the Spring Load Calculator: picking a brand, selecting a spring color, and dragging to read the load."
-              >
-                <source src="/images/springs101/spring-tool-demo.mp4" type="video/mp4" />
-              </video>
-              <span className="springs101-how__zoom" aria-hidden="true">
-                <ExpandSvg /> Enlarge
-              </span>
-            </button>
-            <div className="springs101-how__list">
-              {STEPS.map((s) => (
-                <div key={s.n}>
-                  <span className="springs101-how__step-n">§ {s.n}</span>
-                  <p className="springs101-how__step-body">{s.body}</p>
+            {STEPS.map((s) => (
+              <article className="fcard" key={s.n}>
+                <div className="fcard__head">
+                  <span className="fcard__n mono">{s.n}</span>
+                  <span className="fcard__dot mono">·</span>
+                  <span className="fcard__label mono accent">{s.label}</span>
                 </div>
-              ))}
-            </div>
+                <p className="fcard__body">{s.body}</p>
+              </article>
+            ))}
           </div>
           <p className="springs101-signup__note" style={{ marginTop: '32px' }}>
             No card, no trial, no catch. Just the physics.

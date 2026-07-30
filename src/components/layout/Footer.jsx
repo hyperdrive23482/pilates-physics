@@ -49,7 +49,7 @@ export default function Footer() {
         padding: '56px 0 32px',
       }}
     >
-      <div style={{ maxWidth: '1480px', margin: '0 auto', padding: '0 48px' }} className="pp-footer-inner">
+      <div className="pp-footer-inner pp-shell-inner">
         {/* Newsletter row */}
         <div className="pp-footer-news">
           <div>
