@@ -10,21 +10,21 @@ const GET = [
   {
     n: '01',
     label: 'FREE PRIMER',
-    title: 'Pilates Springs 101: A Primer',
-    body: 'The physics of Pilates springs in one sitting from one Pilates instructor to another: how springs work, how to read manufacturer spring specs, and illustrated spring lineups for major brands across reformer, tower, and chair so you can see for yourself how they compare.',
+    title: 'See how a spring actually loads.',
+    body: "The physics of Pilates springs in one sitting, instructor to instructor: why a spring builds resistance as it stretches, how to read a manufacturer's spring specs, and illustrated spring lineups for major brands across reformer, tower, and chair, so you can compare them for yourself.",
   },
   {
     n: '02',
     label: 'FREE TOOL',
-    title: 'The Spring Load Calculator',
-    body: 'Compare springs across brands, or add spring weights together. No math required. Simply pick a brand, the spring color, and drag your mouse to stretch the spring and read the load at any point.',
+    title: 'Watch the load change as you stretch.',
+    body: 'The Spring Load Calculator. Pick a brand and a spring color, drag to stretch the spring, and read the load at any point in the range. Stack springs together to see what a combination really adds up to. The math is done for you, no mental gymnastics.',
   },
 ]
 
 const STEPS = [
   { n: '01', body: 'Enter your name and email below.' },
   { n: '02', body: 'We create your free Pilates Physics account and send a sign-in link to your inbox.' },
-  { n: '03', body: 'Click the link. Springs 101 and the calculator are waiting in your portal, forever.' },
+  { n: '03', body: 'Click the link. Pilates Springs 101 and the calculator are waiting in your portal, forever.' },
 ]
 
 function ExpandSvg() {
@@ -49,7 +49,6 @@ export default function Springs101Landing() {
   const { user, loading: authLoading } = useEnrollment()
   const navigate = useNavigate()
   const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [website, setWebsite] = useState('')
   const [status, setStatus] = useState('idle')
@@ -65,7 +64,7 @@ export default function Springs101Landing() {
       const res = await fetch('/api/springs101', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, email, website }),
+        body: JSON.stringify({ firstName, email, website }),
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(data.error || 'Something went wrong. Try again.')
@@ -116,9 +115,11 @@ export default function Springs101Landing() {
               A red spring is not <span className="italic accent">a single weight.</span>
             </h1>
             <p className="springs101-hero__lede">
-              Get the free Springs 101 primer and the interactive Spring Load Calculator to learn
-              the basics of how springs work, compare spring specs across brands, and why this
-              matters for your teaching.
+              You already read the body in front of you: how it moves, where it strains, what
+              your cue changes. But a Pilates spring does not load like a dumbbell, and the
+              resistance your client actually meets shapes everything you watch for. Springs 101
+              shows you how springs really load, so what you see starts to make sense. Free
+              primer, plus an interactive calculator.
             </p>
             <a href="#signup" className="btn btn--lg">
               Get free access <ArrowSvg />
@@ -130,13 +131,35 @@ export default function Springs101Landing() {
         <span className="cross br"></span>
       </section>
 
-      {/* ── § 02 What you get ────────────────────────────────────────────── */}
+      {/* ── § 02 Why it matters (stakes) ─────────────────────────────────── */}
+      <section className="section-pad section--inset springs101-why">
+        <div className="container">
+          <div className="kicker">§ 02 · Why It Matters</div>
+          <h2 className="springs101-why__title">
+            You read the body. But not <span className="italic accent">the load behind it.</span>
+          </h2>
+          <p className="springs101-why__body">
+            A Pilates spring does not deliver a fixed weight like a gym dumbbell. Its load
+            increases as it stretches, so a color you call &ldquo;heavy&rdquo; lands differently
+            depending on how far it travels and who is on the carriage.
+          </p>
+          <p className="springs101-why__body">
+            You see the effect of your instruction: the effort, the struggle, the ease. You
+            adjust with a new cue or a whole different exercise to get the response you want.
+            But the load itself, and how differently it lands from one body to the next, never
+            enters the picture. It was not taught as something to factor into your read of the
+            body in front of you, so it stays invisible. A teaching tool you never get to use.
+          </p>
+        </div>
+      </section>
+
+      {/* ── § 03 What you get ────────────────────────────────────────────── */}
       <section className="section-pad section--inset springs101-get">
         <div className="container">
           <div className="springs101-get__head">
-            <div className="kicker">§ 02 · What You Get</div>
+            <div className="kicker">§ 03 · What You Get</div>
             <h2 className="springs101-get__title">
-              Two free resources. <span className="italic accent">One account.</span>
+              Understand the spring, sharpen <span className="italic accent">your eye.</span>
             </h2>
           </div>
 
@@ -156,12 +179,36 @@ export default function Springs101Landing() {
         </div>
       </section>
 
-      {/* ── § 03 How it works ────────────────────────────────────────────── */}
+      {/* ── § 04 You learned the what, here's the why (empathy + proof) ──── */}
+      <section className="section-pad section--inset springs101-guide">
+        <div className="container">
+          <div className="springs101-guide__head">
+            <div className="kicker">§ 04 · You learned the what. Here&rsquo;s the why.</div>
+            <h2 className="springs101-guide__title">
+              Training hands you the setting. Load is what lets you{' '}
+              <span className="italic accent">adapt it.</span>
+            </h2>
+            <p className="springs101-guide__body">
+              The setting you were taught was the right place to start. Certification hands
+              every instructor a spring for the exercise, and that baseline is the foundation
+              good teaching is built on. Springs 101 adds the layer on top of it: once you
+              understand how the spring loads, that starting setting stops being a rule you
+              follow and becomes something you can adjust with reason, for the body actually in
+              front of you.
+            </p>
+            <a href="#signup" className="btn btn--lg springs101-guide__cta">
+              Get free access <ArrowSvg />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── § 05 How it works ────────────────────────────────────────────── */}
       <section className="section-pad section--inset springs101-how">
         <div className="container">
-          <div className="kicker">§ 03 · How It Works</div>
+          <div className="kicker">§ 05 · How It Works</div>
           <h2 className="springs101-how__title">
-            Get access in <span className="italic accent">3 easy steps.</span>
+            Get access in <span className="italic accent">three steps.</span>
           </h2>
           <div className="springs101-how__grid">
             <button
@@ -200,14 +247,15 @@ export default function Springs101Landing() {
         </div>
       </section>
 
-      {/* ── § 04 Signup ──────────────────────────────────────────────────── */}
+      {/* ── § 06 Signup ──────────────────────────────────────────────────── */}
       <section className="section-pad section--inset springs101-signup" id="signup" style={{ scrollMarginTop: '5rem' }}>
         <div className="container container--narrow">
-          <div className="kicker">§ 04 · Get Access</div>
+          <div className="kicker">§ 06 · Get Access</div>
           <h2 className="springs101-signup__head">
-            Start reading springs <span className="italic accent">like an engineer.</span>
+            Know spring physics, deliver <span className="italic accent">better classes.</span>
           </h2>
 
+          <div className="springs101-signup__body">
           {!authLoading && user ? (
             /* Logged-in claim: one click, no email round trip */
             <div>
@@ -263,19 +311,6 @@ export default function Springs101Landing() {
                 </div>
 
                 <div className="pp-form__field">
-                  <label className="pp-form__label">Last name</label>
-                  <input
-                    type="text"
-                    required
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    disabled={status === 'loading'}
-                    maxLength={200}
-                    className="pp-form__input"
-                  />
-                </div>
-
-                <div className="pp-form__field">
                   <label className="pp-form__label">Email</label>
                   <input
                     type="email"
@@ -312,6 +347,7 @@ export default function Springs101Landing() {
               </form>
             </>
           )}
+          </div>
         </div>
       </section>
     </div>

@@ -48,8 +48,10 @@ export default async function handler(req, res) {
       trimmedLast = typeof lastName === 'string' ? lastName.trim() : ''
       const trimmedEmail = typeof email === 'string' ? email.trim() : ''
 
+      // Last name is optional here: this lead magnet collects first name + email
+      // only (matching the newsletter). A blank last_name is backfilled later if
+      // the user buys a workshop (see api/_lib/provision-purchase.js).
       if (!trimmedFirst) return res.status(400).json({ error: 'First name is required' })
-      if (!trimmedLast) return res.status(400).json({ error: 'Last name is required' })
       if (!trimmedEmail) return res.status(400).json({ error: 'Email is required' })
       if (trimmedFirst.length > 200) return res.status(400).json({ error: 'First name is too long' })
       if (trimmedLast.length > 200) return res.status(400).json({ error: 'Last name is too long' })

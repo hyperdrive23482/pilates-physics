@@ -13,30 +13,77 @@ const typeConfig = {
   link: { icon: LinkIcon, accent: 'var(--color-accent)' },
 }
 
+// Content types meant to be viewed/streamed in a new tab rather than downloaded.
+const VIEW_TYPES = new Set(['recording', 'link'])
+
 function isStoragePath(url) {
   return !!url && !/^https?:\/\//i.test(url)
 }
 
-async function signStoragePath(path) {
+function basename(path) {
+  const clean = String(path).split('?')[0].split('#')[0]
+  const parts = clean.split('/')
+  return parts[parts.length - 1] || ''
+}
+
+// `download` may be a filename string (sets Content-Disposition: attachment;
+// filename=...) or boolean true. This is what forces a real download instead of
+// opening a tab — the anchor `download` attribute is ignored for cross-origin URLs.
+async function signStoragePath(path, download) {
+  const options = download ? { download } : undefined
   const { data, error } = await supabase.storage
     .from(STORAGE_BUCKET)
-    .createSignedUrl(path, SIGNED_URL_TTL_SECONDS)
+    .createSignedUrl(path, SIGNED_URL_TTL_SECONDS, options)
   if (error) throw error
   return data?.signedUrl ?? null
+}
+
+function triggerDownload(url, filename) {
+  const a = document.createElement('a')
+  a.href = url
+  if (filename) a.download = filename
+  a.rel = 'noopener'
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
 }
 
 export default function ContentItem({ item }) {
   const { icon: Icon, accent } = typeConfig[item.type] || typeConfig.resource
 
-  // All content types render as a row with a link that opens in a new window
   async function handleClick(e) {
+    // External http(s) URLs: let the native anchor open them in a new tab.
     if (!isStoragePath(item.file_url)) return
     e.preventDefault()
+
+    // Recordings / links stored in the bucket should open in a tab. Open it
+    // synchronously so the browser keeps the user-gesture and doesn't block it,
+    // then point it at the signed URL once we have it.
+    if (VIEW_TYPES.has(item.type)) {
+      const win = window.open('about:blank', '_blank')
+      try {
+        const url = await signStoragePath(item.file_url)
+        if (url && win) {
+          win.opener = null
+          win.location.href = url
+        } else if (win) {
+          win.close()
+        }
+      } catch (err) {
+        if (win) win.close()
+        window.alert(`Could not open file: ${err.message ?? 'unknown error'}`)
+      }
+      return
+    }
+
+    // Everything else (PDFs, slide decks, resources, bonuses): force a real
+    // download so pop-up blockers never come into play.
     try {
-      const url = await signStoragePath(item.file_url)
-      if (url) window.open(url, '_blank', 'noopener,noreferrer')
+      const filename = basename(item.file_url)
+      const url = await signStoragePath(item.file_url, filename || true)
+      if (url) triggerDownload(url, filename)
     } catch (err) {
-      window.alert(`Could not open file: ${err.message ?? 'unknown error'}`)
+      window.alert(`Could not download file: ${err.message ?? 'unknown error'}`)
     }
   }
 

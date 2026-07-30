@@ -25,6 +25,30 @@ const proseStyle = {
 
 const strongStyle = { color: 'var(--color-ink)', fontWeight: 600 }
 
+// Section titles: large serif in full ink so they read as skimmable anchors,
+// not the small uppercase eyebrow used for minor labels (Units, brand names).
+const sectionHeadingStyle = {
+  fontFamily: 'var(--font-serif)',
+  fontSize: '1.85rem',
+  lineHeight: '1.2',
+  fontWeight: 600,
+  color: 'var(--color-ink)',
+  margin: '0 0 1.1rem',
+}
+
+// One entry per teaching section, in order. Drives the "On this page"
+// contents list; each Section below is given the matching id so the
+// jump links land on it.
+const SECTIONS = [
+  { id: 'range', label: 'A spring is a range of weights, not a single one' },
+  { id: 'read-graphs', label: "A spring's full range is one line on a graph" },
+  { id: 'two-numbers', label: 'Two numbers define every spring' },
+  { id: 'no-standard', label: "There's no industry standard spring spec" },
+  { id: 'lineups', label: 'Spring specs from the manufacturers' },
+  { id: 'conversion', label: 'Spring conversion charts are only a starting point' },
+  { id: 'machine', label: 'The same spring feels different on a different machine' },
+]
+
 // Fixed y-axis maximum (in lbs) for apparatuses whose auto-scale would squash
 // the light springs. Anything above the cap is clipped by SpringBrandGraph.
 const Y_AXIS_MAX = { reformer: 60, tower: 60 }
@@ -38,12 +62,144 @@ function Prose({ children }) {
   return <p style={proseStyle}>{children}</p>
 }
 
-function Section({ label, children }) {
+function Section({ id, label, takeaway, children }) {
   return (
-    <section style={{ marginBottom: '3rem' }}>
-      <h2 style={sectionLabelStyle}>{label}</h2>
+    <section id={id} style={{ marginBottom: '3rem', scrollMarginTop: '1.5rem' }}>
+      <h2 style={sectionHeadingStyle}>{label}</h2>
+      {takeaway ? <Takeaway>{takeaway}</Takeaway> : null}
       {children}
     </section>
+  )
+}
+
+// One-line "the gist" callout under a section heading, so someone skimming
+// gets the point before deciding whether to read the full prose.
+function Takeaway({ children }) {
+  return (
+    <div
+      style={{
+        borderLeft: '3px solid var(--color-accent)',
+        padding: '0.1rem 0 0.1rem 1rem',
+        margin: '0 0 1.5rem',
+      }}
+    >
+      <div
+        style={{
+          fontSize: '0.65rem',
+          textTransform: 'uppercase',
+          letterSpacing: '0.15em',
+          fontWeight: 600,
+          color: 'var(--color-accent)',
+          marginBottom: '0.35rem',
+        }}
+      >
+        tldr;
+      </div>
+      <p
+        style={{
+          fontFamily: 'var(--font-serif)',
+          fontSize: '1.05rem',
+          lineHeight: '1.5',
+          color: 'var(--color-ink)',
+          margin: 0,
+        }}
+      >
+        {children}
+      </p>
+    </div>
+  )
+}
+
+// Opening anecdote: two clients, identical footwork springs, very different
+// loads. Grounds the whole primer before any physics shows up. Numbers come
+// from the tall vs. short footwork example (5'11" vs 5'1", 89 vs 69 lb).
+// Canonical values are imperial (heights in inches, forces in lb); the unit
+// toggle re-derives the metric display so the prose never contradicts it.
+function StoryIntro({ unit }) {
+  const lead = {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '1.15rem',
+    lineHeight: '1.7',
+    color: 'var(--color-ink)',
+    margin: '0 0 1.1rem',
+  }
+  const metric = unit === 'metric'
+  const cm = (inches) => `${Math.round(lengthValue(inches, unit))} cm`
+  const kg = (lbs) => `${Math.round(forceValue(lbs, unit))} kg`
+  const tallHeight = metric ? cm(71) : '5′11″'
+  const shortHeight = metric ? cm(61) : '5′1″'
+  const tallStretch = metric ? cm(20) : '20 inches'
+  const shortStretch = metric ? cm(13.5) : '13½'
+  const tallForce = metric ? kg(89) : '89 pounds'
+  const shortForce = metric ? kg(69) : '69'
+  const diffForce = metric ? kg(20) : '20-pound'
+  return (
+    <div style={{ margin: '0 0 2.5rem' }}>
+      <p style={lead}>
+        Two clients with the same footwork springs, same equipment settings, but different
+        heights. One is {tallHeight}. The other is {shortHeight}.
+      </p>
+      <p style={lead}>
+        The shorter client tells you this feels easy. The taller client looks over at their friend
+        and says &ldquo;speak for yourself.&rdquo;
+      </p>
+      <p style={lead}>
+        Same setting. Same machine. Is the shorter client really that much stronger than the
+        taller client?
+      </p>
+      <p style={lead}>
+        Before thinking about strength, recognize that longer legs press the carriage out farther.
+        The taller client goes about {tallStretch}, the shorter about {shortStretch}. And because a
+        spring gets heavier the more it stretches, the taller client meets about {tallForce} at full
+        press while the shorter meets about {shortForce}.
+        <sup style={{ fontSize: '0.7em' }}>*</sup>{' '}
+        That&apos;s a {diffForce} difference that instructors aren&apos;t taught to recognize in our
+        teacher training.
+      </p>
+      <p
+        style={{
+          fontSize: '0.8rem',
+          lineHeight: '1.6',
+          color: 'var(--color-ink-muted)',
+          fontStyle: 'italic',
+          margin: '1.5rem 0 0',
+        }}
+      >
+        *Measurements from a Balanced Body Studio Reformer with footbar in the middle position, in
+        gear 1, and 2 reds and a green spring attached.
+      </p>
+    </div>
+  )
+}
+
+// Jump list built from SECTIONS. Native anchor links pair with each Section's
+// id + scrollMarginTop, so no scroll JS is needed.
+function Contents() {
+  return (
+    <nav
+      aria-label="On this page"
+      className="pp-card"
+      style={{ padding: '1.5rem 1.75rem', margin: '0 0 3rem' }}
+    >
+      <h2 style={{ ...sectionLabelStyle, marginBottom: '1rem' }}>On this page</h2>
+      <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: '0.65rem' }}>
+        {SECTIONS.map((s) => (
+          <li key={s.id}>
+            <a
+              href={`#${s.id}`}
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: '1rem',
+                color: 'var(--color-accent)',
+                textDecoration: 'none',
+              }}
+            >
+              {s.label}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
   )
 }
 
@@ -104,6 +260,8 @@ export default function Springs101() {
   const fmtForce = (lbs) => `${Math.round(forceValue(lbs, unit))} ${forceUnit}`
   const fmtLength = (inch) =>
     unit === 'metric' ? `${Math.round(lengthValue(inch, unit))} cm` : `${inch} inches`
+  // Singular unit word for prose like "for every inch of travel".
+  const lenWord = unit === 'metric' ? 'centimeter' : 'inch'
 
   const peakRed = reformerBrand('peak-pilates').springs.find((s) => s.color === 'red')
   const alignGreen = reformerBrand('align-pilates').springs.find((s) => s.color === 'green')
@@ -128,6 +286,8 @@ export default function Springs101() {
         <UnitToggle value={unit} onChange={setUnit} />
       </div>
 
+      <StoryIntro unit={unit} />
+
       <p
         style={{
           fontFamily: 'var(--font-serif)',
@@ -143,12 +303,18 @@ export default function Springs101() {
         Pilates springs work, on any machine, from any manufacturer.
       </p>
 
-      <Section label="A spring is a range of weights, not a single one">
+      <Contents />
+
+      <Section
+        id="range"
+        label="A spring is a range of weights, not a single one"
+        takeaway="Stretch a spring farther and it gets heavier. One spring color isn't one weight, it's a whole range."
+      >
         <Prose>
-          We want to talk about springs the way we talk about dumbbells. A 10 pound dumbbell is 10
-          pounds wherever you hold it, so wouldn't it be nice if "two reds and a blue" was a fixed
-          number too? While we're dreaming, "two reds and a blue" would be the same no matter what
-          brand of equipment you taught on.
+          We want to talk about springs the way we talk about dumbbells. A {fmtForce(10)} dumbbell
+          is {fmtForce(10)} wherever you hold it, so wouldn't it be nice if "two reds and a blue"
+          was a fixed number too? While we're dreaming, "two reds and a blue" would be the same no
+          matter what brand of equipment you taught on.
         </Prose>
         <Prose>Unfortunately, it's not that simple.</Prose>
         <Prose>
@@ -173,7 +339,7 @@ export default function Springs101() {
           Here, <span style={strongStyle}>b</span> is the initial tension, the load the spring
           already pulls before the carriage moves. <span style={strongStyle}>k</span> is the spring
           constant (sometimes referred to as stiffness), and indicates how fast the load climbs for
-          every inch of travel. <span style={strongStyle}>x</span> is how far the spring is
+          every {lenWord} of travel. <span style={strongStyle}>x</span> is how far the spring is
           stretched, which depends on the movement and the machine.
         </Prose>
         <Prose>
@@ -183,7 +349,11 @@ export default function Springs101() {
         </Prose>
       </Section>
 
-      <Section label="How to read these graphs">
+      <Section
+        id="read-graphs"
+        label="A spring's full range is one line on a graph"
+        takeaway="Find the stretch along the bottom, go straight up to the line, then read the weight off the left."
+      >
         <Prose>
           If graphs and equations are not your thing, stay with me, this part is easier than it
           looks, and it is the key to everything below.
@@ -205,24 +375,28 @@ export default function Springs101() {
         </Prose>
         <Prose>
           Finally, the spring constant (stiffness) is just the slope of the line. For every one
-          inch the spring stretches, the spring resistance increases a set amount.
+          {' '}{lenWord} the spring stretches, the spring resistance increases a set amount.
         </Prose>
-        <GraphPartsFigure />
+        <GraphPartsFigure unit={unit} />
         <Prose>
           Okay, so now that you know the anatomy of a graph (see what I did there?) let's review how
           to read the graph. Here's how you figure out how much resistance a Balanced Body red
-          spring provides at 12".
+          spring provides at {fmtLength(12)}.
         </Prose>
-        <ReadOffFigure />
+        <ReadOffFigure unit={unit} />
         <Prose>
-          First, go to 12" on the horizontal axis. Then draw a line straight up until you hit the
+          First, go to {fmtLength(12)} on the horizontal axis. Then draw a line straight up until you hit the
           spring force line (the diagonal one across the middle). Then, immediately pivot and go
           straight left to the vertical axis. Wherever your dotted line crosses the vertical axis
           is how heavy the spring is at that amount of stretch.
         </Prose>
       </Section>
 
-      <Section label="Two numbers define every spring">
+      <Section
+        id="two-numbers"
+        label="Two numbers define every spring"
+        takeaway="Starting tension and stiffness (the slope) define a spring together. No single number or color can."
+      >
         <Prose>
           Brands separate themselves with two design choices: how much starting tension they build
           in, and how steeply the load climbs. Peak is the high starting tension brand. A Peak red
@@ -238,16 +412,34 @@ export default function Springs101() {
         </Prose>
       </Section>
 
-      <Section label="The colors are just paint">
+      <Section
+        id="no-standard"
+        label="There's no industry standard spring spec"
+        takeaway="There's no industry standard spring, so two springs can share a color and be nothing alike."
+      >
+        <Prose>
+          There is no industry standard spring. No governing body decides what a "red" should
+          weigh, how much starting tension it carries, or how steeply it climbs. Every
+          manufacturer sets its own. Which means two springs can share a color and be nothing
+          alike.
+        </Prose>
         <Prose>
           Green is the heaviest spring Balanced Body and Align make, and the lightest spring Peak
           makes. Yellow is the lightest spring on a Balanced Body and a middle spring on a Peak.
           Red is a medium for Balanced Body, Align, and Merrithew, but heavy for Peak and BASI.
-          The colors are not a language. They are just paint.
+        </Prose>
+        <Prose>
+          So a shared color is not a shared spring. Two springs can wear the same color and load
+          your student completely differently. To know what you've actually got, read what the
+          spring does, not what it's called.
         </Prose>
       </Section>
 
-      <Section label="The spring lineups">
+      <Section
+        id="lineups"
+        label="Spring specs from the manufacturers"
+        takeaway="Every spring I have data for, brand by brand, on one shared scale so you can compare honestly."
+      >
         <Prose>
           Here is every spring I've found published data for (and one I haven't) brand by brand,
           drawn to a common scale. Each line is one spring: where it meets the left axis is its
@@ -255,6 +447,13 @@ export default function Springs101() {
           each apparatus every graph shares the same scale, so you can compare brands card to card.
           When a brand paints two springs the same color, the shorter one is dashed so you can
           tell them apart.
+        </Prose>
+        <Prose>
+          To read exact numbers off any of these, or to stack several springs and see what the
+          combination adds up to, open them in the{' '}
+          <Link to="/portal/spring-load-calculator" style={{ color: 'var(--color-accent)' }}>
+            Spring Load Calculator
+          </Link>.
         </Prose>
         {springSpecs.apparatuses.map((apparatus) => {
           const graphTravel = X_AXIS[apparatus.id]?.max ?? apparatus.maxTravel
@@ -305,7 +504,11 @@ export default function Springs101() {
         })}
       </Section>
 
-      <Section label="About conversion charts">
+      <Section
+        id="conversion"
+        label="Spring conversion charts are only a starting point"
+        takeaway="Conversion charts are a solid starting point, then let your body verify, because equivalents aren't twins."
+      >
         <Prose>
           People always want the cheat sheet: what is a Balanced Body red on a Merrithew? Fair
           question, and a conversion chart is a good place to start. The charts below line up
@@ -327,14 +530,22 @@ export default function Springs101() {
         </Prose>
       </Section>
 
-      <Section label="Same springs, different machine">
+      <Section
+        id="machine"
+        label="The same spring feels different on a different machine"
+        takeaway="The machine, not the spring, sets how far you stretch, so the same spring can feel different on a different reformer."
+      >
         <Prose>
           Even identical springs on two different machines will not feel the same. Go back to the
           model: force depends on stretch, and stretch is set by the machine, not the spring.
           Carriage travel, where the spring anchors, rope length, pulley height, footbar position:
           all of it changes how far a given movement actually stretches the spring. Same spring,
           different load. That is why you cannot teach from the spring setting alone, and it is
-          why the calculator lets you drag through the stroke and read the load at any point.
+          why the{' '}
+          <Link to="/portal/spring-load-calculator" style={{ color: 'var(--color-accent)' }}>
+            Spring Load Calculator
+          </Link>{' '}
+          lets you drag through the stroke and read the load at any point.
         </Prose>
       </Section>
 
@@ -352,25 +563,27 @@ export default function Springs101() {
         <h2
           style={{
             fontFamily: 'var(--font-serif)',
-            fontSize: '1.35rem',
+            fontSize: '1.6rem',
+            lineHeight: '1.25',
             color: 'var(--color-ink)',
             margin: 0,
           }}
         >
-          See and compare exact weights
+          Build each class around the humans in front of you
         </h2>
-        <p style={{ ...proseStyle, margin: 0, maxWidth: '480px' }}>
-          The Spring Load Calculator charts every spring on this page. Pick a brand, stack
-          springs, and drag through the stroke to read the load at any point.
+        <p style={{ ...proseStyle, margin: 0, maxWidth: '460px' }}>
+          Pilates Physics 101 shows you how to adapt the load for your clients, not just set it. A live, virtual workshop
+          for reformer instructors.
         </p>
-        <Link to="/portal/spring-load-calculator" className="pp-btn pp-btn--primary">
-          Open the calculator <ArrowRight size={16} />
+        <Link to="/pilates-physics-101" className="pp-btn pp-btn--primary">
+          Register for Pilates Physics 101 <ArrowRight size={16} />
         </Link>
         <p style={{ ...proseStyle, margin: 0, fontSize: '0.85rem' }}>
-          Want the full picture, from spring physics to machine setup?{' '}
-          <Link to="/education" style={{ color: 'var(--color-accent)' }}>
-            Explore Workshops
-          </Link>
+          Teach on the Chair or Cadillac too?{' '}
+          <Link to="/pilates-physics-102" style={{ color: 'var(--color-accent)' }}>
+            Pilates Physics 102
+          </Link>{' '}
+          covers those.
         </p>
       </div>
     </div>
