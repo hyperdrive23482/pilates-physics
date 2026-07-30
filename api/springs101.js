@@ -13,13 +13,16 @@ const TOOL_SLUGS = ['spring-load-calculator']
 // the calculator entitlement, email a sign-in link, and tag the subscriber in
 // Kit. Mirrors provisionPurchase minus Stripe.
 //
-// Two historical names are kept on purpose. This file is still springs101.js
-// because the landing page bundle in a stale browser tab would POST to a 404
-// otherwise, and vercel.json pins email templates to this path. The Kit tag on
-// the calculator row is still "springs-101" because the six-email nurture
-// sequence in Kit is triggered by it. The Springs 101 primer itself is no
-// longer granted here: it stays entitled for everyone who already claimed it,
-// and is preserved for use elsewhere.
+// The filename is historical and kept on purpose: a stale browser tab holding
+// the old landing page bundle would POST to a 404 otherwise, and vercel.json
+// pins the email templates to this path.
+//
+// The Kit tag is not hardcoded here. It is read off the calculator's webinars
+// row (see migration 039, which sets it to "spring-calc"), the same way
+// provisionPurchase reads kit_tag off a workshop row.
+//
+// The Springs 101 primer is no longer granted here: it stays entitled for
+// everyone who already claimed it, and is preserved for use elsewhere.
 //
 // Idempotent: resubmitting the same email re-sends a fresh magic link and
 // the entitlement upserts no-op, so "I lost the email, submit again" works.
