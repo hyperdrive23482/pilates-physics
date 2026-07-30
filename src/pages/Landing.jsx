@@ -166,7 +166,9 @@ export default function Landing() {
                 </div>
                 <div className="spring-chart__hint">
                   <span className="spring-chart__hint-dot" aria-hidden="true"></span>
-                  Drag the spring to feel how resistance scales across the range of motion.
+                  <span className="spring-chart__hint-text">
+                    Drag the spring to feel how resistance scales across the range of motion.
+                  </span>
                 </div>
               </figure>
             </div>

@@ -174,19 +174,23 @@
   font-size: 11.5px;
   color: var(--ink-soft);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   letter-spacing: 0.02em;
   font-family: var(--pp-font-mono);
-  flex-wrap: wrap;
 }
 .ppv2 .spring-chart__hint em {
   color: var(--accent);
   font-style: italic;
 }
+.ppv2 .spring-chart__hint-text {
+  flex: 1;
+  min-width: 0;
+}
 .ppv2 .spring-chart__hint-dot {
   width: 6px;
   height: 6px;
+  margin-top: 5px;
   border-radius: 999px;
   background: var(--accent);
   display: inline-block;
