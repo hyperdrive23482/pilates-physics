@@ -1,8 +1,10 @@
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 
 const MONO = '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace'
 const BAR_BG = 'var(--color-surface-raised)'
 const BAR_INK = 'var(--color-ink)'
+const HEIGHT_VAR = '--pp-announcement-height'
 
 function isExternal(url) {
   return /^https?:\/\//i.test(url)
@@ -14,7 +16,6 @@ function AnnouncementContent({ announcement }) {
     color: 'var(--color-accent)',
     borderBottom: '1px solid currentColor',
     paddingBottom: '1px',
-    marginLeft: '6px',
     textDecoration: 'none',
     whiteSpace: 'nowrap',
     fontWeight: 600,
@@ -24,19 +25,22 @@ function AnnouncementContent({ announcement }) {
       style={{
         maxWidth: '1480px',
         margin: '0 auto',
-        height: '100%',
-        padding: '0 32px',
+        padding: '9px 22px',
         display: 'flex',
+        flexWrap: 'wrap',
         alignItems: 'center',
         justifyContent: 'center',
+        columnGap: '8px',
+        rowGap: '2px',
         fontFamily: MONO,
         fontSize: '12px',
         letterSpacing: '0.04em',
+        lineHeight: 1.35,
         color: BAR_INK,
         textAlign: 'center',
       }}
     >
-      <span style={{ lineHeight: 1.2 }}>{announcement?.message}</span>
+      <span>{announcement?.message}</span>
       {hasLink &&
         (isExternal(announcement.link_url) ? (
           <a
@@ -57,6 +61,26 @@ function AnnouncementContent({ announcement }) {
 }
 
 export default function AnnouncementBar({ announcement, variant = 'bar' }) {
+  const barRef = useRef(null)
+
+  // The bar grows to fit its message, so publish its live height for the
+  // navbar offset and the main content's top padding.
+  useEffect(() => {
+    const el = barRef.current
+    if (!el) return
+    const root = document.documentElement
+    const apply = () => {
+      root.style.setProperty(HEIGHT_VAR, `${el.offsetHeight}px`)
+    }
+    apply()
+    const observer = new ResizeObserver(apply)
+    observer.observe(el)
+    return () => {
+      observer.disconnect()
+      root.style.removeProperty(HEIGHT_VAR)
+    }
+  }, [variant, announcement?.message, announcement?.link_text])
+
   if (!announcement?.message) return null
 
   if (variant === 'preview') {
@@ -64,29 +88,38 @@ export default function AnnouncementBar({ announcement, variant = 'bar' }) {
       <div
         style={{
           position: 'relative',
-          height: '2.5rem',
+          minHeight: '2.5rem',
           width: '100%',
+          display: 'flex',
+          alignItems: 'center',
           background: BAR_BG,
         }}
       >
-        <AnnouncementContent announcement={announcement} />
+        <div style={{ width: '100%' }}>
+          <AnnouncementContent announcement={announcement} />
+        </div>
       </div>
     )
   }
 
   return (
     <div
+      ref={barRef}
       style={{
         position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
         zIndex: 60,
-        height: '2.5rem',
+        minHeight: '2.5rem',
+        display: 'flex',
+        alignItems: 'center',
         background: BAR_BG,
       }}
     >
-      <AnnouncementContent announcement={announcement} />
+      <div style={{ width: '100%' }}>
+        <AnnouncementContent announcement={announcement} />
+      </div>
     </div>
   )
 }

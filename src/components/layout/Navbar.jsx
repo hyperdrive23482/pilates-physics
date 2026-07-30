@@ -41,8 +41,9 @@ export default function Navbar({ hasAnnouncement = true }) {
 
   return (
     <header
-      className={`fixed left-0 right-0 z-50 ${hasAnnouncement ? 'top-10' : 'top-0'}`}
+      className="fixed left-0 right-0 z-50"
       style={{
+        top: hasAnnouncement ? 'var(--pp-announcement-height, 2.5rem)' : 0,
         backgroundColor: 'var(--color-bg)',
         borderBottom: '1px solid var(--color-rule)',
       }}
@@ -114,9 +115,17 @@ export default function Navbar({ hasAnnouncement = true }) {
           style={{
             backgroundColor: 'var(--color-bg)',
             borderTop: '1px solid var(--color-rule)',
+            maxHeight: hasAnnouncement
+              ? 'calc(100vh - 4rem - var(--pp-announcement-height, 2.5rem))'
+              : 'calc(100vh - 4rem)',
+            overflowY: 'auto',
           }}
         >
-          <nav className="pp-shell-inner flex flex-col py-4 gap-2">
+          {/* pp-shell-inner sets `padding: 0 Npx`, so vertical padding has to be inline. */}
+          <nav
+            className="pp-shell-inner flex flex-col gap-2"
+            style={{ paddingTop: '16px', paddingBottom: '20px' }}
+          >
             <NavLink to="/" className="nav-link" end onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Home</NavLink>
             <NavLink to="/education" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Education</NavLink>
             <NavLink to="/blog" className="nav-link" onClick={() => setMobileOpen(false)} style={{ padding: '0.5rem 0' }}>Blog</NavLink>

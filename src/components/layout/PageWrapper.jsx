@@ -13,7 +13,11 @@ export default function PageWrapper({ children }) {
       <Navbar hasAnnouncement={hasAnnouncement} />
       <main
         className="flex-1"
-        style={{ paddingTop: hasAnnouncement ? '6.5rem' : '4rem' }}
+        style={{
+          paddingTop: hasAnnouncement
+            ? 'calc(4rem + var(--pp-announcement-height, 2.5rem))'
+            : '4rem',
+        }}
       >
         {children}
       </main>
