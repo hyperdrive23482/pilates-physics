@@ -6,6 +6,7 @@ import ProfileDropdown from '../ui/ProfileDropdown'
 const links = [
   { to: '/admin', label: 'Dashboard', end: true },
   { to: '/admin/content', label: 'Content' },
+  { to: '/admin/instagram', label: 'Instagram' },
   { to: '/admin/announcements', label: 'Announcements' },
   { to: '/admin/workshops', label: 'Workshops' },
   { to: '/admin/tools', label: 'Tools' },

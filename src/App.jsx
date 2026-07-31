@@ -54,6 +54,7 @@ import AdminContentIdeas from './pages/admin/AdminContentIdeas'
 import AdminContentPiece from './pages/admin/AdminContentPiece'
 import AdminContentCalendar from './pages/admin/AdminContentCalendar'
 import AdminContentBrain from './pages/admin/AdminContentBrain'
+import AdminInstagram from './pages/admin/AdminInstagram'
 import AdminBlogPosts from './pages/admin/AdminBlogPosts'
 import AdminBlogPostEdit from './pages/admin/AdminBlogPostEdit'
 import Blog from './pages/Blog'
@@ -371,6 +372,14 @@ export default function App() {
           element={
             <AdminGate>
               <AdminAnnouncementEdit />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/instagram"
+          element={
+            <AdminGate>
+              <AdminInstagram />
             </AdminGate>
           }
         />
