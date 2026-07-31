@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import {
   Plus,
   Trash2,
@@ -8,6 +9,8 @@ import {
   Circle,
   CircleDot,
   CheckCircle2,
+  RefreshCw,
+  AlertTriangle,
 } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
@@ -136,9 +139,11 @@ export default function AdminInstagram() {
     return map
   }, [posts])
 
-  const visibleCategories = ALL_CATEGORIES.filter(
-    (c) => c.key !== 'uncategorized' || byCategory.uncategorized?.length
-  )
+  // Uncategorized only exists when the sync has pulled posts that still
+  // need sorting, and when it does it's the thing to deal with first, so it
+  // jumps to the top rather than sitting below Misc.
+  const hasUncategorized = Boolean(byCategory.uncategorized?.length)
+  const visibleCategories = hasUncategorized ? [UNCATEGORIZED, ...CATEGORIES] : CATEGORIES
 
   return (
     <div style={{ minHeight: '100vh' }}>
@@ -194,6 +199,8 @@ export default function AdminInstagram() {
             ))}
           </div>
         </div>
+
+        <ConnectionPanel request={request} onSynced={refetch} />
 
         <CaptureForm onCreated={refetch} request={request} />
 
@@ -333,6 +340,247 @@ export default function AdminInstagram() {
             )
           })}
       </main>
+    </div>
+  )
+}
+
+function ConnectionPanel({ request, onSynced }) {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [status, setStatus] = useState(null)
+  const [busy, setBusy] = useState(false)
+  const [progress, setProgress] = useState(null)
+  const [notice, setNotice] = useState(null)
+
+  const loadStatus = useCallback(async () => {
+    try {
+      setStatus(await request('/api/admin/instagram-connect'))
+    } catch (e) {
+      setStatus({ error: e.message })
+    }
+  }, [request])
+
+  useEffect(() => {
+    loadStatus()
+  }, [loadStatus])
+
+  // The OAuth callback bounces back here with a result in the query string.
+  // Show it once, then strip it so a refresh doesn't replay the message.
+  useEffect(() => {
+    const connected = searchParams.get('connected')
+    const igError = searchParams.get('ig_error')
+    if (!connected && !igError) return
+    setNotice(
+      igError
+        ? { kind: 'error', text: igError }
+        : { kind: 'ok', text: 'Instagram connected. Run a sync to pull your posts in.' }
+    )
+    const next = new URLSearchParams(searchParams)
+    next.delete('connected')
+    next.delete('ig_error')
+    setSearchParams(next, { replace: true })
+  }, [searchParams, setSearchParams])
+
+  async function connect() {
+    setBusy(true)
+    try {
+      const { url } = await request('/api/admin/instagram-connect', { method: 'POST' })
+      window.location.href = url
+    } catch (e) {
+      alert(`Could not start authorization: ${e.message}`)
+      setBusy(false)
+    }
+  }
+
+  async function disconnect() {
+    if (!confirm('Disconnect Instagram? Synced posts stay, but metrics stop updating.')) return
+    setBusy(true)
+    try {
+      await request('/api/admin/instagram-connect', { method: 'DELETE' })
+      await loadStatus()
+    } catch (e) {
+      alert(`Disconnect failed: ${e.message}`)
+    }
+    setBusy(false)
+  }
+
+  // The server returns one page per call plus a cursor; loop until it says
+  // it's done so a full backfill doesn't need repeated clicking.
+  async function sync() {
+    setBusy(true)
+    setNotice(null)
+    const totals = { created: 0, updated: 0 }
+    setProgress(totals)
+    try {
+      let cursor = null
+      for (let page = 0; page < 200; page++) {
+        const qs = cursor ? `?after=${encodeURIComponent(cursor)}` : ''
+        const r = await request(`/api/admin/instagram-sync${qs}`, { method: 'POST' })
+        totals.created += r.created ?? 0
+        totals.updated += r.updated ?? 0
+        setProgress({ ...totals })
+        if (r.done || !r.next_cursor) break
+        cursor = r.next_cursor
+      }
+      await onSynced()
+      await loadStatus()
+      setNotice({
+        kind: 'ok',
+        text: `Sync complete. ${totals.created} new, ${totals.updated} updated.`,
+      })
+    } catch (e) {
+      setNotice({ kind: 'error', text: e.message })
+    }
+    setProgress(null)
+    setBusy(false)
+  }
+
+  if (!status) return null
+
+  const { configured, connected, username, expires_in_days: expiresIn } = status
+
+  return (
+    <div
+      style={{
+        background: 'var(--color-surface)',
+        border: '1px solid var(--color-rule)',
+        padding: '1rem 1.1rem',
+        marginBottom: '1.25rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.7rem',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem',
+          flexWrap: 'wrap',
+        }}
+      >
+        <span
+          style={{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            background: connected ? 'var(--color-accent)' : 'var(--color-ink-muted)',
+            flexShrink: 0,
+          }}
+        />
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: '0.88rem', color: 'var(--color-ink)' }}>
+            {!configured
+              ? 'Instagram app not configured'
+              : connected
+                ? `Connected${username ? ` as @${username}` : ''}`
+                : 'Instagram not connected'}
+          </div>
+          <div style={{ ...metaTextStyle, marginTop: '0.2rem' }}>
+            {!configured ? (
+              'Set INSTAGRAM_APP_ID and INSTAGRAM_APP_SECRET in Vercel, then redeploy.'
+            ) : connected ? (
+              <>
+                {status.last_synced_at
+                  ? `Last synced ${new Date(status.last_synced_at).toLocaleString()}`
+                  : 'Never synced'}
+                {status.synced_media_count ? ` · ${status.synced_media_count} posts from Instagram` : ''}
+                {typeof expiresIn === 'number' ? ` · token renews in ${expiresIn}d` : ''}
+              </>
+            ) : (
+              'Authorize your professional account to pull posts and metrics automatically.'
+            )}
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+          {configured && connected && (
+            <button
+              type="button"
+              onClick={sync}
+              disabled={busy}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                padding: '0.55rem 1rem',
+                background: 'var(--color-accent)',
+                color: 'var(--color-accent-ink)',
+                border: 'none',
+                fontSize: '0.8rem',
+                fontWeight: 500,
+                cursor: busy ? 'default' : 'pointer',
+                opacity: busy ? 0.5 : 1,
+              }}
+            >
+              <RefreshCw size={13} />
+              {progress
+                ? `Syncing… ${progress.created + progress.updated}`
+                : busy
+                  ? 'Working…'
+                  : 'Sync now'}
+            </button>
+          )}
+          {configured && !connected && (
+            <button
+              type="button"
+              onClick={connect}
+              disabled={busy}
+              style={{
+                padding: '0.55rem 1rem',
+                background: 'var(--color-accent)',
+                color: 'var(--color-accent-ink)',
+                border: 'none',
+                fontSize: '0.8rem',
+                fontWeight: 500,
+                cursor: busy ? 'default' : 'pointer',
+                opacity: busy ? 0.5 : 1,
+              }}
+            >
+              Connect Instagram
+            </button>
+          )}
+          {connected && (
+            <button
+              type="button"
+              onClick={disconnect}
+              disabled={busy}
+              style={{
+                padding: '0.55rem 0.9rem',
+                background: 'transparent',
+                border: '1px solid var(--color-rule)',
+                color: 'var(--color-ink-muted)',
+                fontSize: '0.8rem',
+                cursor: busy ? 'default' : 'pointer',
+              }}
+            >
+              Disconnect
+            </button>
+          )}
+        </div>
+      </div>
+
+      {status.redirect_uri && !connected && (
+        <div style={{ ...metaTextStyle, wordBreak: 'break-all' }}>
+          Redirect URI for the Meta app dashboard: <code>{status.redirect_uri}</code>
+        </div>
+      )}
+
+      {(notice || status.last_sync_error) && (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '0.45rem',
+            fontSize: '0.78rem',
+            color: notice?.kind === 'ok' ? 'var(--color-ink-muted)' : '#ff7d7d',
+            borderTop: '1px solid var(--color-rule)',
+            paddingTop: '0.6rem',
+          }}
+        >
+          {notice?.kind !== 'ok' && <AlertTriangle size={13} style={{ flexShrink: 0, marginTop: '1px' }} />}
+          <span>{notice?.text ?? `Last sync failed: ${status.last_sync_error}`}</span>
+        </div>
+      )}
     </div>
   )
 }
