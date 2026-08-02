@@ -18,6 +18,13 @@ that you can personalize class for every body: the cues, the language, the
 options, and the settings. The physics is the why underneath that makes it
 credible and repeatable. Sell the personalization, prove it with the physics.
 
+**The premise underneath all five beats.** Understand the load, so you can adapt
+and progress any exercise for the body in front of you. Load is the one technical
+word we keep, so define it once ("how hard the work actually is for that body")
+and then use it everywhere. See
+[objections-and-empathy.md](objections-and-empathy.md) for the three ways to say
+this premise and a written response to every objection.
+
 ---
 
 ## Master one-liner (the elevator version)
@@ -56,6 +63,23 @@ problem is not that everyone gets the same class. It is that the same setting is
 different workout for every body, and rote teaching leaves you blind to it. Keep
 this front and center.
 
+**Progression variant (secondary, do not replace the master):**
+
+> "A whole spring is a big jump. Most clients need a smaller step than that."
+
+Use this only in pieces that are specifically about progression: a 201 course, a
+retention email, an ICP 2 piece. The master Problem stays in the hero, in subject
+lines, and in any first line, because the Problem beat has to carry one idea at
+zero cognitive load.
+
+**Support line:** The spring is the loudest dial, not the only one, and often not
+the right size. When it is the only progression you have, the honest choice is
+usually to leave a client where they are.
+
+**Built from:** the pushback "I don't always want to load my clients to the max."
+The reason she does not progress people is that the only dial she was handed is
+too coarse. See [objections-and-empathy.md](objections-and-empathy.md).
+
 ### E: Empathy
 
 > "Memorizing the settings and the script is exactly where you start.
@@ -68,14 +92,23 @@ the next stage.
 **Built from:** the corrected empathy stance. Honor the journey. The training was
 the right starting line, not a failure.
 
+**Progression variant (secondary):**
+
+> "You can tell when a client is ready for more. Deciding what 'more' should be
+> is the harder part."
+
+**Deeper empathy bench.** The twelve empathy lines in
+[objections-and-empathy.md](objections-and-empathy.md) are all usable here. Reach
+for them when you need a specific, felt moment rather than the general stance.
+
 ### A: Answer
 
 > "Pilates Physics shows you why the same setting lands differently on every body,
-> and gives you the cues to adjust for it."
+> and gives you the cues to adapt it now and progress it next."
 
 **Support line:** It explains why bodies feel different loads, shows how each
 setting changes that load, then hands you practical cues and options to change
-what you teach. No math background required.
+what you teach today and what to change next time. No math background required.
 
 **Built from:** "You took an intimidating topic (Physics!) and made it so
 understandable." / "It's helped me to develop quick questions to ask them for
@@ -97,10 +130,15 @@ for Chair and Cadillac).
 > "Stop regurgitating memorized settings and scripts. Start offering personalized
 > options that empower every student."
 
+**Progression line (use alongside or instead, depending on the piece):**
+
+> "Stop guessing at the next step. Start progressing on purpose."
+
 **Support line:** The lever isn't just the spring. It's the footbar and body
 position, the cue you give, the words you use with a client, how you run a mixed
 room. Small, deliberate changes that add up to a far more effective workout for
-every body.
+every body. The same dials that let you adapt today are the ones that let you
+progress next week, in steps smaller than a whole spring.
 
 **Built from:** "My go to has always been change the springs. Now I will be trying
 other things first." / "critical thinking instead of just regurgitating."
@@ -110,20 +148,46 @@ earns its place here because the change students actually voiced goes well beyon
 the machine: it is a shift in how they cue, the language they use, and how they
 run the room. Because it overlaps a little with the Answer beat and the client
 language in the End Result, cut it on a page that already leans on those, and keep
-it where it adds lift.
+it where it adds lift. **Exception:** on any piece about client results, retention,
+or progression, Change is not optional. It is where progression lives.
 
 ### E: End Result
 
-> "Every student gets a class built for their body, not the model in your training
-> manual."
+> "Every student gets a class built for their body, and a next one that moves them
+> forward."
 
 **Support line:** Clients feel the difference because the class was built around
-them. And they trust you, because you can tell them what their body is feeling and
-why.
+them, not around the model in your training manual. They trust you, because you
+can tell them what their body is feeling and why. And they stay, because they can
+feel themselves getting better.
 
 **Built from:** "I feel empowered to make more equipment modifications to better
 fit MY body's needs." / "the more I understand about how my height and weight
 affect my practice, the more I get from it."
+
+---
+
+## Where progression sits, and one caveat
+
+Progression was added to the promise after the beats were first written. It lives
+in **Answer, Change, and End Result**. It stays out of the master **Problem**, the
+master one-liner, and any hero or subject line, because those have one job: carry
+a single idea at zero cognitive load. Adding a second idea there makes the
+Problem weaker, not bigger.
+
+**The caveat.** Every other beat in this file is built from a real student quote.
+Progression is not. The support for it comes from Kaleen's own blog writing
+("design progression that feels thoughtful instead of accidental," "the process
+stays the same but the criteria to progress through the steps will vary"), which
+is brand voice, not voice of customer. The 22 survey responses behind
+[icp-profiles.md](icp-profiles.md) produced rich adaptation language and no
+progression language.
+
+**What to do about it.** Deploy progression in Answer, Change, and End Result
+now. Do not promote it to a headline until it has the same grounding as the other
+beats. Add a progression question to the next post-workshop survey (something
+like "what do you change for a client who is ready for more?") and pull the beat
+back into [customer-language.md](customer-language.md) once real answers exist.
 
 ---
 
@@ -169,6 +233,11 @@ practice, the more I get from it."
 **Rule of thumb:** lead with Problem or Empathy to earn attention, then move to
 Answer and Change, and close on End Result. Do not open with the Answer.
 
+**Objection handling.** If the piece has to overcome resistance (a sales page, an
+FAQ, an ad, a nurture email), pair the beats with
+[objections-and-empathy.md](objections-and-empathy.md). Open on an empathy line,
+name the pushback in her words, then run concede, narrow, land the premise.
+
 ---
 
 ## Applying Don Miller's soundbite principles to Pilates Physics
@@ -178,10 +247,11 @@ These translate the general ideas in
 
 ### Our controlling idea (the one thing)
 
-**Give every body the class it actually needs, powered by physics.** Every piece
-of copy should ladder up to this. The promise is personalization: the cues, the
-language, the options, and the settings that fit the body in front of you. Physics
-is the why underneath, expressed through a few apparatus angles:
+**Give every body the class it actually needs, and know what comes next. Powered
+by physics.** Every piece of copy should ladder up to this. The promise is
+personalization: the cues, the language, the options, and the settings that fit
+the body in front of you, plus a next step that actually moves them. Physics is
+the why underneath, expressed through a few apparatus angles:
 
 - **Reformer** (Pilates Physics 101)
 - **Chair and Cadillac** (Pilates Physics 102)
@@ -203,6 +273,9 @@ Physics is a survival asset because personalizing with confidence helps her:
   every body, and not seeing that is a real risk.
 - Feel credible instead of exposed, especially in front of experienced clients or
   when a setting "just does not work" for someone.
+- Keep clients on the books, because they can feel themselves progressing. This
+  is the most literal survival stake on the list. A client who cannot tell they
+  are getting better eventually stops booking.
 
 Copy should connect the physics back to one of these stakes, not treat it as
 knowledge for its own sake.
@@ -224,7 +297,7 @@ A visitor decides in about five seconds. A landing page must answer:
    it. Name the specific course.
 2. **How will it make my life better?** You will build every class around the body
    in front of you: the right cues, options, and settings, and you can explain the
-   why to your clients.
+   why to your clients. You will also know what to change next week.
 3. **What do I need to do to buy it?** One clear next step: register now, or join
    the waitlist when a cohort is closed. Scarcity (cohort caps, early-bird
    windows) is fine and helps.

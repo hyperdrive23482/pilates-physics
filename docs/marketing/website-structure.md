@@ -31,8 +31,8 @@ Harry Potter is the cleanest illustration of the seven beats:
 | **Guide** | Hagrid and Dumbledore. Trusted mentors who have been there before | Pilates Physics. Empathy plus authority, the Yoda not the Luke |
 | **Plan** | The steps and lessons Harry follows to be ready | Our simple 3-step path to registering and learning |
 | **Call to Action** | Harry realizes he is the one who must act | Register now / join the waitlist |
-| **Failure (Stakes)** | Voldemort takes over the Wizarding World | Keep running one script for the whole room, keep guessing, blend in with every rote teacher |
-| **Success** | If Harry succeeds, there is harmony | Every student gets a class built for their body, and you can explain the why |
+| **Failure (Stakes)** | Voldemort takes over the Wizarding World | Keep running one script for the whole room, keep guessing, blend in with every rote teacher, and watch clients plateau until they stop booking |
+| **Success** | If Harry succeeds, there is harmony | Every student gets a class built for their body and a next one that moves them forward, and you can explain the why |
 
 The reason this matters: human brains are wired to follow story structure. When a
 page does not follow it, people disengage. The layout below is just these seven
@@ -73,6 +73,10 @@ Answer three questions above the fold:
   or the product in action, not a generic stock shot.
 - **Our fills:** lead the headline with the **Problem** beat. Use the **Answer**
   beat for the sub-headline. See [peace-framework.md](peace-framework.md).
+- **Keep progression out of the hero.** The headline carries one idea at zero
+  cognitive load, and that idea is "the same setting is not the same workout."
+  Progression belongs mid-page and below. See the progression caveat in the PEACE
+  file.
 
 ### 2. Stakes
 
@@ -86,7 +90,10 @@ not working with you.
 - Include a call to action.
 - **Our fill:** this is the **Problem** beat escalated. The stakes are
   professional, not literal (see the survival-asset section of the PEACE file):
-  blending in, guessing, losing credibility in front of experienced clients.
+  blending in, guessing, losing credibility in front of experienced clients, and
+  losing clients who cannot feel themselves progressing. That last one is the
+  closest thing we have to a dollar stake, so use it when a page needs a concrete
+  cost.
 
 ### 3. Value Proposition
 
@@ -98,7 +105,8 @@ benefit.
 - Format each as a short header plus a one-line benefit.
 - Tie each straight back to a pain point from the Stakes section.
 - **Our fill:** pull from the **Change** and **End Result** beats. What shifts and
-  what they walk away with.
+  what they walk away with. This is the first section where progression belongs,
+  and it is usually the strongest of the three or four value items.
 
 ### 4. Guide
 
@@ -116,7 +124,10 @@ jobs, in this order:
   [customer-language.md](customer-language.md).
 - **Our fill:** the **Empathy** beat, then the authority proof. "Memorizing the
   settings and the script is exactly where you start. Personalizing them is where
-  you grow."
+  you grow." For a more specific, felt line, pull from the twelve empathy lines in
+  [objections-and-empathy.md](objections-and-empathy.md). That file also has a
+  written response to every objection, which is what an FAQ section should be
+  built from.
 
 ### 5. Plan
 
