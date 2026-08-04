@@ -105,6 +105,11 @@ Most brands do enlightenment well but fail at curiosity and commitment, which is
 why sales lag. You cannot get someone to the enlightenment phase without piquing
 curiosity first.
 
+A finer-grained version of the same ladder is attention, trust, belief, action.
+It is a useful lens for a single piece of content rather than a whole campaign.
+For how to sustain curiosity past the first line, using open loops, see
+[story-framework.md](story-framework.md).
+
 ## The three silent questions
 
 A visitor silently asks these in about five seconds, and bounces if they are not

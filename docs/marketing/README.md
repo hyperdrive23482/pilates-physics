@@ -19,13 +19,18 @@ speaks to a real person, grounded in what actual students told us.
    page, an FAQ, an ad, a nurture email), open
    [objections-and-empathy.md](objections-and-empathy.md) for what she pushes
    back with, the empathy lines that disarm it, and a written response for each.
-5. **Check the voice.** Run the draft against
+5. **If it is a newsletter or a social post, tell it as a story.** For the
+   narrative order (mirror, friction, realization, shift, invitation), open
+   loops, and the rule that keeps the reader the hero, use
+   [story-framework.md](story-framework.md). The raw material it draws on lives
+   in [story-bank.md](story-bank.md). Skip this step for pages.
+6. **Check the voice.** Run the draft against
    [voice-and-messaging.md](voice-and-messaging.md) before you ship it. That file
    is the final word on tone and copy conventions.
-6. **Lay out the page.** For the section order of a landing or marketing page
+7. **Lay out the page.** For the section order of a landing or marketing page
    (hero, stakes, value, guide, plan, footer) and an audit checklist, use
    [website-structure.md](website-structure.md).
-7. **Match the visuals.** For layout, type, color, and components, use the
+8. **Match the visuals.** For layout, type, color, and components, use the
    visual companion, [../design-system.md](../design-system.md).
 
 ## Files in this folder
@@ -39,6 +44,8 @@ speaks to a real person, grounded in what actual students told us.
 | [voice-and-messaging.md](voice-and-messaging.md) | Voice, tone, and copy rules. The source of truth for how we write |
 | [customer-language.md](customer-language.md) | Voice-of-customer swipe file: real student quotes by theme |
 | [objections-and-empathy.md](objections-and-empathy.md) | The 12 pushback lines, the 12 empathy lines, the load/adapt/progress premise, and a written response to every objection |
+| [story-framework.md](story-framework.md) | The five-line narrative order for newsletters and social, open loops, and the rule that keeps the reader the hero. Use it when the piece is first person |
+| [story-bank.md](story-bank.md) | Raw material for those stories: origin, the moment the physics clicked, teaching mistakes, client turnarounds. Currently a scaffold |
 | [nurture-springs-101.md](nurture-springs-101.md) | The six-email evergreen nurture sequence that follows the Springs 101 lead magnet, mapped to the PEACE beats |
 
 ## Source of truth notes

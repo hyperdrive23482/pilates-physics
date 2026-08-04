@@ -233,6 +233,12 @@ practice, the more I get from it."
 **Rule of thumb:** lead with Problem or Empathy to earn attention, then move to
 Answer and Change, and close on End Result. Do not open with the Answer.
 
+**Narrative pieces reorder these.** In a newsletter or a social post told in
+first person, the same beats run as a story rather than as stated claims, and the
+order shifts (Empathy first, then Problem). See
+[story-framework.md](story-framework.md) for the five-line version and how it
+maps back to these beats.
+
 **Objection handling.** If the piece has to overcome resistance (a sales page, an
 FAQ, an ad, a nurture email), pair the beats with
 [objections-and-empathy.md](objections-and-empathy.md). Open on an empathy line,
