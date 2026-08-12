@@ -80,6 +80,12 @@ const INCLUDED = [
     title: 'Reference Guide',
     body: 'A downloadable PDF covering the key topics from the session, built for quick reference in the studio.',
   },
+  {
+    n: '04',
+    label: 'CLASS + OUTLINE',
+    title: 'Recorded Class & Outline',
+    body: 'A full reformer class taught with the framework, plus the written outline behind it. See the physics applied in a real class, then take the outline into your own teaching.',
+  },
 ]
 
 const FAQ = [
@@ -94,6 +100,10 @@ const FAQ = [
   {
     q: 'Will there be a recording?',
     a: 'Yes. The full recording is shared within 24 hours of the live session.',
+  },
+  {
+    q: "What's the recorded class?",
+    a: 'A full-length reformer class taught with the framework from this workshop, shared alongside its written outline. You get both the plan and the execution, so you can see how the physics shows up in actual teaching decisions.',
   },
   {
     q: 'What equipment does this course focus on?',
@@ -415,7 +425,7 @@ export default function PilatesPhysics101() {
             Every registration <span className="italic accent">includes.</span>
           </h2>
 
-          <div className="workshop-included__grid">
+          <div className="workshop-included__grid workshop-included__grid--cols-2">
             {INCLUDED.map((c) => (
               <article className="fcard" key={c.n}>
                 <div className="fcard__head">

@@ -272,6 +272,9 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
+.ppv2 .workshop-included__grid--cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
 .ppv2 .workshop-included .fcard__body {
   font-family: var(--pp-font-serif);
   font-size: 16px;
