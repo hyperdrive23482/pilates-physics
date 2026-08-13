@@ -778,28 +778,49 @@ export default function SpringLoadCalculator() {
       </section>
 
       <style>{`
+        /* Two columns on a wide screen: the graph and the reading below it in
+           one column, the controls beside them in the other. The point is that
+           the graph, the toggles, and the spring list are all on screen at once
+           instead of a 600px-tall graph pushing the controls below the fold.
+           The tabs share the graph's grid column, so their widths match. */
         .spring-calc-root {
           width: 100%;
-          display: flex;
-          flex-direction: column;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 400px;
+          grid-template-areas:
+            'graph panel'
+            'tabs  panel';
+          align-items: start;
           gap: 2rem;
         }
         .spring-calc-graph {
+          grid-area: graph;
           background: var(--color-surface);
           border: 1px solid var(--color-rule);
           padding: 1.25rem;
           border-radius: 2px;
         }
         .spring-calc-panel {
-          width: 100%;
-          max-width: 720px;
+          grid-area: panel;
+          /* Lets .pp-spring-row respond to the sidebar's width rather than the
+             viewport's — a 400px column on a 1440px screen still needs the
+             stacked row layout. */
+          container-type: inline-size;
         }
-        /* The video, primer, and FAQ tabs. Same column width as the selector
-           panel so the page reads as one measure. */
         .spring-calc-tabs {
-          width: 100%;
-          max-width: 720px;
-          margin-top: 1rem;
+          grid-area: tabs;
+        }
+        /* Below this the sidebar has nowhere to go, so stack and hold every
+           block to one measure — graph, controls, and tabs all the same width. */
+        @media (max-width: 1000px) {
+          .spring-calc-root {
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-areas:
+              'graph'
+              'panel'
+              'tabs';
+            max-width: 720px;
+          }
         }
         .spring-calc-faq code {
           font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
