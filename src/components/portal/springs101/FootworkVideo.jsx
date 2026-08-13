@@ -1,5 +1,3 @@
-import { sectionHeadingStyle } from './proseStyles'
-
 // Walkthrough video for the most common question the calculator gets: how do I
 // find the actual weight of the springs I use for footwork?
 //
@@ -10,6 +8,8 @@ const VIMEO_HASH = '6d5f33da15'
 // Source is 1920x1080, so the frame fills the tab column at 16:9.
 const ASPECT_RATIO = '16 / 9'
 
+// Not rendered as a heading — the tab label and the thumbnail carry that. Kept
+// as the iframe's accessible name, which screen readers need.
 const TITLE = 'How to see your footwork spring weights'
 
 function playerSrc() {
@@ -28,8 +28,6 @@ function playerSrc() {
 export default function FootworkVideo() {
   return (
     <section className="spring-calc-video">
-      <h2 style={sectionHeadingStyle}>{TITLE}</h2>
-
       <div
         style={{
           position: 'relative',
