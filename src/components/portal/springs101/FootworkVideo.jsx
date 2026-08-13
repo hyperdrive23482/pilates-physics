@@ -1,4 +1,4 @@
-import { proseStyle, sectionHeadingStyle } from './proseStyles'
+import { sectionHeadingStyle } from './proseStyles'
 
 // Walkthrough video for the most common question the calculator gets: how do I
 // find the actual weight of the springs I use for footwork?
@@ -65,12 +65,6 @@ export default function FootworkVideo() {
           }}
         />
       </div>
-
-      <p style={{ ...proseStyle, marginTop: '1.5rem', marginBottom: 0 }}>
-        A short walkthrough of reading your own footwork load off the graph above:
-        pick your apparatus and brand, add the springs you actually use, then drag
-        across the graph to the extension footwork lives at.
-      </p>
     </section>
   )
 }
