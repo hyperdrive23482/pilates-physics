@@ -7,15 +7,8 @@ import { sectionHeadingStyle } from './proseStyles'
 const VIMEO_ID = '1218106807'
 const VIMEO_HASH = '6d5f33da15'
 
-// The video is portrait (a phone recording). Vimeo's own embed snippet sizes it
-// with padding-top:117.76%, i.e. height = 1.1776 x width, so the frame is
-// 100/117.76. Left as the ratio from that number rather than a rounded 9:16 so
-// there are no black bars.
-const ASPECT_RATIO = '100 / 117.76'
-
-// A portrait video at the full 720px column would be ~850px tall and swallow the
-// page, so cap the width and centre it.
-const MAX_WIDTH = '400px'
+// Source is 1920x1080, so the frame fills the tab column at 16:9.
+const ASPECT_RATIO = '16 / 9'
 
 const TITLE = 'How to see your footwork spring weights'
 
@@ -41,8 +34,6 @@ export default function FootworkVideo() {
         style={{
           position: 'relative',
           width: '100%',
-          maxWidth: MAX_WIDTH,
-          margin: '0 auto',
           aspectRatio: ASPECT_RATIO,
           borderRadius: '2px',
           overflow: 'hidden',
