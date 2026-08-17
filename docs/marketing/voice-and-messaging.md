@@ -46,6 +46,20 @@ respects that you already know your craft.
 - **Set expectations honestly.** This is the physics, applied. Do not imply it is
   a live movement class or a quick trick. The watch-out in
   [icp-profiles.md](icp-profiles.md) exists because expectations slipped.
+- **They/them for generic example people.** The unnamed client who cannot feel an
+  exercise, "a teacher doing their job," anyone standing in for the reader's
+  whole roster. Defaulting every example to "she" quietly narrows who the copy is
+  addressed to. Two exceptions: a specific paired scene where the contrast is the
+  point (the tall and short duet is a husband and wife, and that stays), and real
+  people quoted from the survey data, who keep their own pronouns. Never switch
+  pronouns for the same person inside one piece.
+- **Never name a day of the week in an email.** When one email points at another,
+  say "next time" and "last email," not "Wednesday" or "on Friday." Naming a day
+  hard-codes the send schedule into the copy, so every reschedule, pause, or
+  resend becomes a rewrite, and any subscriber who reads out of order is told
+  something untrue. This applies to sequences and broadcasts alike. Real
+  deadlines are the exception: a cart close or a live call has an actual date and
+  should say so.
 
 ## Do
 
@@ -63,6 +77,10 @@ respects that you already know your craft.
 - Do not lean on fear of the math. Disarm it, do not amplify it.
 - Do not overpromise a hands-on class or an instant hack.
 - Do not use em dashes, title case, or exclamation marks.
+- Do not name a weekday when referring to another email. Use "next time" and
+  "last email."
+- Do not default generic example people to "she." Use they/them, except in a
+  specific paired scene like the duet, or when quoting a real student.
 - Do not bury the why. If a line states a rule, it should hint at the reason.
 
 ## A quick before-and-after
