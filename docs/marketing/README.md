@@ -82,6 +82,7 @@ record of what was considered.
 | [nurture-v2-email-2-drafts.md](working-drafts/nurture-v2-email-2-drafts.md) | The three competing drafts of nurture v2 email 2, the enemy. Version A was chosen and now lives in `current-copy/nurture-v2.md` |
 | [nurture-v2-email-3-drafts.md](working-drafts/nurture-v2-email-3-drafts.md) | The three competing drafts of nurture v2 email 3, the misdiagnosis. Version A was chosen and now lives in `current-copy/nurture-v2.md` |
 | [nurture-v2-email-4-drafts.md](working-drafts/nurture-v2-email-4-drafts.md) | The three competing drafts of nurture v2 email 4, the real diagnosis. Awaiting a decision |
+| [reformer-machine-course-spec.md](working-drafts/reformer-machine-course-spec.md) | Course and offer spec for "The Making of a Reformer," the machine-only mini course proposed for the tripwire slot. Outline, learning objectives, title decision, pricing, and the four-email sales sequence |
 
 ## Source of truth notes
 
