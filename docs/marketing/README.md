@@ -43,9 +43,9 @@ speaks to a real person, grounded in what actual students told us.
 | [website-structure.md](website-structure.md) | The StoryBrand page layout, section by section (hero, stakes, value, guide, plan, footer), with craft tips and an audit checklist. Use it to lay out or audit a page |
 | [voice-and-messaging.md](voice-and-messaging.md) | Voice, tone, and copy rules. The source of truth for how we write |
 | [customer-language.md](customer-language.md) | Voice-of-customer swipe file: real student quotes by theme |
-| [objections-and-empathy.md](objections-and-empathy.md) | The 12 pushback lines, the 12 empathy lines, the load/adapt/progress premise, and a written response to every objection |
+| [objections-and-empathy.md](objections-and-empathy.md) | The 12 pushback lines, the 12 empathy lines, the load/adapt/progress premise, the two roles of load, and a written response to every objection |
 | [story-framework.md](story-framework.md) | The five-line narrative order for newsletters and social, open loops, and the rule that keeps the reader the hero. Use it when the piece is first person |
-| [story-bank.md](story-bank.md) | Raw material for those stories: origin, the moment the physics clicked, teaching mistakes, client turnarounds. Currently a scaffold |
+| [story-bank.md](story-bank.md) | Raw material for those stories: origin, the moment the physics clicked, teaching mistakes, client turnarounds. Sections 5 through 7 have their first entries |
 | [funnel-strategy-nikki-session.md](funnel-strategy-nikki-session.md) | Raw capture of the strategy call with Nikki: the "springs are not one weight" root belief, the calculator → footwork → nurture → tripwire → workshop funnel, and the plan for the 300 new subscribers. Summary plus full transcript |
 
 ## The two copy folders
