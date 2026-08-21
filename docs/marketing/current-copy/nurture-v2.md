@@ -1,38 +1,66 @@
 # Nurture v2 (Nikki structure)
 
-The five-email sequence outlined with Nikki in
-[funnel-strategy-nikki-session.md](../funnel-strategy-nikki-session.md). Follows the
-Spring Load Calculator lead magnet. One idea per email, and the problem is not
-solved until email 4.
+A seven-email sequence that follows the Spring Load Calculator lead magnet and
+runs straight into the cart for
+[The Making of a Reformer](../working-drafts/reformer-machine-course-spec.md).
+Built on the five-beat nurture structure from
+[funnel-strategy-nikki-session.md](../funnel-strategy-nikki-session.md), with the
+mini sales sequence merged into it rather than following it.
 
-| # | Beat | The move | Status |
-|---|------|----------|--------|
-| 1 | POV / root belief | A spring is not one weight | **Final** |
-| 2 | The enemy | "If you don't feel it, you're doing it wrong" | **Final** |
-| 3 | The misdiagnosis | You think the problem is how you explain it | **Final** |
-| 4 | The real diagnosis | The machine is the lever, and you were handed two of its dials | Not drafted |
-| 5 | Origin story + scar reel | How Kaleen got here, what she got wrong, and that she designed a reformer | Not drafted |
+One idea per email. The problem is not solved until email 4.
 
-> **The tripwire changed, and the sequence was re-aimed for it.** Emails 1
-> through 3 were written when the tripwire was Nikki's body weight mini course.
-> It is now
-> [The Making of a Reformer](../working-drafts/reformer-machine-course-spec.md),
-> a machine-only course that keeps the body out on purpose. Email 3's body
-> weight seed was replaced with a machine seed, and email 4 was redrafted from
-> scratch. Emails 1 and 2 needed no change: email 1 is already a pure machine
+| # | Beat | The move | Cart | Status |
+|---|------|----------|------|--------|
+| 1 | POV / root belief | A spring is not one weight | Closed | **Final** |
+| 2 | The enemy | "If you don't feel it, you're doing it wrong" | Closed | **Final** |
+| 3 | The misdiagnosis | You think the problem is how you explain it | Closed | **Final** |
+| 4 | The real diagnosis + cart open | The load has been invisible to you. Closes by opening the course | **Opens** | Version A selected |
+| 5 | Origin story + scar reel | How Kaleen got here, and how she navigated the design decisions using physics | 2 days left | Drafted, blocked on captures |
+| 6 | Objection handler | Five questions about your own reformer | Closes today | Drafted |
+| 7 | Cart close | Reminder only. Very short | Closes tonight | Drafted |
+
+> **Two changes from the original plan, both deliberate.**
+>
+> **The tripwire changed.** Emails 1 through 3 were written when it was Nikki's
+> body weight mini course. It is now The Making of a Reformer, a machine-only
+> course that keeps the body out on purpose, because body weight is Pilates
+> Physics 101's thesis. Email 3's body weight seed was replaced with a machine
+> seed. Emails 1 and 2 needed no change: email 1 is already a pure machine
 > story, and email 2's enemy beat is product-agnostic.
 >
-> **Email 5 now carries a second job.** The course's entire moat is that Kaleen
-> designed a reformer, and that fact currently appears nowhere in this sequence.
-> The origin story is the last email before the cart opens, so it is the only
-> place left to plant it. All three email 4 drafts end on "what it eventually
-> turned into" to hand it that setup.
+> **The cart moved inside the sequence.** Nikki's structure was five nurture
+> emails, then a separate four-email mini sales sequence. This version opens the
+> cart at email 4 and closes it at email 7, so the origin story now lands
+> *after* the offer and works as credentials for it rather than as a warm-up.
+> Two of the four original sales topics are absorbed (the cart open into email
+> 4, the self-quiz into email 6). Two are not used: "one change, three effects"
+> and "the springs you have not looked at" are both still live for ads and
+> organic.
 
-**Cadence:** day 1, 3, 5, 8, 11 assumed, and nothing in the copy depends on it.
-No email names a day of the week. They point back with "last email" and forward
-with "next time," so the drip schedule can be changed without a copy edit. Keep
-that pattern in emails 3 through 5. The rule lives in
+**Cadence.** Emails 1 through 3 assume day 1, 3, 5. The cart runs 72 hours from
+email 4, so emails 4 through 7 are fixed relative to each other:
+
+| Email | Day | Time left |
+|-------|-----|-----------|
+| 4 | Day 1, morning | 72 hours |
+| 5 | Day 2 | "2 more days" |
+| 6 | Day 3, morning | Closes today |
+| 7 | Day 3, end of day | Hours |
+
+No email names a day of the week. Emails 1 through 3 point back with "last
+email" and forward with "next time" so the pre-cart drip can be changed without
+a copy edit. Emails 4 through 7 do name the remaining time, because a deadline
+that is not stated does not work. The rule lives in
 [voice-and-messaging.md](../voice-and-messaging.md).
+
+**Two things block the send, and neither is copy.**
+
+1. **The discount enforcement mechanism is deferred** in the course spec. Email 4
+   opens a cart at $39 while the public page shows $69, so that mechanism has to
+   exist before any of emails 4 through 7 can send.
+2. **The CEC is unconfirmed.** The spec says "1 CEC for $39" is what justifies
+   the price. All drafts are written so the CEC line can be dropped in without a
+   rewrite, and none of them assert it.
 
 **Relationship to the existing sequence.** This is a different structure from
 [nurture-springs-101.md](nurture-springs-101.md), which is six emails mapped to

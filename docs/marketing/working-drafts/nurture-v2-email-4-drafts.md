@@ -1,302 +1,304 @@
-# Nurture v2, Email 4: the real diagnosis
+# Nurture v2, Email 4: the real diagnosis, and the cart opens
 
-Three drafts to choose from. Email 4 of the five-email sequence in
+Three drafts to choose from. Email 4 of the seven-email sequence in
 [current-copy/nurture-v2.md](../current-copy/nurture-v2.md).
 
-> **Third pass, and the reason for it is the product, not the copy.** The first
-> two passes were written when the tripwire was Nikki's body weight and
-> dimensions mini course. The tripwire is now
-> [The Making of a Reformer](reformer-machine-course-spec.md), a machine-only
-> course that deliberately keeps the body out of it. That inverts the second
-> pass's central instruction. See "Passes one and two, retired" at the bottom,
-> which is kept as a decision record rather than deleted.
+> **Fourth pass. The structure changed, not just the copy.** Email 4 is now the
+> cart open for
+> [The Making of a Reformer](reformer-machine-course-spec.md). The diagnosis
+> still carries the email and the offer is the last movement, not the premise.
+> Earlier passes are recorded at the bottom.
 
-**The job of this email.** Nikki's line: "here's what it actually is, make sense
-of their experience." Three emails have said "not that." This one says "this."
+## The job
 
-## The diagnosis: it is the machine, and you were handed two of its dials
+Two things, in this order and this proportion.
 
-The load a client meets is decided by how far the spring travels. Two things
-decide that distance:
+1. **The real diagnosis, and it is roughly 70% of the email.** Nikki's brief:
+   "here's what it actually is, make sense of their experience." Three emails
+   have said "not that." This one says "this."
+2. **Open the cart.** Name the course, plant the design credential in one line,
+   state $39, state 72 hours, link.
 
-1. **Their body.** Height and limb length. Already established in the duet, and
-   the half the teacher cannot change.
-2. **The machine.** Every adjustment on it is a decision about how far the
-   spring is stretched before the client arrives. This is the half the teacher
-   is standing next to, and the half that is the tripwire.
+If the diagnosis shrinks to a preamble, the email becomes a pitch wearing a
+diagnosis costume and the whole sequence's credit gets spent in one send.
 
-The pivot line all three versions share: **one of those you cannot change, the
-other one you are standing next to.**
+## The diagnosis: the load has been invisible to you
 
-## The callback that was already sitting in email 1
+Not a variable they were missing. A condition they have been working in.
 
-Email 1 closes its math with a line nobody wrote on purpose:
+- You set a spring. That is a starting point, not a load.
+- What each person actually meets depends on how far the spring travels, which
+  their body and your machine decide between them.
+- So every client is running a different experiment. All day. Every day. For as
+  long as you have taught.
+- And you have never once seen the number. Not because you were careless. Because
+  nobody ever gave you a way to see it.
+- Which is why, when someone could not feel it, the only variable in the room you
+  could actually see was the person.
 
-> "Even gearing him out one slot (or lowering his footbar) keeps the maximum
-> load gap at 14 pounds."
+That last line is the payoff of email 2. The harmful sentence is not cruelty. It
+is what is left when you are flying blind.
 
-Against a starting gap of 23.75 lb, that single adjustment moved about ten
-pounds, and it still did not close the gap. That seeds the trickle-down hook
-("one change, three effects") and the sales page headline ("you own more machine
-than you are using") honestly, without claiming the rest of the machine closes
-the gap, which has not been verified.
+**The relief, and it is the reason this email works:** it was never a skill
+problem. It was an instrumentation problem. That distinction is the whole gift,
+and it is what earns the ask at the end.
 
-## The payoff, unchanged from pass two
+## Why this diagnosis makes the offer honest
 
-The second pass got this right and it survives the product change intact. The
-payoff is not "you can predict the load before class." Foresight is a planning
-benefit. What teachers actually want is:
+The calculator gave them one reading, on one spring. The diagnosis says the
+spring is only part of what sets the number, and everything else on the machine
+changes it before a body touches it. The course is the rest of the instrument
+panel. Nothing is withheld and nothing is teased, because the email never claims
+to hand over the list.
 
-- To **explain to a client what they are feeling and why**, in plain language,
-  instead of telling them they are doing it wrong.
-- To **adapt with confidence in the moment**, when a client says they are not
-  feeling it where you want them to.
-
-From [customer-language.md](../customer-language.md): "It provided me with more
-understanding and language to help myself and future students understand what is
-happening between their body and the reformer."
+This is the fix for the third pass, which half-taught the answer and then pulled
+it back.
 
 ## What it must not do
 
-- **Do not mention body weight.** It was seeded here and in email 3 for the old
-  tripwire. Body weight is Pilates Physics 101's thesis. Selling the workshop's
-  central claim at tripwire price either spoils the workshop or makes it look
-  redundant, per the course spec. It is out of nurture entirely now.
-- **Do not teach the adjustments.** Naming that they exist is the tease. Saying
-  what each one does to stretch is module 3 of the course, which is the thing
-  being sold.
-- **Do not teach force vectors, joint torque, or body dimensions.** That is 101.
-- **Do not sell.** Email 5 is the origin story. The cart opens after that.
-- **Do not promise a count.** "There are N things you can adjust on a reformer"
-  is still an open decision in the course spec, so no version states a number.
+- **Do not hand over capability.** No client script, no "change this and watch."
+  Understanding is the gift here. Capability is what is for sale. The third pass
+  broke this and it read as a bait and switch.
+- **Do not mention body weight.** Pilates Physics 101's thesis, out of this
+  sequence entirely.
+- **Do not teach the adjustments.** Naming that the machine has more of them than
+  they were taught is the diagnosis. What each one does is module 3.
+- **Do not assert the CEC.** Unconfirmed. Every draft has a marked slot for it.
+- **Do not call $39 a founding price.** Per the spec, tie the discount to the
+  subscriber being new, not to the product being new. "You just joined the list,
+  so you have three days at $39" is true forever and works on subscriber 4,000.
+- **Do not stack the pitch.** No module list, no bullet-point curriculum, no
+  bonus stack. One paragraph of what it is, one line of credential, price,
+  deadline, link.
 
 **Merge fields:** `{{ subscriber.first_name }}` assumed.
 **Pronouns:** they/them for generic clients.
-**No weekday references.** Points back with "the duet," forward with "next time."
+**Deadline language:** emails 4 through 7 do state the remaining time. Only
+emails 1 through 3 avoid it.
 
 ---
 
-## Version A: "The lever"
+## Version A: "You have never seen the number" — SELECTED
 
-The most direct payoff of email 3's closing question, and the only version that
-scripts the actual sentence to say to a client. That script is the sequence's
-one genuinely usable takeaway, so this is the safe pick.
+The most direct statement of the diagnosis, and the cleanest turn into the offer.
+Leads with the instrument idea and lets the relief do the selling.
 
 **Subject line options**
-1. It was never going to be a better cue
-2. One slot on the gear bar
-3. The lever you were never handed
+1. You have never once seen the number
+2. It was never a skill problem
+3. The thing you were never given a way to see
 
-**Preview text:** Not a cue. A change you can actually make, and the words to go with it.
+**Preview text:** Three emails of "not that." Here is what it actually is.
 
 ---
 
 Hi {{ subscriber.first_name }},
 
-I asked you what the lever is, if it is not your words.
+I have spent three emails telling you what the problem is not.
 
-It is the machine.
+It is not that the same setting works for everyone. It is not that your client is doing it wrong. It is not that you need a better cue.
 
-Here is the whole model in one sentence. The load your client meets is decided by how far the spring travels, and two things decide that distance: their body, and the machine you set up for them.
+Here is what it actually is.
 
-One of those you cannot change. The other one you are standing next to.
+You have never been able to see the load.
 
-Go back to the duet. Same springs, five foot one and six foot tall, more than twenty pounds apart at full extension. I mentioned that gearing him out one slot brings that gap down to about fourteen pounds.
+Not once. Not in any class you have ever taught. When you hang two reds and a green on a carriage, you have not set a load. You have set a starting point. What that person actually meets depends on how far the spring travels, and that distance is decided between their body and your machine, after you walk away.
 
-Read that again. One adjustment moved roughly ten pounds. Not a cue. Not a better image. Not a more anatomical explanation. One slot on the gear bar.
+Which means every client in that room is running a different experiment. All day. Every day. For as long as you have been teaching.
 
-And it still did not close it.
+And you have never seen the number for a single one of them.
 
-That is the part I want you to sit with, because both halves of it matter. The lever worked, and it was bigger than any sentence you could have said. And one lever was not enough.
+I want to be careful here, because this is the part that matters. That is not a lapse in attention. You have been watching those bodies closely for years. It is that nobody ever handed you an instrument. You were given colors and a manual, and the actual quantity you were managing was invisible the entire time.
 
-Most of us were never handed the rest of the list. We were taught springs. Maybe footbar height, if the training was thorough. Everything else on that machine got filed under preference, or under whatever the studio owner set it to years ago and nobody has moved since.
+Now go back to the sentence from a couple of emails ago. "If you don't feel it, you're doing it wrong."
 
-So here is what changes in the room.
+Look at where it comes from. A client tells you something is not landing. You check your setting, and your setting is correct, because it is the setting you were taught. So you look around for what else could be different, and the only variable in that room you can actually see is the person.
 
-A client tells you they cannot feel footwork in their legs. Instead of the fifth cue, you say something like this, and it takes about ten seconds:
+That sentence is not cruelty. It is what is left when you are flying blind. Every teacher who has said it, myself included, was reaching for the only visible explanation in the room.
 
-"That makes sense. You're shorter than most people I teach, so you're not stretching these springs as far, which means you're meeting less resistance than the person next to you even though we're on the same setting. Let me change something."
+So the thing you have been treating as a skill problem was never a skill problem. It was an instrumentation problem. That is a genuinely different diagnosis, and it has a genuinely different fix, and the fix is not that you need to be better at your job.
 
-Then you change something on the machine. And you tell them what you changed and why.
+The calculator was the first instrument. One spring, one number, and for a lot of you that was the first time the quantity was ever visible.
 
-Notice what just happened, because it is the whole point of these emails. You did not tell them they were doing it wrong. You did not reach for better words. You told them what was actually happening between their body and the machine, and then you adjusted the machine.
+But the spring is only part of what sets it. There are things on that machine that change the number before a body ever touches it, and most of us were taught two of them.
 
-That is what the physics is for. Not so you can do arithmetic while you teach. So you have something true and kind to say, and somewhere to go once you have said it.
+I know that because I had to learn all of it. I designed a reformer. Every dimension, every adjustment range, every spring specification was a decision I had to make and then defend with physics, and I got a full education in what a reformer actually is on the way through.
 
-Which leaves the obvious question, and it is the one I have been building toward. How many of those levers do you actually have? It is more than you were taught. And they do not move independently, which is its own problem and its own opportunity.
+I put that education into a short course. It is called **The Making of a Reformer: how your machine works and why.** It is the whole machine, everything that changes load before a body gets on it, and it is about an hour. [CEC line goes here once confirmed.]
 
-Next time, though, I owe you the less flattering half. How a Pilates teacher ended up doing math on purpose, what it cost me to learn it the slow way, and what it eventually turned into.
+You just joined my list, so you have three days at **$39**. After that it goes to its normal $69.
+
+[Get The Making of a Reformer →](LINK)
+
+Next time I will tell you how a Pilates teacher ended up designing equipment, which is a less flattering story than it sounds.
 
 Kaleen
 
-[Open the calculator →](/portal)
-
-P.S. Try the sentence. Pick a client who has told you they cannot feel something, explain the load instead of re-cueing it, then change one thing on the machine and tell them why. Hit reply and tell me what they said back.
-
 ---
 
-## Version B: "Between their body and the reformer"
+## Version B: "A different experiment on every body"
 
-Built around a real student's words. Warmest, and the strongest on Nikki's "make
-sense of their experience" brief. The only version that names specific
-adjustments out loud, which is the sharpest tease and the biggest risk.
+Leads with the experiment image rather than the instrument. Slightly warmer, and
+the strongest on "make sense of their experience," because it names specific
+moments the reader will recognize from their own week.
 
 **Subject line options**
-1. What is happening between their body and the machine
-2. The half you cannot change, and the half you can
-3. It is not a communication problem
+1. A different experiment on every body
+2. What was actually happening in all those classes
+3. You were not doing it wrong either
 
-**Preview text:** Your clients have been asking you a question nobody trained you to answer.
+**Preview text:** Here is what has actually been going on. It is not what you think.
 
 ---
 
 Hi {{ subscriber.first_name }},
 
-A student told me what changed for her after all this, and she said it better than I could:
+Three emails of me telling you what the problem is not. Here is what it is.
 
-> "It provided me with more understanding and language to help myself and future students understand what is happening between their body and the reformer."
+Every class you teach, you are running a different experiment on every body in the room, and you have never been shown the results.
 
-Between their body and the reformer. That is the space nobody hands you in training. You get the settings, and you get the cues, and the place where the actual work happens is left for you to guess at.
+Here is what I mean.
 
-So here is what is in that space. It is the machine, and there is more of it than you were taught.
+You hang springs on a carriage. You have not set a load at that moment. You have set a starting point. What each person meets is decided by how far that spring actually travels, and the distance is settled between their body and your machine, after you have moved on to the next reformer.
 
-Start with the part you already know. A spring is a slope, so the load climbs as it stretches. Which means the load is not a property of the spring. It is a property of the meeting between that spring and that body, and what decides the meeting is distance.
+So the same setting is not the same exercise. It never was. It is one experiment for the tall client, a different one for the small client, and a different one again for the person whose footbar someone left low.
 
-Your clients are not all traveling the same distance. They cannot be. Different heights, different limb lengths, and the carriage goes as far as their legs send it.
+You have watched the results of this for years without knowing that is what you were watching.
 
-That is the half you cannot change.
+The client who is always sore after your class and never after anyone else's. The one who has told you three times they cannot feel footwork and you have quietly started to wonder about them. The one who flies through everything on a spring load you find genuinely surprising. The duet where one of them was chatting and the other was working.
 
-The other half is sitting under your hands. Every adjustment on that machine is a decision about how far the spring gets stretched before your client ever arrives. Gear position. Footbar height. Where the ropes are set. Where the carriage is starting from.
+Every one of those was data. You just never had the instrument.
 
-Think back to the duet. Gearing him out one slot took about ten pounds out of a gap of nearly twenty-four. One adjustment, and it moved more than any sentence would have. It also did not finish the job, which tells you something about how many of these you probably need to know.
+And I want to be clear that this is not a lapse in attention. You have been watching those bodies closely for years. Nobody ever gave you a way to see the quantity you were actually managing. You got colors and a manual and were sent in.
 
-Once you can see this, two things change.
+Which is where that sentence comes from, the one from a couple of emails back. Your setting is correct, because it is the setting you were taught. So you look for what else could be different, and the only variable in that room you can see is the person.
 
-You can tell a client what they are feeling and why, which is an entirely different conversation from telling them they are doing it wrong. And when they say they cannot feel it, you have somewhere to go that is not a fifth cue. You change what the machine is doing, and you say out loud why you are doing it.
+It was never cruelty. It is what is left when you are flying blind.
 
-That is the difference between guessing and teaching.
+So here is the reframe I most want you to take from all of this. What you have been carrying as a skill problem was an instrumentation problem. Different diagnosis. Different fix. And the fix is not that you need to be a better teacher.
 
-Next time, how I ended up here, which is a less flattering story than you might expect, and what it eventually turned into.
+The calculator was the first instrument. One spring, one number.
+
+But the spring is only part of what sets that number. Things on your machine change it before a body ever touches it, and most of us were handed two of them and told the rest was preference.
+
+I ended up learning all of them the hard way, because I designed a reformer. Every adjustment range and every spring specification was a decision I had to make and then defend with physics.
+
+That is now a short course. **The Making of a Reformer: how your machine works and why.** The whole machine, everything that changes load before a body gets on it, about an hour. [CEC line goes here once confirmed.]
+
+Because you just joined my list, it is **$39 for the next three days**, then its normal $69.
+
+[Get The Making of a Reformer →](LINK)
+
+Next time, how a Pilates teacher ended up designing equipment. It is a less flattering story than it sounds.
 
 Kaleen
 
-[Open the calculator →](/portal)
-
-P.S. Hit reply and tell me which adjustment on your reformer you have never once changed on purpose. I have a guess.
-
 ---
 
-## Version C: "You own more machine than you are using"
+## Version C: "Flying blind"
 
-Declarative and most quotable. Opens on the sales page headline, which preframes
-the cart without selling anything. Least instructional, so it carries no client
-script.
+Shortest and most declarative. Least handholding through the logic, most
+quotable, and the fastest to the offer. Best if you think the sequence has
+already done enough setup and email 4 should hit and turn.
 
 **Subject line options**
-1. You own more machine than you are using
-2. Two dials, and nobody mentioned the rest
-3. The variable was never the spring
+1. You have been flying blind
+2. Not a skill problem
+3. Nobody gave you an instrument
 
-**Preview text:** Not a better machine. The one already in your studio.
+**Preview text:** It was never that you needed to be better at your job.
 
 ---
 
 Hi {{ subscriber.first_name }},
 
-Three emails in, here is the thing I most want you to keep.
+Here is the real diagnosis, and it is not what three emails of buildup would suggest.
 
-You own more machine than you are using.
+You have been flying blind.
 
-Not a better machine. The one already in your studio, the one you have taught on for years. There are things on it that change what your client feels, and most of us were handed two of them and told the rest was preference.
+Springs on a carriage are a starting point, not a load. What a person meets depends on how far that spring gets pulled, and that distance is decided between their body and your machine. So the number is real, it is different for every client, it changes through the range, and you have never been able to see any of it.
 
-Springs, obviously. Maybe footbar height. Then the conversation stopped, and the rest of that machine became somebody else's setting that nobody has moved since.
+That is not carelessness. It is a missing instrument. You were handed colors and a manual, and the actual quantity you were managing was invisible.
 
-Meanwhile the whole question is distance. A spring is a slope, so the load climbs the further it is stretched, which means the number a person actually meets is decided by how far that spring travels. Two things decide that. Their body, and the machine.
+Everything in this sequence follows from that one fact.
 
-You cannot change their body. You are standing next to the other one.
+It is why the same setting is a different exercise for the two people in front of you. It is why a client can execute beautifully and feel nothing. And it is why we say "if you don't feel it, you're doing it wrong," because when your setting is correct and something is still off, the only variable you can see in that room is the person.
 
-Remember the duet. Nearly twenty-four pounds apart on identical springs, and gearing him out a single slot took about ten of those pounds off. One slot. Not a cue, not a better image, not a more anatomical explanation. One slot on the gear bar, and it moved more than any sentence you could have said.
+That sentence is not cruelty. It is what is left when you cannot see the number.
 
-It also did not close the gap. That is the honest part, and it is the part that started all of this for me. One lever was not enough, and nobody had ever told me how many there were.
+So the thing you have probably been carrying as a gap in your skill is not one. It is a gap in your instruments. Those are different problems and they have different fixes, and this one is not fixed by being better at your job.
 
-I want to be precise about what knowing this buys you, because it is not what people assume. It does not make you faster at picking springs. It makes you able to say a true thing out loud when a client tells you they cannot feel it, and then to change something on purpose instead of cycling through cues and hoping.
+The calculator was the first instrument. One spring, one number.
 
-That is the whole return on understanding this. Not arithmetic. Confidence, and something honest to say.
+The rest of the machine is the rest of the number. There are things on that reformer that change the load before a body ever touches it, and most of us were taught two of them.
 
-Next time, the less flattering half. How I ended up doing math about Pilates, what it cost me to learn it the slow way, and what it eventually turned into.
+I learned the rest because I designed a reformer, and every adjustment range and spring specification on it was a decision I had to make and defend with physics.
+
+It is a short course now. **The Making of a Reformer: how your machine works and why.** About an hour, and it is the whole machine. [CEC line goes here once confirmed.]
+
+You just joined my list, so you have three days at **$39**. It is $69 after that.
+
+[Get The Making of a Reformer →](LINK)
+
+Next time, the story of how a Pilates teacher ended up designing equipment.
 
 Kaleen
-
-[Open the calculator →](/portal)
 
 ---
 
 ## Notes for whichever you pick
 
-- **All three close the same loop the same way:** the machine is the lever, there
-  are more of them than you were taught, and how many is left open. That is the
-  door the mini cart opens through. Keep that shape wherever you land.
-- **All three end on "what it eventually turned into,"** which is a deliberate
-  new plant. Email 5 is the origin story, and it now has a second job: getting
-  the reformer design story on the table before the cart opens. The course's
-  entire moat is that Kaleen designed a machine, and as of this draft that fact
-  appears nowhere in the nurture sequence and nowhere in
-  [story-bank.md](../story-bank.md).
-- **Version B is the only one that names adjustments out loud.** "Where the ropes
-  are set. Where the carriage is starting from." That is the sharpest version of
-  the tease, because a reader who has never thought about carriage start position
-  gets an itch on the spot. It is also the closest any version comes to teaching
-  module 3. Watch it, but it is a list of nouns with no mechanism attached, so it
-  should hold.
-- **Version A is the only one that scripts the client sentence.** That script is
-  the most usable thing in the entire sequence and the most direct answer to the
-  question email 3 asked.
-- **Version C opens on the sales page headline.** Using it here first is
-  deliberate preframing, so keep the sales page consistent with it.
-- **The student quote in version B** is from
-  [customer-language.md](../customer-language.md) and is used unattributed.
-  Confirm `share_permission` before adding a name.
-- **The `/portal` link** is the same placeholder as email 1. If email 4 should
-  point somewhere other than the calculator, this is the email to change, since
-  emails 2 and 3 carry no link at all and this is the first CTA in three emails.
+- **All three spend about 70% on the diagnosis** and hit the offer only in the
+  last movement. If you edit one down, cut from the offer, not from the
+  diagnosis. The diagnosis is what makes the ask land.
+- **All three plant the credential in one sentence** and stop. Email 5 tells the
+  story properly. The line exists so the offer has a reason to be believed at the
+  moment it is made, not to do email 5's job.
+- **All three end on the email 5 tease** after the CTA, so the story is the last
+  thing they read rather than the price.
+- **`[CEC line goes here once confirmed.]` is a real placeholder** in all three.
+  Delete the bracket and write the line, or delete the sentence. Do not ship the
+  bracket.
+- **`LINK` is a placeholder.** It has to resolve to something that actually
+  charges $39, which is the deferred enforcement mechanism in the course spec.
+- **Version B names recognizable moments** (the always-sore client, the one you
+  quietly started to wonder about). That is its main asset and the strongest
+  "make sense of their experience" play in the set. It is also the longest.
+- **Version A is the safest.** Cleanest logic, clearest turn, no reliance on the
+  reader recognizing themselves in a list.
+- **Version C is the one to pick if you think the sequence is already long.**
 
-## Math check
+## Continuity check
 
-Both figures trace to email 1's verified math in
-[nurture-v2.md](../current-copy/nurture-v2.md).
-
-| Claim in these drafts | Computed | Verdict |
+| Callback | Where it lands | Status |
 |---|---|---|
-| Gap of "nearly twenty-four" / "more than twenty" pounds | 92.5 lb vs 68.75 lb = 23.75 lb | Correct |
-| Gearing out one slot leaves about fourteen pounds | 18 in vs 13.5 in = 14.25 lb | Correct |
-| That adjustment moved "roughly ten pounds" | 23.75 - 14.25 = 9.5 lb | Correct |
-| No version states how many adjustments exist | Deliberate, open decision in the course spec | Correct |
+| Email 1's duet | Version B names it directly, A and C imply it | Consistent |
+| Email 2's sentence | All three explain where it comes from and absolve the reader | Pays off |
+| Email 3's "it is a number" | All three make the number the thing that was invisible | Pays off |
+| The calculator | All three call it the first instrument, which upgrades the lead magnet | Consistent |
+| Email 5 handoff | All three tease the design story after the CTA | Set up |
 
 ---
 
-## Passes one and two, retired
+## Earlier passes, retired
 
-Kept as a decision record. Both passes are now wrong, but they are wrong in
-instructive ways, and the reasoning gets relitigated otherwise.
+Kept as a decision record so the reasoning does not get relitigated.
 
-**Pass one** aimed at equipment settings with "you can know the load before
-class" as the payoff. It was retired for two stated reasons.
-
-1. *"Wrong product. The model pointed at gear position, rope length, footbar
-   height, and carriage position. That is an apparatus answer, and it teed up a
-   workshop about adjustments. The next thing the reader is sold is a mini
-   course about body weight and height."*
-2. *"Wrong payoff. Foresight is a planning benefit. Confidence in the moment is
-   the real one."*
-
-**Reason 1 has since inverted.** The tripwire is now an apparatus product, so
-teeing up a course about adjustments is exactly right. Pass one's direction was
-closer to correct than pass two's, and this third pass returns to it.
-
-**Reason 2 still stands** and is carried forward unchanged. The payoff is
-explaining and adapting in the moment, not predicting before class.
+**Pass one** aimed at equipment settings, payoff "you can know the load before
+class." Retired for pointing at the wrong product (the tripwire was then a body
+weight course) and for a weak payoff (foresight is a planning benefit).
 
 **Pass two** aimed at the body: "the body decides, not the spring," closing on
-body weight as the cart door. Retired because body weight is Pilates Physics
-101's thesis and is no longer the tripwire. Its three versions are recoverable
-from git history at commit `2a70877` if the product ladder ever changes again.
+body weight as the cart door. Retired when the tripwire became a machine course,
+which inverted pass one's first objection.
+
+**Pass three** aimed at the machine as "the lever," with a client script and a
+partial list of adjustments, then closed with "how many levers do you have? more
+than you were taught." Retired because it handed over capability and then pulled
+it back, which reads as a bait and switch, and because it commits the exact error
+Nikki warned about: telling them the problem and how to be right in the same
+email. **The lesson worth keeping: the diagnosis email gives understanding, never
+capability.** Naming the product openly, as this pass does, is more honest than
+teasing an answer you do not intend to give.
+
+All three earlier passes are recoverable from git history.
