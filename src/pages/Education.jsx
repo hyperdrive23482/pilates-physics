@@ -10,24 +10,27 @@ const PATHS = [
     n: '01',
     label: 'ONLINE COURSE',
     title: 'The Making of a Reformer',
-    body: 'A behind-the-scenes look at how a reformer is actually designed and built, from spring geometry and carriage mechanics to the choices that decide how the machine loads a body.',
+    sub: 'How your machine works, and why',
+    body: 'A behind-the-scenes look at reformer design, from spring specs to all the decisions that impact how a body is loaded.',
     meta: 'Coming soon',
     ctaLabel: null,
   },
   {
     n: '02',
-    label: '2-HOUR LIVE WORKSHOP',
+    label: 'LIVE, VIRTUAL WORKSHOP',
     title: 'Pilates Physics 101',
-    body: 'A focused 2-hour live session on the mechanics behind reformer springs and the equipment variables that change how a body is loaded. New to Pilates Physics? Start here.',
+    sub: 'The Reformer',
+    body: 'The same settings load every body differently. Learn why, and leave able to reason your way to the right setup for whoever is on the carriage.',
     seriesPrefix: 'PP-101',
     ctaLabel: 'Learn more',
     to: '/pilates-physics-101',
   },
   {
     n: '03',
-    label: '2-HOUR LIVE WORKSHOP',
-    title: 'Pilates Physics 102: Chair and Cadillac',
-    body: 'A focused 2-hour live session on the mechanics of the Pilates Chair and Cadillac. Explore how spring orientation, lever arms, and body weight interact to load your clients.',
+    label: 'LIVE, VIRTUAL WORKSHOP',
+    title: 'Pilates Physics 102',
+    sub: 'Chair and Cadillac',
+    body: 'The Chair and Cadillac break the reformer mold. See how spring direction, lever length, and body weight combine so you can adapt any exercise on the spot.',
     seriesPrefix: 'PP-102',
     ctaLabel: 'Learn more',
     to: '/pilates-physics-102',
@@ -36,16 +39,18 @@ const PATHS = [
     n: '04',
     label: 'PRIVATE, VIRTUAL',
     title: '1:1 Mentoring',
-    body: "One-off or ongoing private mentoring tailored to the questions you have right now. Limited slots. $220 per session.",
+    sub: 'Your questions, your clients, your equipment',
+    body: "Virtual sessions to work through the questions your training never covered, on your equipment, at your pace. Limited slots. $220 per session.",
     meta: 'By inquiry',
     ctaLabel: 'Inquire',
     href: '#inquiry',
   },
   {
     n: '05',
-    label: 'ON-SITE AT YOUR STUDIO',
-    title: 'In-person Workshops',
-    body: 'Bring Pilates Physics to your studio with a custom-built sessions from 2–6 hours either in-person or virtual.',
+    label: 'ON-SITE OR VIRTUAL',
+    title: 'Custom Workshops',
+    sub: 'Built for your team',
+    body: 'In your studio or online, from 2 to 6 hours, shaped around the topics your instructors need most.',
     meta: 'By inquiry',
     ctaLabel: 'Inquire',
     href: '#inquiry',
@@ -54,7 +59,8 @@ const PATHS = [
     n: '06',
     label: 'FOR TEACHER TRAINING PROGRAMS',
     title: 'Licensed Curriculum Module',
-    body: 'Add a custom-built Pilates Physics module to your existing teacher training program. License it for ongoing use and get updates over time.',
+    sub: 'Pilates Physics to empower your graduates',
+    body: 'Add a Pilates Physics module to your existing teacher training program. Get a license for lifetime use of custom or off-the-shelf educational content.',
     meta: 'By inquiry',
     ctaLabel: 'Inquire',
     href: '#inquiry',
@@ -130,7 +136,7 @@ export default function Education() {
               Five ways to learn the <span className="italic accent">physics of Pilates.</span>
             </h1>
             <p className="education-hero__lede">
-              Live workshops, private mentoring, and licensed teacher-training
+              Online workshops, private mentoring, and licensed teacher-training
               modules. Pick the depth that fits where you are right now.
             </p>
           </div>
@@ -159,6 +165,7 @@ export default function Education() {
                   <span className="fcard__label mono accent">{p.label}</span>
                 </div>
                 <h3 className="fcard__title">{p.title}</h3>
+                {p.sub && <p className="fcard__sub italic">{p.sub}</p>}
                 <p className="fcard__body">{p.body}</p>
                 <div className="fcard__foot">
                   <span>{cardMeta(p)}</span>

@@ -65,6 +65,15 @@
 .ppv2 .education-paths .fcard {
   min-height: 280px;
 }
+.ppv2 .education-paths .fcard__sub {
+  font-size: 17px;
+  line-height: 1.3;
+  color: var(--accent);
+  margin: 8px 0 0;
+}
+.ppv2 .education-paths .fcard__sub + .fcard__body {
+  margin-top: 12px;
+}
 .ppv2 .education-paths .fcard__body {
   margin-top: 14px;
 }

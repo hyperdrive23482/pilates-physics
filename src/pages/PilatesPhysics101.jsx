@@ -98,6 +98,10 @@ const FAQ = [
     a: 'Not at all. The concepts are explained for movement professionals. No math prerequisites, no jargon without context.',
   },
   {
+    q: 'Where does the workshop take place?',
+    a: 'Online, live on Zoom. Join from your studio, your kitchen table, anywhere with a screen. Your Zoom link waits in your workshop portal once you register.',
+  },
+  {
     q: 'Will there be a recording?',
     a: 'Yes. The full recording is shared within 24 hours of the live session.',
   },
@@ -115,7 +119,7 @@ const FAQ = [
   },
   {
     q: "What if I can't make the live session?",
-    a: 'The recording is included with every registration. You can submit questions ahead of time. Of course, a big value of the workshop is the live Q&A, but I understand the difficulties of scheduling.',
+    a: "The workshop recording is included with every registration. You will have access to it for at least 6 months. If you can't attend but have specific questions, you can submit them ahead of time via the Pilates Physics Portal. Of course, a big value of the workshop is the live Q&A, but I understand the difficulties of scheduling.",
   },
 ]
 
@@ -196,7 +200,8 @@ export default function PilatesPhysics101() {
     { k: 'Date', v: dateLong },
     { k: 'Time', v: '11am PDT / 2pm EDT' },
     { k: 'Duration', v: '2 hours' },
-    { k: 'Format', v: 'Live via Zoom · recording included' },
+    { k: 'Location', v: 'Zoom' },
+    { k: 'Format', v: 'Live · recording included' },
     { k: 'NPCP CECs', v: '2.0' },
     { k: 'Price', v: price || 'To be announced' },
   ]
