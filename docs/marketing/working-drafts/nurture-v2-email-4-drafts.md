@@ -1,7 +1,17 @@
 # Nurture v2, Email 4: the real diagnosis, and the cart opens
 
-Three drafts to choose from. Email 4 of the seven-email sequence in
+**Superseded. This file is an archive.** Version A was selected and then
+rewritten by Kaleen from the opening down. The final copy lives in
 [current-copy/nurture-v2.md](../current-copy/nurture-v2.md).
+
+What survived the rewrite: the course paragraph, the $39 and $69 framing tied to
+the subscriber being new, and the CEC placeholder. What did not: the "you have
+never seen the load" diagnosis and the instrument framing, which were the spine
+of all three drafts. The rewrite answers email 3's question in two words
+("different load") and moves to the machine and the offer much faster.
+
+The three drafts are kept below because the diagnosis material in them is still
+unspent and may be worth a main-list newsletter later.
 
 > **Fourth pass. The structure changed, not just the copy.** Email 4 is now the
 > cart open for
@@ -78,7 +88,7 @@ emails 1 through 3 avoid it.
 
 ---
 
-## Version A: "You have never seen the number" — SELECTED
+## Version A: "You have never seen the number" (selected, then rewritten)
 
 The most direct statement of the diagnosis, and the cleanest turn into the offer.
 Leads with the instrument idea and lets the relief do the selling.

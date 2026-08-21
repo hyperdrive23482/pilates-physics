@@ -93,6 +93,11 @@ modules. A pure chronological story would fight both.
 
 ### The machine stays unnamed
 
+> **Superseded 2026-08-21.** Nurture v2 email 5 names the Flexia Reformer
+> outright. The reasoning below is kept because its second half now matters more,
+> not less: with the machine named, brand fairness is the only thing keeping the
+> design story on the credentials side of the line.
+
 Following Nikki's Remo play: show it, do not name it, let people ask. The one
 thing that makes that work rather than backfire is the technical content staying
 demonstrably fair across brands, which the spring calculator already is. Do that
@@ -436,7 +441,15 @@ This product needs the next misconception, not that one.
 
 - [x] ~~Pick the title~~ The Making of a Reformer: How your machine works and why
 - [ ] Confirm CEC approval for on-demand self-study, and how many CECs PP101 carries
-- [ ] Decide how identifiable the designed machine is allowed to be, and confirm the brand-fairness pass across the technical content
+- [x] ~~Decide how identifiable the designed machine is allowed to be~~ **Named.**
+  Nurture v2 email 5 states "the Flexia Reformer" outright, which overrides the
+  Remo play below. Recorded 2026-08-21
+- [ ] **Confirm the brand-fairness pass across the technical content. Now
+  urgent.** With the machine named, a course called "how your machine works"
+  is written by someone visibly selling a reformer. Fairness across brands is
+  what keeps that reading as credentials rather than as a pitch, and it is no
+  longer a nice-to-have. The spring calculator already passes. The course content
+  has not been checked
 - [x] ~~Decide whether module 5 folds into module 4~~ Folded. Second-order effects are taught inside reformer adjustments
 - [x] ~~Decide whether classical vs contemporary stays a module~~ It stays
 - [ ] Run the three-sentence design-decision test against every module and cut the story from any module that fails it. Module 7 (the body handoff) is the one with no design decision attached, by design

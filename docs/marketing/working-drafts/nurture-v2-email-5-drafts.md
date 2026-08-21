@@ -1,233 +1,299 @@
 # Nurture v2, Email 5: origin story and scar reel
 
-Two drafts to choose from. Email 5 of the seven-email sequence in
-[current-copy/nurture-v2.md](../current-copy/nurture-v2.md).
-
-> **This email cannot ship as drafted.** Sections 1 through 4 of
-> [story-bank.md](../story-bank.md) are empty, and those are exactly the sections
-> this email is made of: how Kaleen came to Pilates, engineering and teaching
-> colliding, the moment the physics clicked, and what she got wrong as a teacher.
-> The course spec also lists spelling out the bio credentials as an open
-> decision. Everything below is written around the material that does exist, with
-> marked capture slots for the facts only Kaleen can supply. See "What I need
-> from you" at the bottom.
+**Version A was selected and edited by Kaleen. The final copy lives in
+[current-copy/nurture-v2.md](../current-copy/nurture-v2.md).** B and C are kept
+below as archive. Note that the final version names the Flexia Reformer, so the
+"do not name the machine" rule below and the P.S. in all three drafts are
+superseded.
 
 **Position:** day 2. Cart is open, two days left at $39.
 
-## The job
+> **Reworked against Kaleen's email 4 rewrite.** Email 4 now states the
+> credential outright: she came at Pilates from the equipment angle before she
+> ever learned to teach, and designing a reformer meant every dimension,
+> adjustment range, and spring specification had to be defensible with physics.
+> Captured in [story-bank.md](../story-bank.md) section 2.
 
-Establish the credentials for The Making of a Reformer, in Kaleen's own words:
-*"I share how I navigated the design decisions based on physics."*
+## The job changed, and it got simpler
 
-Nikki's brief is origin story plus what Ash calls the scar reel. Not a
-credentials list. How I got here, and what I got wrong on the way.
+Email 5 is no longer the reveal. Email 4 made the claim. **Email 5 is the proof.**
 
-**Why it sits after the cart opens rather than before.** The reader already has
-the offer. This email is not introducing a product, it is answering the question
-the offer raised: why should this person be the one teaching me my own machine.
-That makes it more useful here than it would have been as a warm-up.
+Email 4 says "defensible with physics" and never shows one. If email 5 shows a
+single design decision worked all the way through, that claim is cashed and the
+course becomes concrete. If it does not, email 4 wrote a check nothing covers,
+and the reader has been told twice that Kaleen designed a reformer without ever
+seeing what that bought her.
 
-## The spine
+**One decision told properly beats six decisions mentioned.** That is the whole
+email.
 
-1. **The scar, and it is already in this sequence.** Email 1: "For a long time I
-   assumed that he was really just not grasping the work." Email 2: "I have said
-   it." Both are real admissions Kaleen has already made to this reader. Collect
-   them and go one layer deeper.
-2. **The turn.** What made her look at the machine instead of the person.
-3. **The escalation.** How that became designing one.
-4. **The point.** Designing forces the physics. You cannot hand-wave a dimension
-   to a manufacturer. Every number has to be picked and then defended.
-5. **One worked decision,** named properly: the decision, the options, what was
-   chosen and why.
-6. **The offer.** Two days left at $39.
+## The scar got better, and it is the reason to open with it
+
+The old plan had a teacher who did not know. Common story.
+
+The new one: she understood the equipment before she ever taught, and she
+*still* assumed the tall man was engaging better than the small woman. She
+*still* said "if you don't feel it, you're doing it wrong." Knowing the physics
+did not automatically produce the teaching. The information was in her head and
+it stayed filed under equipment rather than under people.
+
+That is a much better admission, and it does something the old version could not:
+it absolves the reader completely. If knowing the physics was not sufficient even
+for the person who knew it, then no teacher reading this has anything to be
+embarrassed about.
+
+## The recommended worked decision: the shoulder rests
+
+All three drafts use the same one, so filling it once serves whichever you pick.
+Alternatives are listed at the bottom.
+
+It is the strongest candidate because **it closes email 1's loop.** The duet
+turned on press-out distance. Shoulder rest position sets where the body starts
+on the carriage, which sets how far the client presses before their legs are
+straight, which sets how far the spring stretches, which sets the load. A
+comfort-looking feature is a load control, and it is the exact variable that made
+the 5'1" woman and the 6'0" man different.
+
+The course spec documents the decision: shoulder rests that adjust, which buys an
+even shorter distance from shoulder rest to footbar.
+
+> **Sanity check before this ships.** The physics above is straightforward, but
+> shoulder rest position is not modelled in the spring calculator or the class
+> simulator (the footwork exercise exposes footbar and gear only). So this claim
+> is not backed by the tools the way email 1's math is. Confirm it reads true to
+> you before it goes out.
 
 ## What it must not do
 
-- **Do not turn into a credentials list.** The story bank's own warning on section
-  2: "Keep it to moments, not qualifications." BB, equipment maintenance, and
-  Flexia are the setup for moments, not the content.
-- **Do not name the machine.** The spec follows Nikki's Remo play: show it, do
-  not name it, let people ask. Both drafts handle this in the P.S. rather than
-  dodging it, which turns the omission into a fairness claim instead of coyness.
-  Flagged as a decision below.
-- **Do not punch at the reader's training.** Per
-  [voice-and-messaging.md](../voice-and-messaging.md), the training was the
-  foundation, not a failure, and that applies to Kaleen's own training too. The
-  scar is hers, told without self-flagellation.
-- **Do not re-teach the diagnosis.** Email 4 did that. This one is the person.
-- **Do not assert the CEC.** Still unconfirmed.
+- **Do not restate the credential.** Email 4 said it. Saying it again is a
+  credentials list, which is exactly what the story bank warns section 2 against.
+- **Do not name the machine.** Per the spec's Remo play. All three drafts handle
+  it in the P.S. rather than dodging, which turns the omission into a fairness
+  claim instead of coyness.
+- **Do not punch at the reader's training.** The scar is Kaleen's, told without
+  self-flagellation. Per [voice-and-messaging.md](../voice-and-messaging.md).
+- **Do not re-teach the load.** Email 4 did that.
+- **Do not assert the CEC.**
 
 **Deadline language:** "two more days" is correct on day 2 of a 72-hour window
-that closes at end of day 3.
+closing end of day 3.
 
 ---
 
-## Version A: "The part I am least proud of"
+## Version A: "I knew the machine and still got it wrong" (SELECTED, final copy in current-copy)
 
-Scar first, then the turn, then the design. Follows Nikki's structure in order
-and pays off the two admissions already sitting in emails 1 and 2. The safer
-pick, and the warmest.
+Scar first, and it is built on the new sharper version of it. The warmest, and
+the one that does the most for the reader, because the absolution is the point.
+Recommended.
 
 **Subject line options**
-1. The part I am least proud of
-2. I was standing next to the answer
-3. How a Pilates teacher ended up designing equipment
+1. I knew the machine and still got it wrong
+2. It did not help me either, not at first
+3. The part I left out yesterday
 
-**Preview text:** I said the sentence too. For years.
+**Preview text:** Knowing the physics did not make me a better teacher. Not on its own.
 
 ---
 
 Hi {{ subscriber.first_name }},
 
-I want to tell you how I got here, and I have to start with the part I am least proud of.
+Yesterday I mentioned that I came at this from the equipment side before I ever learned to teach.
 
-In the first email I told you about the duet. The tall man working hard, the small woman chatting through her set. And I told you what I believed at the time, which was that he was really engaging with the work and she was not quite grasping it.
+Here is the part I left out. It did not help me. Not at first.
 
-I taught that way for a long time.
+I walked into teaching already understanding how these machines work. I could have told you exactly what a spring does when you stretch it. And I still stood in front of that duet from the first email, the tall man working hard and the small woman chatting through her set, and thought that he was really engaging with the work and she was not quite grasping it.
 
-I also said the sentence. The one from the second email. "If you don't feel it, you're doing it wrong." I said it warmly, to people I liked, and I thought I was helping them.
+I still thought the sentence I showed you in the second email. 
 
-What makes me wince now is not that I said it. It is that I said it while standing right next to the answer.
+That is the honest part of this story and it is not the shape you would expect. Knowing the physics did not make me a better teacher right away. The information was sitting in my head the whole time, filed under equipment, and it never once walked across the room and filed itself under people.
 
-> **[CAPTURE 1: the turn.]** What actually made you look at the machine instead
-> of the person? The course spec names equipment maintenance as the bridge. Two
-> or three sentences, one specific moment if you have one. The story bank asks
-> for this in section 2 and section 3.
+Designing a reformer of my own to sell worldwide is where it stopped being possible to be vague about any of it.
 
-> **[CAPTURE 2: the escalation.]** How you went from understanding machines to
-> being asked to design one. Two or three sentences.
+Every dimension on a reformer is a number that somebody has to actually manufacture. There is no "about there." You pick, and then you defend the pick to people whose entire job is to ask you why.
 
-And that is where this stopped being an interest and became unavoidable.
+Let me show you one, because it is the fastest way to explain what I mean.
 
-Because when you design a reformer, you do not get to hand-wave. Every dimension is a number somebody has to manufacture, and every one of those numbers changes what a body will feel on that machine. You cannot say "about there." You have to pick, and then you have to defend the pick, to people whose job is to ask why.
+Take the shoulder rests. Most people read those as a comfort feature, something you adjust so a client is not uncomfortable. They are not. Where the shoulder rests sit decides where a body starts on the carriage. That decides how close they are to the footbar.  That decides how far your client presses in footwork before their legs are straight. That decides how far the spring stretches. And that decides the load.
 
-> **[CAPTURE 3: one worked decision.]** Name the decision, name the options, name
-> what you chose and why. Candidates are listed at the bottom of this file. This
-> is the single most important paragraph in the email, because it is the proof of
-> the whole claim. One decision told properly beats four mentioned.
+That's a big part of the reason I made the Flexia Reformer shoulder rests adjustable in two directions: wide-narrow and close-far to the footbar.
 
-I made dozens of those. How many gear positions to offer and where to stop. Which springs to source, and what happens to a spring after ten thousand cycles. Where the ropes run. What the shoulder rests are allowed to do. Whether the footbar needed to pivot, and what it costs you when it does not.
+I made dozens of decisions like that one. How many gear positions to offer and where to stop. What spring specs to require.  Where the pulleys sit on the risers. Whether the footbar needed to pivot.
 
 Every one of them turned out to be a load decision wearing a different costume.
 
-That is the education I did not know I had signed up for, and it is what the course is.
+That is what The Making of a Reformer online course is. Not a parts list. Each section opens with a decision I had to make, gives you the physics that settled it, and closes with what I picked and why.
 
-The Making of a Reformer is not a parts list. It is those decisions. Each section opens with a choice I had to make, gives you the physics that settled it, and closes with what I picked and why. You get the technical content with the stakes still attached, which is the only way I know to make this stuff stick.
-
-You have **two more days at $39**. After that it is $69.
+You can still get it for **$39** for just two more days.  Then it goes back to $69.
 
 [Get The Making of a Reformer →](LINK)
 
 Kaleen
 
-P.S. People ask which reformer. I am deliberately not saying, and the reason matters: the course has to be fair to every brand on the market, and it is. The physics does not care whose logo is on the frame, and neither does the spring calculator you already have.
-
 ---
 
-## Version B: "You cannot hand-wave a dimension"
+## Version B: "One decision, all the way through"
 
-Opens on the design work, then reaches back for the scar. Starts on the most
-interesting material rather than the most vulnerable, so it is the stronger open
-and the weaker close. Pick this if you think the sequence has had enough
-confession in it.
+Proof first. Opens on the shoulder rests and works them end to end before any
+story arrives. The most substantial and the most respectful of a technical
+reader, which per the spec is what this list is. Pick this if you think the
+sequence has had enough confession in it.
 
 **Subject line options**
-1. You cannot hand-wave a dimension
-2. Somebody has to actually build it
-3. The question I could not answer
+1. One decision, all the way through
+2. The shoulder rests are not a comfort feature
+3. What a reformer designer actually argues about
 
-**Preview text:** Every number on that machine is a decision somebody made.
+**Preview text:** Let me show you one decision from start to finish.
 
 ---
 
 Hi {{ subscriber.first_name }},
 
-Here is the fastest way I know to learn how a reformer works.
+Let me show you one decision, all the way through. It is the fastest way I know to explain what yesterday's course actually is.
 
-Try to have one made.
+Take the shoulder rests on your reformer.
 
-> **[CAPTURE 2: the escalation.]** Two or three sentences on how you ended up
-> designing a reformer. Enough for the reader to believe it, not the whole story.
+Most people read those as a comfort feature. Something you slide around so a client is not uncomfortable, filed next to headrest height and nothing to do with load.
 
-The thing nobody warns you about is that you cannot hand-wave. Every dimension is a number that somebody has to actually manufacture, and every one of those numbers changes what a body will feel on that machine. There is no "about there." You pick, and then you defend the pick to people whose entire job is to ask you why.
+They are not.
 
-> **[CAPTURE 3: one worked decision.]** The decision, the options, what you chose
-> and why. Candidates at the bottom of this file. This paragraph is the proof of
-> the whole email.
+Where the shoulder rests sit decides where a body starts on the carriage. That decides how far your client presses before their legs are straight. That decides how far the spring stretches. Which decides what they feel.
 
-I made dozens of those. How many gear positions and where to stop. Which springs to source, and what happens to a spring after ten thousand cycles. Where the ropes run. What the shoulder rests are allowed to do. Whether the footbar needed to pivot.
+Which means it is the duet from the first email, and it is adjustable.
 
-Every one of them was a load decision wearing a different costume.
+Now here is what that looks like from the other side of it, when you are the one specifying the machine rather than teaching on it.
 
-And somewhere in the middle of all that, I had to sit with the part I am least proud of.
+> **[CAPTURE 3: what you decided and why.]** Whether they moved at all, how far,
+> and what it cost you elsewhere. Three sentences: the decision, the options, the
+> choice. This paragraph is the proof of the entire email, and in this version it
+> is also the opening argument, so it carries more weight here than anywhere else.
 
-Because I taught for a long time before any of this. I told you about the duet in the first email, and what I believed at the time, which was that he was really engaging with the work and she was not quite grasping it. I said the sentence from the second email too. "If you don't feel it, you're doing it wrong." Warmly, to people I liked, believing I was helping.
+There is no "about there" in that conversation. Every dimension is a number somebody has to manufacture, and you defend each one to people whose entire job is to ask you why.
 
-What makes me wince is not that I said it. It is that I said it while standing next to the answer.
+I made dozens of those calls. How many gear positions and where to stop. Which springs to source, and what happens to a spring after ten thousand cycles. Where the ropes run. Whether the footbar needed to pivot.
 
-> **[CAPTURE 1: the turn.]** Optional here, one or two sentences. What made you
-> look at the machine instead of the person.
+Every one turned out to be a load decision wearing a different costume.
 
-That is the education I did not know I had signed up for, and it is what the course is.
+> **[CAPTURE 2: the escalation.]** One or two sentences on how you ended up being
+> the person making these calls. Short here. Version B is not the story version.
 
-The Making of a Reformer is not a parts list. It is those decisions. Each section opens with a choice I had to make, gives you the physics that settled it, and closes with what I picked and why.
+And I will tell you the uncomfortable part, since I have told you most of it already. I understood this equipment before I ever learned to teach, and it did not make me a better teacher on its own. I stood in front of that duet and thought he was engaging and she was not quite grasping it. The information was in my head the whole time and it stayed filed under equipment rather than under people.
 
-**Two more days at $39**, then it is $69.
+That is why the course is built the way it is. Every section opens with a decision I had to make, gives you the physics that settled it, and closes with what I picked and why. The physics arrives attached to something at stake, because that is the only way I have found to make it land on an actual person in an actual class.
+
+**Two more days at $39,** then $69.
 
 [Get The Making of a Reformer →](LINK)
 
 Kaleen
 
-P.S. People ask which reformer. I am deliberately not saying, and the reason matters: the course has to be fair to every brand on the market, and it is. The physics does not care whose logo is on the frame.
+P.S. People keep asking which reformer. I am deliberately not saying, and the reason matters. The course has to be fair to every brand on the market, and it is. The physics does not care whose logo is on the frame.
+
+---
+
+## Version C: "Somebody has to actually build it"
+
+The behind-the-scenes version. Opens on what designing is actually like rather
+than on the scar or the physics. Most curiosity-driven and the most distinct from
+the rest of the sequence, at the cost of taking longest to reach a point.
+
+**Subject line options**
+1. Somebody has to actually build it
+2. There is no "about there"
+3. The question I had to answer about a thousand times
+
+**Preview text:** Every number on that machine is a decision somebody defended.
+
+---
+
+Hi {{ subscriber.first_name }},
+
+The fastest way I know to learn how a reformer works is to try to have one made.
+
+> **[CAPTURE 2: the escalation.]** Two or three sentences on how you ended up
+> designing one. Enough for the reader to believe it, not the whole story.
+
+Here is what nobody warns you about.
+
+You cannot say "about there." Every dimension is a number that somebody has to actually manufacture, in a factory, thousands of times. So every number gets a question attached to it, and the question is always the same one. Why that and not something else.
+
+I answered that question a few hundred times. How many gear positions, and where to stop. Which springs to source, and what happens to them after ten thousand cycles. Where the ropes run. Whether the footbar needed to pivot.
+
+Let me show you one, because it is the one that changed how I teach.
+
+The shoulder rests. Most people read those as a comfort feature. Something you slide around so a client is not uncomfortable.
+
+They are not. Where the shoulder rests sit decides where a body starts on the carriage, which decides how far your client presses before their legs are straight, which decides how far the spring stretches, which decides the load.
+
+It is the duet from the first email, sitting there disguised as padding.
+
+> **[CAPTURE 3: what you decided and why.]** Whether they moved at all, how far,
+> and what it cost you elsewhere. Three sentences: the decision, the options, the
+> choice. This paragraph is the proof of the entire email.
+
+Every one of those decisions turned out to be a load decision wearing a different costume. That is the education I did not know I was signing up for.
+
+And I needed it more than I would have guessed, because I came at this equipment-first and it did not make me a better teacher on its own. I stood in front of that duet and thought he was engaging with the work and she was not quite grasping it. The physics was in my head the whole time. It just never walked across the room.
+
+The course is that education, arranged so it does walk across the room. Each section opens with a decision, gives you the physics that settled it, and closes with what I chose and why.
+
+**Two more days at $39,** then $69.
+
+[Get The Making of a Reformer →](LINK)
+
+Kaleen
+
+P.S. People keep asking which reformer. I am deliberately not saying, and the reason matters. The course has to be fair to every brand on the market, and it is. The physics does not care whose logo is on the frame.
 
 ---
 
 ## What I need from you
 
-Three captures, and the same three serve both versions, so filling them once
-covers whichever you pick. These belong in
-[story-bank.md](../story-bank.md) sections 2, 3, and 4 as well, since they are
-the brand's central story and this will not be the last thing that needs them.
+Three captures, and the same three serve all three versions, so filling them once
+covers whichever you pick. All three belong in
+[story-bank.md](../story-bank.md) as well. Section 2 now has its first entry from
+your email 4 rewrite, and these extend it.
 
-| # | Capture | Where it goes | Story bank home |
-|---|---------|---------------|-----------------|
-| 1 | **The turn.** What made you look at the machine instead of the person | Both versions | Sections 2 and 3 |
-| 2 | **The escalation.** How you ended up designing a reformer | Both versions | Section 2 |
-| 3 | **One worked decision**, told properly | Both versions, the load-bearing paragraph | New, and it belongs in the course spec too |
+| # | Capture | Weight | Story bank home |
+|---|---------|--------|-----------------|
+| 1 | **What connected them.** You had the equipment knowledge and it stayed inert. What made it finally land on the person in front of you | Essential in A, cut from B and C | Section 3 |
+| 2 | **The escalation.** How you became the person who designs one. Email 4 says it happened, this says how | Short in all three | Section 2 |
+| 3 | **The shoulder rest decision.** Whether they moved at all, how far, what it cost you elsewhere | **Load-bearing in all three.** This is the proof of email 4's claim | New, and it belongs in the course spec too |
 
-**Capture 3 candidates,** all documented in
-[reformer-machine-course-spec.md](reformer-machine-course-spec.md). Pick the one
-where physics forced an answer that cost you something or surprised you:
+**If the shoulder rests are the wrong decision to feature,** these are the
+alternatives from
+[reformer-machine-course-spec.md](reformer-machine-course-spec.md). Swap it in
+the same slot and the drafts still work:
 
-- **Three gear positions instead of more.** A "where to stop" decision, and the
-  most on-thesis of the set, because gear position is the adjustment the trickle-
-  down hook runs on.
-- **Adjustable shoulder rests.** They buy a shorter distance from shoulder rest
-  to footbar, which is a load decision disguised as a comfort feature. The best
-  illustration of "every dimension is a load decision" in the whole spec.
-- **Bearings.** Specified to take friction off the table, and to buy quiet and
-  low maintenance at the same time. Sets up module 5 nicely.
+- **Three gear positions instead of more.** A "where to stop" decision, and it is
+  the adjustment the trickle-down hook runs on.
+- **Bearings.** Specified to take friction off the table and buy quiet, low
+  maintenance wheels at the same time. Sets up module 5.
 - **The footbar that does not pivot** but still locks, still adjusts, and still
-  works as a kickstand. Good on tradeoffs, four constraints against each other.
-- **The spring color wearing off.** The spec calls this the sharpest thing in
-  module 2, a visible failure everyone has seen with a real engineering
-  explanation behind it. Strongest as a story, weakest as a load decision.
+  works as a kickstand. Four constraints against each other.
+- **The spring color wearing off.** The spec calls it the sharpest thing in module
+  2. Strongest as a story, weakest as a load decision, so it proves less.
 
-The three-sentence test from the spec applies: name the decision, name the
-options, name what was chosen. If a candidate cannot produce all three, pick a
-different one.
+The three-sentence test from the spec applies to whichever you pick: name the
+decision, name the options, name what was chosen. If it cannot produce all three,
+it is the wrong one to feature.
 
-## Decisions to confirm
+## Notes
 
-- **The unnamed machine.** Both drafts handle it in the P.S., turning the
-  omission into a brand-fairness claim. That follows the spec's Remo play and it
-  is honest, since the calculator genuinely is brand-fair. If you would rather
-  name it, cut the P.S. and add the name to the credential line. Do not leave it
-  unaddressed, because a reader who notices the gap and gets no explanation reads
-  it as evasion.
-- **"I taught that way for a long time"** is deliberately vague on years. Put a
-  real number in if you are comfortable with it, since it is more credible.
-- **CEC.** Not asserted anywhere in this email. If it lands, it belongs in the
-  offer paragraph, not in the story.
-- **Version B reorders the sequence's emotional arc,** confession last instead of
-  first. Worth reading both out loud before deciding.
+- **All three end on the P.S. about the unnamed machine.** It converts the
+  omission into a brand-fairness claim, which is honest, since the calculator
+  genuinely is brand-fair. If you would rather name it, cut the P.S. Do not leave
+  it unaddressed, because a reader who notices the gap and gets no explanation
+  reads it as evasion.
+- **None of them tease email 6.** Email 4 does not tease email 5 either, so the
+  sequence has stopped teasing forward now that the cart is open. Consistent, and
+  worth keeping unless you want a one-line hook for the quiz.
+- **Version A is the recommendation.** It is the only one where the absolution
+  lands, and that absolution is the most valuable thing this email can give a
+  reader who has just been asked for money.
+- **Version B is the safest if capture 1 does not exist.** It needs only captures
+  2 and 3, and 2 is short in it.
+- **"Ten thousand cycles" appears in all three** and is illustrative, not
+  sourced. Either put a real fatigue-life figure in or change it to "after a few
+  years in a busy studio." The spec's safety framing note applies: wear claims
+  should have something citable behind them.

@@ -59,7 +59,34 @@ This is the section most likely to produce the brand's central story, because it
 is the literal origin of "powered by physics." It is also the one most at risk of
 turning into a credentials list. Keep it to moments, not qualifications.
 
-_Not yet written._
+### Equipment first, teaching second
+
+Kaleen's own words, captured 2026-08-21 while writing nurture v2 email 4:
+
+> "I came at Pilates from precisely this equipment angle before I ever learned
+> how to teach. And when it was time to design my own reformer, I had to pick
+> every dimension, every adjustment range, every spring specification. They
+> needed to be defensible with physics, and I got a full education in what a
+> reformer actually is on the way through."
+
+**Why it matters:** it inverts the expected order. The assumption behind most of
+this brand's copy has been teacher-who-later-found-physics. It is the reverse,
+which makes the authority native rather than acquired, and it explains the
+equipment-first instinct that runs through everything.
+
+**The sharper story is still missing, and it is a better one than the original
+plan had.** If she already understood the equipment before she ever taught, then
+the scar in nurture v2 emails 1 and 2 gets more interesting, not less. She knew
+the machine and still assumed the tall man was engaging better than the short
+woman. She knew the machine and still said "if you don't feel it, you're doing it
+wrong." Knowing the physics did not automatically produce the teaching. Something
+had to connect them, and that connection is section 3.
+
+**Still needed here:** what she was actually doing on the equipment side, and how
+she ended up being the person who designs one. Both are load-bearing for nurture
+v2 email 5.
+
+Ran on: nurture v2 email 4 (not yet sent).
 
 ---
 
