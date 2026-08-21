@@ -145,23 +145,15 @@ export default function Landing() {
                     {secondaryCta.label}
                   </Link>
                 </div>
-                {/* Spec block always describes whatever the primary CTA points at,
+                {/* Spec block only appears when a scheduled workshop is leading,
                     so the details never contradict the button. */}
-                <div className="hero__meta mono">
-                  {registrationLeads ? (
-                    <>
-                      <div><span className="hero__meta-k">What</span> {nextWorkshop.title} Workshop</div>
-                      <div><span className="hero__meta-k">When</span> {formatWorkshopWhen(nextWorkshop.scheduled_at)}</div>
-                      <div><span className="hero__meta-k">Where</span> Live, online · recording included</div>
-                    </>
-                  ) : (
-                    <>
-                      <div><span className="hero__meta-k">What</span> Spring Load Calculator</div>
-                      <div><span className="hero__meta-k">Who</span> Any brand, any spring color</div>
-                      <div><span className="hero__meta-k">Cost</span> Free</div>
-                    </>
-                  )}
-                </div>
+                {registrationLeads && (
+                  <div className="hero__meta mono">
+                    <div><span className="hero__meta-k">What</span> {nextWorkshop.title} Workshop</div>
+                    <div><span className="hero__meta-k">When</span> {formatWorkshopWhen(nextWorkshop.scheduled_at)}</div>
+                    <div><span className="hero__meta-k">Where</span> Live, online · recording included</div>
+                  </div>
+                )}
               </div>
             </div>
 
