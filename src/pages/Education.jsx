@@ -8,6 +8,14 @@ import './Education.css'
 const PATHS = [
   {
     n: '01',
+    label: 'ONLINE COURSE',
+    title: 'The Making of a Reformer',
+    body: 'A behind-the-scenes look at how a reformer is actually designed and built, from spring geometry and carriage mechanics to the choices that decide how the machine loads a body.',
+    meta: 'Coming soon',
+    ctaLabel: null,
+  },
+  {
+    n: '02',
     label: '2-HOUR LIVE WORKSHOP',
     title: 'Pilates Physics 101',
     body: 'A focused 2-hour live session on the mechanics behind reformer springs and the equipment variables that change how a body is loaded. New to Pilates Physics? Start here.',
@@ -16,21 +24,13 @@ const PATHS = [
     to: '/pilates-physics-101',
   },
   {
-    n: '02',
+    n: '03',
     label: '2-HOUR LIVE WORKSHOP',
     title: 'Pilates Physics 102: Chair and Cadillac',
     body: 'A focused 2-hour live session on the mechanics of the Pilates Chair and Cadillac. Explore how spring orientation, lever arms, and body weight interact to load your clients.',
     seriesPrefix: 'PP-102',
     ctaLabel: 'Learn more',
     to: '/pilates-physics-102',
-  },
-  {
-    n: '03',
-    label: '3-HOUR LIVE WORKSHOP',
-    title: 'Pilates Physics 201: Advanced Load Analysis',
-    body: 'A deeper 3-hour workshop on building free-body diagrams for common Pilates exercises and using physics to progress them in your own teaching.',
-    meta: 'Coming soon',
-    ctaLabel: null,
   },
   {
     n: '04',

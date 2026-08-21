@@ -95,8 +95,6 @@ const TESTIMONIALS = [
 // ─── Landing page ─────────────────────────────────────────────────────────────
 export default function Landing() {
   const { workshop: nextWorkshop } = useNextWorkshop()
-  const heroWhat = nextWorkshop ? `${nextWorkshop.title} Workshop` : ' '
-  const heroWhen = nextWorkshop ? formatWorkshopWhen(nextWorkshop.scheduled_at) : ' '
 
   // ── Auto-rotating CTA rule ────────────────────────────────────────────────
   // Within 30 days of the next workshop, registration leads and the spring
@@ -147,10 +145,22 @@ export default function Landing() {
                     {secondaryCta.label}
                   </Link>
                 </div>
+                {/* Spec block always describes whatever the primary CTA points at,
+                    so the details never contradict the button. */}
                 <div className="hero__meta mono">
-                  <div><span className="hero__meta-k">What</span> {heroWhat}</div>
-                  <div><span className="hero__meta-k">When</span> {heroWhen}</div>
-                  <div><span className="hero__meta-k">Where</span> Live, online · recording included</div>
+                  {registrationLeads ? (
+                    <>
+                      <div><span className="hero__meta-k">What</span> {nextWorkshop.title} Workshop</div>
+                      <div><span className="hero__meta-k">When</span> {formatWorkshopWhen(nextWorkshop.scheduled_at)}</div>
+                      <div><span className="hero__meta-k">Where</span> Live, online · recording included</div>
+                    </>
+                  ) : (
+                    <>
+                      <div><span className="hero__meta-k">What</span> Spring Load Calculator</div>
+                      <div><span className="hero__meta-k">Who</span> Any brand, any spring color</div>
+                      <div><span className="hero__meta-k">Cost</span> Free</div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
