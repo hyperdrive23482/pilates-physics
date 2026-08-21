@@ -10,8 +10,23 @@ solved until email 4.
 | 1 | POV / root belief | A spring is not one weight | **Final** |
 | 2 | The enemy | "If you don't feel it, you're doing it wrong" | **Final** |
 | 3 | The misdiagnosis | You think the problem is how you explain it | **Final** |
-| 4 | The real diagnosis | What is actually going on: stretch, body, load | Not drafted |
-| 5 | Origin story + scar reel | How Kaleen got here, and what she got wrong | Not drafted |
+| 4 | The real diagnosis | The machine is the lever, and you were handed two of its dials | Not drafted |
+| 5 | Origin story + scar reel | How Kaleen got here, what she got wrong, and that she designed a reformer | Not drafted |
+
+> **The tripwire changed, and the sequence was re-aimed for it.** Emails 1
+> through 3 were written when the tripwire was Nikki's body weight mini course.
+> It is now
+> [The Making of a Reformer](../working-drafts/reformer-machine-course-spec.md),
+> a machine-only course that keeps the body out on purpose. Email 3's body
+> weight seed was replaced with a machine seed, and email 4 was redrafted from
+> scratch. Emails 1 and 2 needed no change: email 1 is already a pure machine
+> story, and email 2's enemy beat is product-agnostic.
+>
+> **Email 5 now carries a second job.** The course's entire moat is that Kaleen
+> designed a reformer, and that fact currently appears nowhere in this sequence.
+> The origin story is the last email before the cart opens, so it is the only
+> place left to plant it. All three email 4 drafts end on "what it eventually
+> turned into" to hand it that setup.
 
 **Cadence:** day 1, 3, 5, 8, 11 assumed, and nothing in the copy depends on it.
 No email names a day of the week. They point back with "last email" and forward
@@ -168,7 +183,8 @@ P.S. Hit reply and tell me the line repeated over and over in our industry that 
 ## Email 3 · The misdiagnosis
 
 **Status:** final, Kaleen's edit of draft version A, softened so that cues are
-allowed to sometimes be the right answer. Alternates are archived in
+allowed to sometimes be the right answer, then re-seeded for the machine
+tripwire (the body weight line was swapped for the gear bar and footbar lines). Alternates are archived in
 [nurture-v2-email-3-drafts.md](../working-drafts/nurture-v2-email-3-drafts.md).
 
 **Subject:** The thing we reach for instead
@@ -203,7 +219,7 @@ Both are valid adjustments.
 
 What a cue cannot do is close a gap that large.
 
-It cannot change how the spring load compares to your client's own body weight.
+It cannot change where on that spring's climb your client is starting from. It cannot move the gear bar or the footbar. It cannot change what the machine is already doing before anyone lies down on it.
 
 Even when maximum load is not the goal, the spring is still doing a job of its own. A cue sends information to your client's ears. The spring sends it straight through their body. Some people need more of that input before the work registers, and some need less.
 
@@ -227,9 +243,15 @@ P.S. This week, if someone is performing the exercise well but doesn't feel it, 
   "The lever you were never handed" are both live options if you want to test.
 - **No CTA, third email running.** Emails 2 and 3 both ask for nothing. That is
   defensible for these beats, but email 4 should probably carry a link.
-- **The body weight line is a deliberate seed.** "How the spring load compares to
-  your client's own body weight" points at the tripwire product Nikki wants next
-  in the funnel. Do not resolve it here.
+- **The machine lines are a deliberate seed.** "Where on that spring's climb,"
+  the gear bar, and the footbar point at the tripwire product, which is now
+  [The Making of a Reformer](../working-drafts/reformer-machine-course-spec.md)
+  rather than Nikki's original body weight course. Name the category, do not
+  teach it here.
+- **Body weight was removed from this email.** The earlier draft closed on "it
+  cannot change how the spring load compares to your client's own body weight."
+  That seeded the wrong product. Body weight is Pilates Physics 101's thesis, so
+  it stays out of nurture entirely now.
 - **Email 4 owes the reader a payoff.** This email promises to answer what the
   lever is when words are not, and what to do the next time a client says they
   cannot feel it. The payoff is not foresight. It is being able to explain to a
