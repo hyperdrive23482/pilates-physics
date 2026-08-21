@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Reformer, Named — Pilates Physics</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --surface-2: #1c1c1c;
+    --border: #2a2a2a;
+    --text: #e8e4dc;
+    --muted: #6b6660;
+    --dim: #423e39;
+    --accent: #c8a96e;
+    --accent-2: #6e9ec8;
+    --line: #4a4640;
+    --fill: #191919;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    padding: 28px 20px 36px;
+  }
+
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 400;
+    color: #EF9F27;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 22px;
+  }
+
+  /* ---- view tabs ---- */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+  .tab {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 7px 13px;
+    cursor: pointer;
+    transition: color .15s, border-color .15s, background .15s;
+  }
+  .tab:hover { color: var(--text); border-color: var(--line); }
+  .tab.on { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+
+  /* ---- stage ---- */
+  .stage {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  svg { display: block; width: 100%; height: auto; max-height: 58vh; margin: 0 auto; }
+
+  .vis { pointer-events: none; }
+  .hit { fill: transparent; stroke: transparent; stroke-width: 9; stroke-linejoin: round; cursor: pointer; }
+
+  .part .vis {
+    stroke: var(--line);
+    stroke-width: 1.1;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    transition: stroke .12s ease, fill .12s ease, stroke-width .12s ease;
+  }
+  .part.on .vis { stroke: var(--accent); stroke-width: 2; }
+  .part.on .vis[data-fill] { fill: rgba(200,169,110,0.14); }
+  .scene.active .part:not(.on) .vis { stroke: var(--dim); }
+
+  .viewlabel {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 8px;
+    text-align: center;
+  }
+  .datum { stroke: #232323; stroke-width: 0.6; stroke-dasharray: 3 4; }
+
+  /* ---- panel ---- */
+  .panel {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
+    border-radius: 3px;
+    padding: 14px 16px;
+    min-height: 128px;
+    margin-bottom: 20px;
+  }
+  .p-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 7px; }
+  .p-name {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 20px;
+    color: var(--text);
+  }
+  .p-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 2px;
+    border: 1px solid;
+  }
+  .tag-yes { color: #EF9F27; border-color: rgba(239,159,39,0.4); background: rgba(239,159,39,0.08); }
+  .tag-ind { color: var(--accent-2); border-color: rgba(110,158,200,0.4); background: rgba(110,158,200,0.08); }
+  .tag-no  { color: var(--muted); border-color: var(--border); }
+  .p-note { font-size: 15px; line-height: 1.55; color: #b8b2a8; max-width: 74ch; }
+  .p-views { font-family: 'DM Mono', monospace; font-size: 10.5px; color: var(--muted); margin-top: 8px; letter-spacing: .05em; }
+  .panel.empty .p-name { color: var(--muted); font-style: italic; }
+
+  /* ---- index ---- */
+  .index-head {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 9px;
+  }
+  .index {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+    gap: 3px;
+  }
+  .ix {
+    font-size: 14px;
+    color: #b8b2a8;
+    padding: 6px 9px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: color .12s, background .12s, border-color .12s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .ix:hover { color: var(--text); background: var(--surface); }
+  .ix.on { color: var(--accent); background: rgba(200,169,110,0.09); border-color: rgba(200,169,110,0.3); }
+  .ix.absent { color: var(--dim); cursor: default; }
+  .ix.absent:hover { background: transparent; color: var(--dim); }
+  .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--line); flex: 0 0 auto; }
+  .ix.absent .dot { background: transparent; border: 1px solid var(--dim); }
+  .ix.on .dot { background: var(--accent); }
+
+  .foot {
+    margin-top: 22px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    color: var(--dim);
+    text-align: center;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 620px) {
+    body { padding: 20px 12px 28px; }
+    .stage { padding: 8px; }
+    .index { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Module 1 &middot; The machine, named</div>
+  <h1>The Reformer, <em>Named</em></h1>
+  <p class="subtitle">Hover or tap any part. Switch views to see what each one hides.</p>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="stage">
+    <svg id="scene" class="scene"></svg>
+    <div class="viewlabel" id="viewlabel"></div>
+  </div>
+
+  <div class="panel empty" id="panel">
+    <div class="p-head"><div class="p-name" id="pname">Hover a part to name it</div><div id="ptag"></div></div>
+    <div class="p-note" id="pnote">Every part below either changes the load on the carriage or it does not. That distinction is the whole point of this module.</div>
+    <div class="p-views" id="pviews"></div>
+  </div>
+
+  <div class="index-head">All parts &mdash; dimmed means not visible in this view</div>
+  <div class="index" id="index"></div>
+
+  <div class="foot">
+    Schematic, not to scale &middot; geometry is placeholder pending measurement
+  </div>
+</div>
+
+<script>
+/* ===================================================================
+   DIMENSIONS - all values in centimetres.  *** ALL PLACEHOLDER ***
+   This is the only block you need to edit to correct the drawing.
+   World convention matches src/lib/reformer/types.js:
+     x = 0 at the HEAD end (risers), +x toward the FOOT end (footbar)
+     h = height above the floor
+     z = across the machine, 0 at centreline
+   =================================================================== */
+const D = {
+  L: 240,            // frame length, head end to foot end
+  W: 66,             // frame width, outside to outside
+
+  railTop: 42,       // height of the rail running surface
+  railH: 7,          // depth of the rail beam
+  railW: 6,          // width of one rail in plan
+  railZ: 30,         // |z| of each rail centreline
+  legH: 35,          // leg height, floor to underside of rail
+  legW: 12,
+
+  carL: 95,          // carriage length
+  carW: 56,          // carriage width
+  carDeck: 9,        // carriage deck thickness incl. upholstery
+  carRest: 205,      // x of the carriage FOOT edge at rest
+
+  wheelR: 3.5,       // rolling wheel radius
+  wheelX1: 124, wheelX2: 191,
+  sideWheelR: 2.5,
+  sideWheelZ: 25,
+
+  riserX: 10, riserW: 5, riserTop: 93, riserZ: 27,
+  pulley2: 62,       // second pulley position down the riser
+
+  footbarX: 232, footbarTop: 65, footbarZ: 28,
+  springbarX: 224, springbarW: 5,
+  springRestX: 212,
+  springZ: [-20, -10, 0, 10, 20],
+
+  stopperX: 54, stopperW: 6,
+
+  headrestL: 24,     // headrest length from the carriage head edge
+  srX: 136, srL: 14, srZ: 16, srW: 12, srH: 14,   // shoulder rests
+  gearX1: 196, gearX2: 240,
+
+  FL: 100            // drawing datum: the floor line in view coordinates
+};
+D.carHead  = D.carRest - D.carL;          // 110
+D.deckBot  = D.railTop + 2 * D.wheelR;    // 49
+D.deckTop  = D.deckBot + D.carDeck;       // 58
+D.railBot  = D.railTop - D.railH;         // 35
+D.halfW    = D.W / 2;                     // 33
+D.springX1 = D.carRest;
+D.springX2 = D.springbarX;
+
+/* ---- coordinate helpers ------------------------------------------ */
+const up  = h => D.FL - h;   // height above floor -> view y
+const mir = z => -z;         // bottom / foot views mirror across the centreline
+
+/* ---- shape constructors ------------------------------------------ */
+const R  = (x, y, w, h, rx) => ({ t: 'r', x: x, y: y, w: w, h: h, rx: rx || 0 });
+const C  = (cx, cy, r)      => ({ t: 'c', cx: cx, cy: cy, r: r });
+const Ln = (x1, y1, x2, y2) => ({ t: 'l', x1: x1, y1: y1, x2: x2, y2: y2 });
+const Pg = pts              => ({ t: 'g', pts: pts });
+const Pa = d                => ({ t: 'd', d: d });
+
+// zig-zag coil drawn along x, from x1 to x2, about the line y
+function coilX(x1, x2, y, amp, n) {
+  const seg = (x2 - x1) / n;
+  let d = 'M ' + x1 + ' ' + y;
+  for (let i = 0; i < n; i++) {
+    d += ' L ' + (x1 + seg * i + seg / 2).toFixed(2) + ' ' + (y + (i % 2 ? amp : -amp)).toFixed(2);
+    d += ' L ' + (x1 + seg * (i + 1)).toFixed(2) + ' ' + y;
+  }
+  return Pa(d);
+}
+
+/* ===================================================================
+   VIEWS
+   =================================================================== */
+const VIEWS = {
+  side:   { label: 'Side',      box: [-18, up(104), 282, 118], note: 'Head end left, foot end right' },
+  top:    { label: 'Top',       box: [-18, -46,     282, 92 ], note: 'Head end left' },
+  bottom: { label: 'Bottom',    box: [-18, -46,     282, 92 ], note: 'Head end left, left and right mirrored' },
+  head:   { label: 'Head end',  box: [-54, up(104), 108, 118], note: 'Looking toward the foot end' },
+  foot:   { label: 'Foot end',  box: [-54, up(104), 108, 118], note: 'Looking toward the head end' }
+};
+
+/* ===================================================================
+   PARTS
+   Ordered LARGEST FIRST so small parts land on top for hit-testing.
+   load: 'yes'  changes the load on the carriage
+         'ind'  changes it indirectly, or only in some configurations
+         'no'   does not change the load
+   =================================================================== */
+const PARTS = [
+
+{ id: 'frame', name: 'Frame', load: 'no', fill: true,
+  note: 'The static structure: legs, end crossmembers, and the box that ties them together. It carries every force the machine produces but adds none of its own. Everything that does change load is mounted to it.',
+  views: {
+    side:   [R(6, up(D.legH), D.legW, D.legH), R(D.L - 18, up(D.legH), D.legW, D.legH), R(6, up(9), D.L - 24, 5)],
+    top:    [R(0, -D.halfW, 9, D.W), R(D.L - 9, -D.halfW, 9, D.W)],
+    bottom: [R(0, -D.halfW, 9, D.W), R(D.L - 9, -D.halfW, 9, D.W), R(9, -6, D.L - 18, 12)],
+    head:   [R(-D.halfW, up(D.legH), D.legW, D.legH), R(D.halfW - D.legW, up(D.legH), D.legW, D.legH), R(-D.halfW, up(D.railBot), D.W, 5)],
+    foot:   [R(-D.halfW, up(D.legH), D.legW, D.legH), R(D.halfW - D.legW, up(D.legH), D.legW, D.legH), R(-D.halfW, up(D.railBot), D.W, 5)]
+  }},
+
+{ id: 'rails', name: 'Rails', load: 'no', fill: true,
+  note: 'The two running surfaces the carriage rolls along. Their length sets the total travel available; their condition sets how much friction the carriage meets. Worn or dirty rails change what a spring feels like without changing what the spring does.',
+  views: {
+    side:   [R(0, up(D.railTop), D.L, D.railH)],
+    top:    [R(0, -D.railZ - D.railW / 2, D.L, D.railW), R(0, D.railZ - D.railW / 2, D.L, D.railW)],
+    bottom: [R(0, -D.railZ - D.railW / 2, D.L, D.railW), R(0, D.railZ - D.railW / 2, D.L, D.railW)],
+    head:   [R(-D.railZ - D.railW / 2, up(D.railTop), D.railW, D.railH), R(D.railZ - D.railW / 2, up(D.railTop), D.railW, D.railH)],
+    foot:   [R(-D.railZ - D.railW / 2, up(D.railTop), D.railW, D.railH), R(D.railZ - D.railW / 2, up(D.railTop), D.railW, D.railH)]
+  }},
+
+{ id: 'carriage', name: 'Carriage', load: 'yes', fill: true,
+  note: 'The moving platform. Its mass is part of every load calculation whether or not anyone is on it, and it is the object every spring, rope, and wheel acts on. Where it sits along the rails determines how far the springs are stretched.',
+  views: {
+    side:   [R(D.carHead, up(D.deckTop), D.carL, D.carDeck, 1.5)],
+    top:    [R(D.carHead, -D.carW / 2, D.carL, D.carW, 2)],
+    bottom: [R(D.carHead, -D.carW / 2, D.carL, D.carW, 2)],
+    head:   [R(-D.carW / 2, up(D.deckTop), D.carW, D.carDeck, 1.5)],
+    foot:   [R(-D.carW / 2, up(D.deckTop), D.carW, D.carDeck, 1.5)]
+  }},
+
+{ id: 'springs', name: 'Springs', load: 'yes', fill: false,
+  note: 'The load source. Each spring resists in proportion to how far it is stretched, so the number attached and the distance the carriage has travelled both matter. This is the only part of the machine that stores and returns energy.',
+  views: {
+    side:   [coilX(D.springX1, D.springX2, up(D.railTop - 2), 3, 9)],
+    top:    D.springZ.map(z => coilX(D.springX1, D.springX2, z, 2.6, 9)),
+    bottom: D.springZ.map(z => coilX(D.springX1, D.springX2, mir(z), 2.6, 9)),
+    foot:   D.springZ.map(z => C(mir(z), up(D.railTop - 2), 2.2)),
+    head:   null
+  }},
+
+{ id: 'springbar', name: 'Spring bar', load: 'yes', fill: true,
+  note: 'The fixed crossmember at the foot end that the springs hook onto. On machines where it can be repositioned, moving it changes how far every spring is stretched before the carriage has moved at all. It changes the starting load, not the spring.',
+  views: {
+    side:   [R(D.springbarX, up(D.railTop + 2), D.springbarW, 10)],
+    top:    [R(D.springbarX, -D.halfW + 3, D.springbarW, D.W - 6)],
+    bottom: [R(D.springbarX, -D.halfW + 3, D.springbarW, D.W - 6)],
+    foot:   [R(-D.halfW + 3, up(D.railTop + 2), D.W - 6, 10)],
+    head:   null
+  }},
+
+{ id: 'springrest', name: 'Spring rest', load: 'no', fill: true,
+  note: 'The parking hooks that hold unhooked springs off the floor. A spring resting here is doing nothing to the carriage. Worth naming precisely, because "on the rest" and "attached but slack" are not the same state.',
+  views: {
+    side:   [R(D.springRestX, up(D.railTop + 4), 8, 4)],
+    top:    [R(D.springRestX, -D.halfW + 2, 8, 9), R(D.springRestX, D.halfW - 11, 8, 9)],
+    bottom: [R(D.springRestX, -D.halfW + 2, 8, 9), R(D.springRestX, D.halfW - 11, 8, 9)],
+    head:   null,
+    foot:   null
+  }},
+
+{ id: 'footbar', name: 'Footbar', load: 'ind', fill: false,
+  note: 'The bar the feet or hands push against. Its height and position change the direction of the force a body applies, and on most machines it also sets where the carriage starts. It does not change spring stiffness, but it changes almost everything about how that stiffness is experienced.',
+  views: {
+    side:   [Ln(D.footbarX, up(D.railTop), D.footbarX, up(D.footbarTop)), C(D.footbarX, up(D.footbarTop), 3)],
+    top:    [R(D.footbarX - 3, -D.footbarZ, 6, D.footbarZ * 2), C(D.footbarX, -D.footbarZ + 3, 3), C(D.footbarX, D.footbarZ - 3, 3)],
+    bottom: [R(D.footbarX - 3, -D.footbarZ, 6, D.footbarZ * 2)],
+    foot:   [Ln(-D.footbarZ, up(D.railTop), -D.footbarZ, up(D.footbarTop)), Ln(D.footbarZ, up(D.railTop), D.footbarZ, up(D.footbarTop)), R(-D.footbarZ, up(D.footbarTop) - 2, D.footbarZ * 2, 4, 2)],
+    head:   [R(-D.footbarZ, up(D.footbarTop) - 2, D.footbarZ * 2, 4, 2)]
+  }},
+
+{ id: 'gear', name: 'Gear bar', load: 'ind', fill: true,
+  note: 'The notched bar the footbar locks into. Each notch is a different footbar position, which is why "gearing" is the word for it. Changing gear moves where the carriage starts, which changes the stretch already in the springs before the first repetition.',
+  views: {
+    side:   [R(D.gearX1, up(D.railTop + 6), D.gearX2 - D.gearX1, 5),
+             Ln(D.gearX1 + 9,  up(D.railTop + 6), D.gearX1 + 9,  up(D.railTop + 1)),
+             Ln(D.gearX1 + 20, up(D.railTop + 6), D.gearX1 + 20, up(D.railTop + 1)),
+             Ln(D.gearX1 + 31, up(D.railTop + 6), D.gearX1 + 31, up(D.railTop + 1))],
+    top:    [R(D.gearX1, -D.halfW, D.gearX2 - D.gearX1, 4), R(D.gearX1, D.halfW - 4, D.gearX2 - D.gearX1, 4)],
+    bottom: [R(D.gearX1, -D.halfW, D.gearX2 - D.gearX1, 4), R(D.gearX1, D.halfW - 4, D.gearX2 - D.gearX1, 4)],
+    foot:   [R(-D.halfW, up(D.railTop + 6), 4, 5), R(D.halfW - 4, up(D.railTop + 6), 4, 5)],
+    head:   null
+  }},
+
+{ id: 'headrest', name: 'Headrest', load: 'no', fill: true,
+  note: 'The hinged section at the head end of the carriage. It changes the position of the head and neck, and therefore the shape of the spine, but it moves with the carriage and adds nothing to what the springs must overcome.',
+  views: {
+    side:   [Pg([[D.carHead, up(D.deckTop)], [D.carHead + D.headrestL, up(D.deckTop)], [D.carHead + D.headrestL, up(D.deckTop + 5)], [D.carHead, up(D.deckTop + 8)]])],
+    top:    [R(D.carHead, -D.carW / 2, D.headrestL, D.carW, 2)],
+    bottom: [R(D.carHead, -D.carW / 2, D.headrestL, D.carW, 2)],
+    head:   [R(-D.carW / 2, up(D.deckTop + 8), D.carW, 8, 2)],
+    foot:   null
+  }},
+
+{ id: 'shoulderrests', name: 'Shoulder rests', load: 'ind', fill: true,
+  note: 'The two blocks the shoulders brace against. They are what lets a body push the carriage away rather than slide up it, so they transmit force without adding any. Their spacing changes which part of the shoulder girdle takes the load.',
+  views: {
+    side:   [R(D.srX, up(D.deckTop + D.srH), D.srL, D.srH, 2)],
+    top:    [R(D.srX, -D.srZ - D.srW / 2, D.srL, D.srW, 2), R(D.srX, D.srZ - D.srW / 2, D.srL, D.srW, 2)],
+    bottom: null,
+    head:   [R(-D.srZ - D.srW / 2, up(D.deckTop + D.srH), D.srW, D.srH, 2), R(D.srZ - D.srW / 2, up(D.deckTop + D.srH), D.srW, D.srH, 2)],
+    foot:   [R(-D.srZ - D.srW / 2, up(D.deckTop + D.srH), D.srW, D.srH, 2), R(D.srZ - D.srW / 2, up(D.deckTop + D.srH), D.srW, D.srH, 2)]
+  }},
+
+{ id: 'shoulderposts', name: 'Shoulder posts', load: 'no', fill: true,
+  note: 'The pins the shoulder rests sit on, and the sockets in the carriage they drop into. The sockets are what make shoulder rest position adjustable at all, and on many machines removable.',
+  views: {
+    side:   [R(D.srX + 4, up(D.deckTop + 2), 3, 5), R(D.srX + D.srL - 7, up(D.deckTop + 2), 3, 5)],
+    top:    [C(D.srX + D.srL / 2, -D.srZ, 2.6), C(D.srX + D.srL / 2, D.srZ, 2.6)],
+    bottom: null,
+    head:   [R(-D.srZ - 1.5, up(D.deckTop + 2), 3, 5), R(D.srZ - 1.5, up(D.deckTop + 2), 3, 5)],
+    foot:   null
+  }},
+
+{ id: 'risers', name: 'Risers', load: 'no', fill: true,
+  note: 'The uprights at the head end that carry the pulleys. Their height sets how steeply the ropes descend, which sets the angle at which rope tension meets the body. A riser changes direction, never magnitude.',
+  views: {
+    side:   [R(D.riserX - D.riserW / 2, up(D.riserTop), D.riserW, D.riserTop - D.railTop)],
+    top:    [R(D.riserX - D.riserW / 2, -D.riserZ - 3, D.riserW, 6), R(D.riserX - D.riserW / 2, D.riserZ - 3, D.riserW, 6)],
+    bottom: null,
+    head:   [R(-D.riserZ - D.riserW / 2, up(D.riserTop), D.riserW, D.riserTop - D.railTop), R(D.riserZ - D.riserW / 2, up(D.riserTop), D.riserW, D.riserTop - D.railTop)],
+    foot:   [R(-D.riserZ - D.riserW / 2, up(D.riserTop), D.riserW, D.riserTop - D.railTop), R(D.riserZ - D.riserW / 2, up(D.riserTop), D.riserW, D.riserTop - D.railTop)]
+  }},
+
+{ id: 'pulleys', name: 'Pulleys', load: 'yes', fill: false,
+  note: 'The wheels the ropes turn over. A single pulley redirects rope tension without changing it. A second pulley in the same rope path can halve the force the hand feels while doubling the distance it must travel, which is the one place on this machine where the number on the spring is not the number at the strap.',
+  views: {
+    side:   [C(D.riserX, up(D.riserTop), 4), C(D.riserX, up(D.pulley2), 4)],
+    top:    [C(D.riserX, -D.riserZ, 4), C(D.riserX, D.riserZ, 4)],
+    bottom: null,
+    head:   [C(-D.riserZ, up(D.riserTop), 4), C(D.riserZ, up(D.riserTop), 4)],
+    foot:   null
+  }},
+
+{ id: 'ropes', name: 'Ropes and straps', load: 'ind', fill: false,
+  note: 'They run from the carriage, over the pulleys, and back to the hands or feet. Rope length sets where in the carriage travel the work begins. Because they pull at an angle rather than straight along the rails, only part of that tension moves the carriage.',
+  views: {
+    side:   [Ln(D.carHead, up(D.deckBot + 1), D.riserX + 2, up(D.riserTop - 2)), Ln(D.riserX - 2, up(D.riserTop - 2), 92, up(D.railTop + 6))],
+    top:    [Ln(D.carHead, -D.riserZ, D.riserX, -D.riserZ), Ln(D.carHead, D.riserZ, D.riserX, D.riserZ),
+             Ln(D.riserX, -D.riserZ + 3, 92, -D.riserZ + 3), Ln(D.riserX, D.riserZ - 3, 92, D.riserZ - 3)],
+    bottom: null,
+    head:   [Ln(-D.riserZ, up(D.riserTop - 2), -D.riserZ + 3, up(D.railTop + 6)), Ln(D.riserZ, up(D.riserTop - 2), D.riserZ - 3, up(D.railTop + 6))],
+    foot:   null
+  }},
+
+{ id: 'loops', name: 'Loops and handles', load: 'no', fill: false,
+  note: 'What the body actually holds. They change where the rope tension enters the body, whether at the hand, wrist, forearm, foot, or ankle, and that changes the lever each joint has to work against. Same tension, different torque.',
+  views: {
+    side:   [C(88, up(D.railTop + 9), 5)],
+    top:    [C(88, -D.riserZ + 3, 5), C(88, D.riserZ - 3, 5)],
+    bottom: null,
+    head:   [C(-D.riserZ + 3, up(D.railTop + 9), 5), C(D.riserZ - 3, up(D.railTop + 9), 5)],
+    foot:   null
+  }},
+
+{ id: 'rollingwheels', name: 'Rolling wheels', load: 'ind', fill: false,
+  note: 'The load-bearing wheels that carry the carriage along the top of the rails. Every one of them is a friction source. When a carriage feels heavy on a light spring, this is usually why, and it is a maintenance problem rather than a programming problem.',
+  views: {
+    side:   [C(D.wheelX1, up(D.railTop + D.wheelR), D.wheelR), C(D.wheelX2, up(D.railTop + D.wheelR), D.wheelR)],
+    top:    null,
+    bottom: [C(D.wheelX1, -D.railZ, D.wheelR), C(D.wheelX1, D.railZ, D.wheelR), C(D.wheelX2, -D.railZ, D.wheelR), C(D.wheelX2, D.railZ, D.wheelR)],
+    head:   [C(-D.railZ, up(D.railTop + D.wheelR), D.wheelR), C(D.railZ, up(D.railTop + D.wheelR), D.wheelR)],
+    foot:   [C(-D.railZ, up(D.railTop + D.wheelR), D.wheelR), C(D.railZ, up(D.railTop + D.wheelR), D.wheelR)]
+  }},
+
+{ id: 'sidewheels', name: 'Side wheels', load: 'ind', fill: false,
+  note: 'Smaller wheels turning on a vertical axis, bearing against the inside face of the rails. They stop the carriage wandering sideways. Invisible from above, and the second friction source people forget when they blame the springs.',
+  views: {
+    side:   null,
+    top:    null,
+    bottom: [C(D.wheelX1 + 7, -D.sideWheelZ, D.sideWheelR), C(D.wheelX1 + 7, D.sideWheelZ, D.sideWheelR), C(D.wheelX2 - 7, -D.sideWheelZ, D.sideWheelR), C(D.wheelX2 - 7, D.sideWheelZ, D.sideWheelR)],
+    head:   [C(-D.sideWheelZ, up(D.railTop + 3), D.sideWheelR), C(D.sideWheelZ, up(D.railTop + 3), D.sideWheelR)],
+    foot:   null
+  }},
+
+{ id: 'stopper', name: 'Stopper', load: 'no', fill: true,
+  note: 'The bumper that limits how far the carriage can travel toward the head end. It defines the end of the working range. Nothing about it changes spring tension; it only decides where the movement is allowed to stop.',
+  views: {
+    side:   [R(D.stopperX, up(D.railTop + 7), D.stopperW, 7, 1)],
+    top:    [R(D.stopperX, -D.halfW, D.stopperW, 7, 1), R(D.stopperX, D.halfW - 7, D.stopperW, 7, 1)],
+    bottom: [R(D.stopperX, -D.halfW, D.stopperW, 7, 1), R(D.stopperX, D.halfW - 7, D.stopperW, 7, 1)],
+    head:   [R(-D.halfW, up(D.railTop + 7), 7, 7, 1), R(D.halfW - 7, up(D.railTop + 7), 7, 7, 1)],
+    foot:   null
+  }},
+
+{ id: 'footstrap', name: 'Foot strap', load: 'no', fill: false,
+  note: 'The strap at the foot end used to anchor the feet for work done facing the other way. It transmits force to the frame rather than to the carriage, so it holds a body in place rather than adding resistance to it.',
+  views: {
+    side:   [R(D.L - 4, up(D.railBot), 3, 22, 1), Ln(D.L - 4, up(D.railBot - 22), D.L - 22, up(D.railBot - 22))],
+    top:    [R(D.L - 7, -18, 4, 36, 1)],
+    bottom: [R(D.L - 7, -18, 4, 36, 1)],
+    foot:   [R(-18, up(D.railBot - 20), 36, 4, 1)],
+    head:   null
+  }}
+
+];
+
+/* ===================================================================
+   RENDER
+   =================================================================== */
+const NS = 'http://www.w3.org/2000/svg';
+const scene   = document.getElementById('scene');
+const tabsEl  = document.getElementById('tabs');
+const indexEl = document.getElementById('index');
+const panel   = document.getElementById('panel');
+const pname   = document.getElementById('pname');
+const ptag    = document.getElementById('ptag');
+const pnote   = document.getElementById('pnote');
+const pviews  = document.getElementById('pviews');
+
+const EMPTY_NOTE = 'Every part below either changes the load on the carriage or it does not. That distinction is the whole point of this module.';
+const TAG = {
+  yes: ['Changes load', 'tag-yes'],
+  ind: ['Changes it indirectly', 'tag-ind'],
+  no:  ['Does not change load', 'tag-no']
+};
+
+let view = 'side';
+let active = null;
+let sticky = false;
+
+function el(name, attrs) {
+  const n = document.createElementNS(NS, name);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  return n;
+}
+
+function shapeEl(s, filled) {
+  let n;
+  if (s.t === 'r')      n = el('rect',    { x: s.x, y: s.y, width: s.w, height: s.h, rx: s.rx });
+  else if (s.t === 'c') n = el('circle',  { cx: s.cx, cy: s.cy, r: s.r });
+  else if (s.t === 'l') n = el('line',    { x1: s.x1, y1: s.y1, x2: s.x2, y2: s.y2 });
+  else if (s.t === 'g') n = el('polygon', { points: s.pts.map(p => p.join(',')).join(' ') });
+  else                  n = el('path',    { d: s.d });
+
+  const canFill = filled && s.t !== 'l' && s.t !== 'd';
+  n.setAttribute('fill', canFill ? 'var(--fill)' : 'none');
+  if (canFill) n.setAttribute('data-fill', '1');
+  return n;
+}
+
+function shapesFor(part, v) {
+  const s = part.views[v];
+  if (!s) return [];
+  return Array.isArray(s) ? s : [s];
+}
+
+function draw() {
+  scene.innerHTML = '';
+  const V = VIEWS[view];
+  scene.setAttribute('viewBox', V.box.join(' '));
+  scene.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+  // datum line: the floor in elevation views, the centreline in plan views
+  const datumY = (view === 'top' || view === 'bottom') ? 0 : up(0);
+  scene.appendChild(el('line', {
+    x1: V.box[0] + 4, y1: datumY, x2: V.box[0] + V.box[2] - 4, y2: datumY, class: 'datum'
+  }));
+
+  const hitLayer = [];
+  for (const part of PARTS) {
+    const shapes = shapesFor(part, view);
+    if (!shapes.length) continue;
+
+    const g = el('g', { class: 'part', 'data-id': part.id });
+    for (const s of shapes) {
+      const n = shapeEl(s, part.fill);
+      n.setAttribute('class', 'vis');
+      g.appendChild(n);
+    }
+    scene.appendChild(g);
+
+    const hg = el('g', { class: 'hitg', 'data-id': part.id });
+    for (const s of shapes) {
+      const n = shapeEl(s, false);
+      n.setAttribute('class', 'hit');
+      hg.appendChild(n);
+    }
+    hitLayer.push(hg);
+  }
+  // hit shapes go on top so no visible geometry blocks them
+  for (const hg of hitLayer) scene.appendChild(hg);
+
+  document.getElementById('viewlabel').textContent = V.note;
+
+  wireHits();
+  paint();
+}
+
+function wireHits() {
+  scene.querySelectorAll('.hitg').forEach(hg => {
+    const id = hg.dataset.id;
+    hg.addEventListener('mouseenter', () => { if (!sticky) setActive(id); });
+    hg.addEventListener('click', e => { e.stopPropagation(); sticky = true; setActive(id); });
+  });
+}
+
+scene.addEventListener('mouseleave', () => { if (!sticky) setActive(null); });
+scene.addEventListener('click', () => { sticky = false; setActive(null); });
+
+function buildTabs() {
+  tabsEl.innerHTML = '';
+  for (const k in VIEWS) {
+    const b = document.createElement('button');
+    b.className = 'tab' + (k === view ? ' on' : '');
+    b.textContent = VIEWS[k].label;
+    b.onclick = () => { view = k; sticky = false; buildTabs(); draw(); buildIndex(); };
+    tabsEl.appendChild(b);
+  }
+}
+
+function buildIndex() {
+  indexEl.innerHTML = '';
+  const sorted = PARTS.slice().sort((a, b) => a.name.localeCompare(b.name));
+  for (const part of sorted) {
+    const present = shapesFor(part, view).length > 0;
+    const d = document.createElement('div');
+    d.className = 'ix' + (present ? '' : ' absent');
+    d.dataset.id = part.id;
+    d.innerHTML = '<span class="dot"></span>' + part.name;
+    if (present) {
+      d.addEventListener('mouseenter', () => { if (!sticky) setActive(part.id); });
+      d.addEventListener('mouseleave', () => { if (!sticky) setActive(null); });
+      d.addEventListener('click', () => { sticky = true; setActive(part.id); });
+    } else {
+      d.title = part.name + ' is not visible in this view';
+    }
+    indexEl.appendChild(d);
+  }
+  paint();
+}
+
+function setActive(id) { active = id; paint(); }
+
+function paint() {
+  scene.classList.toggle('active', !!active);
+  scene.querySelectorAll('.part').forEach(g => g.classList.toggle('on', g.dataset.id === active));
+  indexEl.querySelectorAll('.ix').forEach(d => d.classList.toggle('on', d.dataset.id === active));
+
+  const part = PARTS.filter(p => p.id === active)[0];
+  if (!part) {
+    panel.classList.add('empty');
+    pname.textContent = 'Hover a part to name it';
+    ptag.innerHTML = '';
+    pnote.textContent = EMPTY_NOTE;
+    pviews.textContent = '';
+    return;
+  }
+  panel.classList.remove('empty');
+  pname.textContent = part.name;
+  ptag.innerHTML = '<span class="p-tag ' + TAG[part.load][1] + '">' + TAG[part.load][0] + '</span>';
+  pnote.textContent = part.note;
+  const inViews = Object.keys(VIEWS).filter(v => shapesFor(part, v).length).map(v => VIEWS[v].label);
+  pviews.textContent = 'Visible in: ' + inViews.join('  ·  ');
+}
+
+buildTabs();
+draw();
+buildIndex();
+</script>
+</body>
+</html>
