@@ -84,10 +84,12 @@ modules. A pure chronological story would fight both.
 
 | Module | What the design story adds |
 |--------|----------------------------|
-| 2, friction | You specified wheels and a track. You know why friction is negligible because you had to decide how negligible to make it |
-| 4, every dial | Every adjustment range is a designer's choice about where to stop. Where the gear bar stops, how many rope positions exist, how high the footbar goes |
-| 7, classical vs contemporary | Goes from the riskiest module to the best one. You had to choose between the traditions, with reasons, so your neutrality is credible rather than diplomatic. You are not refereeing a fight you have no stake in, you are someone who had to pick and can explain the tradeoff |
-| 8, springs over time | You sourced springs and evaluated coatings and fatigue life. The most credible seven minutes in the product, and nobody else in Pilates education can produce it |
+| 1, anatomy | Every dimension is a decision somebody made. Carriage width and length, a height low enough to stand up on under an eight-foot ceiling, and a frame that ships in more than one box |
+| 2, springs | You sourced springs and evaluated stiffness, coatings, and fatigue life. The most credible stretch in the product, and nobody else in Pilates education can produce it |
+| 3, adjustments | Every adjustment range is a designer's choice about where to stop. Three gear positions instead of more, a footbar that does not pivot but still locks and still works as a kickstand, a fixed pulley height, shoulder rests that move |
+| 4, pulleys | The decision not to reinvent anything. Off-the-shelf industrial parts carry field reliability data from other industries, and borrowing that data is standard practice in Pilates equipment |
+| 5, friction | You specified bearings. You know friction is negligible because you had to decide how negligible to make it, and you were buying quiet and low maintenance at the same time |
+| 6, classical vs contemporary | Goes from the riskiest module to the best one. You had to choose between the traditions, with reasons, so your neutrality is credible rather than diplomatic. You are not refereeing a fight you have no stake in, you are someone who had to pick and can explain the tradeoff |
 
 ### The machine stays unnamed
 
@@ -117,47 +119,133 @@ deliberate. Running under is the risk for CEC purposes.
 
 | # | Module | Min | Format | Job |
 |---|--------|-----|--------|-----|
-| 0 | Start here | 2 | Video | The promise: you own more machine than you are using. Opens the design story that runs through every module |
-| 1 | The machine, named | 5 | Video + interactive diagram | Vocabulary. Which parts change load and which do not |
-| 2 | Where load actually comes from | 5 | Video + text | Springs, carriage mass, friction. The friction myth-bust |
-| 3 | Springs, actually | 10 | Video + spring calculator + checkpoint | Hooke's law, elastic vs plastic, slack vs pretension, colors lie |
-| 4 | Every dial and what it does | 9 | Video + tables + tool | Gear bar, footbar, ropes, risers. Effect on stretch, no body |
-| 5 | One change, three effects | 7 | Video + worked examples | The hook module. Second-order consequences |
-| 6 | Pulleys and the load curve | 6 | Animation + text | One rope vs two, why "half" is half true, where load peaks |
-| 7 | Classical vs contemporary | 4 | Side by side + text | Physics takes no side. Same exercise, different load, neither wrong |
-| 8 | Springs over time | 7 | Video + downloadable checklist | Coatings, wear, inspection, hazards, when to call the manufacturer |
-| 9 | What I did not teach you | 3 | Video | The body. Handoff to 101 |
-| - | Final assessment | 5 | Quiz | CEC requirement |
+| 0 | Introduction | 3 | Video | The promise: you own more machine than you are using. Quick bio, and the opening of the design story that runs through every module |
+| 1 | Reformer anatomy | 6 | Video + interactive diagram | Vocabulary. Which parts change load and which do not |
+| 2 | Springs | 14 | Video + spring calculator + checkpoint | The core module. Anatomy, Hooke's law, what makes a spring stiff, how springs age, how brands differ, and how to inspect one |
+| 3 | Reformer adjustments | 10 | Video + tables + tool | Every dial and what it does to stretch, with no body on the machine |
+| 4 | Pulleys | 7 | Animation + text | Why "half" is half true, and where the load actually peaks |
+| 5 | Friction | 8 | Video + worked math | The myth-bust. Rolling vs starting friction, and the fact that friction reverses direction |
+| 6 | Classical vs contemporary | 5 | Side by side + text | Physics takes no side. Same exercise, different load, neither wrong |
+| 7 | How we consider the body | 3 | Video | The handoff to Pilates Physics 101 |
+| - | Final assessment | 5 | Quiz, 10 questions | CEC requirement |
 
-**Total: 63 minutes.**
+**Total: 61 minutes.**
+
+### Module detail
+
+Each module opens with the design decision, delivers the technical content, and
+closes with what was chosen and why.
+
+**0. Introduction.** The promise, then a short bio: BB, equipment maintenance,
+Flexia. The bio is not credentials for their own sake, it is the setup for every
+design tie-in that follows.
+
+**1. Reformer anatomy.** Interactive mouseover parts diagram.
+*Design tie-in: size.* Carriage width, carriage length, an overall height low
+enough to stand up on the machine under an eight-foot ceiling, and a frame that
+breaks down into multiple shipping boxes. Four constraints pulling against each
+other, and every one of them is visible in the finished machine.
+
+**2. Springs.** The largest module, and the one the free calculator earns.
+
+- Spring anatomy
+- Hooke's law
+- The design factors that determine stiffness
+- Wear: elastic and plastic deformation, and where Hooke's law stops applying
+- Comparing brands
+- Maintenance and safety
+
+*Design tie-in: stiffness and longevity are one sourcing decision, plus the
+anecdote about the color wearing off and what the alternatives were.* The color
+anecdote is the sharpest thing in the module: a visible, universally experienced
+failure with a real engineering explanation behind it.
+
+**3. Reformer adjustments.** Each adjustment and what it does to spring stretch.
+*Design tie-in: where to stop.* Three gear positions rather than more. A footbar
+that did not need to pivot, could still be adjustable, still works as a
+kickstand, and must lock into place. A fixed pulley height, which turns out to
+be fine. Ropes chosen for smooth, quiet adjustment. Shoulder rests that adjust,
+which buys an even shorter distance from shoulder rest to footbar.
+
+**4. Pulleys.** The half-stretch relationship between rope travel and carriage
+travel. Whether pulley height matters.
+*Design tie-in: no need to reinvent the wheel.* Off-the-shelf parts are good
+parts, they arrive with field reliability data from industries that run them
+harder than a studio ever will, and borrowing that data is standard practice in
+Pilates equipment.
+
+**5. Friction.** Structured as a worked argument rather than a lecture.
+
+1. The common scenario: add ten pounds of dumbbells to the carriage and it is
+   ten pounds heavier to push. Heavier clients have to push harder.
+2. Work the math: rolling friction vs starting friction.
+3. The turn: friction changes direction with the carriage, so the force is not
+   the same going out as coming back.
+4. The one scenario where a teacher would actually notice it.
+5. The conclusion: not relevant to load decisions except in that one case.
+
+*Design tie-in: bearings.* Chosen to take friction off the table, and to buy
+quiet, low-maintenance wheels at the same time.
+
+**6. Classical vs contemporary.** Materials, tradeoffs, neutral tone.
+*Design tie-in: the choice that was already made.* A classical machine was never
+on the table, because the design is not coming from a classical training. The
+personal reasons go in plainly, including low straps and leather, alongside the
+requirements that ruled classical out on their own: adjustability and
+shippability. Genuine respect for classical practitioners, stated and meant.
+
+**7. How we consider the body.** The one thing the machine cannot tell you, and
+the handoff to Pilates Physics 101.
 
 ### Design decisions inside the outline
 
-- **Elastic and plastic deformation sits early, with Hooke's law** (module 3),
-  not with maintenance. Hooke's law is true in the elastic region. Past it the
-  spring takes a permanent set and never returns those numbers again. Same
-  lesson, two payoffs, and it makes Hooke's law feel real instead of academic.
-- **Friction goes early as the trust module** (module 2). It is relief, not
-  threat, so it does not sell, but an educator who tells you what you can stop
-  worrying about is more credible on everything after. Build in the caveat that
-  friction is negligible on a maintained machine. Flat-spotted wheels and a dry
-  track are a different conversation.
-- **Wear and maintenance closes the course** (module 8), because "now go look at
-  your own machine" converts into same-day action.
-- **Module 8 is also the honest caveat on the free calculator.** The
+- **Springs are one module, not two.** An earlier draft split Hooke's law (early)
+  from wear and maintenance (last). Consolidating means elastic and plastic
+  deformation arrive attached to the law they bound, which is the version that
+  makes Hooke's law feel real instead of academic, and brand comparison sits next
+  to the stiffness factors that explain it. The cost is that the course no longer
+  ends on "now go look at your own springs," which was the cleanest same-day
+  action in the product. See the open decisions below.
+- **Springs still carries the honest caveat on the free calculator.** The
   calculator's numbers assume a spring still in its elastic range that has not
   taken a set and is not corroded under the coating. Answering "what about my
-  twelve-year-old springs" is the missing half of the lead magnet.
-- **Module 9 is a handoff, not a pitch.** Ending on what the course does not
+  twelve-year-old springs" is the missing half of the lead magnet, and it now
+  lands mid-course instead of at the end.
+- **Friction runs late and long.** An earlier draft put it early as a short trust
+  module. This version is a five-beat worked argument with a genuine reversal in
+  it, which is too much machinery to open a course with, but it earns the late
+  slot as the module most likely to change how someone thinks. Build in the
+  caveat that friction is negligible on a *maintained* machine. Flat-spotted
+  wheels and a dry track are a different conversation.
+- **The trickle-down content lives inside module 3.** There is no standalone
+  "one change, three effects" module any more, which resolves an earlier open
+  question in favor of folding it into adjustments. The second-order effects
+  still have to be taught explicitly there, because the primary paid ad hook and
+  the cart-open email both lead on them. If they are not visibly in the product,
+  those two assets are writing a check the content does not cash.
+- **Module 7 is a handoff, not a pitch.** Ending on what the course does not
   cover converts better than a hard close, and it preframes 101.
+- **The quiz is ten questions,** with content pending whatever the CEC body
+  actually requires.
 
-### Safety framing for module 8
+### Neutrality watch on module 6
+
+The module is specified as neutral in tone, and the design tie-in includes the
+view that classical equipment accommodates a narrower range of bodies. Both can
+run in the same module, but not in the same breath, or the neutrality reads as a
+formality. Separate them: the physics section takes no side at all, and the
+design tie-in is explicitly framed as one designer's own requirements rather than
+a verdict on the tradition. This is the module most likely to get clipped and
+reposted without its context.
+
+### Safety framing for module 2
 
 Keep it descriptive, not prescriptive. "Here is what to look for and when to
 call your manufacturer," never "safe" or "unsafe," and point to each
 manufacturer's own replacement guidance rather than inventing an interval. This
 is the one module where being wrong has physical consequences, so the wear
-claims should have something citable behind them.
+claims should have something citable behind them, the coating and color-loss
+anecdote included.
 
 ## Draft learning objectives
 
@@ -165,9 +253,15 @@ CEC applications generally want measurable verbs.
 
 1. Identify the components of a reformer that change load and those that do not.
 2. Explain how spring stretch determines load, and where Hooke's law stops applying.
-3. Predict the effect of a given adjustment on starting load and load through range.
-4. Describe the second-order effects of a single equipment adjustment.
-5. Recognize signs of spring wear and describe an inspection process.
+3. Describe the design factors that determine a spring's stiffness, and use them
+   to compare springs across brands.
+4. Predict the effect of a given adjustment on starting load and load through
+   range, including its second-order effects.
+5. Explain how the rope and pulley arrangement relates carriage travel to spring
+   stretch.
+6. Evaluate the role of friction in perceived load, and identify the conditions
+   under which it becomes noticeable.
+7. Recognize signs of spring wear and describe an inspection process.
 
 ## CEC status
 
@@ -184,14 +278,18 @@ wins that comparison. It belongs above the fold and in every email.
 
 | Module | Tool | Status |
 |--------|------|--------|
-| 1 | Labeled reformer diagram | To build |
-| 3 | Spring calculator | Already built (it is the lead magnet) |
-| 4 | Adjustment simulator: move a gear bar, watch starting stretch and total load change with nobody on the machine | To build |
-| 5 | Worked second-order examples | To build |
-| 6 | Load curve animation across carriage travel | To build |
-| 8 | Spring inspection checklist, downloadable | To build |
+| 1 | Interactive reformer parts diagram, labels on mouseover | To build |
+| 2 | Spring calculator | Already built (it is the lead magnet) |
+| 2 | Spring inspection checklist, downloadable | To build |
+| 2 | Brand comparison table | To build |
+| 3 | Adjustment simulator: move a gear bar, watch starting stretch and total load change with nobody on the machine | To build |
+| 3 | Worked second-order examples | To build |
+| 4 | Load curve animation across carriage travel | To build |
+| 5 | Worked friction math, including the direction reversal | To build |
+| - | Final quiz, ten questions | To build |
 
-Modules 4, 5, 6, and 8 are the production cost. Module 3 is free.
+The calculator is free. Everything else is the production cost, and modules 2
+and 3 carry most of it.
 
 The inspection checklist is worth building deliberately as a standalone asset:
 order-bump sweetener, studio-owner lead magnet, and a piece of paper that gets
@@ -259,7 +357,7 @@ Kept as a record so these do not get relitigated.
 | Design Notes: The Reformer | Mouthful |
 | Introduction to Reformer Design | "Introduction to" signals beginner exactly where the product needs to feel specialist, collides with "101," and reads as a course in how to design reformers |
 | Reformer by Design | Rejected outright |
-| Reformer Teardown | Best engineering register of the set, but module 8 is wear and maintenance, so a meaningful number of people would read it as a repair course |
+| Reformer Teardown | Best engineering register of the set, but module 2 covers wear and maintenance, so a meaningful number of people would read it as a repair course |
 | Reformer Mechanics | Safe, clear, and forgettable |
 | Reformer Blueprint | Runner-up, and the closest call. Punchier and more concrete, but weaker on story, and it carries a real DIY-search risk that the winning title does not. Held in reserve as a possible series name for the chair and tower editions |
 
@@ -339,12 +437,17 @@ This product needs the next misconception, not that one.
 - [x] ~~Pick the title~~ The Making of a Reformer: How your machine works and why
 - [ ] Confirm CEC approval for on-demand self-study, and how many CECs PP101 carries
 - [ ] Decide how identifiable the designed machine is allowed to be, and confirm the brand-fairness pass across the technical content
-- [ ] Run the three-sentence design-decision test against every module and cut the story from any module that fails it
+- [x] ~~Decide whether module 5 folds into module 4~~ Folded. Second-order effects are taught inside reformer adjustments
+- [x] ~~Decide whether classical vs contemporary stays a module~~ It stays
+- [ ] Run the three-sentence design-decision test against every module and cut the story from any module that fails it. Module 7 (the body handoff) is the one with no design decision attached, by design
+- [ ] Decide where the same-day action goes now that springs no longer closes the course. Options: end module 7 with the inspection prompt, put the checklist download on the completion screen, or send it as a post-purchase email
+- [ ] Resolve whether pulley height actually matters, which is currently an open question inside module 4 rather than a teaching point
+- [ ] Spell out the bio credentials in module 0 (BB, equipment maintenance, Flexia) in the form they should be said out loud on camera
+- [ ] Write the ten quiz questions against the learning objectives once the CEC requirements are known
 - [ ] Settle chair vs tower vs Cadillac naming for the follow-on editions, matching PP102
-- [ ] Count the real second-order effects for module 5. If there are three or four solid ones it is the best module in the product. If it is really only gearing out, the hook should be pulleys instead and module 5 folds into module 4
-- [ ] Decide whether module 7 (classical vs contemporary) stays a module or folds into module 4
+- [ ] Count the real second-order effects now living inside module 3. If there are three or four solid ones, the trickle-down hook holds. If it is really only gearing out, the primary ad hook and the cart-open email should switch to pulleys
 - [ ] Discount enforcement mechanism
-- [ ] Source the wear and coating claims in module 8
+- [ ] Source the wear and coating claims in module 2
 
 ## Related files
 
