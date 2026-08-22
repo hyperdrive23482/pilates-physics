@@ -15,12 +15,14 @@ This resolves the spec's open decision "Discount enforcement mechanism:
 |------|----------|-----|
 | Discount mechanism | A second Stripe Price at $39, no coupon | Adaptive Pricing is on, which rules out amount-off coupons |
 | Deadline shape | End of day, fixed timezone, not tag time plus N hours | A ragged expiry contradicts "today," "tomorrow," and "midnight" in the copy. See "Timeline" |
-| Kit structure | Two sequences: 1 to 3 nurture, 4 to 8 cart | The tag cannot fire at entry, and the cart cannot skip weekends. See "Timeline" |
+| Kit structure | Two sequences with a visual automation carrying the handoff between them | Already built. See "The Kit flow as built" |
+| Handoff tag | `in-MOR-sequence`, applied once nurture completes | Starts the offer clock and enrols them in the cart sequence. This is the tag the cron polls |
+| Purchase tag | `MOR-purchased` | `webinars.kit_tag` must match this string exactly, or the buyer is never removed from the cart sequence |
 | Offer identity | Opaque token in a Kit custom field | Survives cross-device; no PII in URLs |
 | Clock start | When the Kit tag is applied, not on click | Deadline is printable in the email and immune to link prefetch |
 | Sync method | Vercel cron poll, every 15 minutes | Reuses existing cron infrastructure; easier to debug than a webhook |
 | Tag trigger | Kit sequences and automations, internally | The cron is a pure reader and never writes tags |
-| Launch cohort | Backfill everyone who got the spring calculator | See "The backfill" below |
+| Launch cohort | The 238 who already completed nurture, bulk-tagged in waves | They finished before the handoff step existed and cannot reach it on their own. See "The backfill" |
 
 ## Why there is no Stripe coupon
 
@@ -61,6 +63,102 @@ check has a bug. It needs a test.
 **Note for international buyers:** Adaptive Pricing will present the local
 equivalent of $39. Write "$39 USD" in the email copy.
 
+## The Kit flow as built
+
+Confirmed against the Kit account on 2026-08-22. Two sequences and three visual
+automations already exist. This plan is written against that, not against a
+greenfield design.
+
+### Tags
+
+| Tag | Meaning | Applied by |
+|-----|---------|------------|
+| `spring-calc` | Claimed the free calculator | `api/springs101.js`, from `webinars.kit_tag` on the `spring-load-calculator` row (migration 039) |
+| `in-nurture` | Currently inside the nurture sequence | "Spring Calc Welcome" automation |
+| `completed-nurture` | Finished nurture | **Nothing. See "What still has to change"** |
+| `in-MOR-sequence` | In the cart sequence, offer clock running | "Spring Calc Welcome" automation, final step |
+| `MOR-didnotbuy` | Finished the cart sequence without buying | "MOR Email Sequence" automation, final step |
+| `MOR-purchased` | Bought the course | `provisionPurchase`, from `webinars.kit_tag` on the course row |
+
+### Sequences
+
+| Sequence | Emails |
+|----------|--------|
+| Spring Calc Welcome | A leftover transactional delivery email, then nurture emails 1, 2, 3 |
+| Making of a Reformer | Cart emails 4, 5, 6, 7, 8 |
+
+The offer lives entirely inside the second sequence. Nothing in nurture carries a
+link that needs a token, which is what makes the handoff safe.
+
+### Automations
+
+```
+Spring Calc Welcome   spring-calc  -> +in-nurture -> [Spring Calc Welcome seq]
+                                   -> -in-nurture -> +in-MOR-sequence
+
+MOR Email Sequence    in-MOR-sequence -> [Making of a Reformer seq]
+                                      -> +MOR-didnotbuy
+
+MOR Purchase          MOR-purchased -> -MOR-didnotbuy -> -in-MOR-sequence
+```
+
+Plus one classic automation rule: when `MOR-purchased` is applied, unsubscribe
+from the Making of a Reformer sequence.
+
+**That rule, not the tag removal, is what stops the sales emails.** Removing
+`in-MOR-sequence` does not pull anyone out of a sequence already running. If the
+rule is ever disabled, a day-1 buyer receives "$39 ends at midnight" three days
+after paying, and nothing else in the system would catch it.
+
+### Why this beats what this plan originally specified
+
+The earlier draft put the offer tag on the last step of sequence 1. Here it sits
+in the automation *between* the two sequences instead, which is better: the tag
+is not coupled to a sequence step that could be reordered or deleted, and the
+whole handoff is legible in one screen.
+
+### What still has to change
+
+- [ ] **`completed-nurture` is never applied.** The Spring Calc Welcome
+      automation removes `in-nurture` and adds `in-MOR-sequence` with nothing in
+      between. Add the step or retire the tag
+- [ ] **A one-day delay on email 4**, expressed in days. See "Why email 4 cannot
+      send immediately"
+- [ ] **A condition step before `MOR-didnotbuy`**, in "MOR Email Sequence",
+      between the sequence and the tag: apply only when `MOR-purchased` is
+      absent. Unsubscribing from a sequence is not the same as leaving the
+      automation, and Kit will most likely advance to the tag step regardless.
+      The "MOR Purchase" automation cannot cover this, because it runs at
+      purchase time and removes a tag that has not been applied yet
+- [ ] **Activate "MOR Email Sequence" and "MOR Purchase".** Both are toggled
+      off. Inactive automations do not accept subscribers, and switching one on
+      later does not retroactively enrol anyone whose trigger already fired.
+      Nobody is in flight today, so the cost is zero, but this has to happen
+      before anyone finishes nurture and before any backfill wave
+- [ ] **Decide on the leftover transactional email.** `api/springs101.js` already
+      sends a magic link through Resend at claim time, and that is the email that
+      actually gets them into the portal. A Kit email covering the same moment
+      either repeats it or, opened first, sends them to
+      `/portal/spring-load-calculator` with no session. Cutting it also moves
+      cart open a day earlier, at no cost
+
+### Why email 4 cannot send immediately
+
+Two independent reasons, both closed by the same one-day delay.
+
+**The token will not exist yet.** "MOR Email Sequence" fires the instant
+`in-MOR-sequence` lands and enrols the subscriber immediately. The cron polls
+every 15 minutes. A zero-delay email 4 can go out before `offer_token` has been
+written back to Kit, and the merge field renders blank in the one email that has
+to carry the link.
+
+**The window math depends on it.** `expires_at = end_of_day(tag_date + 4 days)`,
+and email 4 says "4 days." That is only true if the tag lands on day 0 and email
+4 lands on day 1, giving the reader days 1 through 4 in full.
+
+Express it in **days, not hours.** Per the Timeline section, day-based delays
+respect the sequence schedule and hour-based delays bypass it.
+
 ## Page map
 
 | Route | Audience | Price shown | Indexed |
@@ -68,11 +166,17 @@ equivalent of $39. Write "$39 USD" in the email copy.
 | `/education` | Public | none, a card only | yes |
 | `/making-of-a-reformer` | Public | $69 | yes |
 | `/offer/reformer?t=TOKEN` | Email only | $39 + countdown | **noindex** |
+| `/workshops/making-of-a-reformer` | Nobody, by design | redirect | no |
 | `/portal/making-of-a-reformer` | Buyers | none | no |
 
 The offer page must carry `noindex`. The spec's framing rule is that the public
 page shows $69 only. If Google surfaces a $39 page, $69 stops reading as real
 to anyone who browses.
+
+**`/workshops/making-of-a-reformer` has to redirect, not render.** Left alone it
+resolves: `BrandedWorkshopRedirect` falls through to the generic
+`WorkshopSalesPage` for any slug it does not recognise, which would publish a
+second indexable $69 page for the same product. See Phase 1.
 
 ### Three pricing blocks, not two
 
@@ -106,8 +210,14 @@ Add `'course'` to the `webinars_kind_check` constraint, which is currently
 ```sql
 insert into public.webinars (slug, title, subtitle, status, kind, price_cents, kit_tag)
 values ('making-of-a-reformer', 'The Making of a Reformer',
-        'How your machine works and why', 'live', 'course', 6900, 'course-reformer');
+        'How your machine works and why', 'live', 'course', 6900, 'MOR-purchased');
 ```
+
+**`kit_tag` must be `MOR-purchased`, exactly.** `provisionPurchase` applies
+whatever string sits in this column, and that tag is what triggers the "MOR
+Purchase" automation and the unsubscribe-from-sequence rule. Seed a different
+name and buyers keep receiving sales emails for a course they already own,
+silently. Migration 039 records the same trap one product earlier.
 
 Use `status = 'live'`. It is already in the check constraint, it already passes
 the purchasability gate in `api/checkout/create-session.js`, and `kind =
@@ -175,6 +285,27 @@ framing need real layout.
       Buy button posts to the existing checkout with no `offerToken`, and
       `allow_promotion_codes: true` stays on for this path.
 
+- [ ] **Teach `workshopUrl` about the course, and loosen the redirect guard.**
+      Two lines that fix two things.
+
+```js
+// src/lib/workshop.js
+if (slug === 'making-of-a-reformer') return '/making-of-a-reformer'
+
+// src/App.jsx, BrandedWorkshopRedirect
+if (url !== `/workshops/${slug}`) return <Navigate to={url} replace />
+```
+
+`workshopUrl` is already the single source of truth for "this slug has a
+branded page," and PP101 and PP102 both rely on it. The current guard hard-codes
+a `/pilates-physics` prefix, so a third branded page needs it generalised.
+
+This is what makes `/workshops/making-of-a-reformer` redirect instead of
+rendering a duplicate sales page. It also repairs the full-price `cancel_url`
+for free, because `create-session.js` sends abandoned checkouts to
+`/workshops/{slug}` and that path now lands on the real page. Only the offer
+path needs the API to do anything, which is Phase 3.
+
 - [ ] Add a card to the `PATHS` array in `src/pages/Education.jsx`
 
 It slots between the spring calculator and PP101, which is the ladder the spec
@@ -216,14 +347,20 @@ that $39 was a trick. That protects $69 instead of undermining it.
 
 ### 2b. Kit setup, manual, in the dashboard
 
-- [ ] Custom fields: `offer_token`, `offer_deadline`
-- [ ] Tag: `tripwire-offer-open`
-- [ ] The tag goes on the **last step of sequence 1**, so the first email that
-      needs the merge fields (email 4, the cart open) is a full day later. See
-      "Timeline" below for why this cannot be a single sequence
+The tags, sequences, and automations already exist. See "The Kit flow as built"
+for the structure and for the five changes it still needs. What is missing here
+is only the pair of custom fields.
 
-Fifteen minutes would cover the cron interval, and an hour would be cheap
-insurance. Splitting the sequence buys a full overnight instead, for free.
+- [ ] Custom fields: `offer_token`, `offer_deadline`
+- [ ] Everything under "What still has to change"
+
+**No new tag is needed.** `in-MOR-sequence` is the trigger the cron polls, and
+the "Spring Calc Welcome" automation already applies it at exactly the right
+moment: after nurture completes, before the cart sequence begins.
+
+The cron interval alone would only require a fifteen-minute gap between that tag
+and email 4. The one-day delay on email 4 buys a full overnight instead, which is
+the difference between "usually fine" and "cannot race."
 
 ### 2c. `api/cron/mint-offers.js`
 
@@ -233,7 +370,7 @@ insurance. Splitting the sequence buys a full overnight instead, for free.
 Each run:
 
 ```
-1. GET Kit subscribers tagged `tripwire-offer-open`, since cursor
+1. GET Kit subscribers tagged `in-MOR-sequence`
 2. filter out: existing subscriber_offers rows for this offer_key
                users already holding a course entitlement
 3. insert up to 100 offer rows,
@@ -241,19 +378,28 @@ Each run:
    **Not now() + 72h. See "Timeline" below: a ragged afternoon deadline
    contradicts "today," "tomorrow," and "midnight" in the copy.**
 4. PUT offer_token + offer_deadline back to Kit, throttled
-5. stamp kit_synced_at; advance cursor only past fully-synced records
+5. stamp kit_synced_at
 ```
 
-Step 5's ordering matters. Advance the cursor on sync, not on insert, or a
-mid-batch failure orphans rows holding a token nobody ever received.
+**There is no cursor.** An earlier draft tracked one, which meant storing cron
+state the schema has nowhere to put, and getting the advance ordering exactly
+right so a mid-batch failure could not orphan rows holding a token nobody
+received. Drop it. `unique (offer_key, email)` already makes step 2 idempotent,
+so re-reading the same subscribers costs one wasted query and nothing else. A run
+that dies halfway is picked up fifteen minutes later, and the rows whose
+`kit_synced_at` is still null are the retry queue. That is what the partial index
+in Phase 0 exists for.
 
 The 100-row cap is not optional. Vercel caps function duration and a few
 thousand Kit field writes will not finish in one invocation. Kit rate-limits
 the v4 API, so add a delay between writes and verify the current ceiling in
 their docs before settling on a batch size.
 
-- [ ] New function in `api/_lib/kit.js`: `updateSubscriberFields(subscriberId,
-      fields)`. Follow the existing tag-cache pattern in that file.
+- [ ] Two new functions in `api/_lib/kit.js`, following the tag-cache pattern
+      already in that file:
+      - `listSubscribersByTag(tagName, { page })` for step 1. Nothing in the file
+        covers this today. `buildSubscriberFilter` is broadcast-only
+      - `updateSubscriberFields(subscriberId, fields)` for step 4
 
 ### 2d. `api/offer.js` and `src/pages/OfferPage.jsx`
 
@@ -297,19 +443,75 @@ reopens on request is not a window, and word travels fast in this industry.
 
 ## Phase 3: Checkout
 
-Two changes to `api/checkout/create-session.js`.
+Four changes to `api/checkout/create-session.js`, plus one to the webhook.
 
-- [ ] **Accept an optional `offerToken`.** Re-validate it server-side. Never
-      trust that the page said it was valid. Then branch on price:
+- [ ] **Accept an optional `offerToken` and re-validate it server-side.** Never
+      trust that the page said it was valid. The client clock is a suggestion and
+      the countdown is decoration; this check is the entire enforcement layer.
+
+**All four conditions, not just expiry:**
+
+```js
+const { data: row } = await supabaseAdmin
+  .from('subscriber_offers')
+  .select('id, token, webinar_id, expires_at, redeemed_at')
+  .eq('token', offerToken)
+  .maybeSingle()
+
+const offer =
+  row &&
+  row.webinar_id === workshop.id &&      // 1. bound to THIS product
+  !row.redeemed_at &&                    // 2. not already used
+  new Date(row.expires_at) > new Date()  // 3. still open
+    ? row
+    : null                               // 4. exists at all
+```
+
+The `webinar_id` check is the one that is easy to skip and expensive to miss.
+Without it, a valid reformer token passed against the PP101 slug sells PP101 for
+$39, because the price branch keys off the token rather than off the product.
+
+**An invalid token is a 409, not a silent fallthrough.**
+
+```js
+if (offerToken && !offer) {
+  return res.status(409).json({ offerExpired: true })
+}
+```
+
+The tempting version drops them to full price and carries on. Do not. Someone
+whose window closed while the tab sat open would see $39 on the page and $69 on
+the Stripe receipt, which is the exact bait-and-switch the expired pricing block
+exists to prevent. Return the 409, let `OfferPage` re-fetch and re-render as
+expired, and make them click $69 deliberately.
+
+- [ ] **Branch on price, and turn off stacking:**
 
 ```js
 const priceId = offer
   ? process.env.TRIPWIRE_OFFER_PRICE_ID
-  : product.stripe_price_id
+  : workshop.stripe_price_id
 ```
 
 Set `allow_promotion_codes: false` on the offer path, so no other active
 promotion code can stack on top of $39.
+
+- [ ] **Send cancelled offer checkouts back to the offer page.** The URLs are
+      currently hard-coded to `/workshops/{slug}`:
+
+```js
+cancel_url: offer
+  ? `${origin}/offer/reformer?t=${offer.token}`
+  : `${origin}/workshops/${slug}`,
+```
+
+Build it from the validated row, never from anything the client posted, or the
+parameter becomes an open redirect. The full-price branch needs no change once
+Phase 1 lands, because that path now redirects to the real page.
+
+`success_url` stays as it is. `/workshops/:slug/success` is its own route rather
+than part of the branded redirect, and `RegistrationSuccess` is already
+slug-generic: it polls `verify-session` and links to `/portal/{slug}`.
 
 - [ ] **Add `offer_id` to session metadata** so the webhook can close the loop.
 
@@ -470,30 +672,26 @@ than a literal reading of "96 hours" would imply. **Never describe the offer in
 hours in customer-facing copy.** Days are what is promised and days are what is
 enforced.
 
-### Split into two Kit sequences
+### Two sequences, with the handoff in an automation
 
-This falls out of the tag timing and it solves three problems at once.
+Already built this way. "The Kit flow as built" has the exact structure: Spring
+Calc Welcome carries nurture, the Making of a Reformer sequence carries the cart,
+and the automation between them applies `in-MOR-sequence`.
 
-**Sequence 1, emails 1 to 3.** Nurture, no offer, no link that needs a token.
-Weekday-only is fine here. The last step applies `tripwire-offer-open`.
+What the schedule still needs:
 
-**Sequence 2, emails 4 to 8.** Cart. **All seven days enabled, no exclusions.**
+- **All seven days enabled on the cart sequence, no exclusions.** The deadline is
+  wall-clock and does not pause for Saturday. Exclude weekends and a subscriber
+  whose email 6 slides to Monday has a window that expired Sunday with no
+  reminder ever sent. Weekday-only is safe on nurture, because nothing there is
+  on a clock
+- **A one-day delay on email 4,** in days. See "Why email 4 cannot send
+  immediately"
+- **9am sequence schedule, every delay in days** except email 8
 
-Why it has to be this way:
-
-- **The tag cannot fire at sequence entry.** The clock starts when the tag is
-  applied, and emails 1 through 3 run for the better part of a week before the
-  cart opens. Tag on entry and the window expires days before email 4 ever
-  mentions it.
-- **Phase 2b's "at least 1 hour after the tag step" becomes a full day,** which
-  is far more comfortable than an hour. The cron polls every 15 minutes and has
-  overnight to mint the token and write `offer_token` and `offer_deadline` back
-  to Kit before email 4 needs them.
-- **Weekend exclusions are fatal once the cart is open.** The deadline is
-  wall-clock and does not pause for Saturday. Exclude weekends in sequence 2 and
-  a subscriber whose email 6 gets pushed to Monday has a window that expired
-  Sunday with no reminder sent. Sequence 1 can skip weekends safely because
-  nothing there is on a clock.
+The handoff tag cannot move earlier, to sequence entry. The clock starts when it
+is applied, and nurture runs for the better part of a week before the cart opens.
+Tag on entry and the window expires days before email 4 ever mentions it.
 
 ### Print the deadline, do not hard-code it
 
@@ -513,70 +711,111 @@ timezone-named deadline in the body.
 - [x] ~~Decide the window length.~~ **Four calendar days, 2026-08-21**
 - [x] ~~Email 4 copy: "3 days" becomes "4 days"~~ **Done**
 - [x] ~~Spec offer terms and the sequence cadence table~~ **Done**
-- [ ] Cron: `expires_at = end_of_day(mint_date + 4 days)` in
-      `America/Los_Angeles`, replacing `now() + 72h`
-- [ ] Email 8 body: deadline from `{{ offer_deadline }}`, timezone named
 - [x] ~~Phase 1 active pricing block: replace the "4:12pm" example with an
       end-of-day deadline~~ **Done**
-- [ ] Kit: two sequences, tag on the last step of sequence 1
-- [ ] Kit: sequence schedule 9am, all delays in days
-- [ ] Kit: sequence 2 enabled all seven days
-- [ ] Kit: email 8 as an 11-hour delay off email 7
-- [ ] Test: one subscriber added at 11pm, confirm email 1 lands next morning
-- [ ] Test: an expired token against `create-session.js`, already listed in
-      Phase 3 and still the only thing between an expired link and a $30 discount
+- [x] ~~Kit: two sequences with the handoff between them~~ **Built**
+
+Code:
+
+- [ ] Cron: `expires_at = end_of_day(mint_date + 4 days)` in
+      `America/Los_Angeles`, replacing `now() + 72h`
+- [ ] Migration 042: `kit_tag = 'MOR-purchased'`, matching Kit exactly
+
+Kit, all manual:
+
+- [ ] One-day delay on email 4, expressed in days
+- [ ] Condition step before `MOR-didnotbuy`, skipped when `MOR-purchased` is
+      present
+- [ ] Activate "MOR Email Sequence" and "MOR Purchase"
+- [ ] `completed-nurture` step, or retire the tag
+- [ ] Sequence schedule 9am, all delays in days
+- [ ] Cart sequence enabled all seven days
+- [ ] Email 8 as an 11-hour delay off email 7
+- [ ] Email 8 body: deadline from `{{ offer_deadline }}`, timezone named
+- [ ] Decide on the leftover transactional email
+
+Tests:
+
+- [ ] One subscriber added at 11pm. Confirm email 1 lands the next morning rather
+      than at 11:15pm. The entire schedule rests on this
+- [ ] One subscriber who buys mid-sequence. Confirm they stop receiving cart
+      emails and do **not** end up tagged `MOR-didnotbuy`
+- [ ] An expired token against `create-session.js`, already listed in Phase 3 and
+      still the only thing between an expired link and a $30 discount
 
 ### How this interacts with the backfill
 
-It does not, much, which is the point of a rolling per-subscriber deadline. Each
-wave mints its own end-of-day deadline four days out from its own tag event, so
-staggering a few hundred a day produces a steady trickle of windows rather than
-one spike. The cron sees the same steady input either way.
+Barely, which is the point of a rolling per-subscriber deadline. Each wave mints
+its own end-of-day deadline four days out from its own tag event, so staggering a
+few dozen a day produces a steady trickle of windows rather than one spike. The
+cron sees the same steady input either way.
 
-One thing to watch: the backfill cohort enters at the **sequence 1** step, so
-their window does not open until they clear emails 1 through 3. Budget for that
-when planning waves. A wave tagged Monday does not reach cart open until the
-following week.
+The cohort enters differently from a new subscriber, though. They have already
+completed nurture, so they are tagged straight into `in-MOR-sequence` and their
+cart opens the next morning. A wave tagged Monday reaches email 4 on Tuesday, not
+the following week.
 
 ---
 
 ## The backfill
 
-Tagging the whole spring-calculator list turns a trickle into a batch job.
+238 subscribers have completed the Spring Calc Welcome sequence. The
+`in-MOR-sequence` step was appended to that automation afterwards, so none of
+them ever passed through it and Kit will not walk them back. **They cannot reach
+the tripwire on their own.** Nothing about this is self-healing.
+
+**The entry point is `in-MOR-sequence`, applied directly.** Bulk-tag them and the
+"MOR Email Sequence" automation picks them up on the tag event exactly as it does
+a new subscriber. They do not re-enter nurture, and should not: they have already
+read emails 1 through 3.
+
+**Activate "MOR Email Sequence" before the first wave.** Inactive automations do
+not accept subscribers. Tag a wave while it is switched off and that wave is
+silently lost, with no way to re-fire the trigger short of removing the tag and
+re-adding it.
 
 **Exclude existing buyers.** Filter against `user_entitlements` before minting.
-Sending a discount for something someone already owns is the kind of error
-people screenshot.
+Sending a discount for something someone already owns is the kind of error people
+screenshot.
 
-**Stagger it in Kit, do not dump it.** Two reasons:
+**Stagger it, do not dump it.** Two reasons:
 
 - *Deliverability.* This list opted in for a free calculator and has never
-  received a sales email. Two thousand promotional sends in one hour is the
-  shape spam filters look for.
+  received a sales email. Two hundred promotional sends in one hour is the shape
+  spam filters look for
 - *The deadline spike.* One tag event means one shared deadline, so every
-  reminder email and every purchase lands in the same four days, then silence.
+  reminder and every purchase lands inside the same four days, then silence
 
-Tag in waves, a few hundred a day over a week or two. The cron does not care.
-It sees a steady trickle, which is what it was designed for. This is a Kit
-scheduling decision, not code.
+Waves of a few dozen a day over a week or two. The cron does not care; it sees
+the steady trickle it was designed for. This is a Kit scheduling decision, not
+code.
 
-**The copy conflict.** The spec's framing rule is:
+### The copy conflict
 
-> Tie the discount to the subscriber being new, not the product being new:
-> "you just joined the list, so you have three days at $39."
+Email 4 opens:
 
-That is true for every future subscriber and false for the entire backfill
-cohort. Some of them ran the calculator months ago, and this is the first sales
-email they have ever received. "You just joined the list" reads as a mail merge
-that did not check.
+> Because you just joined my list, I want to give you the chance to buy this
+> course for **$39**.
 
-The backfill cohort needs its own email 1, anchored to what they did rather
-than when they joined: they ran the calculator, they got one spring's number,
-here is the rest of the machine. Emails 2 through 4 can be shared unchanged,
-since those are about the product rather than the timing.
+True for every future subscriber. False for all 238, some of whom ran the
+calculator months ago and have just finished a nurture sequence. It reads as a
+mail merge that did not check, in the email that has to earn the sale.
 
-Practically: two Kit sequences sharing one tag, or one sequence with email 1
-swapped by segment.
+**The backfill needs its own email 4,** anchored to what they did rather than
+when they joined: they ran the calculator, they got one spring's number, here is
+the rest of the machine. Emails 5 through 8 are about the product rather than the
+timing and ship unchanged.
+
+Two ways to build it in Kit:
+
+1. **A Liquid conditional on email 4's opening,** gated on a backfill tag. One
+   sequence to maintain, and it disappears on its own once the cohort clears.
+   Test the render carefully: a Liquid error in a body fails quietly
+2. **A duplicate cart sequence** differing only in email 4, entered by a separate
+   backfill tag and retired afterwards. More to maintain for two weeks, and
+   nothing subtle to get wrong
+
+Option 1 unless the conditional proves awkward to preview.
 
 ---
 

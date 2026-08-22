@@ -375,15 +375,16 @@ Kept as a record so these do not get relitigated.
 | Urgency lever | Price only. All content is always included |
 | Content bonus | Deliberately deferred. Can be added later without restructuring the offer |
 | Order bump at PP101 checkout | $39, permanently |
-| Enforcement mechanism | **Deferred.** Logistics to be worked out later |
+| Enforcement mechanism | **Resolved.** A second Stripe Price at $39 plus a per-subscriber token, enforced server-side. See [the build plan](../../making-of-a-reformer-build-plan.md) |
 
 ### Framing rules
 
 - **Do not call $39 a founding price.** The window recurs for every new
   subscriber, so "founding" becomes a lie. Tie the discount to the subscriber
   being new, not the product being new: "you just joined the list, so you have
-  three days at $39." That is true forever and works on subscriber 4,000 as well
-  as on the first 300.
+  four days at $39." That is true forever and works on subscriber 4,000 as well
+  as on the first 300. **The one exception is the backfill cohort,** who did not
+  just join and need their own email 4. See the build plan.
 - **The public page shows $69 only.** No "regularly $69, today $39." The moment
   the public page names the discount, $69 stops reading as real to anyone who
   browses. The $39 lives only in the email path.
@@ -396,16 +397,16 @@ Kept as a record so these do not get relitigated.
 
 ## Email sequence
 
-Four emails over three days, running after nurture email 5 (the origin story).
-This adapts Nikki's mini sales sequence structure. Two of her four slots do not
-fit this product.
+**Five emails over four calendar days.** The shipped copy, subject lines, send
+times, and the day-by-day timeline live in
+[current-copy/nurture-v2.md](../current-copy/nurture-v2.md), which is the source
+of truth. The mechanism that makes the deadline in that copy true is the
+Timeline section of [the build plan](../../making-of-a-reformer-build-plan.md).
 
-| Day | Email | Job |
-|-----|-------|-----|
-| 1 | **Cart open: one change, three effects** | Lead with the trickle-down hook. You gear out one notch and three other things move. Open the offer, name the $39 price and the four-day deadline |
-| 2 | **Five questions about your own reformer** | Replaces Nikki's case study slot. An interactive self-quiz. Miss two and you buy |
-| 3 | **The springs you have not looked at** | Wear, plastic set, coatings, inspection. The email that reaches studio owners, who buy for staff |
-| 4 | **Cart close: and what this is not** | Sell the vision of not guessing at the machine, then say plainly that this does not cover the body and 101 is where that lives |
+This section originally carried its own four-email table adapted from Nikki's
+mini sales sequence. It has been removed rather than updated: two copies of a
+cadence drift, and the copy file already owns it. What survives is the reasoning
+below, which is not recorded anywhere else.
 
 ### Why the case study slot got replaced
 
