@@ -27,7 +27,7 @@ Two things, in this order and this proportion.
    "here's what it actually is, make sense of their experience." Three emails
    have said "not that." This one says "this."
 2. **Open the cart.** Name the course, plant the design credential in one line,
-   state $39, state 72 hours, link.
+   state $39, state the four-day window, link.
 
 If the diagnosis shrinks to a preamble, the email becomes a pitch wearing a
 diagnosis costume and the whole sequence's credit gets spent in one send.

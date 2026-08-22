@@ -1,7 +1,12 @@
 # Nurture v2, Email 6: five questions about your own reformer
 
-Two drafts to choose from. Email 6 of the seven-email sequence in
-[current-copy/nurture-v2.md](../current-copy/nurture-v2.md).
+**Version A was selected and edited by Kaleen. The final copy lives in
+[current-copy/nurture-v2.md](../current-copy/nurture-v2.md).** B is kept below as
+archive. Note that Kaleen's edit changed three of the five questions, so the
+mapping table below describes the plan rather than what shipped. The current copy
+records the difference.
+
+Email 6 of the eight-email sequence.
 
 **Position:** day 3, morning. Cart closes tonight.
 
@@ -54,52 +59,46 @@ the count gets confirmed, this line can get sharper.
 
 ---
 
-## Version A: "Five questions"
+## Version A: "Five questions" (SELECTED, final copy in current-copy)
 
 Straight down the middle. Frames it as an honest self-check, runs the five, gives
 the scoring, closes. The safe pick and the easiest to skim, which matters on the
 last day.
 
 **Subject line options**
-1. Five questions about your own reformer
-2. Five questions. Answer them honestly
-3. How well do you actually know that machine
+1. How well do you know your reformer?
 
-**Preview text:** No trick questions. Answer them for yourself and see where you land.
+**Preview text:** Answer them for yourself and see where you land.
 
 ---
 
 Hi {{ subscriber.first_name }},
 
-Some of you read the last two emails and thought: I already know my machine.
+Do you know your reformer as well as you think you do?
 
-You might. A lot of you have taught on the same reformer for years and know exactly what it does. So rather than argue with you about it, here are five questions. Answer them in your head, honestly, and see where you land.
+You may have taught on the same reformer for years and know exactly what it does. You've experimented with different settings and know through trial and error that moving one thing affects another thing.
 
-**One.** You move the gear bar out one notch. What happens to the load, and what else changes when you do it?
+Or, you may have been given settings to use from your studio owner or lead educator during teacher training, and haven't deviated.  You think you might have other adjustment options but you've never played around with them.
 
-**Two.** Two reformers, different brands, both with a red spring. Same resistance?
+Regardless, here's a little quiz to help you think about what you do and don't know about your reformer.
+
+**One.** You lower the footbar one notch. What happens to the spring load? 
+
+**Two.** You move the gearbar out one notch.  What else changes because of that?
 
 **Three.** The rope runs through a pulley, so your client feels half the spring load. True or false?
 
-**Four.** A heavier client makes the carriage harder to push, because of friction. True or false?
+**Four.** A heavier client makes the carriage significantly harder to push, because of friction. True or false?
 
-**Five.** Take the oldest spring in your studio. How would you know whether it still does what its color says it does?
+**Five.** Why do manufacturers recommend replacing your springs so often?
 
-I am not going to answer them here. That is the course. But notice which ones you had to stop and think about, because that is the actual result of this exercise.
+If you want to know the answers to these questions, you should grab my online course, The Making of a Reformer.  It covers all five, and then some. [CEC line goes here once confirmed.]
 
-**If you got all five cleanly, you do not need what I am selling.** I mean that. Close this email, go teach, and I will see you when the workshop opens.
-
-If two or more of those gave you pause, that is not a gap in your teaching. It is a gap in what anybody ever told you about the equipment, and it is exactly the hour I built.
-
-The Making of a Reformer covers all five, and the rest of the machine with them. [CEC line goes here once confirmed.]
-
-**It is $39 until tonight.** After that it goes to $69.
+**It is $39 until tomorrow.** After that it goes to $69.
 
 [Get The Making of a Reformer →](LINK)
 
 Kaleen
-
-P.S. Question four is the one that surprises people most. It is also the one I hear stated confidently, out loud, in studios, more than any other thing on this list.
 
 ---
 

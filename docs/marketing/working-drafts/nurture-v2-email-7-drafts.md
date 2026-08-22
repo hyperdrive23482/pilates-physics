@@ -1,118 +1,175 @@
-# Nurture v2, Email 7: cart close
+# Nurture v2, Email 7: what exactly is in The Making of a Reformer
 
-Three drafts to choose from. Email 7 of the seven-email sequence in
-[current-copy/nurture-v2.md](../current-copy/nurture-v2.md).
+**Version B was selected and edited by Kaleen. The final copy lives in
+[current-copy/nurture-v2.md](../current-copy/nurture-v2.md).** A is kept below as
+archive. Kaleen's edit dropped most of the callbacks to email 6's five questions,
+so the answer table below is now reference material for the course rather than a
+description of what shipped.
 
-**Position:** day 3, end of day. Cart closes tonight.
+Email 7 of the eight-email sequence.
+
+**Position:** day 3, morning. Cart closes tonight. Email 8 follows the same
+evening.
+
+> **This email replaced the cart close on 2026-08-21.** Email 7 used to be the
+> "closing tonight" reminder. That job moved to the new email 8, and the three
+> old cart-close drafts moved with it to
+> [nurture-v2-email-8-drafts.md](nurture-v2-email-8-drafts.md). Email 7 is now a
+> content email.
 
 ## The job
 
-One job. Remind them it closes and give them the link.
+Email 6 asked five questions and did not answer them. This email is the payoff:
+what is actually in the course, told by answering those five.
 
-No new argument, no new content, no new hook. Anyone still reading on day 3 has
-had the diagnosis, the origin story, and the quiz. They do not need a sixth
-reason. They need to be told the time is up and given somewhere to click.
+That structure does three things at once. It cashes email 6's tease, so the quiz
+does not read as bait. It proves the course is substantive, because each answer
+is surprising enough that the reader wants the rest. And the syllabus emerges
+from the answers rather than being recited, which means the reader gets a module
+list without having to read a module list.
 
-**Target length: under 100 words of body copy.** All three drafts are between 60
-and 90. If one grows past 100 in editing, something new has crept in and should
-come back out.
+**This is the last content email in the sequence.** Everything the offer has to
+argue, it argues here. Email 8 is a deadline and nothing more.
 
-## Rules
+## The five answers, and what each one is sourced from
 
-- **No guilt, no fake scarcity.** The price genuinely goes to $69 and the course
-  genuinely stays available. Say exactly that. Anyone who has read six emails
-  will notice manufactured pressure and it costs more than it earns.
-- **State what actually happens at midnight.** The content is not going away.
-  Only the price changes. That is the whole urgency lever per the spec, and being
-  precise about it is more persuasive than being vague.
-- **Link early and link again.** On a closing email people skim to the button.
-- **No P.S. that reopens an argument.** If there is a P.S., it is one line.
-- **Set a real send time.** "Tonight" and "midnight" have to match whatever the
-  cart actually enforces, including which timezone.
+Every claim below traces to
+[reformer-machine-course-spec.md](reformer-machine-course-spec.md). None of them
+are in the spring calculator, so **Kaleen has to sign off on all five before this
+ships.** The two flagged as unconfirmed are the ones to read hardest.
+
+| Q | Answer in one line | Module | Source, and confidence |
+|---|---|---|---|
+| 1. Lower the footbar one notch | The spring load does not change at all. The footbar is not attached to the springs | 1, anatomy | Module 1's stated job is "which parts change load and which do not." Physically sound: spring stretch tracks carriage position, and the footbar does not move the carriage. **Confirm the framing is how you teach it** |
+| 2. Gear bar out one notch | Starting stretch goes up, so the carriage is loaded before anyone touches it, and every load through the press goes up with it | 3, adjustments | The spec's adjustment simulator is specified as "move a gear bar, watch starting stretch and total load change." Solid |
+| 3. The pulley halves the load | Half true. The halving applies to one of the two things people think it applies to | 4, pulleys | Spec: "Why 'half' is half true, and where the load actually peaks." **Deliberately not spelled out in the draft copy, because the spec does not resolve which half.** Sharpen once module 4 is written |
+| 4. Heavier client, more friction | False on a maintained machine. Rolling friction barely moves with added weight, and friction reverses direction with the carriage | 5, friction | Spec's five-beat worked argument, including the reversal and the maintained-machine caveat. Solid |
+| 5. Why manufacturers say replace springs | Past a point a spring takes a permanent set, and after that Hooke's law stops describing it and the color stops meaning what it did | 2, springs | Spec: elastic vs plastic deformation, where Hooke's law stops applying, plus the color-loss anecdote. Solid |
+
+**Question 5 is under the spec's safety framing rule.** Descriptive, never
+prescriptive. No invented interval, no "safe" or "unsafe," and point at the
+manufacturer's own guidance. Both drafts follow it. Do not edit an interval in.
+
+**Question 1 is the one I would check first.** It is the only answer that is
+flatly "nothing changes," and if Kaleen teaches footbar height as a load
+adjustment for any reason the calculator does not model, the answer inverts.
+
+## What must not go in
+
+- **Do not promise a tool that will not exist at launch.** The spec's tool table
+  lists the parts diagram, inspection checklist, brand comparison table,
+  adjustment simulator, load curve animation, and worked friction math as **to
+  build.** Only the spring calculator exists. Both drafts name the modules and
+  stay off the tool list for exactly this reason. If a tool is confirmed built,
+  add it; do not add it on the assumption it will be.
+- **Do not assert the CEC.** Same placeholder as emails 4 and 6.
+- **Do not re-run the objection.** Email 6 handled "I already know my machine."
+  Running it again on the last content day reads as pleading.
+- **Do not name a second product.** Module 7 hands off to Pilates Physics 101,
+  and naming it here starts a second sale on a closing day. Both drafts describe
+  module 7 without naming 101.
 
 ---
 
-## Version A: "Closing tonight"
+## Version A: "The answers" (not selected)
 
-Plainest of the three. Says what happens, gives the link, stops.
+Runs the five questions in order, answers each in two or three lines, and lets the
+module list assemble itself out of the answers. Closest to what was asked for, and
+the strongest of the two, because every answer is a small reversal and five small
+reversals in a row is the best argument this product has.
 
 **Subject line options**
-1. Closing tonight
-2. Last call for $39
-3. The $39 window closes tonight
+1. What exactly is in The Making of a Reformer?
+2. The answers to yesterday's five questions
+3. Answers, and what else is in there
 
-**Preview text:** Price goes to $69 at midnight. The course stays.
+**Preview text:** All five, plus the rest of what an hour buys you.
 
 ---
 
 Hi {{ subscriber.first_name }},
 
-Quick one. The $39 window on The Making of a Reformer closes tonight.
+Yesterday I asked you five questions and did not answer any of them. Here they are, and here is where each one lives in the course.
 
-[Get it before midnight →](LINK)
+**One. You lower the footbar one notch. What happens to the spring load?**
 
-Nothing dramatic happens after that. The course does not disappear, it just goes to its usual $69. If that is the right price for you, buy it then and I will be glad either way.
+Nothing. The footbar is not attached to the springs, so the load at any point on the carriage is exactly what it was before you moved it. What changes is the angle your client presses at and where their range starts and stops. Both of those change what they feel, and neither of them is load.
 
-But if you were going to, tonight is cheaper.
+Knowing which parts of your reformer change load and which only change the feeling of it is the whole first module.
+
+**Two. You move the gearbar out one notch. What else changes because of that?**
+
+The springs are already stretched before anybody lies down. So the carriage is loaded at the start, it is loaded harder at the end, and the amount of effort it takes just to break the carriage away from the stopper goes up. One notch, and the whole shape of the movement is different.
+
+That is module three, which walks every adjustment on the machine and what each one does to spring stretch, with nobody on it.
+
+**Three. The rope runs through a pulley, so your client feels half the spring load. True or false?**
+
+Half true, which is the most annoying possible answer. Something in that setup really does get halved. It is not the thing most people think, and once you know which one it is, you also know where the load actually peaks during the movement, which is not where it feels like it does.
+
+Module four, with the load drawn out across the full travel of the carriage.
+
+**Four. A heavier client makes the carriage significantly harder to push, because of friction. True or false?**
+
+False, on a machine that is maintained. The friction does go up. It goes up by an amount so small it disappears next to the springs. And here is the part almost nobody mentions: friction reverses direction when the carriage does, so it is not even working against your client the whole time.
+
+Module five is that argument worked all the way through, including the one situation where you genuinely would notice it.
+
+**Five. Why do manufacturers recommend replacing your springs so often?**
+
+Because a spring that gets stretched far enough, often enough, stops coming all the way back. Once it takes that set, the math that describes a spring stops describing that spring, and the color on it stops meaning what it meant when it was new.
+
+Module two is the biggest one in the course. Spring anatomy, what actually makes a spring stiff, how springs age, how brands differ, and what to look for on your own before you call your manufacturer.
+
+---
+
+There are three more modules I did not need for the quiz. One on the parts of the reformer and what each one is for. One on classical versus contemporary, where the physics takes no side at all. And one at the end on the single thing the machine cannot tell you, no matter how well you understand it.
+
+The whole thing is about an hour, it is available the moment you buy it, and you can watch it in pieces. [CEC line goes here once confirmed.]
+
+**$39 today.** After that it is $69.
+
+[Get The Making of a Reformer →](LINK)
 
 Kaleen
 
 ---
 
-## Version B: "One line about what it is"
+## Version B: "Here is the whole thing" (SELECTED, final copy in current-copy)
 
-Adds a single sentence of reminder for anyone who skimmed the last three emails,
-then closes. Slightly warmer, still under 100 words.
+The syllabus version. Walks the course module by module in order and mentions
+which of yesterday's questions each one settles, without giving the answers.
+Pick this if the answers do not survive Kaleen's physics review, or if giving
+five answers away on the last day feels like too much.
 
 **Subject line options**
-1. Last few hours
-2. $39 until midnight
-3. Closing the door on this one
+1. What exactly is in The Making of a Reformer?
 
-**Preview text:** An hour on the machine you teach on every day.
+**Preview text:** 8 modules in one hour of on-demand video
 
 ---
 
 Hi {{ subscriber.first_name }},
 
-Last call. The $39 price on The Making of a Reformer ends tonight.
+My online course, The Making of a Reformer, covers how and why your machine works the way it does.  If you're wondering what exactly you get for $39, here's a quick overview.
 
-It is about an hour, it covers the whole machine, and it is the answer to the five questions I sent this morning.
+**The parts. ** Every component on a reformer, so you know their names and what they do.
 
-[Get it before midnight →](LINK)
+**Springs.** The biggest module in the course. Not only do we cover Hooke's Law, but we dive into what factors influence how a spring feels, how springs age, and common safety hazards you need to know.
 
-After tonight it goes to $69 and stays there. The course is not going anywhere, so this is a price deadline and nothing more.
+**Adjustments.** All the components on the machine that affect fit and spring stretch. 
 
-Kaleen
+**Pulleys.** Why "your client feels half the spring load" is half right, and a funny thing that happens when you get on and off the carriage while using the ropes.
 
----
+**Friction.** The truth about how body weight and wheel design affects friction forces.
 
-## Version C: "The one question"
+**Classical and contemporary comparison.** A level-headed look at materials and design differences between classical and contemporary reformers.
 
-Pulls a single thread from email 6 rather than restating the offer. The most
-distinctive of the three and the one most likely to get opened by someone who
-ignored the last two, at the cost of being slightly less direct.
+About an hour altogether, available the moment you buy, and you can take it in pieces. [CEC line goes here once confirmed.]
 
-**Subject line options**
-1. Number four
-2. About that fourth question
-3. Closing tonight, and one last thing
+**$39 today,** then $69.
 
-**Preview text:** The $39 window ends at midnight.
-
----
-
-Hi {{ subscriber.first_name }},
-
-Of the five questions this morning, number four is the one I would go back and check first. Whether a heavier client makes the carriage harder to push.
-
-Most teachers say yes, out loud, with confidence.
-
-The answer is in the course, and the $39 price on it ends tonight.
-
-[Get it before midnight →](LINK)
-
-After that it is $69. Same course, same everything, just the normal price.
+[Get The Making of a Reformer →](LINK)
 
 Kaleen
 
@@ -120,30 +177,23 @@ Kaleen
 
 ## Notes
 
-- **Version A is the default.** It is the shortest, it makes no claim that needs
-  checking, and it works whether or not the reader opened email 6.
-- **Version C depends on email 6 having landed.** If open rates on email 6 are
-  low, C is talking to people who do not know what "number four" means. Only pick
-  it if you are comfortable with that, or send it as a resend to email 6 openers
-  and use A for everyone else.
-- **All three say the course stays available.** That is per the spec's urgency
-  lever, which is price only, all content always included. It is also the honest
-  version and it is what keeps the sequence's tone intact on the way out.
-- **None of them mention the CEC.** By this point it would be a new argument.
-- **"Midnight" is a placeholder.** Match it to the real cart deadline and name
-  the timezone in the copy if the list spans more than one.
-- **Nobody gets a next-time tease,** because there is no next email. If a main-
-  list newsletter follows, that transition belongs in a separate send, not
-  tacked onto a close.
-
-## After this email
-
-The sequence ends here. Per the funnel structure, subscribers move to the main
-list. Two things are undecided and both sit outside this file:
-
-1. **What happens to non-buyers.** They have had one offer and declined it. The
-   spec puts the course back in front of them as a permanent $39 order bump at
-   Pilates Physics 101 checkout, which is the natural second chance.
-2. **What happens to buyers.** They should not get the main list cold. The spec
-   has an open decision about where the same-day action goes, and a post-purchase
-   email carrying the spring inspection checklist is one of the listed options.
+- **Version A is the recommendation** and it is the one that matches the brief.
+  Five reversals in a row is a stronger argument than a syllabus, and every one of
+  them opens a door the course walks through rather than closing one.
+- **Version A's risk is that it satisfies somebody.** A reader who wanted the five
+  answers now has them. That risk is smaller than it looks, because each answer is
+  the headline and the course is the reasoning, but it is real and it is the
+  reason version B exists.
+- **Version B ships without a physics review.** It names what each module settles
+  without asserting any of it. If Kaleen's sign-off on the five answers is going
+  to take longer than the cart, B is the safe send.
+- **Both leave the tool list out.** See the "what must not go in" section. This is
+  the single most likely way for this email to promise something the product does
+  not deliver on launch day.
+- **Neither has a P.S.,** consistent with emails 4, 5, and 6.
+- **Both say "$39 today."** That is deliberately vaguer than email 6's "until
+  tomorrow" and email 8's "tonight," because the cart timeline is being settled
+  separately. Once it is, make all three match.
+- **Module numbers are not used in the copy.** The spec numbers them 0 through 7;
+  the emails describe them instead. Keep it that way unless the sales page numbers
+  them, in which case match the sales page.

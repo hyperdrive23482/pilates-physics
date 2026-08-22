@@ -371,7 +371,7 @@ Kept as a record so these do not get relitigated.
 | Item | Decision |
 |------|----------|
 | Evergreen price | $69 on the site |
-| Promotional price | $39 for 72 hours, inside the email sequence only |
+| Promotional price | $39 for four calendar days, inside the email sequence only. Deadline is end of day, not a rolling 72 hours. See the build plan's Timeline |
 | Urgency lever | Price only. All content is always included |
 | Content bonus | Deliberately deferred. Can be added later without restructuring the offer |
 | Order bump at PP101 checkout | $39, permanently |
@@ -402,7 +402,7 @@ fit this product.
 
 | Day | Email | Job |
 |-----|-------|-----|
-| 1 | **Cart open: one change, three effects** | Lead with the trickle-down hook. You gear out one notch and three other things move. Open the offer, name the $39 price and the 72-hour deadline |
+| 1 | **Cart open: one change, three effects** | Lead with the trickle-down hook. You gear out one notch and three other things move. Open the offer, name the $39 price and the four-day deadline |
 | 2 | **Five questions about your own reformer** | Replaces Nikki's case study slot. An interactive self-quiz. Miss two and you buy |
 | 3 | **The springs you have not looked at** | Wear, plastic set, coatings, inspection. The email that reaches studio owners, who buy for staff |
 | 4 | **Cart close: and what this is not** | Sell the vision of not guessing at the machine, then say plainly that this does not cover the body and 101 is where that lives |

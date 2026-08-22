@@ -1,9 +1,10 @@
 # Nurture v2, Email 5: origin story and scar reel
 
-**Version A was selected and edited by Kaleen. The final copy lives in
-[current-copy/nurture-v2.md](../current-copy/nurture-v2.md).** B and C are kept
+**Version C was selected and edited by Kaleen, and it replaced an earlier
+version A edit. The final copy lives in
+[current-copy/nurture-v2.md](../current-copy/nurture-v2.md).** A and B are kept
 below as archive. Note that the final version names the Flexia Reformer, so the
-"do not name the machine" rule below and the P.S. in all three drafts are
+"do not name the machine" rule below and the P.S. in versions A and B are
 superseded.
 
 **Position:** day 2. Cart is open, two days left at $39.
@@ -75,12 +76,14 @@ even shorter distance from shoulder rest to footbar.
 - **Do not re-teach the load.** Email 4 did that.
 - **Do not assert the CEC.**
 
-**Deadline language:** "two more days" is correct on day 2 of a 72-hour window
-closing end of day 3.
+**Deadline language:** the window became four calendar days on 2026-08-21,
+closing end of day on day 4. "Two more days" still holds on day 2, because the
+natural reading counts the days remaining after today, which is day 3 and day 4.
+It understates slightly rather than over-promising, which is the safe direction.
 
 ---
 
-## Version A: "I knew the machine and still got it wrong" (SELECTED, final copy in current-copy)
+## Version A: "I knew the machine and still got it wrong" (superseded by C)
 
 Scar first, and it is built on the new sharper version of it. The warmest, and
 the one that does the most for the reader, because the absolution is the point.
@@ -191,16 +194,15 @@ P.S. People keep asking which reformer. I am deliberately not saying, and the re
 
 ---
 
-## Version C: "Somebody has to actually build it"
+## Version C: "Somebody has to actually build it" (SELECTED, final copy in current-copy)
 
 The behind-the-scenes version. Opens on what designing is actually like rather
 than on the scar or the physics. Most curiosity-driven and the most distinct from
 the rest of the sequence, at the cost of taking longest to reach a point.
 
-**Subject line options**
-1. Somebody has to actually build it
-2. There is no "about there"
-3. The question I had to answer about a thousand times
+**Subject line**
+
+1. The question I had to answer about a thousand time
 
 **Preview text:** Every number on that machine is a decision somebody defended.
 
@@ -210,40 +212,43 @@ Hi {{ subscriber.first_name }},
 
 The fastest way I know to learn how a reformer works is to try to have one made.
 
-> **[CAPTURE 2: the escalation.]** Two or three sentences on how you ended up
-> designing one. Enough for the reader to believe it, not the whole story.
+I designed and produced my own because after getting my hands on hundreds of machines over the years, I didn't like the physics of any of them.
 
 Here is what nobody warns you about.
 
-You cannot say "about there." Every dimension is a number that somebody has to actually manufacture, in a factory, thousands of times. So every number gets a question attached to it, and the question is always the same one. Why that and not something else.
+You cannot say "about there." Every dimension is a number that somebody has to actually manufacture, in a factory, thousands of times. So every number gets a question attached to it, and the question is always the same one. Why this and not that?
 
-I answered that question a few hundred times. How many gear positions, and where to stop. Which springs to source, and what happens to them after ten thousand cycles. Where the ropes run. Whether the footbar needed to pivot.
+I answered that question a few hundred times during my development process. How many gear positions, and where to stop. How big the carriage should be. Where the pulleys sit. Whether the footbar needed to pivot or not.
 
-Let me show you one, because it is the one that changed how I teach.
+Let me show you one that resulted in a relatively rare adjustment lever, precisely because I was thinking about loading a variety of bodies.
 
-The shoulder rests. Most people read those as a comfort feature. Something you slide around so a client is not uncomfortable.
+The shoulder rests. 
 
-They are not. Where the shoulder rests sit decides where a body starts on the carriage, which decides how far your client presses before their legs are straight, which decides how far the spring stretches, which decides the load.
+Most people read those as a comfort feature. Something that keeps the client from sliding off and maybe, sometimes, can be removed or swapped to change the width between them.
 
-It is the duet from the first email, sitting there disguised as padding.
+However, they are not just a comfort feature. Where the shoulder rests sit directly impacts where a body starts on the carriage, which decides how close they are to the footbar, which decides how far your client presses before their legs are straight, which decides how far the spring stretches, which decides the spring load.
 
-> **[CAPTURE 3: what you decided and why.]** Whether they moved at all, how far,
-> and what it cost you elsewhere. Three sentences: the decision, the options, the
-> choice. This paragraph is the proof of the entire email.
+I wanted my reformer to fit larger bodies better, and in order to preserve the ability for smaller folks to get the range of movement they needed, I added a second slot for the shoulder rests that allowed them to move closer to the footbar.
 
-Every one of those decisions turned out to be a load decision wearing a different costume. That is the education I did not know I was signing up for.
+Not only was it great for short people doing footwork, but it was also nice for planks and lunges where the footbar and shoulder rests were used at the same time.  No more wedging foam rollers or yoga blocks between feet and shoulder rests.
 
-And I needed it more than I would have guessed, because I came at this equipment-first and it did not make me a better teacher on its own. I stood in front of that duet and thought he was engaging with the work and she was not quite grasping it. The physics was in my head the whole time. It just never walked across the room.
+Before designing the Flexia Reformer I thought I knew reformers well.  After all, I came at Pilates equipment-first as a design engineer and only  after taking classes to learn about what I was building did I get the Pilates bug.   
 
-The course is that education, arranged so it does walk across the room. Each section opens with a decision, gives you the physics that settled it, and closes with what I chose and why.
+For seven years I built, maintained, and repaired Pilates equipment, and yet I still hadn't considered all the load tradeoffs each design decision created. 
 
-**Two more days at $39,** then $69.
+I stood in front of that duet and thought he was engaging with the work and she was not quite grasping it. 
+
+The physics was in my head the whole time. The magnitude of it just never landed.
+
+It turned out that every functional design decision I made was actually a load decision. That is the education I did not know I was signing up for when I set out to design my reformer.
+
+The Making of a Reformer: How your machine works and why, is that education, arranged in a convenient mini course so you can understand how each of the reformer components affects how your load is delivered to the client. Along the way, I'll share the design decisions I faced when creating my own reformer, and why I chose what I did.
+
+You can grab the course for $39 for another 2 days.  But after that, it goes back to the regular price of $69.
 
 [Get The Making of a Reformer →](LINK)
 
 Kaleen
-
-P.S. People keep asking which reformer. I am deliberately not saying, and the reason matters. The course has to be fair to every brand on the market, and it is. The physics does not care whose logo is on the frame.
 
 ---
 
