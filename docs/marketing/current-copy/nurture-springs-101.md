@@ -4,7 +4,9 @@ Evergreen, six emails, sent to anyone who claims the Springs 101 lead magnet.
 Written for **ICP 1, The Curious Practitioner**, with light nods to ICP 2 and 3.
 
 **Cadence:** day 1, 3, 5, 8, 11, 14 (measured from the Kit tag, not from signup,
-so the delivery email lands first).
+so the delivery email lands first). Nothing in the copy depends on those days.
+No email names a day of the week, so the schedule can change without a copy
+edit. See the rule in [voice-and-messaging.md](../voice-and-messaging.md).
 
 **Destination:** every CTA points to `/education`. That page lists what is
 scheduled and falls back to "Join the waitlist" on its own, so the sequence never
@@ -29,7 +31,7 @@ slope, not a number. The sequence walks that idea from the equipment to the body
 ## Before you load these
 
 - **Testimonial permission.** The quotes in emails 3 and 5 are pulled from
-  [customer-language.md](customer-language.md). They are safe unattributed. Check
+  [customer-language.md](../customer-language.md). They are safe unattributed. Check
   each student's `share_permission` in the survey data before attaching a name.
 - **The one exclamation mark.** "(Physics!)" in email 5 is verbatim student
   language, not our voice. Keep it as a quote or cut the quote, do not smooth it.
@@ -76,7 +78,7 @@ Which leaves a question your setting sheet cannot answer. If the load depends on
 how far the spring gets stretched, and every client stretches it a different
 distance, then who in your class is actually on that red?
 
-That one is Wednesday.
+That one is next time.
 
 Kaleen
 
@@ -105,12 +107,12 @@ Hi {{ subscriber.first_name }},
 
 Two clients, back to back. Same reformer, same red spring, same footwork.
 
-Your first client is tall. She presses out to straight legs and the carriage runs
-nearly the full length of its track. Your second client is short. She presses out
+Your first client is tall. They press out to straight legs and the carriage runs
+nearly the full length of its track. Your second client is short. They press out
 to the same straight legs, and the carriage travels several inches less.
 
-Now put that against the slope from Monday. The load climbs with stretch. So your
-taller client finishes her rep near the top of the climb, somewhere around 40
+Now put that against the slope from last time. The load climbs with stretch. So your
+taller client finishes their rep near the top of the climb, somewhere around 40
 pounds. Your shorter client finishes lower down the same line, closer to 30.
 
 Neither of them did anything wrong. Neither did you. The setting was the same.
@@ -178,8 +180,8 @@ When a body does not fit the standard setting, your only lever is to add a sprin
 or drop one, and then hope. You know that cannot be the only option, because you
 have watched a spring change fix one thing and break another.
 
-When a client asks why this feels so much harder than it did at her old studio,
-you have the setting. You do not have the reason. And she can tell.
+When a client asks why this feels so much harder than it did at their old studio,
+you have the setting. You do not have the reason. And they can tell.
 
 When you are honest with yourself, some days feel less like teaching and more
 like reciting. One instructor described it as regurgitating what she was taught
@@ -244,12 +246,13 @@ your client up or down the line before the first rep.
 **Or you can change how much of the curve the movement covers.** Footbar height,
 where you place the body, how far a client is set up from the bar, and the limb
 lengths of the person in front of you. These decide how much travel a given
-movement produces, which is to say how far up the climb she finishes.
+movement produces, which is to say how far up the climb they finish.
 
 Two clients on the same spring, ending at different points on the same line. That
-is the tall and short problem from Wednesday, and it is also the lever. If a
-setting is landing wrong for someone, you can move where she starts, or you can
-change how far she travels, and both of those change the load without touching a
+is the tall and short problem from earlier in this series, and it is also the
+lever. If a
+setting is landing wrong for someone, you can move where they start, or you can
+change how far they travel, and both of those change the load without touching a
 spring.
 
 There is a third category worth naming so it does not surprise you later. Some
@@ -365,8 +368,8 @@ That is the first layer. The workshop is the rest of it.
 often as you want. Pilates Physics 101 covers the reformer. Pilates Physics 102
 covers the chair and the cadillac. You get the physics behind the settings and,
 just as importantly, how to teach with it: the cues, the options you can offer a
-mixed room, and the language to hand a client so she can choose her own load
-instead of comparing herself to the person next to her.
+mixed room, and the language to hand a client so they can choose their own load
+instead of comparing themselves to the person next to them.
 
 No math background required. That is not a marketing line, it is a design
 constraint I hold myself to.
@@ -377,9 +380,9 @@ it. It is also not a set of hacks. It is the reasoning underneath, which is the
 part that keeps working on bodies you have not met yet.
 
 If that is what you want, here is the End Result. Every student in your room gets
-a class built for her body, not for the model in your training manual. She feels
-the difference because the class was built around her. And she trusts you,
-because you can tell her what her body is feeling and why.
+a class built for their body, not for the model in your training manual. They feel
+the difference because the class was built around them. And they trust you,
+because you can tell them what their body is feeling and why.
 
 [See upcoming workshops →](/education)
 

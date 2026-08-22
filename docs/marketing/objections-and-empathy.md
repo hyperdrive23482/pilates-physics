@@ -28,6 +28,18 @@ Everything below rests on one claim. Say it three ways depending on the room.
 > teaches you to see it, so you can adapt what you're teaching and know what
 > comes next.
 
+**D. The sharp version, when the piece needs an edge**
+
+> When the load is wrong, no cue can fix it.
+
+**Keep it scoped exactly that way.** Inside its condition the claim is true and
+unarguable, and it does not tell a teacher that her cueing is the problem.
+Unscoped, as "words do not matter," it is both insulting and false: sometimes a
+different cue really is the one that lands, and being good at that is worth
+something. Nurture v2 email 3 in
+[current-copy/nurture-v2.md](current-copy/nurture-v2.md) is written on the scoped
+version. Match it.
+
 **Keep "load" as the one technical word.** Define it once, then use it
 everywhere. Every response in this file lands on it, which is what makes them
 read as one brand instead of twelve clever answers.
@@ -36,7 +48,60 @@ read as one brand instead of twelve clever answers.
 [peace-framework.md](peace-framework.md), which promises adapting but not a
 forward direction. Progression is what answers the seasoned teacher and the
 "what do I do in week six" question. The PEACE beats need a review pass with
-progression in mind.
+progression in mind, and [The two roles of load](#the-two-roles-of-load) below is
+the material that pass should be built on.
+
+---
+
+## The two roles of load
+
+Load does not do the same job in every exercise. **The teaching intent decides
+which job is running.** Decide the intent first and the load question mostly
+answers itself.
+
+| If the intent is | Load's job | What "right" means |
+|---|---|---|
+| A skill: articulation, connection, coordination, awareness | Facilitate. Load is there to make the skill reachable | The setting that lets them find the movement, which is often more support, not less |
+| Strength: loading tissue, building capacity over time | Supply the stimulus. Load has to climb | A setting genuinely harder than last time, in a step they can actually take |
+
+This is what the three beats in **B** are already describing. **Adapt** is load
+serving a skill. **Progress** is load as the stimulus. One dial, two different
+reasons to touch it.
+
+**Name the intent whenever you write about load.** A load claim with no intent
+attached is where this brand contradicts itself. "Correct load, not maximum load"
+and "you have to add load over time" are both true, and they read as opposed
+until you say which intent you are talking about.
+
+**Strength is a thing, never the thing.** When strength comes up it travels with
+what Pilates is already good at: articulation, connection, coordination,
+awareness. Pilates Physics is not a strength brand that happens to use reformers.
+Progressive overload is one reason load moves. Making a skill reachable is the
+other, and it is the one the survey data actually voiced. This supersedes the
+"its own lane" framing in
+[funnel-strategy-nikki-session.md](funnel-strategy-nikki-session.md), which parked
+strength training entirely.
+
+---
+
+## The enemy underneath
+
+The belief every pushback below is standing on, in Kaleen's words:
+
+> Load is just there. It is background. It is unchangeable.
+
+And that is just not true. Naming it is the sharpest version of the premise. Load
+is a teaching tool, exactly like imagery, verbal cues, and hands-on work. It is
+the only one of the four that gets treated as fixed.
+
+**The full source line.** "Load is just so often not the lever. It's not a lever
+that's considered. It's just there. It's background. It's unchangeable. And
+that's just not true." Keep the phrasing close to this. "It's just there" is the
+part that lands, and it is hers, not a writer's metaphor.
+
+**Reserved, not spare.** Nurture v2's enemy slot is spent on "if you don't feel
+it, you're doing it wrong," and a sequence gets one enemy. Hold this one for the
+tripwire sequence or a standalone piece. Do not stack them.
 
 ---
 
@@ -48,7 +113,7 @@ In her voice, the way she would say it to a friend.
 2. "I'm not good at math. That was never my thing."
 3. "It takes too long to give options in the moment."
 4. "I don't always want to load my clients to the max." *(hidden assumption:
-   physics means heavier. It means correct.)*
+   physics means heavier. It means matched to the intent.)*
 5. "If it looks good to me, then they're getting a good workout." *(weakest, and
    the best hook. You can't see load, you have to ask.)*
 6. "This is theory. It's not applicable to teaching group classes." *(real, and
@@ -143,10 +208,16 @@ write these live, in the moment.
 
 *Pairs with empathy #8.*
 
-> You shouldn't. More load was never the goal, correct load is. Understanding
-> load is how you find the setting that's honest for that body, and plenty of the
-> time that means lighter, not heavier. Pilates Physics tells you which direction
-> to move and why.
+> You shouldn't, and maximum was never the point. What decides it is what you are
+> teaching. When the intent is a skill, load is there to make that skill
+> reachable, and plenty of the time that means lighter, or more support, not
+> heavier. When the intent is strength, load does have to climb over time, in
+> steps small enough that they can actually take them. Understanding load is what
+> tells you which of those two you are doing, and which direction to move.
+
+**Note.** This response used to read "more load was never the goal, correct load
+is." That is only true under a skill intent, so it was rewritten. See
+[The two roles of load](#the-two-roles-of-load).
 
 ### 5. "If it looks good to me, then they're getting a good workout."
 

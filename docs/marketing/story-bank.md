@@ -29,7 +29,8 @@ later, and polishing too early is how a true story turns into a manufactured one
 4. **Log what shipped.** Add a date and a channel under the entry once it runs,
    so the same story does not go out twice in a month.
 
-**Status:** scaffold. Every section below is empty on purpose.
+**Status:** sections 5, 6, and 7 have their first entries, from a brain dump on
+2026-08-19. Sections 1 through 4 are still empty on purpose.
 
 ---
 
@@ -58,7 +59,34 @@ This is the section most likely to produce the brand's central story, because it
 is the literal origin of "powered by physics." It is also the one most at risk of
 turning into a credentials list. Keep it to moments, not qualifications.
 
-_Not yet written._
+### Equipment first, teaching second
+
+Kaleen's own words, captured 2026-08-21 while writing nurture v2 email 4:
+
+> "I came at Pilates from precisely this equipment angle before I ever learned
+> how to teach. And when it was time to design my own reformer, I had to pick
+> every dimension, every adjustment range, every spring specification. They
+> needed to be defensible with physics, and I got a full education in what a
+> reformer actually is on the way through."
+
+**Why it matters:** it inverts the expected order. The assumption behind most of
+this brand's copy has been teacher-who-later-found-physics. It is the reverse,
+which makes the authority native rather than acquired, and it explains the
+equipment-first instinct that runs through everything.
+
+**The sharper story is still missing, and it is a better one than the original
+plan had.** If she already understood the equipment before she ever taught, then
+the scar in nurture v2 emails 1 and 2 gets more interesting, not less. She knew
+the machine and still assumed the tall man was engaging better than the short
+woman. She knew the machine and still said "if you don't feel it, you're doing it
+wrong." Knowing the physics did not automatically produce the teaching. Something
+had to connect them, and that connection is section 3.
+
+**Still needed here:** what she was actually doing on the equipment side, and how
+she ended up being the person who designs one. Both are load-bearing for nurture
+v2 email 5.
+
+Ran on: nurture v2 email 4 (not yet sent).
 
 ---
 
@@ -108,7 +136,59 @@ Prompts:
 Anonymize as you write, not later. Change or omit identifying details at capture
 time so there is nothing to scrub before publishing.
 
-_Not yet written._
+### The bridge that could only clench
+
+Group class, bridge on the reformer. The intent was never "get your hips up." It
+was lumbo-pelvic stability and the skill of the pelvic rock, articulating up one
+segment at a time. How you get to the top matters more than the fact that you got
+there.
+
+A bigger client was on the same springs as the rest of the room and could only
+get up by gripping. Everything above the pelvis moved as one block. I cued it
+every way I had: rock your pelvis, peel up like a wave, spine heavy and round
+like a hammock, lift your butt then your back then your ribs. None of it could
+land, because at that load the only route up was to clench.
+
+**The turn:** I added a spring. More support to keep the carriage closed, not
+more challenge. The articulation showed up almost immediately.
+
+**Why it matters:** this is the counterintuitive one. More spring made it easier.
+It is also the cleanest case of load serving a skill rather than supplying a
+stimulus, so it is the natural illustration for
+[the two roles of load](objections-and-empathy.md#the-two-roles-of-load). It
+gives the folder a second scene, one about movement quality, next to the
+tall-and-short footwork duet, which is about effort. Nikki wanted "more springs
+isn't always harder" for the tripwire. This is that.
+
+**Anonymized:** no name, no studio, body size described only as far as the
+physics requires.
+
+Ran on: not yet.
+
+### "Am I the problem?"
+
+Not one client, a pattern. Someone is performing an exercise while the teacher
+describes at length what they should be feeling and why it matters. And they are
+sitting there thinking: I do not feel that. I look different from everyone around
+me and they all seem to be getting it. Is it me?
+
+**The turn:** none of that is a movement-ability problem. It is a being-seen
+problem, and underneath it is usually a load problem. The load was never right
+for that body, so the sensation was never available, and the only conclusion left
+to reach was that they were the broken part.
+
+**Why it matters:** this is the emotional stake the folder was missing. It is the
+client's interior, which is exactly what makes it the teacher's stake, because
+the teacher is the only person in the room who can end it.
+
+**Handle with care.** The reader is the hero, so this is framed as what the
+reader can fix, never as what she has been doing to people. It also has a nastier
+cousin: going on at length about what an exercise should feel like, to someone
+who does not feel it. Keep that pointed at the industry habit, not at the reader.
+See [the hero rule](story-framework.md#the-hero-rule) and "punch up, never
+across" in [voice-and-messaging.md](voice-and-messaging.md).
+
+Ran on: not yet.
 
 ---
 
@@ -123,7 +203,44 @@ Prompts:
 Note that the survey data in [icp-profiles.md](icp-profiles.md) can support parts
 of this section. Where it does, cite the quote so the story stays grounded.
 
-_Not yet written._
+### Why it exists
+
+I built Pilates Physics to teach how load actually works inside a session. Load
+is a teaching tool, the same as imagery, verbal cues, and hands-on work, and it
+is the only one of the four that gets treated as fixed. Meanwhile the industry is
+full of confident, incorrect statements about spring physics, which raises a fair
+question about how anyone is supposed to personalize a session while holding
+wrong information about the main variable.
+
+**Voice note before any of this ships.** Aim it at the claims and at the pipeline
+that produced them, never at the teacher repeating them. See "punch up, never
+across" in [voice-and-messaging.md](voice-and-messaging.md).
+
+Ran on: not yet.
+
+### Parking lot: the business case. Not for copy yet.
+
+The teacher-facing outcome, in Kaleen's own words: getting the setup right keeps
+your classes full, makes you the teacher people fight to book, keeps churn low
+and retention high, and lets you earn more because you can adapt.
+
+Probably all true, and none of it is grounded. It is n equals one, from one
+teacher at one studio, and the 22 survey responses behind
+[icp-profiles.md](icp-profiles.md) contain no retention or income language at
+all. This is the same footing progression is on, so it gets the same treatment as
+the caveat in [peace-framework.md](peace-framework.md).
+
+**Rules until that changes.**
+
+- Tell it as a story about my own classes. Never as a promise about the reader's.
+- Keep it out of headlines, subject lines, and sales-page claims.
+- Watch the tone. "Earn more, be in demand" drifts toward business-coach copy,
+  which cuts against "confident, not hyped."
+- Keep adding real phrasing here as it turns up, especially anything a student
+  says unprompted.
+- Promote it only once students say it back in their own words. Add a question to
+  the next post-workshop survey that could produce that language, something like
+  "has anything changed in how your clients book with you?"
 
 ---
 
@@ -138,7 +255,36 @@ Prompts:
 Short entries. These are not full stories, they are Mirror lines and subject
 lines. Two sentences each is plenty, and volume matters more than quality here.
 
-_Not yet written._
+**"They see me."** What a client says, in some form, right after a setup change
+lands. Not "good class." Closer to: she knows what she is doing, she saw that I
+am built differently, she knew what to change. That reaction is the actual
+product, and it is a sharper End Result than "a class built for your body."
+
+**The blank look I do not get.** Most rooms have a face in them that says "what
+am I supposed to be feeling?" I rarely get it. Not because of better cues, but
+because when someone looks like they are struggling or breathing through it, the
+first thing I change is the load. Useful as proof precisely because it is small,
+specific, and checkable.
+
+**Concert tickets.** Students say signing up for my classes is like trying to get
+concert tickets, and of the teachers at my studio mine fill fastest. Capture
+only. Read the parking lot in section 6 before this goes anywhere.
+
+**"I don't feel that."** The client sentence the whole brand hangs off. It is
+honest information, and the industry habit is to hand it straight back as a
+personal failing. Already spent in nurture v2 email 2, so check that sequence
+before reusing it as a hook.
+
+**"It's just there."** On load being the tool nobody counts as a tool: "Load is
+just so often not the lever. It's not a lever that's considered. It's just there.
+It's background. It's unchangeable. And that's just not true." The assumption
+underneath almost every objection. Written up as a reserved enemy beat in
+[objections-and-empathy.md](objections-and-empathy.md#the-enemy-underneath).
+
+**The wrong category of fix.** When a client cannot feel it, reaching for another
+cue is not a weaker fix, it is the wrong category of fix. Load is a teaching tool
+sitting right next to cues, imagery, and hands-on work, and it is the one that
+never gets considered. Spent in nurture v2 email 3, in its softened form.
 
 ---
 
