@@ -906,7 +906,7 @@ I just wanted to drop in real quick and remind you that your special $39 price f
 
 [Get it now →](LINK)
 
-Hope to see you in class.
+Hope to see you in there.
 
 Kaleen
 
