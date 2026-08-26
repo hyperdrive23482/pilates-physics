@@ -4,7 +4,7 @@ A durable, append-only record of who signs in, from where, and what they open.
 
 **Primary purpose: chargeback evidence.** Card networks ask for IP addresses, timestamps, and recorded activity. `auth.audit_log_entries` is pruned by Supabase and was empty when we needed it during a Mastercard 4837 dispute. Product analytics is a secondary read of the same rows.
 
-Status: **Phase 2 built, unverified. Phase 1 verified on staging, 2026-08-26.** Migration `042` applied; `login`, `portal_view`, and `certificate_download` all confirmed writing real client IPs, email snapshots, and server-verified `entitled` flags. `tool_open` and `checkout_start` are deployed but not yet exercised. Phase 3 is unstarted.
+Status: **Phase 3 built, unverified. Phase 2 built, unverified. Phase 1 verified on staging, 2026-08-26.** Migration `042` applied; `login`, `portal_view`, and `certificate_download` all confirmed writing real client IPs, email snapshots, and server-verified `entitled` flags. `tool_open` and `checkout_start` are deployed but not yet exercised. Migration `043` has not been pushed.
 
 All three §7 open items were folded into Phase 2. One Phase 2 item is deferred: the `auth.audit_log_entries` mirror, which is still waiting on the count query in §1.
 
@@ -770,41 +770,41 @@ Built 2026-08-26, not yet verified on staging.
 
 ## 6. Phase 3 — analytics, privacy, retention
 
-### Analytics rollups
+Built 2026-08-26, not yet verified. **Migration `043` still needs `supabase db push`.**
 
-Extend `AdminAnalytics.jsx` / `api/admin/analytics-summary.js`:
+### Retention: 26 months, redact rather than delete
 
-- opens per content item, over entitled users
-- tool usage by slug
-- **fraction of buyers who ever logged in at all** — the number actually worth knowing
+`043_activity_retention.sql` replaces the append-only trigger function from 042. The original blocked every UPDATE, which would also have blocked the redaction this phase depends on. The new version permits a past-horizon UPDATE only when it nulls `ip_address` and `user_agent` and leaves every other column identical, checked field by field. Rows inside the window stay completely immutable, and deletes are still refused inside the window. A partial index supports the sweep's scan.
 
-### Retention: 26 months of full detail
+`api/cron/redact-activity.js` runs daily at 03:30 UTC via `vercel.json`, using the same `CRON_SECRET` check as `publish-scheduled`. It nulls the two fields and never deletes rows, so historical engagement stays countable without holding personal data beyond its stated purpose.
 
-Then strip `ip_address` and `user_agent` and keep the rest as aggregate.
+The JS horizon is deliberately two days more conservative than the trigger's `now() - interval '26 months'`. `setUTCMonth` overflows short months (31 March minus one month gives 3 March) where Postgres clamps to 28 February, so without the margin the job could occasionally ask to redact a row the trigger still considers protected.
 
-Reasoning: the usual card-network dispute window is 120 days, but pre-arbitration and arbitration extend past that, and Visa's outer limit for certain reason codes runs to 540 days. 24 months covers essentially every real scenario; 26 gives margin. The `26 months` interval in the append-only trigger is already set to match.
+### Analytics
 
-Do **not** write "indefinitely" into the policy. GDPR storage limitation requires a stated period, and a defined one is also easier to defend.
+`api/admin/analytics-summary.js` gains an `engagement` block, rendered by a new section in `AdminAnalytics.jsx`.
 
-### Legal basis: legitimate interest. No consent mechanism needed.
+The number worth having: **what fraction of buyers ever signed in**. This is computed from `auth.users.last_sign_in_at`, *not* from `activity_events`. Event logging only starts in August 2026, so counting logins from the log would report nearly every existing customer as having never signed in. `last_sign_in_at` covers the whole life of the account.
 
-GDPR Recital 47 names fraud prevention as a legitimate interest explicitly, and access logging tied to delivering purchased content also sits under contract performance. No cookie banner is triggered: cookie consent rules bite on storing or reading information on the user's *device*, and this logs a request the server already receives.
+Content and tools are ranked by **distinct people, not raw hits**, on the grounds that one person replaying a recording ten times is one person who wanted it. Both counts are shown.
 
-**Flagged as genuinely uncertain rather than guessed:**
+Aggregation happens in JS, matching the rest of that handler. That is fine at current volume; the read is capped at 50,000 events and the cap is reported to the UI rather than silently truncating. Move it to a database view if the table outgrows that.
 
-- The *analytics* reuse is the softer half of the argument. It is defensible as a compatible secondary purpose, but it is the part a regulator would push on. The clean answer is to document a short Legitimate Interests Assessment.
-- The current `src/pages/Privacy.jsx` has a CCPA section but **no GDPR/UK section at all**. That is a pre-existing gap, independent of this work, and worth closing at the same time.
-- This is not legal advice.
+### Privacy policy
 
-### Privacy policy edits (`src/pages/Privacy.jsx`)
+`src/pages/Privacy.jsx`, effective date moved to 26 August 2026.
 
-- New subsection under §1 "Information We Collect": server-side access logs (IP address, browser user agent, timestamps, which content was opened)
-- New bullet under §2 "How We Use Your Information": fraud prevention and payment-dispute resolution
-- Rewrite §6 "Data Retention" with the concrete 26-month figure and the post-horizon stripping
-- New section: GDPR / UK data subject rights, plus the legitimate-interest basis stated explicitly
-- Bump the effective date
+- New "Account activity logs" item in §1, saying plainly that the records are written by our servers rather than the browser, and that the log can be added to but not edited.
+- Two new purposes in §2: fraud and dispute defence, and understanding which materials get used.
+- §4 states that these logs use no cookies and store nothing on the visitor's device, which is the basis for not showing a consent banner for them.
+- §6 states the 26-month period, why it was chosen, and what happens after. It also says explicitly that activity records survive account deletion in unlinked form, because a dispute can arrive long after an account closes.
+- New §9 covering UK and EU rights, naming contract performance for service data and legitimate interests for the activity logs, and the right to object. Sections 9 to 11 renumbered to 10 to 12.
 
----
+### Legal basis, and what remains uncertain
+
+Legitimate interest, with no consent mechanism required. GDPR Recital 47 names fraud prevention explicitly, and nothing here reads or stores anything on the visitor's device, which is what triggers cookie-consent rules.
+
+Still flagged rather than resolved: the analytics reuse is the softer half of that argument and is the part a regulator would press on. Documenting a short Legitimate Interests Assessment would close it. None of this is legal advice.
 
 ## 7. Open items from the Phase 1 verification
 

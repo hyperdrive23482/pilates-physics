@@ -57,6 +57,8 @@ export default function AdminAnalytics() {
               <StatCard label="Questions submitted" value={data.totals.total_questions} />
             </div>
 
+            {data.engagement && <Engagement engagement={data.engagement} />}
+
             <section>
               <h2
                 style={{
@@ -103,6 +105,105 @@ export default function AdminAnalytics() {
         )}
       </main>
     </div>
+  )
+}
+
+function Engagement({ engagement }) {
+  const { buyers, buyers_signed_in: signedIn, buyers_never_signed_in: never } = engagement
+  const pct = buyers ? Math.round((signedIn / buyers) * 100) : 0
+
+  return (
+    <section style={{ marginBottom: '3rem' }}>
+      <SectionHeading>Engagement</SectionHeading>
+
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gap: '1rem',
+          marginBottom: '2rem',
+        }}
+      >
+        {/* Counted from auth.users.last_sign_in_at rather than the activity
+            log, which only starts in Aug 2026 and would report nearly every
+            existing customer as never having signed in. */}
+        <StatCard label="Buyers who signed in" value={`${pct}%`} />
+        <StatCard label="Buyers never signed in" value={never} />
+        <StatCard label="Active last 30 days" value={engagement.active_users_30d} />
+        <StatCard label="Recorded events" value={engagement.recorded_events} />
+      </div>
+
+      {engagement.truncated && (
+        <p style={{ fontSize: '0.75rem', color: '#e0a458', margin: '0 0 1rem' }}>
+          Event read hit its cap, so the breakdowns below are partial.
+        </p>
+      )}
+
+      <EngagementTable
+        title="Content opened"
+        rows={engagement.content}
+        empty="No content opens recorded yet."
+      />
+      <EngagementTable
+        title="Tools used"
+        rows={engagement.tools}
+        empty="No tool opens recorded yet."
+      />
+    </section>
+  )
+}
+
+function EngagementTable({ title, rows, empty }) {
+  return (
+    <div style={{ marginBottom: '1.5rem' }}>
+      <SectionHeading>{title}</SectionHeading>
+      {rows?.length ? (
+        <div
+          className="pp-table-wrap"
+          style={{ background: 'var(--color-surface)', border: '1px solid var(--color-rule)' }}
+        >
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--color-rule)' }}>
+                <Th>Item</Th>
+                <Th align="right">People</Th>
+                <Th align="right">Opens</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.key} style={{ borderBottom: '1px solid var(--color-rule)' }}>
+                  <Td>{r.label}</Td>
+                  {/* Distinct people first: one person replaying a recording
+                      ten times is one person who wanted it. */}
+                  <Td align="right" mono>{r.distinct_users}</Td>
+                  <Td align="right" mono>{r.opens}</Td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p style={{ fontSize: '0.85rem', color: 'var(--color-ink-muted)', margin: 0 }}>{empty}</p>
+      )}
+    </div>
+  )
+}
+
+function SectionHeading({ children }) {
+  return (
+    <h2
+      style={{
+        fontSize: '0.7rem',
+        fontWeight: 600,
+        letterSpacing: '0.15em',
+        textTransform: 'uppercase',
+        color: 'var(--color-ink-muted)',
+        marginBottom: '1rem',
+      }}
+    >
+      {children}
+    </h2>
   )
 }
 

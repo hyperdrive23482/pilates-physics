@@ -52,7 +52,7 @@ export default function Privacy() {
       </p>
       <h1 style={h1Style}>Privacy Policy</h1>
       <p style={{ ...pStyle, color: 'var(--color-ink-dim)' }}>
-        Effective date: April 13, 2026
+        Effective date: August 26, 2026
       </p>
 
       <p style={pStyle}>
@@ -83,6 +83,14 @@ export default function Privacy() {
           device information, pages visited, and referring URL through cookies or similar
           technologies.
         </li>
+        <li>
+          <strong style={{ color: 'var(--color-ink)' }}>Account activity logs:</strong>{' '}
+          When you sign in, start a purchase, or open material in the member portal, our
+          servers record what happened, when it happened, the IP address the request came
+          from, and your browser user agent. These records are written by our servers rather
+          than by your browser, and they are stored in a log that can be added to but not
+          edited or overwritten.
+        </li>
       </ul>
 
       <h2 style={h2Style}>2. How We Use Your Information</h2>
@@ -96,6 +104,10 @@ export default function Privacy() {
           Pilates Physics (you can opt out at any time)</li>
         <li>Respond to your comments, questions, and support requests</li>
         <li>Monitor and analyze usage trends to improve user experience</li>
+        <li>Detect and investigate fraud, secure your account, and defend against payment
+          disputes and chargebacks</li>
+        <li>Understand which workshop materials are actually used, so we can make more of
+          what people find useful</li>
       </ul>
 
       <h2 style={h2Style}>3. Email Communications</h2>
@@ -112,6 +124,11 @@ export default function Privacy() {
         browsing activity. Cookies are small text files stored on your device. You can control
         cookie settings through your browser preferences. Disabling cookies may affect the
         functionality of certain parts of the Site.
+      </p>
+      <p style={pStyle}>
+        The account activity logs described in Section 1 are recorded by our servers as part
+        of handling your request. They do not rely on cookies, they do not store anything on
+        your device, and they are not shared with advertising networks.
       </p>
 
       <h2 style={h2Style}>5. Third-Party Services</h2>
@@ -134,6 +151,20 @@ export default function Privacy() {
         longer use your information, please contact us at the address below. We will retain
         and use your information as necessary to comply with legal obligations, resolve
         disputes, and enforce our agreements.
+      </p>
+      <p style={pStyle}>
+        Account activity logs are kept in full detail for 26 months. We chose that period
+        because card network dispute windows commonly run 120 days but can extend
+        considerably longer through pre-arbitration and arbitration, and we need the records
+        to still exist when a dispute arrives. After 26 months we automatically remove the IP
+        address and browser user agent from those records and keep only the remaining history
+        of the event.
+      </p>
+      <p style={pStyle}>
+        If an account is deleted, its activity records are unlinked from the account but the
+        records themselves are retained for the period above. These records are the evidence
+        we rely on to answer a payment dispute, and a dispute can be raised long after an
+        account is closed.
       </p>
 
       <h2 style={h2Style}>7. Data Security</h2>
@@ -160,7 +191,26 @@ export default function Privacy() {
         To exercise any of these rights, please contact us at hello@pilatesphysics.com.
       </p>
 
-      <h2 style={h2Style}>9. Children's Privacy</h2>
+      <h2 style={h2Style}>9. Your Rights Under UK and EU Data Protection Law</h2>
+      <p style={pStyle}>
+        If you are located in the United Kingdom or the European Economic Area, you have the
+        right to access the personal information we hold about you, to have it corrected or
+        deleted, to receive a copy of it, to object to or restrict certain processing, and to
+        lodge a complaint with your local supervisory authority.
+      </p>
+      <p style={pStyle}>
+        Most of your information is processed so that we can perform our contract with you,
+        which is how we deliver the workshops and materials you purchase. Account activity
+        logs, including IP addresses, are processed on the basis of our legitimate interests
+        in preventing fraud, keeping your account secure, and defending against payment
+        disputes. You can object to that processing, though we may need to continue it where
+        we have compelling grounds, such as an open dispute over a payment.
+      </p>
+      <p style={pStyle}>
+        To exercise any of these rights, contact us at hello@pilatesphysics.com.
+      </p>
+
+      <h2 style={h2Style}>10. Children's Privacy</h2>
       <p style={pStyle}>
         The Site is not directed to individuals under the age of 18. We do not knowingly
         collect personal information from children. If we become aware that we have
@@ -168,13 +218,13 @@ export default function Privacy() {
         delete that information.
       </p>
 
-      <h2 style={h2Style}>10. Changes to This Policy</h2>
+      <h2 style={h2Style}>11. Changes to This Policy</h2>
       <p style={pStyle}>
         We may update this Privacy Policy from time to time. Changes will be posted on this
         page with an updated effective date. We encourage you to review this page periodically.
       </p>
 
-      <h2 style={h2Style}>11. Contact</h2>
+      <h2 style={h2Style}>12. Contact</h2>
       <p style={pStyle}>
         If you have questions about this Privacy Policy or your personal data, please contact
         us at:
