@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams, Link } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams, Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminWorkshop } from '../../hooks/admin/useAllWorkshops'
@@ -10,6 +10,33 @@ import WorkshopForm from '../../components/admin/WorkshopForm'
 import ContentEditor from '../../components/admin/ContentEditor'
 import WorkshopFeedbackPanel from '../../components/admin/WorkshopFeedbackPanel'
 import SurveyConfigEditor from '../../components/admin/SurveyConfigEditor'
+
+const CLONE_DEFAULT_OPTIONS = {
+  copy_content: true,
+  include_recordings: false,
+  copy_survey: true,
+}
+
+// Fields a clone must not inherit: they belong to the session that was cloned.
+// The endpoint resets these too; blanking them here means the admin sees an
+// honest form before creating. kit_tag is cleared because it auto-grants
+// access, so it should be a deliberate paste rather than an inherited default.
+function cloneDefaults(source) {
+  return {
+    ...source,
+    title: `${source.title} (copy)`,
+    slug: `${source.slug}-copy`,
+    status: 'draft',
+    scheduled_at: null,
+    zoom_link: null,
+    zoom_passcode: null,
+    recording_url: null,
+    kit_tag: null,
+    bonus_webinar_id: null,
+    bonus_starts_at: null,
+    bonus_ends_at: null,
+  }
+}
 
 const TABS = [
   { id: 'details', label: 'Details' },
@@ -27,10 +54,16 @@ export default function AdminWorkshopEdit() {
   const { workshop, loading, refetch } = useAdminWorkshop(isNew ? null : slug)
   const { request } = useAdminAPI()
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [tab, setTab] = useState('details')
   const [saving, setSaving] = useState(false)
   const [bonusOptions, setBonusOptions] = useState([])
   const [backfilling, setBackfilling] = useState(false)
+  const [cloneSource, setCloneSource] = useState(null)
+  const [cloneLoading, setCloneLoading] = useState(false)
+  const [cloneOptions, setCloneOptions] = useState(CLONE_DEFAULT_OPTIONS)
+
+  const cloneSlug = isNew ? searchParams.get('from') : null
 
   useEffect(() => {
     let cancelled = false
@@ -46,10 +79,58 @@ export default function AdminWorkshopEdit() {
     }
   }, [workshop?.id])
 
+  // Load the full source row whenever ?from=<slug> changes, so the form can be
+  // prefilled with everything the clone will carry over.
+  useEffect(() => {
+    if (!cloneSlug) {
+      setCloneSource(null)
+      setCloneLoading(false)
+      return
+    }
+    let cancelled = false
+    setCloneLoading(true)
+    supabase
+      .from('webinars')
+      .select('*')
+      .eq('slug', cloneSlug)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (cancelled) return
+        setCloneSource(error ? null : data ?? null)
+        setCloneLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [cloneSlug])
+
+  function selectCloneSource(slug) {
+    setSearchParams(slug ? { from: slug } : {}, { replace: true })
+  }
+
   async function save(payload) {
+    // Guard the window between picking a source and its row arriving, so a
+    // fast submit can't quietly create a blank workshop instead of a copy.
+    if (isNew && cloneSlug && cloneLoading) {
+      throw new Error('Still loading the workshop you are copying. Try again in a moment.')
+    }
+    if (isNew && cloneSlug && !cloneSource) {
+      throw new Error(`No workshop found with the slug "${cloneSlug}".`)
+    }
     setSaving(true)
     try {
-      if (isNew) {
+      if (isNew && cloneSource) {
+        const result = await request('/api/admin/clone-workshop', {
+          method: 'POST',
+          body: { source_id: cloneSource.id, overrides: payload, options: cloneOptions },
+        })
+        if (result?.warnings?.length) {
+          window.alert(
+            `Workshop created, but with warnings:\n\n${result.warnings.join('\n\n')}`,
+          )
+        }
+        navigate(`/admin/workshops/${result.slug}/edit`, { replace: true })
+      } else if (isNew) {
         const { data, error } = await supabase
           .from('webinars')
           .insert(payload)
@@ -165,14 +246,28 @@ export default function AdminWorkshopEdit() {
           </nav>
         )}
 
+        {isNew && (
+          <ClonePicker
+            options={bonusOptions}
+            selectedSlug={cloneSlug ?? ''}
+            onSelect={selectCloneSource}
+            notFound={!!cloneSlug && !cloneLoading && !cloneSource}
+            cloneOptions={cloneOptions}
+            onToggle={(key, value) => setCloneOptions((o) => ({ ...o, [key]: value }))}
+          />
+        )}
+
         {isNew || tab === 'details' ? (
           loading ? (
             <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>Loading…</p>
           ) : (
             <WorkshopForm
-              initial={workshop}
+              key={isNew ? cloneSource?.id ?? 'blank' : workshop?.id}
+              initial={isNew ? (cloneSource ? cloneDefaults(cloneSource) : null) : workshop}
               onSubmit={save}
-              submitLabel={isNew ? 'Create workshop' : 'Save changes'}
+              submitLabel={
+                isNew ? (cloneSource ? 'Create copy' : 'Create workshop') : 'Save changes'
+              }
               busy={saving}
               workshops={bonusOptions}
               onBackfill={isNew ? undefined : handleBackfill}
@@ -192,6 +287,120 @@ export default function AdminWorkshopEdit() {
         {!isNew && tab === 'enrolled' && <EnrolledUsersTab workshopId={workshop?.id} />}
       </main>
     </div>
+  )
+}
+
+// Lets a new workshop start as a copy of an existing one. Picking a source
+// prefills the form below; submitting then routes through /api/admin/clone-workshop,
+// which also duplicates the content items and their uploaded files.
+function ClonePicker({ options, selectedSlug, onSelect, notFound, cloneOptions, onToggle }) {
+  const sources = options.filter((w) => w.kind === 'webinar')
+  return (
+    <div
+      style={{
+        border: '1px solid var(--color-rule)',
+        background: 'var(--color-surface)',
+        padding: '1rem 1.25rem',
+        marginBottom: '2rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.75rem',
+      }}
+    >
+      <label style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+        <span
+          style={{
+            fontSize: '0.7rem',
+            fontWeight: 600,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            color: 'var(--color-ink-muted)',
+          }}
+        >
+          Start from an existing workshop
+        </span>
+        <select
+          value={selectedSlug}
+          onChange={(e) => onSelect(e.target.value)}
+          style={{
+            padding: '0.6rem 0.75rem',
+            background: 'var(--color-bg)',
+            color: 'var(--color-ink)',
+            border: '1px solid var(--color-rule)',
+            fontSize: '0.9rem',
+            fontFamily: 'var(--font-serif)',
+            outline: 'none',
+          }}
+        >
+          <option value="">Start blank</option>
+          {sources.map((w) => (
+            <option key={w.id} value={w.slug}>
+              {w.title}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      {notFound && (
+        <p style={{ color: '#ff7d7d', fontSize: '0.8rem', margin: 0 }}>
+          No workshop found with the slug &ldquo;{selectedSlug}&rdquo;. Pick one from the list.
+        </p>
+      )}
+
+      {selectedSlug && !notFound && (
+        <>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem 1.5rem' }}>
+            <CloneCheck
+              label="Copy content items"
+              checked={cloneOptions.copy_content}
+              onChange={(v) => onToggle('copy_content', v)}
+            />
+            <CloneCheck
+              label="Include recording files"
+              checked={cloneOptions.include_recordings}
+              disabled={!cloneOptions.copy_content}
+              onChange={(v) => onToggle('include_recordings', v)}
+            />
+            <CloneCheck
+              label="Copy survey questions"
+              checked={cloneOptions.copy_survey}
+              onChange={(v) => onToggle('copy_survey', v)}
+            />
+          </div>
+          <span
+            style={{ fontSize: '0.72rem', color: 'var(--color-ink-muted)', lineHeight: 1.6 }}
+          >
+            The date, Zoom details, recording URL, Kit tag, early-bonus window and survey
+            dates are left blank on purpose. Enrolled users, questions and feedback are
+            never copied.
+          </span>
+        </>
+      )}
+    </div>
+  )
+}
+
+function CloneCheck({ label, checked, disabled, onChange }) {
+  return (
+    <label
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '0.45rem',
+        fontSize: '0.85rem',
+        color: disabled ? 'var(--color-ink-muted)' : 'var(--color-ink)',
+        cursor: disabled ? 'not-allowed' : 'pointer',
+        opacity: disabled ? 0.6 : 1,
+      }}
+    >
+      <input
+        type="checkbox"
+        checked={checked && !disabled}
+        disabled={disabled}
+        onChange={(e) => onChange(e.target.checked)}
+      />
+      {label}
+    </label>
   )
 }
 

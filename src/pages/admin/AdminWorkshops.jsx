@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Trash2, Edit3 } from 'lucide-react'
+import { Plus, Trash2, Edit3, Copy } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAllWorkshops } from '../../hooks/admin/useAllWorkshops'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
@@ -130,6 +130,14 @@ export default function AdminWorkshops() {
                           style={iconLinkStyle}
                         >
                           <Edit3 size={14} />
+                        </Link>
+                        <Link
+                          to={`/admin/workshops/new?from=${encodeURIComponent(w.slug)}`}
+                          aria-label="Duplicate"
+                          title="Duplicate this workshop and its content"
+                          style={iconLinkStyle}
+                        >
+                          <Copy size={14} />
                         </Link>
                         <button
                           type="button"
