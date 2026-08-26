@@ -4,7 +4,11 @@ A durable, append-only record of who signs in, from where, and what they open.
 
 **Primary purpose: chargeback evidence.** Card networks ask for IP addresses, timestamps, and recorded activity. `auth.audit_log_entries` is pruned by Supabase and was empty when we needed it during a Mastercard 4837 dispute. Product analytics is a secondary read of the same rows.
 
-Status: **Phase 1 code committed on `feature/activity-log`; migration `042` applied to the database.** Still unverified: the whole write path needs a Vercel preview, since no service-role key exists locally (see §4). Phases 2 and 3 are unstarted.
+Status: **Phase 1 verified on staging, 2026-08-26.** Migration `042` applied; `login`, `portal_view`, and `certificate_download` all confirmed writing real client IPs, email snapshots, and server-verified `entitled` flags. `tool_open` and `checkout_start` are deployed but not yet exercised. Phases 2 and 3 are unstarted.
+
+Three open items carried forward, in §7.
+
+Debugging note for next time: client events are silent by design, so when they go missing the cause is usually environmental rather than a code bug. During the first verification pass three things stacked up: the branch was not merged so staging had no `/api/track`; then a long-lived browser tab kept running the pre-deploy bundle, because React Router route changes never re-fetch JS. The console named a bundle hash that no longer existed on the server, which is what gave it away. Check `curl -sI` on the deployment and the bundle hash in the console before suspecting the instrumentation.
 
 The original brief that produced this plan is preserved in the appendix at the bottom.
 
@@ -787,6 +791,14 @@ GDPR Recital 47 names fraud prevention as a legitimate interest explicitly, and 
 - Bump the effective date
 
 ---
+
+## 7. Open items from the Phase 1 verification
+
+**1. Rename `/api/track`.** Filter lists (uBlock Origin, AdGuard, EasyPrivacy) commonly block URL paths matching `/track`. This was *not* observed causing a problem during the 2026-08-26 verification — no `ERR_BLOCKED_BY_CLIENT` appeared — so this is a known risk rather than a confirmed one. It matters anyway because the failure mode is silent and invisible: a blocked ping leaves no trace, so a dispute timeline would show a gap indistinguishable from a customer who never logged in, and the customers affected would skew toward the privacy-conscious. Suggested target `/api/portal/activity`, avoiding `track`, `analytics`, `event`, `collect`, `beacon`, `stat`, `pixel`. Touches the file path and the fetch URL in `src/lib/track.js`; the internal `track()` helper name can stay.
+
+**2. `path` on `login` events is imprecise.** Observed `/portal` for a password sign-in that happened on `/login`. `track()` reads `window.location.pathname` inside the async IIFE, after `await getSession()` resolves, by which time the Login page has already navigated. Not evidence-critical (the `event_type` already says what happened) but it is a small inaccuracy in a record meant to be precise. One-line fix: capture the pathname synchronously before the IIFE.
+
+**3. Client-fired `tool_open` for the four client-only tools.** `spring-load-calculator`, `springs-101`, `reformer-force-modeler`, and `class-simulator` make no server call, so Phase 1 gives them no `tool_open` at all. A client-fired event with `source: 'client'` would close the coverage gap for roughly fifteen lines in `ToolHost.jsx`, and the server-side entitlement re-check in the track endpoint already applies. Weaker than the server-observed version, which is exactly what the `source` column exists to record.
 
 ## Appendix: original brief
 
