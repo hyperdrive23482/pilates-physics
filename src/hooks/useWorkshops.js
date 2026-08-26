@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import { isActiveEntitlement } from '../lib/entitlements'
 import { useAdmin } from './useAdmin'
 
 export function useWorkshops() {
@@ -179,6 +180,7 @@ export function useMyWorkshops(userId) {
           setWorkshops(
             sortByStatus(
               (data || [])
+                .filter(isActiveEntitlement)
                 .map((e) => e.workshop)
                 .filter(Boolean)
             )

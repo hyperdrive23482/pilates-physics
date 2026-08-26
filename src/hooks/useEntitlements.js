@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import { isActiveEntitlement } from '../lib/entitlements'
 import { useAdmin } from './useAdmin'
 
 export function useEntitlements(userId) {
@@ -17,17 +18,18 @@ export function useEntitlements(userId) {
 
     supabase
       .from('user_entitlements')
-      .select('webinar_id')
+      // expires_at is fetched so this gate can match what the server enforces.
+      .select('webinar_id, expires_at')
       .eq('user_id', userId)
       .then(({ data, error }) => {
-        if (!error) setEntitlements((data || []).map((e) => e.webinar_id))
+        if (!error) setEntitlements(data || [])
         setLoading(false)
       })
   }, [userId, adminLoading])
 
   function hasAccess(workshopId) {
     if (isAdmin) return true
-    return entitlements.includes(workshopId)
+    return isActiveEntitlement(entitlements.find((e) => e.webinar_id === workshopId))
   }
 
   return { entitlements, hasAccess, loading: loading || adminLoading }
