@@ -1,5 +1,6 @@
 import { Download, FileText, PlayCircle, Gift, Link as LinkIcon, Presentation, ExternalLink } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
+import { track } from '../../lib/track'
 
 const STORAGE_BUCKET = 'webinar-content'
 const SIGNED_URL_TTL_SECONDS = 3600
@@ -48,10 +49,25 @@ function triggerDownload(url, filename) {
   a.remove()
 }
 
-export default function ContentItem({ item }) {
+// The recording_url fallback in WorkshopPortal renders a synthetic item whose
+// id is the string 'main-recording' rather than a row UUID. content_id is a
+// uuid column, so anything that isn't one is dropped and the label survives in
+// metadata instead.
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+export default function ContentItem({ item, webinarId }) {
   const { icon: Icon, accent } = typeConfig[item.type] || typeConfig.resource
 
   async function handleClick(e) {
+    // Record before anything can return or navigate. Fire-and-forget, so it
+    // never delays opening the file. VIEW_TYPES open a tab; everything else
+    // resolves to a real file download.
+    track(VIEW_TYPES.has(item.type) ? 'content_click' : 'download', {
+      webinar_id: webinarId ?? null,
+      content_id: UUID_RE.test(String(item.id ?? '')) ? item.id : null,
+      metadata: { content_type: item.type, content_title: item.title },
+    })
+
     // External http(s) URLs: let the native anchor open them in a new tab.
     if (!isStoragePath(item.file_url)) return
     e.preventDefault()

@@ -4,6 +4,7 @@ import { requireUser } from './_lib/require-user.js'
 import { findUserByEmail } from './_lib/provision-purchase.js'
 import { sendAuthEmail } from './_lib/resend.js'
 import { tagSubscriber } from './_lib/kit.js'
+import { logActivity } from './_lib/log-activity.js'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -150,6 +151,20 @@ export default async function handler(req, res) {
         console.error('springs101 Kit tagging failed:', err)
       }
     }
+
+    // Pre-purchase touchpoint. Often the earliest server-observed contact with
+    // a person who later buys, so its IP is worth having: it helps establish a
+    // relationship predating the charge. Not a tool_open -- this endpoint is
+    // the claim/signup, not someone using the calculator.
+    await logActivity(req, {
+      userId,
+      email: normalizedEmail,
+      eventType: 'lead_magnet_claim',
+      source: 'server',
+      webinarId: calculatorRow?.id ?? null,
+      webinarSlug: calculatorRow?.slug ?? null,
+      metadata: { label: userState },
+    })
 
     return res.status(200).json({ ok: true, userState, emailSent })
   } catch (err) {

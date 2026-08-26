@@ -10,6 +10,11 @@ import { supabase } from './supabase'
  * session back out of storage is a race.
  */
 export function track(eventType, payload = {}, accessToken = null) {
+  // Read the path synchronously, before any await. Sign-in flows navigate the
+  // moment the session resolves, so reading it later records where the user
+  // landed rather than where the event happened.
+  const path = window.location.pathname
+
   ;(async () => {
     try {
       let token = accessToken
@@ -21,7 +26,9 @@ export function track(eventType, payload = {}, accessToken = null) {
       }
       if (!token) return
 
-      await fetch('/api/track', {
+      // Not /api/track: that path is blocked by common ad-blocker filter
+      // lists, and a blocked ping is silent. See api/portal/activity.js.
+      await fetch('/api/portal/activity', {
         method: 'POST',
         keepalive: true,
         headers: {
@@ -30,7 +37,7 @@ export function track(eventType, payload = {}, accessToken = null) {
         },
         body: JSON.stringify({
           event_type: eventType,
-          path: window.location.pathname,
+          path,
           ...payload,
         }),
       })

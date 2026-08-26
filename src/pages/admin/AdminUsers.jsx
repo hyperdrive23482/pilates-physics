@@ -4,6 +4,7 @@ import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import { useAllWorkshops } from '../../hooks/admin/useAllWorkshops'
 import AdminNav from '../../components/admin/AdminNav'
 import EntitlementManager from '../../components/admin/EntitlementManager'
+import UserActivityPanel from '../../components/admin/UserActivityPanel'
 
 export default function AdminUsers() {
   const { user, signOut } = useEnrollment()
@@ -128,6 +129,11 @@ export default function AdminUsers() {
                       <div style={{ fontSize: '0.78rem', color: 'var(--color-ink-muted)' }}>
                         {u.email}
                       </div>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--color-ink-muted)' }}>
+                        {u.last_sign_in_at
+                          ? `Last sign-in ${new Date(u.last_sign_in_at).toLocaleDateString()}`
+                          : 'Never signed in'}
+                      </div>
                     </div>
                     <div style={{ fontSize: '0.8rem', color: 'var(--color-ink-muted)' }}>
                       {u.entitlements.length} entitlement{u.entitlements.length === 1 ? '' : 's'}
@@ -144,6 +150,21 @@ export default function AdminUsers() {
                         workshops={workshops}
                         onChange={refetch}
                       />
+                      <div style={{ marginTop: '1rem' }}>
+                        <h3
+                          style={{
+                            fontSize: '0.65rem',
+                            fontWeight: 600,
+                            letterSpacing: '0.15em',
+                            textTransform: 'uppercase',
+                            color: 'var(--color-ink-muted)',
+                            margin: '0 0 0.5rem',
+                          }}
+                        >
+                          Activity
+                        </h3>
+                        <UserActivityPanel userRow={u} />
+                      </div>
                     </div>
                   )}
                 </div>

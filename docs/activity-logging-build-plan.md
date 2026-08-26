@@ -4,9 +4,9 @@ A durable, append-only record of who signs in, from where, and what they open.
 
 **Primary purpose: chargeback evidence.** Card networks ask for IP addresses, timestamps, and recorded activity. `auth.audit_log_entries` is pruned by Supabase and was empty when we needed it during a Mastercard 4837 dispute. Product analytics is a secondary read of the same rows.
 
-Status: **Phase 1 verified on staging, 2026-08-26.** Migration `042` applied; `login`, `portal_view`, and `certificate_download` all confirmed writing real client IPs, email snapshots, and server-verified `entitled` flags. `tool_open` and `checkout_start` are deployed but not yet exercised. Phases 2 and 3 are unstarted.
+Status: **Phase 2 built, unverified. Phase 1 verified on staging, 2026-08-26.** Migration `042` applied; `login`, `portal_view`, and `certificate_download` all confirmed writing real client IPs, email snapshots, and server-verified `entitled` flags. `tool_open` and `checkout_start` are deployed but not yet exercised. Phases 2 and 3 are unstarted.
 
-Three open items carried forward, in §7.
+All three §7 open items were folded into Phase 2. One Phase 2 item is deferred: the `auth.audit_log_entries` mirror, which is still waiting on the count query in §1.
 
 Debugging note for next time: client events are silent by design, so when they go missing the cause is usually environmental rather than a code bug. During the first verification pass three things stacked up: the branch was not merged so staging had no `/api/track`; then a long-lived browser tab kept running the pre-deploy bundle, because React Router route changes never re-fetch JS. The console named a bundle hash that no longer existed on the server, which is what gave it away. Check `curl -sI` on the deployment and the bundle hash in the console before suspecting the instrumentation.
 
@@ -743,16 +743,30 @@ Check specifically:
 
 ## 5. Phase 2 — remaining capture, timeline, dispute export
 
-- Thread `webinar_id` into `ContentItem`'s four call sites; UUID-guard the synthetic `main-recording` id
-- `content_click` and `download` events
-- `lead_magnet_claim` in `api/springs101.js`
-- `purchase` and `entitlement_granted` in the Stripe webhook (`ip_address` null there, since the request comes from Stripe)
-- `auth.audit_log_entries` mirror cron, if the count check shows it populating
-- `api/admin/user-activity.js` plus the per-user timeline in `AdminUsers.jsx`
-- `api/admin/dispute-evidence.js` producing plain text sized for Stripe's `access_activity_log` field
-- Surface `last_sign_in_at` in `api/admin/list-users.js` (already fetched, currently dropped in the mapping)
+Built 2026-08-26, not yet verified on staging.
 
----
+**Capture points added**
+
+- `content_click` / `download` in `ContentItem`. One event per click, typed by what the click does: `content_click` for things that open in a tab (recording, link), `download` for everything that resolves to a real file. Fired before the handler's early return so external URLs are captured too. `webinar_id` now threaded through all four call sites in `WorkshopPortal.jsx`, and the synthetic `main-recording` id is UUID-guarded so it lands as null with the label preserved in metadata.
+- `tool_open` client-side in `ToolHost.jsx` for the four tools with no server path, skipping `animation-*` so they are not double-counted. Writes `source: 'client'`.
+- `lead_magnet_claim` in `api/springs101.js`. Labelled correctly: this endpoint is the claim, not someone using the calculator.
+- `purchase` and `entitlement_granted` in the Stripe webhook, with `ip_address` and `user_agent` explicitly null. The request comes from Stripe, so capturing its IP would put an address in the evidence log with no relation to the buyer. No duplicate guard is needed; see the comment in the handler for why a retry can never double-log.
+
+**Open-item fixes folded in**
+
+- `/api/track` renamed to `/api/portal/activity`. Old cached bundles will POST to a path that no longer exists and lose events for the length of one deploy window; acceptable and silent by design.
+- `track()` now reads `window.location.pathname` synchronously, so `login` records where the sign-in happened rather than where the redirect landed.
+
+**Admin surfaces**
+
+- `api/admin/user-activity.js` returns account, entitlements, and events for one person. Accepts `user_id` and/or `email`, querying each handle separately and merging rather than interpolating an email into a PostgREST `.or()` filter. Both handles are required for correctness: events written before an account existed (an anonymous `checkout_start`, a lead magnet claim) carry an email with a null `user_id`, and a deleted account leaves email as the only handle at all.
+- `src/lib/disputeEvidence.js` formats that payload into plain text for Stripe's `access_activity_log` field: account dates, access granted, a summary (sign-in count over distinct days, distinct IPs, how many events were server-recorded), the full timeline, and a closing note explaining what server-recorded versus browser-reported means and that the log is append-only. All timestamps ISO-8601 UTC.
+- `src/components/admin/UserActivityPanel.jsx` renders the timeline inside the expanded user row in `AdminUsers.jsx`, with a "Copy dispute evidence" button. Each row shows its `source` so the distinction stays visible rather than being flattened.
+- `last_sign_in_at` surfaced in `api/admin/list-users.js` and shown on the collapsed user row.
+
+**Deferred**
+
+- The `auth.audit_log_entries` mirror cron. Still contingent on the count query in §1, which has not been run.
 
 ## 6. Phase 3 — analytics, privacy, retention
 

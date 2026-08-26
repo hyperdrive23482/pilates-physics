@@ -36,6 +36,9 @@ export default async function handler(req, res) {
       last_name: u.user_metadata?.last_name ?? '',
       is_admin: u.user_metadata?.is_admin === true,
       created_at: u.created_at,
+      // Already fetched by listUsers(); surfacing it costs nothing and it is
+      // the first thing worth knowing in a payment dispute.
+      last_sign_in_at: u.last_sign_in_at ?? null,
       entitlements: byUser.get(u.id) ?? [],
     }))
 

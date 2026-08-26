@@ -258,7 +258,7 @@ export default function WorkshopPortal() {
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {recordings.map((item) => (
-                  <ContentItem key={item.id} item={item} />
+                  <ContentItem key={item.id} item={item} webinarId={workshop.id} />
                 ))}
               </div>
             </section>
@@ -280,6 +280,7 @@ export default function WorkshopPortal() {
                 Recording
               </h2>
               <ContentItem
+                webinarId={workshop.id}
                 item={{
                   id: 'main-recording',
                   type: 'recording',
@@ -341,7 +342,7 @@ export default function WorkshopPortal() {
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
                 {downloads.map((item) => (
-                  <ContentItem key={item.id} item={item} />
+                  <ContentItem key={item.id} item={item} webinarId={workshop.id} />
                 ))}
               </div>
             </section>
@@ -364,7 +365,7 @@ export default function WorkshopPortal() {
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
                 {bonusAndResources.map((item) => (
-                  <ContentItem key={item.id} item={item} />
+                  <ContentItem key={item.id} item={item} webinarId={workshop.id} />
                 ))}
               </div>
             </section>

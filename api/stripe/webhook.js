@@ -2,6 +2,7 @@ import { stripe } from '../_lib/stripe.js'
 import { supabaseAdmin } from '../_lib/supabase-admin.js'
 import { sendPurchaseNotification } from '../_lib/resend.js'
 import { provisionPurchase } from '../_lib/provision-purchase.js'
+import { logActivity } from '../_lib/log-activity.js'
 
 // Vercel pure Node functions don't have the Next.js bodyParser flag, so we
 // build the raw body from the stream ourselves for signature verification.
@@ -77,6 +78,31 @@ export default async function handler(req, res) {
       })
     } catch (err) {
       console.error('Purchase notification send failed:', err)
+    }
+
+    // Anchor the timeline: the purchase itself, and the access it granted.
+    // No duplicate guard is needed. The idempotency check above already
+    // returned for anything marked 'processed', and the only way to reach here
+    // with an existing row is a prior 'failed' one -- which means
+    // provisionPurchase threw, since nothing after it can throw (the
+    // notification and logEvent both swallow their own errors). So a retry
+    // that gets this far never logged these events the first time.
+    // ip_address and user_agent are explicitly null because this request comes
+    // from Stripe, not the customer -- recording Stripe's IP here would put an
+    // address in the evidence log that has nothing to do with the buyer. The
+    // customer's own purchase IP is captured by checkout_start in
+    // api/checkout/create-session.js.
+    for (const eventType of ['purchase', 'entitlement_granted']) {
+      await logActivity(req, {
+        userId: result.userId,
+        email: result.email,
+        eventType,
+        source: 'server',
+        webinarId: result.workshopId,
+        ipAddress: null,
+        userAgent: null,
+        metadata: { label: session.id, content_title: result.workshopTitle },
+      })
     }
 
     await logEvent({

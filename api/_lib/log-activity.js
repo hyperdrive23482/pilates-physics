@@ -50,6 +50,12 @@ function trim(value, max = MAX_TEXT) {
 // dropped when the function freezes after responding, and the row silently
 // never lands. Overlap it with other work (Promise.all) if latency matters.
 // Fire-and-forget is a browser-side pattern only, see src/lib/track.js.
+//
+// Pass `ipAddress: null` / `userAgent: null` explicitly to suppress capture.
+// Machine-to-machine callers must do this: in the Stripe webhook the request
+// comes from Stripe, so recording its IP would put an address in the evidence
+// log that has nothing to do with the customer. Absent keys fall back to the
+// request headers; only an explicit key overrides.
 export async function logActivity(req, event) {
   try {
     const { error } = await supabaseAdmin.from('activity_events').insert({
@@ -63,8 +69,8 @@ export async function logActivity(req, event) {
       tool_slug: trim(event.toolSlug, 128),
       entitled: typeof event.entitled === 'boolean' ? event.entitled : null,
       path: safePath(event.path),
-      ip_address: clientIp(req),
-      user_agent: trim(req.headers['user-agent']),
+      ip_address: 'ipAddress' in event ? event.ipAddress : clientIp(req),
+      user_agent: 'userAgent' in event ? trim(event.userAgent) : trim(req.headers['user-agent']),
       metadata: event.metadata ?? {},
     })
     if (error) console.error('logActivity insert failed:', error.message)

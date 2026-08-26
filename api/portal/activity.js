@@ -1,17 +1,29 @@
-import { supabaseAdmin } from './_lib/supabase-admin.js'
-import { requireUser } from './_lib/require-user.js'
-import { logActivity, safePath } from './_lib/log-activity.js'
+import { supabaseAdmin } from '../_lib/supabase-admin.js'
+import { requireUser } from '../_lib/require-user.js'
+import { logActivity, safePath } from '../_lib/log-activity.js'
+
+// Deliberately NOT named /api/track. Filter lists (uBlock Origin, AdGuard,
+// EasyPrivacy) commonly block URL paths matching /track, and a blocked ping
+// leaves no trace at all: a dispute timeline would show a gap indistinguishable
+// from a customer who never signed in. Keep this path boring.
 
 // Event types a browser is allowed to assert. Server-only types
-// (tool_open, checkout_start, certificate_download, purchase, ...) are
+// (checkout_start, certificate_download, purchase, lead_magnet_claim) are
 // deliberately absent: only server code may write those, so a client can never
 // manufacture the strongest class of evidence.
+//
+// tool_open is present but writes source='client'. The ten animation-* tools
+// are logged server-side in portal/animation.js; the four client-only tools
+// (spring-load-calculator, springs-101, reformer-force-modeler,
+// class-simulator) make no server call, so a browser-asserted event is the only
+// coverage available for them. The source column keeps the two distinguishable.
 const CLIENT_EVENTS = new Set([
   'login',
   'portal_view',
   'dashboard_view',
   'content_click',
   'download',
+  'tool_open',
 ])
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -23,6 +35,9 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 const DEDUP_WINDOW_SECONDS = 60
 
 const META_KEYS = ['method', 'content_type', 'content_title', 'label']
+
+// Slugs are compared against the webinars table, so keep the charset tight.
+const SLUG_RE = /^[a-z0-9-]{1,128}$/i
 
 function sanitizeMetadata(input) {
   if (!input || typeof input !== 'object') return {}
@@ -54,6 +69,7 @@ export default async function handler(req, res) {
 
   const webinarId = uuidOrNull(body.webinar_id)
   const contentId = uuidOrNull(body.content_id)
+  const toolSlug = SLUG_RE.test(String(body.tool_slug ?? '')) ? body.tool_slug : null
 
   try {
     // Independently re-verify entitlement. The browser says "I opened X"; the
@@ -99,6 +115,7 @@ export default async function handler(req, res) {
       webinarId,
       webinarSlug,
       contentId,
+      toolSlug,
       entitled,
       path: safePath(body.path),
       metadata: sanitizeMetadata(body.metadata),

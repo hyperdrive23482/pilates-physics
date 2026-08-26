@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react'
+import { track } from '../../lib/track'
 import SpringLoadCalculator from './SpringLoadCalculator'
 import AnimationTool from './AnimationTool'
 import ReformerForceModeler from './reformer/ReformerForceModeler'
@@ -29,6 +31,20 @@ const REGISTRY = {
 
 export default function ToolHost({ workshop }) {
   const Tool = REGISTRY[workshop.slug]
+
+  // The animation-* tools fetch their HTML from api/portal/animation.js, which
+  // logs tool_open server-side. The remaining four are pure client components
+  // that make no server call, so a browser-asserted event is the only coverage
+  // available for them. Logging every tool here would double-count the
+  // animations, so this deliberately skips them.
+  const logged = useRef(null)
+  useEffect(() => {
+    if (!Tool || workshop.slug.startsWith('animation-')) return
+    if (logged.current === workshop.slug) return
+    logged.current = workshop.slug
+    track('tool_open', { webinar_id: workshop.id, tool_slug: workshop.slug })
+  }, [Tool, workshop.id, workshop.slug])
+
   if (!Tool) {
     return (
       <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>
