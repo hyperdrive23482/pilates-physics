@@ -4,7 +4,7 @@ A durable, append-only record of who signs in, from where, and what they open.
 
 **Primary purpose: chargeback evidence.** Card networks ask for IP addresses, timestamps, and recorded activity. `auth.audit_log_entries` is pruned by Supabase and was empty when we needed it during a Mastercard 4837 dispute. Product analytics is a secondary read of the same rows.
 
-Status: **Phase 1 applied to the working tree, not yet pushed or deployed.** Migration `042` still needs `supabase db push`, and the whole write path needs a Vercel preview to verify (see §4). Phases 2 and 3 are unstarted.
+Status: **Phase 1 code committed on `feature/activity-log`; migration `042` applied to the database.** Still unverified: the whole write path needs a Vercel preview, since no service-role key exists locally (see §4). Phases 2 and 3 are unstarted.
 
 The original brief that produced this plan is preserved in the appendix at the bottom.
 
@@ -689,19 +689,23 @@ export function track(eventType, payload = {}, accessToken = null) {
 
 The local `.env` has no service-role key, so none of the write path can be exercised locally.
 
-**1. Push the migration.**
+**1. Push the migration.** ✅ Done.
 
 ```bash
 supabase db push
 ```
 
-**2. Confirm the append-only trigger actually bites.** In the Supabase SQL editor. All three should raise:
+Note for future pushes: `040_instagram_planner.sql` had been applied to the shared database from `feature/insta-planner` while its file existed only on that branch, which made `db push` refuse. The file now lives on this branch too. The CLI's suggested `migration repair --status reverted 040` would have been the wrong fix, since `instagram_posts` genuinely exists and marking it reverted would make the next push from `feature/insta-planner` try to re-create it. `041_instagram_connection` is on neither local nor remote (never pushed) and was deliberately left out.
+
+**2. Confirm the append-only trigger actually bites.** In the Supabase SQL editor. The insert seeds a row and should **succeed**; the update and delete should both **raise**:
 
 ```sql
 insert into public.activity_events (event_type, source) values ('login','server');
 update public.activity_events set path = '/x' where id = (select max(id) from public.activity_events);
 delete from public.activity_events where id = (select max(id) from public.activity_events);
 ```
+
+Every row is inside the 26-month window right now, so no delete can succeed at all until 2028. That is intended. The seed row stays in the table; it is harmless, or remove it later via the Phase 3 retention path.
 
 **3. Deploy the branch to a Vercel preview.** Then exercise, on the preview URL:
 
