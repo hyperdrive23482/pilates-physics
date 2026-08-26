@@ -4,7 +4,7 @@ A durable, append-only record of who signs in, from where, and what they open.
 
 **Primary purpose: chargeback evidence.** Card networks ask for IP addresses, timestamps, and recorded activity. `auth.audit_log_entries` is pruned by Supabase and was empty when we needed it during a Mastercard 4837 dispute. Product analytics is a secondary read of the same rows.
 
-Status: **Phase 3 built, unverified. Phase 2 built, unverified. Phase 1 verified on staging, 2026-08-26.** Migration `042` applied; `login`, `portal_view`, and `certificate_download` all confirmed writing real client IPs, email snapshots, and server-verified `entitled` flags. `tool_open` and `checkout_start` are deployed but not yet exercised. Migration `043` has not been pushed.
+Status: **Phase 3 built, unverified. Phase 2 built, unverified. Phase 1 verified on staging, 2026-08-26.** Migration `042` applied; `login`, `portal_view`, and `certificate_download` all confirmed writing real client IPs, email snapshots, and server-verified `entitled` flags. `tool_open` and `checkout_start` are deployed but not yet exercised. Migrations `042` and `043` are applied to stage; neither is on prod.
 
 All three §7 open items were folded into Phase 2. One Phase 2 item is deferred: the `auth.audit_log_entries` mirror, which is still waiting on the count query in §1.
 
@@ -770,7 +770,15 @@ Built 2026-08-26, not yet verified on staging.
 
 ## 6. Phase 3 — analytics, privacy, retention
 
-Built 2026-08-26, not yet verified. **Migration `043` still needs `supabase db push`.**
+Built 2026-08-26. Migration `043` pushed to stage, and its trigger fully verified there:
+
+| | Inside 26 months | Past 26 months |
+|---|---|---|
+| UPDATE nulling ip_address / user_agent | blocked | allowed |
+| UPDATE of any other column | blocked | blocked |
+| DELETE | blocked | allowed |
+
+So the append-only claim the dispute export makes is backed by a tested constraint, and the redaction hole opened for the retention job is exactly one field wide. Analytics and the privacy copy remain unverified.
 
 ### Retention: 26 months, redact rather than delete
 
