@@ -1,5 +1,6 @@
 import { supabaseAdmin } from '../_lib/supabase-admin.js'
 import { requireUser } from '../_lib/require-user.js'
+import { logActivity } from '../_lib/log-activity.js'
 import { buildCertificate } from '../_lib/build-certificate.js'
 
 export default async function handler(req, res) {
@@ -53,6 +54,21 @@ export default async function handler(req, res) {
         return res.status(403).json({ error: 'Access expired' })
       }
     }
+
+    // Server-observed, entitlement-gated, and it produces a PDF with the
+    // customer's own name on it. People whose cards were stolen do not
+    // download CEC certificates. entitled stays null for admins, who bypassed
+    // the check rather than failing it.
+    await logActivity(req, {
+      userId: user.id,
+      email: user.email,
+      eventType: 'certificate_download',
+      source: 'server',
+      webinarId: workshop.id,
+      webinarSlug: workshop.slug,
+      entitled: isAdmin ? null : true,
+      metadata: { label: workshop.title },
+    })
 
     // 4. Resolve participant name (fallback to email).
     const meta = user.user_metadata ?? {}

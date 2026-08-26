@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { track } from '../lib/track'
 import ExpiredLinkNotice from '../components/ui/ExpiredLinkNotice'
 
 export default function AuthCallback() {
@@ -12,6 +13,15 @@ export default function AuthCallback() {
     let subscription
 
     function routeUser(event, session) {
+      // Record before navigating. track() uses keepalive so the request
+      // survives the unmount this is about to cause.
+      if (session) {
+        track(
+          'login',
+          { metadata: { method: event === 'PASSWORD_RECOVERY' ? 'recovery' : 'magiclink' } },
+          session.access_token
+        )
+      }
       if (event === 'PASSWORD_RECOVERY') {
         navigate('/set-password', { replace: true })
       } else if (session?.user?.user_metadata?.needs_password) {

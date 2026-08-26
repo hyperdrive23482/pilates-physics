@@ -1,6 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
+import { track } from '../lib/track'
 import { useEnrollment } from '../hooks/useEnrollment'
 import { useWorkshop } from '../hooks/useWorkshops'
 import { useEntitlements } from '../hooks/useEntitlements'
@@ -26,6 +27,17 @@ export default function WorkshopPortal() {
       navigate('/login', { replace: true })
     }
   }, [authLoading, user, navigate])
+
+  // Record the visit once per workshop per mount. hasAccess is a fresh closure
+  // every render and cannot go in a dep array, so guard on the id last sent.
+  const viewLogged = useRef(null)
+  useEffect(() => {
+    if (entLoading || !workshop?.id) return
+    if (viewLogged.current === workshop.id) return
+    if (!hasAccess(workshop.id)) return
+    viewLogged.current = workshop.id
+    track('portal_view', { webinar_id: workshop.id })
+  })
 
   // Check entitlement once loaded
   const allLoaded = !authLoading && !workshopLoading && !entLoading

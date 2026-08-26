@@ -1,5 +1,6 @@
 import { stripe } from '../_lib/stripe.js'
 import { supabaseAdmin } from '../_lib/supabase-admin.js'
+import { logActivity } from '../_lib/log-activity.js'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -73,6 +74,19 @@ export default async function handler(req, res) {
         first_name: firstName ?? user?.user_metadata?.first_name ?? '',
         last_name: lastName ?? user?.user_metadata?.last_name ?? '',
       },
+    })
+
+    // The IP that initiated the purchase. Stripe will not reliably give you
+    // this, and comparing it against later login IPs is the strongest single
+    // artifact against a "cardholder did not authorize" claim.
+    await logActivity(req, {
+      userId: user?.id ?? null,
+      email: resolvedEmail,
+      eventType: 'checkout_start',
+      source: 'server',
+      webinarId: workshop.id,
+      webinarSlug: workshop.slug,
+      metadata: { label: session.id },
     })
 
     return res.status(200).json({ url: session.url })

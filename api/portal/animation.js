@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { supabaseAdmin } from '../_lib/supabase-admin.js'
+import { logActivity } from '../_lib/log-activity.js'
 
 // Server-authoritative slug → filename whitelist.
 // Filename is NEVER taken from the client — this is the path-traversal defense.
@@ -36,6 +37,7 @@ export default async function handler(req, res) {
   }
   const user = userData.user
   const isAdmin = user.user_metadata?.is_admin === true
+  let entitlementVerified = false
 
   const { slug } = req.query
   if (typeof slug !== 'string' || !(slug in SLUG_TO_FILE)) {
@@ -63,11 +65,27 @@ export default async function handler(req, res) {
     if (ent.expires_at && new Date(ent.expires_at) <= new Date()) {
       return res.status(403).json({ error: 'Access expired' })
     }
+    entitlementVerified = true
   }
 
   try {
     const dir = join(process.cwd(), 'animations')
     const html = readFileSync(join(dir, SLUG_TO_FILE[slug]), 'utf8')
+    // Highest-quality signal in the system: fully server-observed, after the
+    // entitlement gate. Awaited because an unawaited promise can be dropped
+    // when the Vercel function freezes; one insert, and the file read above
+    // has already happened.
+    await logActivity(req, {
+      userId: user.id,
+      email: user.email,
+      eventType: 'tool_open',
+      source: 'server',
+      webinarId: workshop.id,
+      webinarSlug: workshop.slug,
+      toolSlug: slug,
+      entitled: entitlementVerified ? true : null,
+      metadata: isAdmin ? { admin: 'true' } : {},
+    })
     return res.status(200).json({ html })
   } catch (err) {
     console.error('portal/animation error:', err)

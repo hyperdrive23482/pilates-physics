@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import { track } from '../lib/track'
 
 // Customers paste emails with stray spaces or phone-autocapitalized letters.
 // Normalize before every auth call so a casing or whitespace slip never causes
@@ -44,6 +45,10 @@ export function useEnrollment() {
       password,
     })
     if (error) throw error
+    // Explicit, not onAuthStateChange SIGNED_IN — that also fires on token
+    // refresh and tab focus and would flood the log. The server verifies the
+    // JWT, so a client can never forge a login for a different account.
+    track('login', { metadata: { method: 'password' } })
   }
 
   // Passwordless login: emails a sign-in link plus a one-time code. shouldCreateUser
@@ -66,9 +71,13 @@ export function useEnrollment() {
   async function verifyEmailCode(email, token) {
     const normalized = normalizeEmail(email)
     const first = await supabase.auth.verifyOtp({ email: normalized, token, type: 'email' })
-    if (!first.error) return
+    if (!first.error) {
+      track('login', { metadata: { method: 'otp' } }, first.data?.session?.access_token)
+      return
+    }
     const second = await supabase.auth.verifyOtp({ email: normalized, token, type: 'magiclink' })
     if (second.error) throw second.error
+    track('login', { metadata: { method: 'otp' } }, second.data?.session?.access_token)
   }
 
   async function setPassword(password) {
