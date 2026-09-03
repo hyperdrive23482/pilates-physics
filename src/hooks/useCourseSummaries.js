@@ -44,6 +44,18 @@ export function useCourseSummaries(userId, courseIds) {
         )
       if (cancelled) return
 
+      // Which courses this person has already passed, so the card can offer
+      // the certificate directly rather than making them find the quiz again.
+      // RLS on quiz_attempts limits this to their own rows.
+      const { data: passes } = await supabase
+        .from('quiz_attempts')
+        .select('webinar_id')
+        .eq('user_id', userId)
+        .eq('passed', true)
+        .in('webinar_id', ids)
+      if (cancelled) return
+
+      const passed = new Set((passes ?? []).map((p) => p.webinar_id))
       const done = new Set((progress ?? []).map((p) => p.module_id))
       const out = {}
       for (const id of ids) {
@@ -54,6 +66,7 @@ export function useCourseSummaries(userId, courseIds) {
         out[id] = {
           total: mine.length,
           done: doneCount,
+          passed: passed.has(id),
           // Everything finished sends them to the quiz rather than to a module
           // they have already watched.
           resumeKey: firstIncomplete === -1 ? 'quiz' : String(firstIncomplete),

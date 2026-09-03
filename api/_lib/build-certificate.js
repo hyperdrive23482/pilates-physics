@@ -105,7 +105,16 @@ function drawCornerMarks(doc) {
     .stroke()
 }
 
-export function buildCertificate({ workshop, participantName }) {
+/**
+ * Render the certificate PDF.
+ *
+ * @param {object}  workshop         the webinars row
+ * @param {string}  participantName  printed as the recipient
+ * @param {string=} completedAt      ISO date the person finished. Courses pass
+ *   the earliest passed quiz attempt; workshops omit it and keep printing
+ *   `scheduled_at`, since for them the event date IS the completion date.
+ */
+export function buildCertificate({ workshop, participantName, completedAt = null }) {
   const doc = new PDFDocument({
     size: 'LETTER',
     layout: 'landscape',
@@ -252,8 +261,11 @@ export function buildCertificate({ workshop, participantName }) {
     valign: 'bottom',
   })
 
+  // A workshop happened on a date; a course is finished on one. `completedAt`
+  // carries the latter (the earliest passed quiz attempt), and falls back to
+  // the scheduled date so nothing about the workshop path changes.
   const cells = [
-    { label: 'DATE', value: formatDate(workshop.scheduled_at) || '—' },
+    { label: 'DATE', value: formatDate(completedAt ?? workshop.scheduled_at) || '—' },
     {
       label: 'DURATION',
       value: workshop.duration_min ? `${workshop.duration_min} minutes` : '—',

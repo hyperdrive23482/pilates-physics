@@ -5,6 +5,7 @@ import { useMyWorkshops } from '../hooks/useWorkshops'
 import { useCourseSummaries } from '../hooks/useCourseSummaries'
 import PortalNav from '../components/portal/PortalNav'
 import WorkshopCard from '../components/portal/WorkshopCard'
+import CertificateButton from '../components/portal/CertificateButton'
 import FeedbackBanner from '../components/portal/FeedbackBanner'
 import { BookOpen, ArrowRight } from 'lucide-react'
 
@@ -132,16 +133,24 @@ export default function PortalDashboard() {
                   {courses.map((w) => {
                     const s = summaries[w.id]
                     return (
-                      <WorkshopCard
+                      <div
                         key={w.id}
-                        workshop={w}
-                        progress={s}
-                        linkTo={
-                          s?.resumeKey
-                            ? `/portal/${w.slug}?module=${s.resumeKey}`
-                            : `/portal/${w.slug}`
-                        }
-                      />
+                        style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}
+                      >
+                        <WorkshopCard
+                          workshop={w}
+                          progress={s}
+                          linkTo={
+                            s?.resumeKey
+                              ? `/portal/${w.slug}?module=${s.resumeKey}`
+                              : `/portal/${w.slug}`
+                          }
+                        />
+                        {/* Sibling of the card, never inside it: the card is a
+                            link, and a button nested in one is both invalid and
+                            impossible to click without navigating. */}
+                        {s?.passed && <CertificateButton workshop={w} user={user} />}
+                      </div>
                     )
                   })}
                 </div>

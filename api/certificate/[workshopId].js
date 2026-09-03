@@ -23,15 +23,48 @@ export default async function handler(req, res) {
     const { data: workshop, error: wErr } = await supabaseAdmin
       .from('webinars')
       .select(
-        'id, slug, title, subtitle, description, scheduled_at, duration_min, status, npcp_cecs, npcp_course_id, npcp_approval_date'
+        'id, slug, title, subtitle, description, kind, scheduled_at, duration_min, status, npcp_cecs, npcp_course_id, npcp_approval_date'
       )
       .eq('id', workshopId)
       .maybeSingle()
     if (wErr) throw wErr
     if (!workshop) return res.status(404).json({ error: 'Workshop not found' })
 
-    // 2. Status check — workshops are eligible once they've ended (awaiting_recording, complete, archived).
-    if (
+    const isAdmin = user.user_metadata?.is_admin === true
+    const isCourse = workshop.kind === 'course'
+
+    // 2. Eligibility. The two product types earn a certificate differently.
+    //
+    // A workshop is earned by attending, which the app can only approximate
+    // with "the event has happened", so status is the gate.
+    //
+    // A course has no event. It is earned by passing the quiz, which is a
+    // stronger claim: a scored, server-written attempt rather than an
+    // inference. That is also the record NPCP would be shown.
+    let completedAt = null
+    if (isCourse) {
+      const { data: pass, error: passErr } = await supabaseAdmin
+        .from('quiz_attempts')
+        .select('created_at')
+        .eq('user_id', user.id)
+        .eq('webinar_id', workshop.id)
+        .eq('passed', true)
+        .order('created_at', { ascending: true })
+        .limit(1)
+      if (passErr) throw passErr
+
+      completedAt = pass?.[0]?.created_at ?? null
+
+      // Admins bypass so the PDF can be proofed before anyone buys, which
+      // otherwise means sitting your own quiz. They get today's date, since
+      // there is no attempt to date it by.
+      if (!completedAt) {
+        if (!isAdmin) {
+          return res.status(403).json({ error: 'Pass the course quiz to earn your certificate' })
+        }
+        completedAt = new Date().toISOString()
+      }
+    } else if (
       workshop.status !== 'awaiting_recording' &&
       workshop.status !== 'complete' &&
       workshop.status !== 'archived'
@@ -40,7 +73,6 @@ export default async function handler(req, res) {
     }
 
     // 3. Entitlement check (admins bypass)
-    const isAdmin = user.user_metadata?.is_admin === true
     if (!isAdmin) {
       const { data: ent, error: eErr } = await supabaseAdmin
         .from('user_entitlements')
@@ -67,7 +99,12 @@ export default async function handler(req, res) {
       webinarId: workshop.id,
       webinarSlug: workshop.slug,
       entitled: isAdmin ? null : true,
-      metadata: { label: workshop.title },
+      metadata: {
+        label: workshop.title,
+        // For a course this is the evidence chain in one line: the credit was
+        // issued because a quiz was passed on this date.
+        ...(isCourse ? { completed_at: completedAt } : {}),
+      },
     })
 
     // 4. Resolve participant name (fallback to email).
@@ -79,7 +116,7 @@ export default async function handler(req, res) {
     const participantName = fullName || user.email || 'Participant'
 
     // 5. Stream PDF
-    const doc = buildCertificate({ workshop, participantName })
+    const doc = buildCertificate({ workshop, participantName, completedAt })
 
     res.setHeader('Content-Type', 'application/pdf')
     res.setHeader(

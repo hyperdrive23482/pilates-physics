@@ -645,6 +645,34 @@ through the modules was never the evidence.
 
 ## Phase 4: Certificate
 
+> **Built 2026-09-03.** Lint and production build clean. Twelve assertions
+> against real rendered PDFs, covering the course path, the missing-date
+> fallback, and the untouched workshop path. Not committed.
+>
+> Changed: `api/certificate/[workshopId].js`, `api/_lib/build-certificate.js`,
+> `src/hooks/useCourseSummaries.js`, `src/pages/PortalDashboard.jsx`.
+>
+> Notes on what shipped:
+>
+> 1. **The two product types now earn a certificate differently, and the code
+>    says so.** A workshop is earned by attending, which the app can only
+>    approximate as "the event has happened", so status stays its gate. A
+>    course is earned by passing the quiz, which is the stronger claim: a
+>    scored, server-written attempt rather than an inference.
+> 2. **The admin bypass covers the new gate**, so the PDF can be proofed before
+>    anyone buys. Without it the only way to see the document would be to sit
+>    your own quiz. An admin with no attempt gets today's date.
+> 3. **The download activity event carries `completed_at` for a course**, so
+>    the evidence chain reads in one line: this credit was issued because this
+>    quiz was passed on this date.
+> 4. **The dashboard certificate button is a sibling of the card, not inside
+>    it.** The card is a link, and a button nested in one cannot be clicked
+>    without navigating.
+>
+> Verified in the rendered PDF: the DATE cell shows the pass date, DURATION
+> shows the runtime summed from the modules, and the NPCP row prints once its
+> three fields are set. The workshop path still prints `scheduled_at`.
+
 - [ ] `api/certificate/[workshopId].js`: branch on `kind`. For a course, drop
       the status gate and require a passed `quiz_attempts` row instead. Use the
       earliest passed attempt as the completion date.
