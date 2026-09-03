@@ -8,6 +8,9 @@ import { supabase } from '../../lib/supabase'
 import AdminNav from '../../components/admin/AdminNav'
 import WorkshopForm from '../../components/admin/WorkshopForm'
 import ContentEditor from '../../components/admin/ContentEditor'
+import CurriculumEditor from '../../components/admin/CurriculumEditor'
+import QuizEditor from '../../components/admin/QuizEditor'
+import CourseResultsPanel from '../../components/admin/CourseResultsPanel'
 import WorkshopFeedbackPanel from '../../components/admin/WorkshopFeedbackPanel'
 import SurveyConfigEditor from '../../components/admin/SurveyConfigEditor'
 
@@ -38,7 +41,11 @@ function cloneDefaults(source) {
   }
 }
 
-const TABS = [
+// The tab set depends on what the product is. A course is delivered here
+// rather than on Zoom, so it trades the event tabs for a curriculum, a graded
+// quiz and the completion record. Its attachments live inside Curriculum,
+// scoped per module, which is why it has no separate Content tab.
+const WORKSHOP_TABS = [
   { id: 'details', label: 'Details' },
   { id: 'content', label: 'Content' },
   { id: 'questions', label: 'Pre-workshop Q&A' },
@@ -46,6 +53,20 @@ const TABS = [
   { id: 'feedback', label: 'Feedback' },
   { id: 'enrolled', label: 'Enrolled users' },
 ]
+
+const COURSE_TABS = [
+  { id: 'details', label: 'Details' },
+  { id: 'curriculum', label: 'Curriculum' },
+  { id: 'quiz', label: 'Quiz' },
+  { id: 'results', label: 'Results' },
+  { id: 'survey', label: 'Survey' },
+  { id: 'feedback', label: 'Feedback' },
+  { id: 'enrolled', label: 'Enrolled users' },
+]
+
+function tabsFor(kind) {
+  return kind === 'course' ? COURSE_TABS : WORKSHOP_TABS
+}
 
 export default function AdminWorkshopEdit() {
   const { slug } = useParams()
@@ -62,8 +83,39 @@ export default function AdminWorkshopEdit() {
   const [cloneSource, setCloneSource] = useState(null)
   const [cloneLoading, setCloneLoading] = useState(false)
   const [cloneOptions, setCloneOptions] = useState(CLONE_DEFAULT_OPTIONS)
+  const [moduleTotalMin, setModuleTotalMin] = useState(null)
 
   const cloneSlug = isNew ? searchParams.get('from') : null
+  const isCourse = workshop?.kind === 'course'
+  const tabs = tabsFor(workshop?.kind)
+
+  // A course's runtime is the sum of its module runtimes, so the Details tab
+  // can show it read-only and save the same figure the certificate prints.
+  useEffect(() => {
+    if (!isCourse || !workshop?.id) {
+      setModuleTotalMin(null)
+      return
+    }
+    let cancelled = false
+    supabase
+      .from('course_modules')
+      .select('duration_min')
+      .eq('webinar_id', workshop.id)
+      .then(({ data, error }) => {
+        if (cancelled || error) return
+        const total = (data ?? []).reduce((sum, m) => sum + (m.duration_min ?? 0), 0)
+        setModuleTotalMin(total)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [isCourse, workshop?.id, tab])
+
+  // Kind can change (a row saved as a course, say), and the old tab may not
+  // exist in the new set. Fall back to Details rather than rendering nothing.
+  useEffect(() => {
+    if (!tabs.some((t) => t.id === tab)) setTab('details')
+  }, [tabs, tab])
 
   useEffect(() => {
     let cancelled = false
@@ -224,7 +276,7 @@ export default function AdminWorkshopEdit() {
               marginBottom: '2rem',
             }}
           >
-            {TABS.map((t) => (
+            {tabs.map((t) => (
               <button
                 key={t.id}
                 type="button"
@@ -272,11 +324,19 @@ export default function AdminWorkshopEdit() {
               workshops={bonusOptions}
               onBackfill={isNew ? undefined : handleBackfill}
               backfilling={backfilling}
+              derivedDurationMin={moduleTotalMin}
+              lockKind={!isNew}
             />
           )
         ) : null}
 
         {!isNew && tab === 'content' && <ContentEditor workshopId={workshop?.id} />}
+
+        {!isNew && tab === 'curriculum' && <CurriculumEditor workshopId={workshop?.id} />}
+
+        {!isNew && tab === 'quiz' && <QuizEditor workshop={workshop} />}
+
+        {!isNew && tab === 'results' && <CourseResultsPanel workshop={workshop} />}
 
         {!isNew && tab === 'questions' && <QuestionsList workshopId={workshop?.id} />}
 
@@ -294,7 +354,11 @@ export default function AdminWorkshopEdit() {
 // prefills the form below; submitting then routes through /api/admin/clone-workshop,
 // which also duplicates the content items and their uploaded files.
 function ClonePicker({ options, selectedSlug, onSelect, notFound, cloneOptions, onToggle }) {
-  const sources = options.filter((w) => w.kind === 'webinar')
+  // Courses are clonable too, which is how a second one (the chair edition,
+  // say) starts from an existing curriculum rather than from nothing. Tools
+  // and resources are not: they are single components keyed by slug, so a
+  // copy would render the same thing under a different name.
+  const sources = options.filter((w) => w.kind === 'webinar' || w.kind === 'course')
   return (
     <div
       style={{

@@ -112,6 +112,39 @@ player, the quiz, and the certificate branch.
 
 ## Phase 0: Schema
 
+> **Built 2026-09-03.** Both migrations are written and validated against a
+> throwaway PostgreSQL 18 instance, replaying migrations 001 through 042 plus
+> these two, with the Supabase `auth` schema stubbed. Thirteen behavioural
+> tests cover RLS on every new table, the check constraints, reordering, and
+> seed idempotency.
+>
+> **Pushed to dev (`pilates-physics-dev`) 2026-09-03** and verified: the four
+> tables exist, the course row carries the right price, Kit tag, CEC count and
+> pass mark, and the anon key reads zero rows from all four, so RLS is live.
+> **Prod is still pending** and ships with the rest of the course.
+>
+> Three things came out differently from the spec below, all recorded in the
+> migration comments:
+>
+> 1. **The unique constraints on `(webinar_id, sort_order)` are DEFERRABLE**,
+>    for both `course_modules` and `quiz_questions`. A plain unique constraint
+>    fails partway through a reorder even when the final ordering is valid.
+> 2. **Two reorder functions ship with the schema**, `reorder_course_modules`
+>    and `reorder_quiz_questions`. A deferred constraint only helps inside one
+>    transaction, and the browser cannot span one across two supabase-js
+>    calls, which is how `ContentEditor` moves `webinar_content` rows today.
+>    Each renumbers a whole list from an ordered array of ids and refuses a
+>    non-admin caller. Phase 1 should call these rather than paired updates.
+> 3. **The module seed uses `where not exists`, not `on conflict`.**
+>    PostgreSQL will not infer a deferrable constraint for `ON CONFLICT`. The
+>    guard is also safer: a re-run can never overwrite a Vimeo URL or summary
+>    edited in the admin.
+>
+> Also added beyond the spec: check constraints keeping `correct_index` inside
+> the `choices` array and `score` inside `total`, a partial index on passed
+> attempts for the certificate lookup, and an `updated_at` trigger on both new
+> editable tables.
+
 ### `supabase/migrations/044_courses.sql`
 
 - [ ] Add `'course'` to the `webinars_kind_check` constraint, currently
@@ -306,6 +339,35 @@ the admin afterwards.
 ## Phase 1: Course authoring in the admin
 
 Built before the portal, because the portal renders what this produces.
+
+> **Built 2026-09-03.** Lint and production build both clean. Not yet
+> exercised in a browser, and not committed.
+>
+> Files added: `src/lib/vimeo.js`, `src/components/admin/CurriculumEditor.jsx`,
+> `QuizEditor.jsx`, `CourseResultsPanel.jsx`, `api/admin/course-results.js`,
+> and `supabase/migrations/046_reorder_grants.sql`.
+> Changed: `WorkshopForm.jsx`, `AdminWorkshopEdit.jsx`, `AdminWorkshops.jsx`,
+> `ContentEditor.jsx`, `api/admin/clone-workshop.js`.
+>
+> Differences from the spec below:
+>
+> 1. **A Results tab shipped with this phase** rather than being deferred,
+>    along with `api/admin/course-results.js`. It needs the service role,
+>    because `auth.users` is not joinable through PostgREST, which is the same
+>    reason `workshop-enrollments.js` exists.
+> 2. **`ContentEditor` gained a `moduleFilter` prop** instead of a second
+>    component being written. It scopes the list to one module, to the
+>    course-wide items, or to everything, so per-module attachments reuse the
+>    existing upload and signed-URL handling untouched.
+> 3. **Migration 046 fixes a flaw in 044.** The `revoke execute ... from anon`
+>    at the end of 044 has no effect, because PostgreSQL grants EXECUTE to
+>    PUBLIC by default and revoking from one role leaves that inheritance in
+>    place. Confirmed against dev: an anon-key call reached the function body.
+>    Nothing was exposed, since the `is_admin()` guard is the real control and
+>    it held, but the revoke read as protection while providing none. **046
+>    still needs pushing.**
+> 4. **Cloning copies the curriculum and quiz**, remapping each attachment to
+>    its copied module. `quiz_pass_pct` was added to the cloned fields.
 
 ### A course editor, not the workshop editor
 

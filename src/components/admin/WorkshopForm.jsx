@@ -2,6 +2,16 @@ import { useState, useEffect } from 'react'
 
 const STATUSES = ['draft', 'upcoming', 'live', 'awaiting_recording', 'complete', 'archived']
 
+// What a row IS, which decides how the portal renders it. Until this selector
+// existed every row created here took the column default of 'webinar', which
+// is why tools, resources and the first course all had to arrive by migration.
+const KINDS = [
+  { value: 'webinar', label: 'Workshop (live, on Zoom)' },
+  { value: 'course', label: 'Course (on demand, in the portal)' },
+  { value: 'tool', label: 'Tool (interactive, in the portal)' },
+  { value: 'resource', label: 'Resource (reading material)' },
+]
+
 function slugify(s) {
   return s
     .toLowerCase()
@@ -27,6 +37,12 @@ export default function WorkshopForm({
   workshops = [],
   onBackfill,
   backfilling = false,
+  // Total runtime of the course's modules, from the Curriculum tab. Null for
+  // anything that is not a course, or before the curriculum exists.
+  derivedDurationMin = null,
+  // The kind is locked once a row exists: changing it on a live product moves
+  // it between portal renderers and orphans whatever the old one relied on.
+  lockKind = false,
 }) {
   const [form, setForm] = useState({
     title: '',
@@ -34,6 +50,8 @@ export default function WorkshopForm({
     subtitle: '',
     description: '',
     price_cents: '',
+    kind: 'webinar',
+    quiz_pass_pct: 80,
     status: 'draft',
     zoom_link: '',
     zoom_passcode: '',
@@ -62,6 +80,8 @@ export default function WorkshopForm({
       subtitle: initial.subtitle ?? '',
       description: initial.description ?? '',
       price_cents: initial.price_cents ?? '',
+      kind: initial.kind ?? 'webinar',
+      quiz_pass_pct: initial.quiz_pass_pct ?? 80,
       status: initial.status ?? 'draft',
       zoom_link: initial.zoom_link ?? '',
       zoom_passcode: initial.zoom_passcode ?? '',
@@ -109,18 +129,38 @@ export default function WorkshopForm({
       }
     }
 
+    const isCourse = form.kind === 'course'
+
     const payload = {
       title: form.title.trim(),
       slug: form.slug.trim(),
       subtitle: form.subtitle.trim() || null,
       description: form.description.trim() || null,
       price_cents: form.price_cents === '' ? null : Number(form.price_cents),
+      kind: form.kind,
+      quiz_pass_pct: Number(form.quiz_pass_pct) || 80,
       status: form.status,
-      zoom_link: form.zoom_link.trim() || null,
-      zoom_passcode: form.zoom_passcode.trim() || null,
-      scheduled_at: form.scheduled_at ? new Date(form.scheduled_at).toISOString() : null,
-      duration_min: form.duration_min === '' ? null : Number(form.duration_min),
-      recording_url: form.recording_url.trim() || null,
+      // A course has no event, so the Zoom and recording fields are not just
+      // hidden below, they are actively cleared. Otherwise switching a row to
+      // a course leaves a stale Zoom link behind that nothing ever shows and
+      // nobody remembers to remove.
+      zoom_link: isCourse ? null : form.zoom_link.trim() || null,
+      zoom_passcode: isCourse ? null : form.zoom_passcode.trim() || null,
+      scheduled_at: isCourse
+        ? null
+        : form.scheduled_at
+        ? new Date(form.scheduled_at).toISOString()
+        : null,
+      // For a course the runtime is the sum of its modules, so the certificate
+      // can never disagree with the curriculum. Falls back to whatever was
+      // typed while the curriculum is still empty.
+      duration_min:
+        isCourse && derivedDurationMin != null && derivedDurationMin > 0
+          ? derivedDurationMin
+          : form.duration_min === ''
+          ? null
+          : Number(form.duration_min),
+      recording_url: isCourse ? null : form.recording_url.trim() || null,
       hero_image_url: form.hero_image_url.trim() || null,
       kit_tag: form.kit_tag.trim() || null,
       stripe_price_id: form.stripe_price_id.trim() || null,
@@ -144,8 +184,49 @@ export default function WorkshopForm({
     !!form.bonus_webinar_id && !!form.bonus_starts_at && !!form.bonus_ends_at
   const canBackfill = !!onBackfill && bonusComplete && !dirty && !busy && !backfilling
 
+  const isCourse = form.kind === 'course'
+  const isEvent = form.kind === 'webinar'
+  const usesDerivedDuration = isCourse && derivedDurationMin != null && derivedDurationMin > 0
+
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      <Row>
+        <Field
+          label="Type *"
+          hint={
+            lockKind
+              ? 'Fixed once the row exists. Changing it would move the product between portal renderers.'
+              : 'Decides how the portal delivers it. Cannot be changed later.'
+          }
+        >
+          <select
+            value={form.kind}
+            onChange={(e) => update('kind', e.target.value)}
+            disabled={lockKind}
+            style={{ ...inputStyle, opacity: lockKind ? 0.6 : 1 }}
+          >
+            {KINDS.map((k) => (
+              <option key={k.value} value={k.value}>
+                {k.label}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Status">
+          <select
+            value={form.status}
+            onChange={(e) => update('status', e.target.value)}
+            style={inputStyle}
+          >
+            {STATUSES.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </Field>
+      </Row>
+
       <Row>
         <Field label="Title *">
           <input
@@ -212,19 +293,6 @@ export default function WorkshopForm({
       </Field>
 
       <Row>
-        <Field label="Status">
-          <select
-            value={form.status}
-            onChange={(e) => update('status', e.target.value)}
-            style={inputStyle}
-          >
-            {STATUSES.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-        </Field>
         <Field label="Price (cents)" hint="e.g. 4900 = $49.00">
           <input
             type="number"
@@ -234,56 +302,104 @@ export default function WorkshopForm({
             style={inputStyle}
           />
         </Field>
+        {isCourse ? (
+          <Field
+            label="Quiz pass mark (%)"
+            hint="The share of questions needed to pass and earn the certificate."
+          >
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value={form.quiz_pass_pct}
+              onChange={(e) => update('quiz_pass_pct', e.target.value)}
+              style={inputStyle}
+            />
+          </Field>
+        ) : (
+          <Field label="Duration (min)">
+            <input
+              type="number"
+              min="0"
+              value={form.duration_min}
+              onChange={(e) => update('duration_min', e.target.value)}
+              style={inputStyle}
+            />
+          </Field>
+        )}
       </Row>
 
-      <Row>
-        <Field label="Scheduled at" hint="Local time">
-          <input
-            type="datetime-local"
-            value={form.scheduled_at}
-            onChange={(e) => update('scheduled_at', e.target.value)}
-            style={inputStyle}
-          />
-        </Field>
-        <Field label="Duration (min)">
-          <input
-            type="number"
-            min="0"
-            value={form.duration_min}
-            onChange={(e) => update('duration_min', e.target.value)}
-            style={inputStyle}
-          />
-        </Field>
-      </Row>
+      {/* A course has no date, no Zoom room and no replay. Those fields are
+          hidden rather than left blank, because a stale Zoom link on a product
+          that never meets is worse than no field at all. */}
+      {!isCourse && (
+        <>
+          <Row>
+            <Field label="Scheduled at" hint="Local time">
+              <input
+                type="datetime-local"
+                value={form.scheduled_at}
+                onChange={(e) => update('scheduled_at', e.target.value)}
+                style={inputStyle}
+              />
+            </Field>
+            <Field label="Recording URL">
+              <input
+                type="text"
+                value={form.recording_url}
+                onChange={(e) => update('recording_url', e.target.value)}
+                style={inputStyle}
+              />
+            </Field>
+          </Row>
+
+          {isEvent && (
+            <Row>
+              <Field label="Zoom link">
+                <input
+                  type="text"
+                  value={form.zoom_link}
+                  onChange={(e) => update('zoom_link', e.target.value)}
+                  style={inputStyle}
+                />
+              </Field>
+              <Field label="Zoom passcode">
+                <input
+                  type="text"
+                  value={form.zoom_passcode}
+                  onChange={(e) => update('zoom_passcode', e.target.value)}
+                  style={inputStyle}
+                />
+              </Field>
+            </Row>
+          )}
+        </>
+      )}
 
       <Row>
-        <Field label="Zoom link">
-          <input
-            type="text"
-            value={form.zoom_link}
-            onChange={(e) => update('zoom_link', e.target.value)}
-            style={inputStyle}
-          />
-        </Field>
-        <Field label="Zoom passcode">
-          <input
-            type="text"
-            value={form.zoom_passcode}
-            onChange={(e) => update('zoom_passcode', e.target.value)}
-            style={inputStyle}
-          />
-        </Field>
-      </Row>
-
-      <Row>
-        <Field label="Recording URL">
-          <input
-            type="text"
-            value={form.recording_url}
-            onChange={(e) => update('recording_url', e.target.value)}
-            style={inputStyle}
-          />
-        </Field>
+        {isCourse ? (
+          <Field
+            label="Total runtime (min)"
+            hint={
+              usesDerivedDuration
+                ? 'Added up from the module runtimes on the Curriculum tab, and saved with the course. This is the figure printed on the certificate.'
+                : 'Will be added up from the module runtimes once the curriculum has them. Typed value used until then.'
+            }
+          >
+            <input
+              type="number"
+              min="0"
+              value={usesDerivedDuration ? derivedDurationMin : form.duration_min}
+              onChange={(e) => update('duration_min', e.target.value)}
+              readOnly={usesDerivedDuration}
+              style={{
+                ...inputStyle,
+                opacity: usesDerivedDuration ? 0.6 : 1,
+                cursor: usesDerivedDuration ? 'not-allowed' : 'text',
+              }}
+            />
+          </Field>
+        ) : null}
         <Field label="Hero image URL">
           <input
             type="text"

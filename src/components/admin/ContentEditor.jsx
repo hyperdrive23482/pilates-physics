@@ -14,13 +14,23 @@ const EMPTY_DRAFT = {
   file_url: '',
 }
 
-export default function ContentEditor({ workshopId }) {
+// `moduleFilter` scopes the list, so a course can hang attachments off an
+// individual module without a second copy of this component:
+//   'all'    every row for the workshop (the Content tab, unchanged)
+//   'course' only rows with no module_id (a course's shared resources)
+//   <uuid>   only rows belonging to that course module
+export default function ContentEditor({ workshopId, moduleFilter = 'all' }) {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [editingId, setEditingId] = useState(null) // null | item.id | 'new'
   const [draft, setDraft] = useState(null)
   const [saving, setSaving] = useState(false)
+
+  // New rows inherit whatever scope the list is showing, so an item added
+  // under a module belongs to it without another control to forget.
+  const newRowModuleId =
+    moduleFilter === 'all' || moduleFilter === 'course' ? null : moduleFilter
 
   const refetch = useCallback(async () => {
     if (!workshopId) {
@@ -29,15 +39,17 @@ export default function ContentEditor({ workshopId }) {
       return
     }
     setLoading(true)
-    const { data, error: err } = await supabase
+    let q = supabase
       .from('webinar_content')
       .select('*')
       .eq('webinar_id', workshopId)
-      .order('sort_order', { ascending: true })
+    if (moduleFilter === 'course') q = q.is('module_id', null)
+    else if (moduleFilter !== 'all') q = q.eq('module_id', moduleFilter)
+    const { data, error: err } = await q.order('sort_order', { ascending: true })
     if (err) setError(err.message)
     else setItems(data ?? [])
     setLoading(false)
-  }, [workshopId])
+  }, [workshopId, moduleFilter])
 
   useEffect(() => {
     refetch()
@@ -86,6 +98,7 @@ export default function ContentEditor({ workshopId }) {
         .from('webinar_content')
         .insert({
           webinar_id: workshopId,
+          module_id: newRowModuleId,
           title: draft.title,
           type: draft.type,
           available_after: draft.available_after,

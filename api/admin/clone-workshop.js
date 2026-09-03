@@ -17,6 +17,7 @@ const COPY_FIELDS = [
   'npcp_cecs',
   'npcp_course_id',
   'npcp_approval_date',
+  'quiz_pass_pct',
 ]
 
 // Session-specific fields. Reset by default so a clone can never inherit the
@@ -48,6 +49,13 @@ const OVERRIDE_FIELDS = [
 ]
 
 const CONTENT_FIELDS = ['type', 'title', 'description', 'available_after', 'sort_order']
+
+// A course carries its curriculum and its assessment, which is the whole
+// point of cloning one: the chair edition starts from the reformer's shape
+// rather than from an empty list. Videos come along too, since a module with
+// no vimeo_url is just a title, and the admin can swap them per module.
+const MODULE_FIELDS = ['sort_order', 'title', 'summary', 'vimeo_url', 'duration_min']
+const QUIZ_FIELDS = ['sort_order', 'prompt', 'choices', 'correct_index', 'explanation']
 
 function isStoragePath(url) {
   return !!url && !/^https?:\/\//i.test(url)
@@ -117,16 +125,69 @@ export default async function handler(req, res) {
     }
 
     const warnings = []
+    let modulesCopied = 0
+    let questionsCopied = 0
+    // old module id -> new module id, so attachments land under the module
+    // they belonged to rather than loose at the course level.
+    const moduleIdMap = new Map()
 
-    if (!copyContent) {
-      return res.status(200).json({
+    const done = (extra = {}) =>
+      res.status(200).json({
         id: created.id,
         slug: created.slug,
         content_copied: 0,
         files_copied: 0,
+        modules_copied: modulesCopied,
+        questions_copied: questionsCopied,
         warnings,
+        ...extra,
       })
+
+    // ---- Copy the curriculum and quiz (courses only) --------------------
+    if (source.kind === 'course') {
+      const { data: sourceModules, error: modErr } = await supabaseAdmin
+        .from('course_modules')
+        .select('*')
+        .eq('webinar_id', source.id)
+        .order('sort_order', { ascending: true })
+      if (modErr) throw modErr
+
+      for (const m of sourceModules ?? []) {
+        const next = { webinar_id: created.id }
+        for (const f of MODULE_FIELDS) next[f] = m[f]
+        const { data: newModule, error: insModErr } = await supabaseAdmin
+          .from('course_modules')
+          .insert(next)
+          .select('id')
+          .single()
+        if (insModErr) {
+          warnings.push(`Could not copy the module "${m.title}": ${insModErr.message}`)
+          continue
+        }
+        moduleIdMap.set(m.id, newModule.id)
+        modulesCopied += 1
+      }
+
+      const { data: sourceQuestions, error: qErr } = await supabaseAdmin
+        .from('quiz_questions')
+        .select('*')
+        .eq('webinar_id', source.id)
+        .order('sort_order', { ascending: true })
+      if (qErr) throw qErr
+
+      if (sourceQuestions?.length) {
+        const qRows = sourceQuestions.map((q) => {
+          const next = { webinar_id: created.id }
+          for (const f of QUIZ_FIELDS) next[f] = q[f]
+          return next
+        })
+        const { error: insQErr } = await supabaseAdmin.from('quiz_questions').insert(qRows)
+        if (insQErr) warnings.push(`Could not copy the quiz questions: ${insQErr.message}`)
+        else questionsCopied = qRows.length
+      }
     }
+
+    if (!copyContent) return done()
 
     // ---- Copy content items ---------------------------------------------
     const { data: sourceItems, error: itemsErr } = await supabaseAdmin
@@ -136,15 +197,7 @@ export default async function handler(req, res) {
       .order('sort_order', { ascending: true })
     if (itemsErr) throw itemsErr
 
-    if (!sourceItems?.length) {
-      return res.status(200).json({
-        id: created.id,
-        slug: created.slug,
-        content_copied: 0,
-        files_copied: 0,
-        warnings,
-      })
-    }
+    if (!sourceItems?.length) return done()
 
     // Storage RLS grants entitled users read access only when the object's
     // first path segment is a webinar they own (005_admin_storage.sql), so
@@ -179,6 +232,10 @@ export default async function handler(req, res) {
     for (const item of sourceItems) {
       const next = { webinar_id: created.id }
       for (const f of CONTENT_FIELDS) next[f] = item[f]
+      // Follow the attachment to its copied module. A module that failed to
+      // copy leaves this null, which parks the file in the course-wide
+      // resources rather than pointing it at the original course's module.
+      next.module_id = item.module_id ? moduleIdMap.get(item.module_id) ?? null : null
       // Recordings belong to the session that was cloned. Keep the row so the
       // structure survives, but leave the file for the admin to attach.
       next.file_url =
@@ -189,22 +246,10 @@ export default async function handler(req, res) {
     const { error: contentErr } = await supabaseAdmin.from('webinar_content').insert(rows)
     if (contentErr) {
       warnings.push(`The workshop was created but its content could not be copied: ${contentErr.message}`)
-      return res.status(200).json({
-        id: created.id,
-        slug: created.slug,
-        content_copied: 0,
-        files_copied: filesCopied,
-        warnings,
-      })
+      return done({ files_copied: filesCopied })
     }
 
-    return res.status(200).json({
-      id: created.id,
-      slug: created.slug,
-      content_copied: rows.length,
-      files_copied: filesCopied,
-      warnings,
-    })
+    return done({ content_copied: rows.length, files_copied: filesCopied })
   } catch (err) {
     console.error('clone-workshop error:', err)
     return res.status(500).json({ error: err.message ?? 'Internal error' })

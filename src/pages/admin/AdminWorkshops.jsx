@@ -16,7 +16,15 @@ export default function AdminWorkshops() {
   const { workshops: allWorkshops, loading, refetch } = useAllWorkshops()
   const { request } = useAdminAPI()
   const [revenueByWorkshop, setRevenueByWorkshop] = useState({})
-  const workshops = allWorkshops.filter((w) => w.kind === 'webinar')
+  // This page used to hard-filter to kind === 'webinar', which meant a course
+  // row was reachable only by typing its edit URL. Tools and resources keep
+  // their own page, so the filter covers the two sellable, schedulable kinds.
+  const [kindFilter, setKindFilter] = useState('webinar')
+  const workshops =
+    kindFilter === 'all'
+      ? allWorkshops.filter((w) => w.kind === 'webinar' || w.kind === 'course')
+      : allWorkshops.filter((w) => w.kind === kindFilter)
+  const courseCount = allWorkshops.filter((w) => w.kind === 'course').length
 
   // Per-workshop revenue lives on the analytics-summary endpoint (the same
   // source the dashboard and analytics pages use); merge it in by id.
@@ -76,6 +84,44 @@ export default function AdminWorkshops() {
           </Link>
         </div>
 
+        {courseCount > 0 && (
+          <div
+            style={{
+              display: 'flex',
+              gap: '0.5rem',
+              marginBottom: '1.25rem',
+              flexWrap: 'wrap',
+            }}
+          >
+            {[
+              { id: 'webinar', label: 'Workshops' },
+              { id: 'course', label: `Courses (${courseCount})` },
+              { id: 'all', label: 'All' },
+            ].map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => setKindFilter(f.id)}
+                style={{
+                  padding: '0.4rem 0.85rem',
+                  background:
+                    kindFilter === f.id ? 'var(--color-accent)' : 'transparent',
+                  color:
+                    kindFilter === f.id
+                      ? 'var(--color-accent-ink)'
+                      : 'var(--color-ink-muted)',
+                  border: '1px solid var(--color-rule)',
+                  cursor: 'pointer',
+                  fontSize: '0.8rem',
+                  fontFamily: 'var(--font-serif)',
+                }}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+        )}
+
         {loading ? (
           <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>Loading…</p>
         ) : workshops.length === 0 ? (
@@ -108,7 +154,25 @@ export default function AdminWorkshops() {
                     key={w.id}
                     style={{ borderBottom: '1px solid var(--color-rule)' }}
                   >
-                    <Td>{w.title}</Td>
+                    <Td>
+                      {w.title}
+                      {kindFilter !== 'webinar' && w.kind === 'course' && (
+                        <span
+                          style={{
+                            marginLeft: '0.5rem',
+                            fontSize: '0.65rem',
+                            fontWeight: 600,
+                            letterSpacing: '0.08em',
+                            textTransform: 'uppercase',
+                            color: 'var(--color-ink-muted)',
+                            border: '1px solid var(--color-rule)',
+                            padding: '0.1rem 0.35rem',
+                          }}
+                        >
+                          Course
+                        </span>
+                      )}
+                    </Td>
                     <Td mono>{w.slug}</Td>
                     <Td>
                       <StatusPill status={w.status} />
