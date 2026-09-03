@@ -9,6 +9,13 @@ the mechanism.
 This resolves the spec's open decision "Discount enforcement mechanism:
 **Deferred.**"
 
+> **Scope note, 2026-09-02.** The course product itself (portal player, quiz,
+> certificate, landing page, education link) is planned in
+> [making-of-a-reformer-course-plan.md](making-of-a-reformer-course-plan.md).
+> This file keeps the $39 offer machinery only. Migration numbers below
+> (042/043/044) are stale: 042 and 043 now belong to activity logging, and
+> the course plan starts at 044.
+
 ## Decisions locked
 
 | Item | Decision | Why |

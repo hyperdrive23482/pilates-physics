@@ -16,8 +16,9 @@ subscribers before the current workshop cart closes.
 > [customer-language.md](customer-language.md) or [story-bank.md](story-bank.md)
 > if you want them polished.
 
-**Related files:** [nurture-springs-101.md](nurture-springs-101.md) (the existing
-six-email sequence this conversation revisits), [peace-framework.md](peace-framework.md),
+**Related files:** [nurture-springs-101.md](archive/nurture-springs-101.md) (the
+six-email sequence this conversation revisits, archived 2026-09-03),
+[peace-framework.md](peace-framework.md),
 [voice-and-messaging.md](voice-and-messaging.md).
 
 ---

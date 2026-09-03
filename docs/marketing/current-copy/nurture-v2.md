@@ -156,10 +156,10 @@ because that is the day the cart closes.
 
 ---
 
-**Relationship to the existing sequence.** This is a different structure from
-[nurture-springs-101.md](nurture-springs-101.md), which is six emails mapped to
-the PEACE beats and already written. Decide which one is live before loading
-either into Kit.
+**Relationship to the existing sequence.** This was one of two structures written
+for the same lead magnet slot. The other,
+[nurture-springs-101.md](../archive/nurture-springs-101.md), was six emails mapped
+to the PEACE beats. It was archived on 2026-09-03. This sequence is the live one.
 
 ---
 

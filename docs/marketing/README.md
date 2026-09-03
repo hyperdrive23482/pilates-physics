@@ -48,31 +48,32 @@ speaks to a real person, grounded in what actual students told us.
 | [story-bank.md](story-bank.md) | Raw material for those stories: origin, the moment the physics clicked, teaching mistakes, client turnarounds. Sections 5 through 7 have their first entries |
 | [funnel-strategy-nikki-session.md](funnel-strategy-nikki-session.md) | Raw capture of the strategy call with Nikki: the "springs are not one weight" root belief, the calculator → footwork → nurture → tripwire → workshop funnel, and the plan for the 300 new subscribers. Summary plus full transcript |
 
-## The two copy folders
+## The three copy folders
 
 Everything above is reference: who we write for and how we write. The actual
-written copy lives in one of two folders, and which folder a file is in is what
+written copy lives in one of three folders, and which folder a file is in is what
 tells you whether it is settled.
 
 | Folder | What belongs in it |
 |--------|--------------------|
 | [current-copy/](current-copy/) | Copy that is final or live. One file per sequence or campaign. This is what gets loaded into Kit |
 | [working-drafts/](working-drafts/) | Drafts in progress: alternate versions, options being compared, anything awaiting a decision. Nothing here is approved |
+| [archive/](archive/) | Finished copy that lost. Complete sequences we decided not to run, kept for the reasoning and the lines worth reusing. Never load anything here into Kit |
 
 When a draft is chosen, move the approved copy into the matching
 `current-copy/` file and leave the alternates behind in `working-drafts/` as a
-record of what was considered.
+record of what was considered. When a finished piece is retired, move it to
+`archive/` and put a dated note at the top saying what replaced it.
 
 ### current-copy/
 
 | File | What it is |
 |------|------------|
-| [nurture-v2.md](current-copy/nurture-v2.md) | The five-email sequence from the Nikki call (POV, enemy, misdiagnosis, real diagnosis, origin story). Email 1 is final, 2 through 5 are not drafted |
-| [nurture-springs-101.md](current-copy/nurture-springs-101.md) | The six-email evergreen nurture sequence that follows the Springs 101 lead magnet, mapped to the PEACE beats |
+| [nurture-v2.md](current-copy/nurture-v2.md) | The eight-email sequence that follows the Spring Load Calculator and runs into The Making of a Reformer cart. All eight final. This is the live nurture sequence |
 
-> **Two nurture sequences are written for the same lead magnet.** `nurture-v2.md`
-> and `nurture-springs-101.md` are different structures for the same slot. Pick
-> one before loading either into Kit.
+> **This is the only nurture sequence.** `nurture-springs-101.md` was a second
+> structure written for the same slot. It was archived on 2026-09-03, and
+> `nurture-v2.md` is what gets loaded into Kit.
 
 ### working-drafts/
 
@@ -83,6 +84,12 @@ record of what was considered.
 | [nurture-v2-email-3-drafts.md](working-drafts/nurture-v2-email-3-drafts.md) | The three competing drafts of nurture v2 email 3, the misdiagnosis. Version A was chosen and now lives in `current-copy/nurture-v2.md` |
 | [nurture-v2-email-4-drafts.md](working-drafts/nurture-v2-email-4-drafts.md) | The three competing drafts of nurture v2 email 4, the real diagnosis. Awaiting a decision |
 | [reformer-machine-course-spec.md](working-drafts/reformer-machine-course-spec.md) | Course and offer spec for "The Making of a Reformer," the machine-only mini course proposed for the tripwire slot. Outline, learning objectives, title decision, pricing, and the four-email sales sequence |
+
+### archive/
+
+| File | What it is |
+|------|------------|
+| [nurture-springs-101.md](archive/nurture-springs-101.md) | The six-email evergreen sequence mapped to the PEACE beats, written for the same lead magnet slot as `nurture-v2.md`. Archived 2026-09-03. Its subject lines are still cited in [story-framework.md](story-framework.md) |
 
 ## Source of truth notes
 

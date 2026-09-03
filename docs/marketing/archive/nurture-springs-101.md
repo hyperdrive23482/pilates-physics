@@ -1,5 +1,13 @@
 # Springs 101 Nurture Sequence
 
+> **Archived 2026-09-03. Not live, and not the sequence to load into Kit.**
+> Two sequences were written for the same lead magnet slot. The one that ships is
+> [nurture-v2.md](../current-copy/nurture-v2.md), the eight-email sequence that runs
+> from the Spring Load Calculator into The Making of a Reformer cart. This file is
+> kept as a record of the alternate structure, its PEACE mapping, and its subject
+> lines, which are still cited in
+> [story-framework.md](../story-framework.md). Do not load it into Kit.
+
 Evergreen, six emails, sent to anyone who claims the Springs 101 lead magnet.
 Written for **ICP 1, The Curious Practitioner**, with light nods to ICP 2 and 3.
 

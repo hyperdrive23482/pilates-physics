@@ -212,10 +212,10 @@ carrying for you.
 3. **The loop has to be true.** Every pattern above is a promise that something
    specific is coming. If the payoff is thinner than the setup, do not run it.
 
-**Subject lines.** This is where loops earn the most. Compare the existing
-`nurture-springs-101.md` subject lines: "Do this before you read the primer"
-is a loop, "A red spring is not a single weight" is a contradiction. Both work
-because the email delivers on them.
+**Subject lines.** This is where loops earn the most. Compare the subject lines
+in the archived [nurture-springs-101.md](archive/nurture-springs-101.md): "Do
+this before you read the primer" is a loop, "A red spring is not a single weight"
+is a contradiction. Both work because the email delivers on them.
 
 ---
 
