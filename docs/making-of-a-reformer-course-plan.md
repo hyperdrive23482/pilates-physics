@@ -469,6 +469,32 @@ alongside the content rows.
 
 ## Phase 2: Portal delivery
 
+> **Built 2026-09-03.** Lint and production build clean. Not yet opened in a
+> browser, and not committed.
+>
+> Added: `src/hooks/useCourse.js` (modules and progress),
+> `src/hooks/useCourseSummaries.js` (dashboard progress),
+> `src/components/portal/course/` with `CoursePlayer.jsx`, `ModuleList.jsx`,
+> `VimeoEmbed.jsx` and `course.css`.
+> Changed: `WorkshopPortal.jsx`, `PortalDashboard.jsx`, `WorkshopCard.jsx`,
+> `StatusBadge.jsx`, `api/portal/activity.js`.
+>
+> Differences from the spec below:
+>
+> 1. **`isPlainWorkshop` replaced every `!isInteractive` guard** in
+>    `WorkshopPortal`. Those guards meant "not a tool", which silently became
+>    wrong once a third kind existed: a course would have rendered the Zoom
+>    panel, the certificate section and the description block underneath its
+>    own player. Now the three delivery models are named explicitly.
+> 2. **The quiz row renders a placeholder.** It is reachable and honest about
+>    not being open yet. Phase 3 replaces the component; nothing else changes.
+> 3. **`module_complete` was added to the client event whitelist** in
+>    `api/portal/activity.js`, with a comment recording that it asserts
+>    advancing past a module, not watching it.
+> 4. **The dashboard card resumes rather than restarts.** `useCourseSummaries`
+>    fetches modules and progress for every owned course in two queries, and
+>    the card links to `?module=<first unfinished>`.
+
 ### Dashboard
 
 - [ ] `PortalDashboard.jsx`: add a Courses section above Tools, filtering

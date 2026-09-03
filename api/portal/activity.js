@@ -17,6 +17,12 @@ import { logActivity, safePath } from '../_lib/log-activity.js'
 // (spring-load-calculator, springs-101, reformer-force-modeler,
 // class-simulator) make no server call, so a browser-asserted event is the only
 // coverage available for them. The source column keeps the two distinguishable.
+//
+// module_complete is client-asserted for the same reason: finishing a course
+// module is a browser event with no server call behind it. It records that
+// someone advanced past a module, which is not the same as watching it, since
+// courses do not gate on playback. The evidence that carries a CEC is the
+// server-written quiz_attempts row, never this.
 const CLIENT_EVENTS = new Set([
   'login',
   'portal_view',
@@ -24,6 +30,7 @@ const CLIENT_EVENTS = new Set([
   'content_click',
   'download',
   'tool_open',
+  'module_complete',
 ])
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i

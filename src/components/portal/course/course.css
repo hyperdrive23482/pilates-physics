@@ -1,0 +1,39 @@
+/* Course delivery layout: a module list beside the player on a desktop, and
+   a jump-to select above it on a phone. Breakpoint matches ppv2.css. */
+
+.course-layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: start;
+}
+
+/* The list is long enough to outrun the player on a short module, so it
+   scrolls within itself rather than stretching the page. */
+.course-sidebar {
+  position: sticky;
+  top: 1.5rem;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+}
+
+.course-sidebar-compact {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .course-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* Below the breakpoint the sidebar would push the video down the page, so
+     the same navigation collapses into the select instead. */
+  .course-sidebar {
+    display: none;
+  }
+
+  .course-sidebar-compact {
+    display: block;
+  }
+}

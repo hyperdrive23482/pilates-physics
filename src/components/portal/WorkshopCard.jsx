@@ -2,7 +2,10 @@ import { Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowRight } from 'lucide-react'
 import StatusBadge from './StatusBadge'
 
-export default function WorkshopCard({ workshop, linkTo }) {
+// `progress` is only passed for courses: { done, total }. It turns the card
+// into a resume point rather than a link to the front of something already
+// half finished.
+export default function WorkshopCard({ workshop, linkTo, progress }) {
   const date = workshop.scheduled_at
     ? new Date(workshop.scheduled_at).toLocaleDateString('en-US', {
         weekday: 'short',
@@ -93,6 +96,34 @@ export default function WorkshopCard({ workshop, linkTo }) {
         )}
       </div>
 
+      {progress && progress.total > 0 && (
+        <div style={{ marginTop: 'auto' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              fontSize: '0.75rem',
+              color: 'var(--color-ink-muted)',
+              marginBottom: '0.35rem',
+            }}
+          >
+            <span>
+              {progress.done} of {progress.total} modules
+            </span>
+            <span>{Math.round((progress.done / progress.total) * 100)}%</span>
+          </div>
+          <div style={{ height: '3px', background: 'var(--color-rule)', overflow: 'hidden' }}>
+            <div
+              style={{
+                width: `${Math.round((progress.done / progress.total) * 100)}%`,
+                height: '100%',
+                background: 'var(--color-accent)',
+              }}
+            />
+          </div>
+        </div>
+      )}
+
       <div
         style={{
           display: 'flex',
@@ -101,10 +132,16 @@ export default function WorkshopCard({ workshop, linkTo }) {
           fontSize: '0.85rem',
           fontWeight: '500',
           color: 'var(--color-accent)',
-          marginTop: 'auto',
+          marginTop: progress ? '0.75rem' : 'auto',
         }}
       >
-        {workshop.kind === 'tool'
+        {workshop.kind === 'course'
+          ? progress && progress.done > 0
+            ? progress.done >= progress.total
+              ? 'Review the course'
+              : 'Continue'
+            : 'Start the course'
+          : workshop.kind === 'tool'
           ? 'Open Tool'
           : workshop.kind === 'resource'
           ? 'Open Resource'

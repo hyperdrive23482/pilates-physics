@@ -1,7 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEnrollment } from '../hooks/useEnrollment'
 import { useMyWorkshops } from '../hooks/useWorkshops'
+import { useCourseSummaries } from '../hooks/useCourseSummaries'
 import PortalNav from '../components/portal/PortalNav'
 import WorkshopCard from '../components/portal/WorkshopCard'
 import FeedbackBanner from '../components/portal/FeedbackBanner'
@@ -17,6 +18,12 @@ export default function PortalDashboard() {
       navigate('/login', { replace: true })
     }
   }, [authLoading, user, navigate])
+
+  // Above the loading early-return: hooks have to run in the same order on
+  // every render, and this component returns early while auth resolves.
+  const courses = workshops.filter((w) => w.kind === 'course')
+  const courseIds = useMemo(() => courses.map((c) => c.id), [courses])
+  const summaries = useCourseSummaries(user?.id, courseIds)
 
   if (authLoading || !user) {
     return (
@@ -115,6 +122,32 @@ export default function PortalDashboard() {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+            {/* Courses: on-demand, delivered here, so they lead the page. */}
+            {courses.length > 0 && (
+              <section>
+                <h2 className="pp-section-label" style={{ marginBottom: '1.25rem' }}>
+                  Courses
+                </h2>
+                <div className="portal-grid">
+                  {courses.map((w) => {
+                    const s = summaries[w.id]
+                    return (
+                      <WorkshopCard
+                        key={w.id}
+                        workshop={w}
+                        progress={s}
+                        linkTo={
+                          s?.resumeKey
+                            ? `/portal/${w.slug}?module=${s.resumeKey}`
+                            : `/portal/${w.slug}`
+                        }
+                      />
+                    )
+                  })}
+                </div>
+              </section>
+            )}
+
             {/* Tools */}
             {tools.length > 0 && (
               <section>

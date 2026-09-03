@@ -12,6 +12,7 @@ import ZoomInfo from '../components/portal/ZoomInfo'
 import ContentItem from '../components/portal/ContentItem'
 import QuestionForm from '../components/portal/QuestionForm'
 import ToolHost from '../components/portal/ToolHost'
+import CoursePlayer from '../components/portal/course/CoursePlayer'
 import CertificateButton from '../components/portal/CertificateButton'
 
 export default function WorkshopPortal() {
@@ -121,17 +122,25 @@ export default function WorkshopPortal() {
     )
   }
 
+  // A course is delivered here, in order, and owns its own layout: a module
+  // list, a player, and the attachments belonging to whichever module is open.
+  // It shares none of the workshop chrome, because there is no event behind it
+  // to have a date, a Zoom room or a replay.
+  const isCourse = workshop.kind === 'course'
+
   // Tools and resources both render through ToolHost (a React component keyed
   // by slug) and skip the workshop chrome (dates, recordings, downloads).
   const isInteractive = workshop.kind === 'tool' || workshop.kind === 'resource'
-  const isPreWorkshop = !isInteractive && (workshop.status === 'upcoming' || workshop.status === 'live')
+  const isPlainWorkshop = !isInteractive && !isCourse
+  const isPreWorkshop =
+    isPlainWorkshop && (workshop.status === 'upcoming' || workshop.status === 'live')
   const isPostWorkshop =
-    !isInteractive &&
+    isPlainWorkshop &&
     (workshop.status === 'awaiting_recording' ||
       workshop.status === 'complete' ||
       workshop.status === 'archived')
   const hasRecording =
-    !isInteractive && (workshop.status === 'complete' || workshop.status === 'archived')
+    isPlainWorkshop && (workshop.status === 'complete' || workshop.status === 'archived')
 
   const recordings = content.filter((c) => c.type === 'recording')
   const downloads = content.filter((c) => c.type === 'download' || c.type === 'slide_deck')
@@ -155,7 +164,7 @@ export default function WorkshopPortal() {
       <main
         className="pp-main"
         style={{
-          maxWidth: isInteractive ? '1080px' : '760px',
+          maxWidth: isInteractive || isCourse ? '1080px' : '760px',
           margin: '0 auto',
         }}
       >
@@ -177,7 +186,7 @@ export default function WorkshopPortal() {
 
         {/* Header */}
         <div style={{ marginBottom: '2.5rem' }}>
-          <StatusBadge status={isInteractive ? workshop.kind : workshop.status} />
+          <StatusBadge status={isInteractive || isCourse ? workshop.kind : workshop.status} />
           <h1
             style={{
               fontFamily: 'var(--font-serif)',
@@ -201,7 +210,7 @@ export default function WorkshopPortal() {
               {workshop.subtitle}
             </p>
           )}
-          {!isInteractive && date && (
+          {isPlainWorkshop && date && (
             <p
               style={{
                 fontSize: '0.85rem',
@@ -218,6 +227,9 @@ export default function WorkshopPortal() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           {/* Tool body (replaces the standard workshop sections) */}
           {isInteractive && <ToolHost workshop={workshop} />}
+
+          {/* Course body: module list, player, per-module attachments. */}
+          {isCourse && <CoursePlayer workshop={workshop} userId={user?.id} />}
 
           {/* Zoom info (pre-workshop only) */}
           {isPreWorkshop && <ZoomInfo workshop={workshop} />}
@@ -326,7 +338,7 @@ export default function WorkshopPortal() {
           )}
 
           {/* Downloads */}
-          {!isInteractive && downloads.length > 0 && (
+          {isPlainWorkshop && downloads.length > 0 && (
             <section>
               <h2
                 style={{
@@ -349,7 +361,7 @@ export default function WorkshopPortal() {
           )}
 
           {/* Bonus content & resources */}
-          {!isInteractive && bonusAndResources.length > 0 && (
+          {isPlainWorkshop && bonusAndResources.length > 0 && (
             <section>
               <h2
                 style={{
@@ -375,7 +387,7 @@ export default function WorkshopPortal() {
           {isPreWorkshop && <QuestionForm workshopId={workshop.id} userId={user.id} />}
 
           {/* Description */}
-          {!isInteractive && workshop.description && (
+          {isPlainWorkshop && workshop.description && (
             <section>
               <h2
                 style={{
