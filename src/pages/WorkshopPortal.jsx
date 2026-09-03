@@ -229,7 +229,7 @@ export default function WorkshopPortal() {
           {isInteractive && <ToolHost workshop={workshop} />}
 
           {/* Course body: module list, player, per-module attachments. */}
-          {isCourse && <CoursePlayer workshop={workshop} userId={user?.id} />}
+          {isCourse && <CoursePlayer workshop={workshop} user={user} />}
 
           {/* Zoom info (pre-workshop only) */}
           {isPreWorkshop && <ZoomInfo workshop={workshop} />}

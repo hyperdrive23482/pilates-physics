@@ -563,6 +563,39 @@ existing reference for a multi-part portal product.
 
 ## Phase 3: The quiz
 
+> **Built 2026-09-03.** Lint and production build clean. The grading function
+> has 14 passing tests. Not opened in a browser, and not committed.
+>
+> Added: `api/course/quiz.js`, `api/_lib/require-entitlement.js`,
+> `src/components/portal/course/CourseQuiz.jsx`.
+> Changed: `CoursePlayer.jsx` (placeholder swapped for the real quiz, and it
+> now takes `user` rather than `userId`, since the certificate button needs
+> the name off the account), `WorkshopPortal.jsx`.
+>
+> Differences from the spec below:
+>
+> 1. **Grading is a pure exported function, `gradeQuiz`.** It decides who
+>    earns a CEC, so it is worth being able to test directly rather than only
+>    through an authenticated HTTP call. The tests cover the pass boundary in
+>    both directions, the ceiling on the threshold, unanswered questions, and
+>    the security property below.
+> 2. **Answers are submitted keyed by question id, not by position.** A quiz
+>    reordered in the admin while someone has it open would otherwise mis-grade
+>    the attempt in flight, silently and in either direction.
+> 3. **`chosen_index` comes back, `correct_index` never does.** The review
+>    screen needs to show what they picked; showing what was right would let
+>    the answer key be assembled by retaking. A test asserts the serialized
+>    response contains no `correct_index` at all.
+> 4. **A pass is remembered and reversible-proof.** Reopening the quiz after
+>    passing shows the pass screen with the certificate, plus a "take it again"
+>    that reveals the questions without discarding the pass, because a later
+>    failure never removes an earlier one.
+>
+> **Known, and fixed by Phase 4:** the certificate button on the pass screen
+> currently fails with "Workshop not yet complete". The certificate route
+> still gates on workshop status, and a course sits at `live`. That gate is
+> replaced with a passed-attempt check in the next phase.
+
 ### `api/course/quiz.js`
 
 Both methods behind `requireUser` plus an entitlement check. Extract that check

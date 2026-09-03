@@ -6,6 +6,7 @@ import { useCourseModules, useCourseProgress } from '../../../hooks/useCourse'
 import ContentItem from '../ContentItem'
 import ModuleList from './ModuleList'
 import VimeoEmbed from './VimeoEmbed'
+import CourseQuiz from './CourseQuiz'
 import './course.css'
 
 /**
@@ -16,10 +17,10 @@ import './course.css'
  * including on a first visit: the sequence is a recommended path, not a gate.
  * See the plan's Phase 2.
  */
-export default function CoursePlayer({ workshop, userId }) {
+export default function CoursePlayer({ workshop, user }) {
   const { modules, attachments, loading } = useCourseModules(workshop?.id)
   const moduleIds = useMemo(() => modules.map((m) => m.id), [modules])
-  const { completed, markComplete } = useCourseProgress(userId, moduleIds)
+  const { completed, markComplete } = useCourseProgress(user?.id, moduleIds)
 
   const [params, setParams] = useSearchParams()
   const raw = params.get('module')
@@ -84,7 +85,13 @@ export default function CoursePlayer({ workshop, userId }) {
 
       <div style={{ minWidth: 0 }}>
         {isQuiz ? (
-          <QuizPlaceholder doneCount={doneCount} total={total} onSelect={select} />
+          <CourseQuiz
+            workshop={workshop}
+            user={user}
+            modules={modules}
+            completed={completed}
+            onSelectModule={select}
+          />
         ) : (
           <ModuleView
             module={current}
@@ -243,39 +250,6 @@ function ComingSoon() {
         extra cost, the moment it is published.
       </span>
     </div>
-  )
-}
-
-// Phase 3 replaces this with the graded quiz. Until then the row still exists
-// in the list and is still reachable, so the shape of the course is honest.
-function QuizPlaceholder({ doneCount, total, onSelect }) {
-  return (
-    <Panel>
-      <h2 style={{ ...headingStyle, marginTop: 0 }}>Final quiz</h2>
-      <p style={bodyStyle}>
-        Ten questions covering the whole course. Passing it is what issues your
-        NPCP certificate, and you can retake it as many times as you need.
-      </p>
-      <p style={bodyStyle}>
-        The quiz is not open yet. It appears here as soon as it is published,
-        and your progress is already saved.
-      </p>
-      <p style={{ ...bodyStyle, color: 'var(--color-ink-muted)', fontSize: '0.85rem' }}>
-        You have finished {doneCount} of {total} modules.
-      </p>
-      {doneCount < total && (
-        <button
-          type="button"
-          onClick={() => {
-            const first = Math.max(0, doneCount)
-            onSelect(String(Math.min(first, total - 1)))
-          }}
-          style={{ ...btnBase, background: 'var(--color-accent)', color: 'var(--color-accent-ink)', border: 'none' }}
-        >
-          Back to the modules
-        </button>
-      )}
-    </Panel>
   )
 }
 
