@@ -12,8 +12,9 @@ const PATHS = [
     title: 'The Making of a Reformer',
     sub: 'How your machine works, and why',
     body: 'A behind-the-scenes look at reformer design, from spring specs to all the decisions that impact how a body is loaded.',
-    meta: 'Coming soon',
-    ctaLabel: null,
+    meta: '$69 · 1 NPCP CEC · Instant access',
+    ctaLabel: 'Learn more',
+    to: '/making-of-a-reformer',
   },
   {
     n: '02',
@@ -133,7 +134,7 @@ export default function Education() {
           <div className="education-hero__inner">
             <div className="kicker">§ 01 · Education</div>
             <h1 className="education-hero__title">
-              Five ways to learn the <span className="italic accent">physics of Pilates.</span>
+              Six ways to learn the <span className="italic accent">physics of Pilates.</span>
             </h1>
             <p className="education-hero__lede">
               Online workshops, private mentoring, and licensed teacher-training

@@ -58,14 +58,20 @@ import AdminBlogPosts from './pages/admin/AdminBlogPosts'
 import AdminBlogPostEdit from './pages/admin/AdminBlogPostEdit'
 import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
+import MakingOfAReformer from './pages/MakingOfAReformer'
 
-// Any /workshops/PP-101-* or /workshops/PP-102-* URL (e.g. a Stripe cancel
-// return) bounces to the branded landing page; everything else renders the
-// generic sales page. workshopUrl is the single source of truth for the mapping.
+// Any /workshops/<slug> URL (a Stripe cancel return, say) bounces to that
+// product's branded page when it has one; everything else renders the generic
+// sales page. workshopUrl is the single source of truth for the mapping.
+//
+// The guard compares against the generic path rather than testing for a
+// '/pilates-physics' prefix, so any branded page added to workshopUrl is
+// covered without touching this. Left as a prefix test, a course would render
+// a second indexable sales page for the same product.
 function BrandedWorkshopRedirect() {
   const { slug } = useParams()
   const url = workshopUrl(slug)
-  if (url.startsWith('/pilates-physics')) return <Navigate to={url} replace />
+  if (url !== `/workshops/${slug}`) return <Navigate to={url} replace />
   return (
     <PageWrapper>
       <WorkshopSalesPage />
@@ -111,6 +117,14 @@ export default function App() {
           element={
             <PageWrapper>
               <Education />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/making-of-a-reformer"
+          element={
+            <PageWrapper>
+              <MakingOfAReformer />
             </PageWrapper>
           }
         />

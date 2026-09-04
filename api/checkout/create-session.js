@@ -34,7 +34,10 @@ export default async function handler(req, res) {
       .maybeSingle()
     if (webErr) throw webErr
     if (!workshop) return res.status(404).json({ error: 'Workshop not found' })
-    if (!['upcoming', 'live'].includes(workshop.status)) {
+    // Courses sit at 'live' permanently and pass this deliberately: an
+  // on-demand product has no event to be upcoming for, and no reason to ever
+  // stop selling. Do not "fix" this by excluding 'live'.
+  if (!['upcoming', 'live'].includes(workshop.status)) {
       return res.status(400).json({ error: 'Registration not open for this workshop' })
     }
     if (!workshop.stripe_price_id) {

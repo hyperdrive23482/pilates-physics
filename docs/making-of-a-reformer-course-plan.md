@@ -694,6 +694,34 @@ The NPCP audit trail is the `quiz_attempts` row plus the existing
 
 ## Phase 5: Landing page and routing
 
+> **Built 2026-09-03.** Lint and production build clean. Not opened in a
+> browser, and not committed. **The sales copy is a first draft and needs
+> Kaleen's pass**, particularly the bio and the design-decision section, which
+> put words in her mouth about her own machine.
+>
+> Added: `src/pages/MakingOfAReformer.jsx`, `src/hooks/useCheckout.js`,
+> `src/components/course/` with `CourseSalesBody.jsx`, `PricingBlock.jsx` and
+> `course-sales.css`.
+> Changed: `App.jsx`, `src/lib/workshop.js`, `Education.jsx`,
+> `RegisterCard.jsx`, `api/checkout/create-session.js` (comment only).
+>
+> Notes on what shipped:
+>
+> 1. **`RegisterCard` was refactored onto `useCheckout` too**, not just the new
+>    pricing block. Extracting the handler and leaving the original in place
+>    would have made two copies of the checkout request, which is the drift
+>    this extraction exists to prevent. **It is on the live PP101 and PP102
+>    pages, so it is worth a real purchase test.**
+> 2. **The redirect guard compares against the generic path** rather than
+>    testing for a `/pilates-physics` prefix, so any future branded page added
+>    to `workshopUrl` is covered without touching `App.jsx` again.
+> 3. **The pricing block has an "opening soon" state** when the row has no
+>    Stripe price. Without it the page would show a buy button that fails at
+>    the server, which is exactly the state the course is in right now.
+> 4. **The hero has no background image.** PP101 sets one via a CSS variable;
+>    this ships without until there is art for it. Already tracked in the open
+>    questions.
+
 ### `src/pages/MakingOfAReformer.jsx` at `/making-of-a-reformer`
 
 - [ ] Build it in the shape of `PilatesPhysics101.jsx`: const arrays at the

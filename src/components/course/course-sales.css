@@ -1,0 +1,187 @@
+/* Course sales page. Layers on top of ppv2.css and Workshop.css, which supply
+   the section, kicker, fcard and heading styles the page shares with the
+   workshop pages. Only what is specific to a course lives here. */
+
+/* ── The ladder: calculator, this course, PP101 ─────────────────────── */
+.course-ladder {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+
+.course-ladder__step {
+  border: 1px solid var(--rule, rgba(0, 0, 0, 0.12));
+  padding: 1.25rem;
+}
+
+/* The rung being sold. Marked rather than described, so the sequence reads
+   at a glance without the copy having to say "you are here". */
+.course-ladder__step--current {
+  border-color: var(--accent);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.course-ladder__step h3 {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  margin: 0.5rem 0 0.35rem;
+}
+
+.course-ladder__step p {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  opacity: 0.75;
+  margin: 0;
+}
+
+/* ── The syllabus ───────────────────────────────────────────────────── */
+.course-modules {
+  margin-top: 2.5rem;
+  border-top: 1px solid var(--rule, rgba(0, 0, 0, 0.12));
+}
+
+.course-module {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 1.25rem;
+  padding: 1.35rem 0;
+  border-bottom: 1px solid var(--rule, rgba(0, 0, 0, 0.12));
+}
+
+.course-module__n {
+  font-size: 0.85rem;
+  padding-top: 0.15rem;
+}
+
+.course-module__title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  margin: 0 0 0.35rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.course-module__min {
+  font-size: 0.72rem;
+  opacity: 0.55;
+  font-weight: 400;
+}
+
+.course-module__body p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+/* ── Design decisions and what-you-get, two up ──────────────────────── */
+.course-decisions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+
+/* ── FAQ ────────────────────────────────────────────────────────────── */
+.course-faq {
+  margin-top: 2rem;
+  border-top: 1px solid var(--rule, rgba(0, 0, 0, 0.12));
+}
+
+.course-faq__item {
+  border-bottom: 1px solid var(--rule, rgba(0, 0, 0, 0.12));
+}
+
+.course-faq__item summary {
+  cursor: pointer;
+  padding: 1.1rem 0;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.course-faq__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.course-faq__item summary::after {
+  content: '+';
+  color: var(--accent);
+  font-size: 1.1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.course-faq__item[open] summary::after {
+  content: '\2212'; /* minus */
+}
+
+.course-faq__item p {
+  margin: 0 0 1.2rem;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  opacity: 0.8;
+  max-width: 62ch;
+}
+
+/* ── Buy ────────────────────────────────────────────────────────────── */
+.course-buy__inner {
+  margin-top: 2.5rem;
+  max-width: 480px;
+}
+
+.course-buy__list {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.course-buy__list li {
+  padding: 0.3rem 0 0.3rem 1.1rem;
+  position: relative;
+  opacity: 0.85;
+}
+
+.course-buy__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.85em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.course-inline-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+
+/* ── Narrow ─────────────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .course-ladder,
+  .course-decisions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .course-module {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+}

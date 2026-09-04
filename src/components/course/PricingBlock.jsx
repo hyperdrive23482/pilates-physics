@@ -1,38 +1,31 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCheckout } from '../../hooks/useCheckout'
-import { isRegistrationOpen } from '../../lib/workshop'
-import WaitlistForm from './WaitlistForm'
-import ArrowSvg from './ArrowSvg'
-import './RegisterCard.css'
+import ArrowSvg from '../ui/ArrowSvg'
+import '../ui/RegisterCard.css'
 
-export default function RegisterCard({ workshop }) {
-  // The request itself lives in useCheckout, shared with the course pricing
-  // block so the two cannot drift apart. This component owns only the form.
+// The only part of the course sales page that varies.
+//
+// The public page shows one number and never mentions a discount. The offer
+// plan adds two more variants against this same body: an active $39 window
+// with a countdown, and an expired one that says so plainly rather than
+// silently reverting. Keeping the body and the price separate now is what
+// makes that a new component rather than a second copy of the whole page.
+//
+// See docs/making-of-a-reformer-build-plan.md, "Three pricing blocks".
+
+export default function PricingBlock({ workshop }) {
+  const slug = workshop?.slug ?? 'making-of-a-reformer'
   const { checkout, status, errorMsg, portalUrl, user, signOut, needsLastName } =
-    useCheckout(workshop.slug)
+    useCheckout(slug)
+
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
 
-  const price = workshop.price_cents
-    ? `$${(workshop.price_cents / 100).toFixed(0)}`
-    : 'Free'
-
-  const registrationOpen = isRegistrationOpen(workshop)
-
-  if (!registrationOpen) {
-    return (
-      <div className="register-card">
-        <h3 className="register-card__title">Registration opens soon</h3>
-        <p className="register-card__body">
-          Join the waitlist and we'll notify you as soon as registration opens.
-        </p>
-        <WaitlistForm />
-        <p className="register-card__meta">No spam. Unsubscribe anytime.</p>
-      </div>
-    )
-  }
+  const price = workshop?.price_cents ? `$${(workshop.price_cents / 100).toFixed(0)}` : '$69'
+  const purchasable = Boolean(workshop?.stripe_price_id)
+  const loading = status === 'loading'
 
   function handleSubmit(e) {
     e?.preventDefault()
@@ -42,14 +35,28 @@ export default function RegisterCard({ workshop }) {
   if (status === 'already_enrolled') {
     return (
       <div className="register-card">
-        <h3 className="register-card__title">You're already registered</h3>
+        <h3 className="register-card__title">You already own this course</h3>
         <p className="register-card__body">
-          Head to your portal to access this workshop.
+          Pick up wherever you left off in your portal.
         </p>
         <Link to={portalUrl} className="btn btn--block">
-          Go to your portal
+          Go to the course
           <ArrowSvg />
         </Link>
+      </div>
+    )
+  }
+
+  // No Stripe price wired up yet. Say so honestly rather than showing a buy
+  // button that fails at the server.
+  if (!purchasable) {
+    return (
+      <div className="register-card">
+        <h3 className="register-card__title">Opening soon</h3>
+        <p className="register-card__body">
+          The course is finished and the doors open shortly. Check back in a
+          few days.
+        </p>
       </div>
     )
   }
@@ -61,10 +68,16 @@ export default function RegisterCard({ workshop }) {
         <span className="register-card__price-unit">one-time</span>
       </div>
 
+      <ul className="course-buy__list">
+        <li>8 modules, about an hour of video</li>
+        <li>1 NPCP CEC on passing the quiz</li>
+        <li>Instant access, yours to keep</li>
+      </ul>
+
       {user ? (
         <>
           <p className="register-card__user">
-            Registering as <strong>{user.email}</strong>
+            Buying as <strong>{user.email}</strong>
             {' · '}
             <button type="button" onClick={signOut} className="register-card__logout">
               Not you? Log out
@@ -78,22 +91,22 @@ export default function RegisterCard({ workshop }) {
                 required
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                disabled={status === 'loading'}
+                disabled={loading}
                 className="pp-form__input"
               />
               <p className="pp-form__help">
-                We'll add this to your certificate of completion.
+                We'll print this on your certificate.
               </p>
             </div>
           )}
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={status === 'loading'}
+            disabled={loading}
             className="btn btn--block"
           >
-            {status === 'loading' ? 'Redirecting to Stripe…' : `Register — ${price}`}
-            {status !== 'loading' && <ArrowSvg />}
+            {loading ? 'Redirecting to Stripe…' : `Get instant access. ${price}`}
+            {!loading && <ArrowSvg />}
           </button>
         </>
       ) : (
@@ -106,7 +119,7 @@ export default function RegisterCard({ workshop }) {
                 required
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                disabled={status === 'loading'}
+                disabled={loading}
                 className="pp-form__input"
               />
             </div>
@@ -117,7 +130,7 @@ export default function RegisterCard({ workshop }) {
                 required
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                disabled={status === 'loading'}
+                disabled={loading}
                 className="pp-form__input"
               />
             </div>
@@ -129,30 +142,24 @@ export default function RegisterCard({ workshop }) {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={status === 'loading'}
+              disabled={loading}
               className="pp-form__input"
             />
             <p className="pp-form__help">
-              Use this email for your account — please use the same email during payment.
+              This becomes your login. Use the same address at checkout.
             </p>
           </div>
-          <button
-            type="submit"
-            disabled={status === 'loading'}
-            className="btn btn--block"
-          >
-            {status === 'loading' ? 'Redirecting to Stripe…' : `Register — ${price}`}
-            {status !== 'loading' && <ArrowSvg />}
+          <button type="submit" disabled={loading} className="btn btn--block">
+            {loading ? 'Redirecting to Stripe…' : `Get instant access. ${price}`}
+            {!loading && <ArrowSvg />}
           </button>
         </form>
       )}
 
-      {status === 'error' && (
-        <p className="pp-form__error">{errorMsg}</p>
-      )}
+      {status === 'error' && <p className="pp-form__error">{errorMsg}</p>}
 
       <p className="register-card__meta">
-        Secure checkout via Stripe. Already registered?{' '}
+        Secure checkout via Stripe. Already have an account?{' '}
         <Link to="/login">Log in</Link>.
       </p>
     </div>
