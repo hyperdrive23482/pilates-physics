@@ -523,7 +523,7 @@ The physics was in my head the whole time. The magnitude of it just never landed
 
 It turned out that every functional design decision I made was actually a load decision. That is the education I did not know I was signing up for when I set out to design my reformer.
 
-How a Reformer Works: inside the mechanisms that make your reformer magical, is that education, arranged in a convenient mini course so you can understand how each of the reformer components affects how your load is delivered to the client. Along the way, I'll share the design decisions I faced when creating my own reformer, and why I chose what I did.
+How a Reformer Works: inside the mechanisms that make your reformer magical, is that education, arranged in a convenient mini course so you can understand how each component of the reformer changes the load your client actually feels.  Brand-agnostic and light on math, easy for anyone who teaches on a reformer to follow along.
 
 You can grab the course for $39 for another 2 days.  But after that, it goes back to the regular price of $69.
 
@@ -538,10 +538,13 @@ Kaleen
 - **One typo fixed on the way in.** The draft subject reads "about a thousand
   time." It is set here as "about a thousand times." Revert if that was
   deliberate.
-- **The course title is capitalised differently here than in email 4.** This
-  email says "How a Reformer Works: inside the mechanisms that make your reformer magical." Email 4
-  says "how your machine works and why." Pick one and make both match, since the
-  two emails land a day apart.
+- **The closing paragraph was rewritten on 2026-09-08** when the course was
+  renamed. The earlier version promised "the design decisions I faced when
+  creating my own reformer, and why I chose what I did." Kaleen is not sharing
+  her designs, so that sentence is gone and the paragraph now closes on
+  "brand-agnostic and light on math." The shoulder rest story above stays: the
+  second slot is visible on every Flexia, so it is a worked example rather than
+  a disclosure.
 - **"Two more days" checks out against the four-day window.** Email 5 lands on
   day 2 and the cart closes end of day 4, so the two days remaining after today
   are day 3 and day 4. It understates by a few hours rather than over-promising,
@@ -762,7 +765,7 @@ five questions outright, is archived in
 
 Hi {{ subscriber.first_name }},
 
-My online course, How a Reformer Works, covers how and why your machine works the way it does.  If you're wondering what exactly you get for $39, here's a quick overview.
+My online course, How a Reformer Works, is exactly what it sounds like. If you're wondering what you get for $39, here's a quick overview, module by module.
 
 **The parts.** Every component on a reformer, so you know their names and what they do.
 
@@ -852,8 +855,8 @@ That is a defensible sell, but it is worth deciding on purpose rather than by
 subtraction. The cheapest fix is one clause per module, the way pulleys already
 does it.
 
-**2. It leads with the product name.** "My online course, The Making of a
-Reformer, covers how and why your machine works" is the first opening in the
+**2. It leads with the product name.** "My online course, How a Reformer
+Works, is exactly what it sounds like" is the first opening in the
 sequence that starts with the product rather than with an idea. Correct for this
 email: the subject line asks what is in it, so the body should answer immediately
 rather than warm up. Worth noting only because it is a deliberate break from
