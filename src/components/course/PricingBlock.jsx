@@ -70,7 +70,7 @@ export default function PricingBlock({ workshop }) {
 
       <ul className="course-buy__list">
         <li>8 modules, about an hour of video</li>
-        <li>1 NPCP CEC on passing the quiz</li>
+        <li>Certificate on passing the quiz</li>
         <li>Instant access, yours to keep</li>
       </ul>
 

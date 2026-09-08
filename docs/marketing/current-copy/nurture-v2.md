@@ -85,14 +85,16 @@ a copy edit. Emails 4 through 8 do name the remaining time, because a deadline
 that is not stated does not work. The rule lives in
 [voice-and-messaging.md](../voice-and-messaging.md).
 
-**Two things block the send, and neither is copy.**
+**One thing blocks the send, and it is not copy.**
 
 1. **The discount enforcement mechanism is deferred** in the course spec. Email 4
    opens a cart at $39 while the public page shows $69, so that mechanism has to
    exist before any of emails 4 through 8 can send.
-2. **The CEC is unconfirmed.** The spec says "1 CEC for $39" is what justifies
-   the price. All drafts are written so the CEC line can be dropped in without a
-   rewrite, and none of them assert it.
+
+**The CEC question is settled: there is no CEC.** As of 2026-09-08 the course
+carries no NPCP continuing education credit, so the "[CEC line goes here once
+confirmed.]" placeholders in emails 4, 6 and 7 were deleted and no email asserts
+one. If approval ever lands, email 4 is where a single CEC line belongs.
 
 ### Subject line pass, 2026-08-21
 
@@ -410,7 +412,7 @@ Most teacher training glosses over this part.
 
 I know that because I came at Pilates from precisely this equipment angle before I ever learned how to teach.  And when it was time to design my own reformer, I had to pick every dimension, every adjustment range, every spring specification.  They needed to be defensible with physics, and I got a full education in what a reformer actually is on the way through.
 
-I put what I learned into a short online course. It's called **How a Reformer Works: inside the mechanisms that make your reformer magical.** It talks about everything that changes load before a body gets on it, and it is about an hour and is available instantly on purchase. [CEC line goes here once confirmed.]
+I put what I learned into a short online course. It's called **How a Reformer Works: inside the mechanisms that make your reformer magical.** It talks about everything that changes load before a body gets on it, and it is about an hour and is available instantly on purchase.
 
 Because you just joined my list, I want to give you the chance to buy this course for **$39**.  You get the special discount for 4 days. After that it goes back to its normal $69.
 
@@ -446,8 +448,7 @@ Kaleen
   charges $39. That is the discount enforcement mechanism, still deferred in
   [the course spec](../working-drafts/reformer-machine-course-spec.md). Nothing
   in emails 4 through 8 can send until it exists.
-- **`[CEC line goes here once confirmed.]` is a real placeholder.** Delete the
-  bracket and write the line, or delete the sentence. Do not ship the bracket.
+- **The CEC placeholder was removed on 2026-09-08.** No CEC, so no line.
 - **No P.S.** Emails 1, 2, and 3 all have one. Not a problem, but it is a break
   in pattern worth making on purpose rather than by omission.
 - **No forward tease to email 5.** The earlier drafts ended on one. This version
@@ -663,7 +664,7 @@ Regardless, here's a little quiz to help you think about what you do and don't k
 
 **Five.** Why do manufacturers recommend replacing your springs so often?
 
-If you want to know the answers to these questions, you should grab my online course, How a Reformer Works.  It covers all five, and then some. [CEC line goes here once confirmed.]
+If you want to know the answers to these questions, you should grab my online course, How a Reformer Works.  It covers all five, and then some.
 
 **It is $39 until tomorrow.** After that it goes to $69.
 
@@ -680,8 +681,7 @@ Kaleen
   day. This line is what surfaced the conflict in the original three-day plan,
   where emails 6 and 7 were both stacked on day 3 and this sentence promised a day
   that did not exist. The window is now four calendar days. No edit needed.
-- **`[CEC line goes here once confirmed.]` is a live placeholder.** Delete the
-  bracket and write the line, or delete the sentence. Do not ship the bracket.
+- **The CEC placeholder was removed on 2026-09-08.** No CEC, so no line.
 - **`LINK` is the same placeholder** as emails 4 and 5, and the same blocker: the
   discount enforcement mechanism is still deferred in
   [the course spec](../working-drafts/reformer-machine-course-spec.md).
@@ -779,7 +779,7 @@ My online course, How a Reformer Works, is exactly what it sounds like. If you'r
 
 **Classical and contemporary comparison.** A level-headed look at materials and design differences between classical and contemporary reformers.
 
-About an hour altogether, available the moment you buy, and you can take it in pieces. [CEC line goes here once confirmed.]
+About an hour altogether, available the moment you buy, and you can take it in pieces.
 
 **$39 today,** then $69.
 
@@ -829,8 +829,7 @@ Kaleen
   inside the closing bold markers, which breaks the emphasis when rendered;
   removed. And "body weight and wheel design *affects*" is a compound subject, so
   it is now "affect." Revert either if they were deliberate.
-- **`[CEC line goes here once confirmed.]` is a live placeholder,** same as emails
-  4 and 6. Delete the bracket and write the line, or delete the sentence.
+- **The CEC placeholder was removed on 2026-09-08,** same as emails 4 and 6.
 - **`LINK` is the same placeholder** and the same blocker as emails 4 through 6:
   the discount enforcement mechanism is still deferred in
   [the course spec](../working-drafts/reformer-machine-course-spec.md).

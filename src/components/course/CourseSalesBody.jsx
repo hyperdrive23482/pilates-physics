@@ -102,7 +102,7 @@ const INCLUDED = [
   {
     n: '03',
     label: 'CERTIFICATE',
-    title: 'Your NPCP certificate',
+    title: 'Your certificate',
     body: 'Generated the moment you pass, with your name on it, ready to download whenever you need it again.',
   },
   {
@@ -167,7 +167,7 @@ export default function CourseSalesBody({ pricing }) {
             </div>
             <p className="workshop-hero__meta">
               <span className="workshop-hero__meta-k">On demand</span>
-              8 modules · about an hour · 1 NPCP CEC
+              8 modules · about an hour · certificate on passing
             </p>
           </div>
         </div>
@@ -289,19 +289,18 @@ export default function CourseSalesBody({ pricing }) {
         </div>
       </section>
 
-      {/* ── § 06 The CEC ─────────────────────────────────────────────────── */}
+      {/* ── § 06 The certificate ─────────────────────────────────────────── */}
       <section className="section-pad section--inset course-cec">
         <div className="container">
-          <div className="kicker">§ 06 · Continuing education</div>
+          <div className="kicker">§ 06 · The certificate</div>
           <h2 className="workshop-why__head">
-            One NPCP CEC, <span className="italic accent">earned not attended.</span>
+            A certificate <span className="italic accent">earned, not attended.</span>
           </h2>
           <p className="workshop-why__body">
             Work through the modules, pass the ten question quiz, and your
             certificate is generated with your name on it. Download it then or
-            any time afterwards. It records the date you passed, the course,
-            and its NPCP details, which is what your credentialing body asks
-            for.
+            any time afterwards. It records the course and the date you
+            passed. It does not carry NPCP continuing education credit.
           </p>
         </div>
       </section>

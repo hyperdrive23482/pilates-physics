@@ -4,7 +4,10 @@
 > slug `how-a-reformer-works`. Kit tags were renamed from `MOR-` to `HARW-`, and
 > migration 048 moved `kit_tag` with them. The Flexia design decisions are not being
 > shared, so the "here is what I chose and why" module shape described below
-> is no longer a promise the sales page makes.
+> is no longer a promise the sales page makes. **There is no NPCP CEC as of
+> 2026-09-08**: `npcp_cecs` is null (045 and 049), the certificate is a plain
+> certificate of completion, and no copy claims a CEC. The CEC material below is
+> kept for when approval is pursued.
 
 The plan for a new product type. Not a workshop with videos attached, but a
 course delivered inside the portal: eight modules in a set sequence, each one a

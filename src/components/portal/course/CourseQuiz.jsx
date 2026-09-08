@@ -4,7 +4,7 @@ import { supabase } from '../../../lib/supabase'
 import CertificateButton from '../CertificateButton'
 
 /**
- * The graded assessment. Passing it is what issues the NPCP certificate.
+ * The graded assessment. Passing it is what issues the certificate.
  *
  * Nothing here holds the answer key. The questions arrive without it, and a
  * submitted attempt comes back saying only whether each answer was right,
