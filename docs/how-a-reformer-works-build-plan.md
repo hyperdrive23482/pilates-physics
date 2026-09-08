@@ -23,8 +23,8 @@ This resolves the spec's open decision "Discount enforcement mechanism:
 | Discount mechanism | A second Stripe Price at $39, no coupon | Adaptive Pricing is on, which rules out amount-off coupons |
 | Deadline shape | End of day, fixed timezone, not tag time plus N hours | A ragged expiry contradicts "today," "tomorrow," and "midnight" in the copy. See "Timeline" |
 | Kit structure | Two sequences with a visual automation carrying the handoff between them | Already built. See "The Kit flow as built" |
-| Handoff tag | `in-MOR-sequence`, applied once nurture completes | Starts the offer clock and enrols them in the cart sequence. This is the tag the cron polls |
-| Purchase tag | `MOR-purchased` (MOR is the original working title, The Making of a Reformer; tag names were kept through the rename) | `webinars.kit_tag` must match this string exactly, or the buyer is never removed from the cart sequence |
+| Handoff tag | `in-HARW-sequence`, applied once nurture completes | Starts the offer clock and enrols them in the cart sequence. This is the tag the cron polls |
+| Purchase tag | `HARW-purchased` (tags were `MOR-*` until 2026-09-08, after the original working title; renamed in place in Kit so automation wiring survived) | `webinars.kit_tag` must match this string exactly, or the buyer is never removed from the cart sequence |
 | Offer identity | Opaque token in a Kit custom field | Survives cross-device; no PII in URLs |
 | Clock start | When the Kit tag is applied, not on click | Deadline is printable in the email and immune to link prefetch |
 | Sync method | Vercel cron poll, every 15 minutes | Reuses existing cron infrastructure; easier to debug than a webhook |
@@ -83,9 +83,9 @@ greenfield design.
 | `spring-calc` | Claimed the free calculator | `api/springs101.js`, from `webinars.kit_tag` on the `spring-load-calculator` row (migration 039) |
 | `in-nurture` | Currently inside the nurture sequence | "Spring Calc Welcome" automation |
 | `completed-nurture` | Finished nurture | **Nothing. See "What still has to change"** |
-| `in-MOR-sequence` | In the cart sequence, offer clock running | "Spring Calc Welcome" automation, final step |
-| `MOR-didnotbuy` | Finished the cart sequence without buying | "MOR Email Sequence" automation, final step |
-| `MOR-purchased` | Bought the course | `provisionPurchase`, from `webinars.kit_tag` on the course row |
+| `in-HARW-sequence` | In the cart sequence, offer clock running | "Spring Calc Welcome" automation, final step |
+| `HARW-didnotbuy` | Finished the cart sequence without buying | "HARW Email Sequence" automation, final step |
+| `HARW-purchased` | Bought the course | `provisionPurchase`, from `webinars.kit_tag` on the course row |
 
 ### Sequences
 
@@ -101,19 +101,19 @@ link that needs a token, which is what makes the handoff safe.
 
 ```
 Spring Calc Welcome   spring-calc  -> +in-nurture -> [Spring Calc Welcome seq]
-                                   -> -in-nurture -> +in-MOR-sequence
+                                   -> -in-nurture -> +in-HARW-sequence
 
-MOR Email Sequence    in-MOR-sequence -> [How a Reformer Works seq]
-                                      -> +MOR-didnotbuy
+HARW Email Sequence    in-HARW-sequence -> [How a Reformer Works seq]
+                                      -> +HARW-didnotbuy
 
-MOR Purchase          MOR-purchased -> -MOR-didnotbuy -> -in-MOR-sequence
+HARW Purchase          HARW-purchased -> -HARW-didnotbuy -> -in-HARW-sequence
 ```
 
-Plus one classic automation rule: when `MOR-purchased` is applied, unsubscribe
+Plus one classic automation rule: when `HARW-purchased` is applied, unsubscribe
 from the How a Reformer Works sequence.
 
 **That rule, not the tag removal, is what stops the sales emails.** Removing
-`in-MOR-sequence` does not pull anyone out of a sequence already running. If the
+`in-HARW-sequence` does not pull anyone out of a sequence already running. If the
 rule is ever disabled, a day-1 buyer receives "$39 ends at midnight" three days
 after paying, and nothing else in the system would catch it.
 
@@ -127,17 +127,17 @@ whole handoff is legible in one screen.
 ### What still has to change
 
 - [ ] **`completed-nurture` is never applied.** The Spring Calc Welcome
-      automation removes `in-nurture` and adds `in-MOR-sequence` with nothing in
+      automation removes `in-nurture` and adds `in-HARW-sequence` with nothing in
       between. Add the step or retire the tag
 - [ ] **A one-day delay on email 4**, expressed in days. See "Why email 4 cannot
       send immediately"
-- [ ] **A condition step before `MOR-didnotbuy`**, in "MOR Email Sequence",
-      between the sequence and the tag: apply only when `MOR-purchased` is
+- [ ] **A condition step before `HARW-didnotbuy`**, in "HARW Email Sequence",
+      between the sequence and the tag: apply only when `HARW-purchased` is
       absent. Unsubscribing from a sequence is not the same as leaving the
       automation, and Kit will most likely advance to the tag step regardless.
-      The "MOR Purchase" automation cannot cover this, because it runs at
+      The "HARW Purchase" automation cannot cover this, because it runs at
       purchase time and removes a tag that has not been applied yet
-- [ ] **Activate "MOR Email Sequence" and "MOR Purchase".** Both are toggled
+- [ ] **Activate "HARW Email Sequence" and "HARW Purchase".** Both are toggled
       off. Inactive automations do not accept subscribers, and switching one on
       later does not retroactively enrol anyone whose trigger already fired.
       Nobody is in flight today, so the cost is zero, but this has to happen
@@ -153,8 +153,8 @@ whole handoff is legible in one screen.
 
 Two independent reasons, both closed by the same one-day delay.
 
-**The token will not exist yet.** "MOR Email Sequence" fires the instant
-`in-MOR-sequence` lands and enrols the subscriber immediately. The cron polls
+**The token will not exist yet.** "HARW Email Sequence" fires the instant
+`in-HARW-sequence` lands and enrols the subscriber immediately. The cron polls
 every 15 minutes. A zero-delay email 4 can go out before `offer_token` has been
 written back to Kit, and the merge field renders blank in the one email that has
 to carry the link.
@@ -217,11 +217,11 @@ Add `'course'` to the `webinars_kind_check` constraint, which is currently
 ```sql
 insert into public.webinars (slug, title, subtitle, status, kind, price_cents, kit_tag)
 values ('how-a-reformer-works', 'How a Reformer Works',
-        'Inside the mechanisms that make your reformer magical', 'live', 'course', 6900, 'MOR-purchased');
+        'Inside the mechanisms that make your reformer magical', 'live', 'course', 6900, 'HARW-purchased');
 ```
 
-**`kit_tag` must be `MOR-purchased`, exactly.** `provisionPurchase` applies
-whatever string sits in this column, and that tag is what triggers the "MOR
+**`kit_tag` must be `HARW-purchased`, exactly.** `provisionPurchase` applies
+whatever string sits in this column, and that tag is what triggers the "HARW
 Purchase" automation and the unsubscribe-from-sequence rule. Seed a different
 name and buyers keep receiving sales emails for a course they already own,
 silently. Migration 039 records the same trap one product earlier.
@@ -361,7 +361,7 @@ is only the pair of custom fields.
 - [ ] Custom fields: `offer_token`, `offer_deadline`
 - [ ] Everything under "What still has to change"
 
-**No new tag is needed.** `in-MOR-sequence` is the trigger the cron polls, and
+**No new tag is needed.** `in-HARW-sequence` is the trigger the cron polls, and
 the "Spring Calc Welcome" automation already applies it at exactly the right
 moment: after nurture completes, before the cart sequence begins.
 
@@ -377,7 +377,7 @@ the difference between "usually fine" and "cannot race."
 Each run:
 
 ```
-1. GET Kit subscribers tagged `in-MOR-sequence`
+1. GET Kit subscribers tagged `in-HARW-sequence`
 2. filter out: existing subscriber_offers rows for this offer_key
                users already holding a course entitlement
 3. insert up to 100 offer rows,
@@ -683,7 +683,7 @@ enforced.
 
 Already built this way. "The Kit flow as built" has the exact structure: Spring
 Calc Welcome carries nurture, the How a Reformer Works sequence carries the cart,
-and the automation between them applies `in-MOR-sequence`.
+and the automation between them applies `in-HARW-sequence`.
 
 What the schedule still needs:
 
@@ -726,14 +726,14 @@ Code:
 
 - [ ] Cron: `expires_at = end_of_day(mint_date + 4 days)` in
       `America/Los_Angeles`, replacing `now() + 72h`
-- [ ] Migration 042: `kit_tag = 'MOR-purchased'`, matching Kit exactly
+- [ ] Migration 042: `kit_tag = 'HARW-purchased'`, matching Kit exactly
 
 Kit, all manual:
 
 - [ ] One-day delay on email 4, expressed in days
-- [ ] Condition step before `MOR-didnotbuy`, skipped when `MOR-purchased` is
+- [ ] Condition step before `HARW-didnotbuy`, skipped when `HARW-purchased` is
       present
-- [ ] Activate "MOR Email Sequence" and "MOR Purchase"
+- [ ] Activate "HARW Email Sequence" and "HARW Purchase"
 - [ ] `completed-nurture` step, or retire the tag
 - [ ] Sequence schedule 9am, all delays in days
 - [ ] Cart sequence enabled all seven days
@@ -746,7 +746,7 @@ Tests:
 - [ ] One subscriber added at 11pm. Confirm email 1 lands the next morning rather
       than at 11:15pm. The entire schedule rests on this
 - [ ] One subscriber who buys mid-sequence. Confirm they stop receiving cart
-      emails and do **not** end up tagged `MOR-didnotbuy`
+      emails and do **not** end up tagged `HARW-didnotbuy`
 - [ ] An expired token against `create-session.js`, already listed in Phase 3 and
       still the only thing between an expired link and a $30 discount
 
@@ -758,7 +758,7 @@ few dozen a day produces a steady trickle of windows rather than one spike. The
 cron sees the same steady input either way.
 
 The cohort enters differently from a new subscriber, though. They have already
-completed nurture, so they are tagged straight into `in-MOR-sequence` and their
+completed nurture, so they are tagged straight into `in-HARW-sequence` and their
 cart opens the next morning. A wave tagged Monday reaches email 4 on Tuesday, not
 the following week.
 
@@ -767,16 +767,16 @@ the following week.
 ## The backfill
 
 238 subscribers have completed the Spring Calc Welcome sequence. The
-`in-MOR-sequence` step was appended to that automation afterwards, so none of
+`in-HARW-sequence` step was appended to that automation afterwards, so none of
 them ever passed through it and Kit will not walk them back. **They cannot reach
 the tripwire on their own.** Nothing about this is self-healing.
 
-**The entry point is `in-MOR-sequence`, applied directly.** Bulk-tag them and the
-"MOR Email Sequence" automation picks them up on the tag event exactly as it does
+**The entry point is `in-HARW-sequence`, applied directly.** Bulk-tag them and the
+"HARW Email Sequence" automation picks them up on the tag event exactly as it does
 a new subscriber. They do not re-enter nurture, and should not: they have already
 read emails 1 through 3.
 
-**Activate "MOR Email Sequence" before the first wave.** Inactive automations do
+**Activate "HARW Email Sequence" before the first wave.** Inactive automations do
 not accept subscribers. Tag a wave while it is switched off and that wave is
 silently lost, with no way to re-fire the trigger short of removing the tag and
 re-adding it.

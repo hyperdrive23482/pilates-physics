@@ -1,8 +1,8 @@
 # How a Reformer Works: Course Product Plan
 
 > **Renamed September 2026.** The course shipped as How a Reformer Works,
-> slug `how-a-reformer-works`. Kit tags keep the `MOR-` prefix from the
-> original working title. Some of the Flexia design decisions are not being
+> slug `how-a-reformer-works`. Kit tags were renamed from `MOR-` to `HARW-`, and
+> migration 048 moved `kit_tag` with them. The Flexia design decisions are not being
 > shared, so the "here is what I chose and why" module shape described below
 > is no longer a promise the sales page makes.
 
@@ -95,7 +95,7 @@ is the product row. `course_modules` is the curriculum.
 | Certificate | Existing PDF and route, with a course branch | Same document as the workshops. Swaps the status gate for a passed-quiz gate and prints the completion date |
 | Admin | A course-shaped editor, not the workshop editor | The point of this revision. See Phase 1 |
 | Landing page | Bespoke, in the shape of `PilatesPhysics101.jsx` | Every landing page here is bespoke. Body split out so the offer page can reuse it |
-| Kit tag | `MOR-purchased`, exactly | The offer plan's Kit automations key on this string |
+| Kit tag | `HARW-purchased`, exactly | The offer plan's Kit automations key on this string |
 | Migrations | Start at `044` | `042` and `043` are activity logging. The offer plan's numbers are stale |
 
 ## What the app already does for free
@@ -306,10 +306,10 @@ insert into public.webinars
 values
   ('how-a-reformer-works', 'How a Reformer Works',
    'Inside the mechanisms that make your reformer magical', '<description, no em dashes>',
-   'live', 'course', 6900, 60, 'MOR-purchased', 1.0)
+   'live', 'course', 6900, 60, 'HARW-purchased', 1.0)
 on conflict (slug) do update set
   kind = 'course', status = 'live', price_cents = 6900,
-  kit_tag = 'MOR-purchased';
+  kit_tag = 'HARW-purchased';
 ```
 
 `stripe_price_id`, `npcp_course_id`, and `npcp_approval_date` stay null and get
@@ -832,7 +832,7 @@ the spec describes become content work rather than engineering work.
 |------|-------|------|
 | Stripe Product and a one-time $69 Price, test and live | Stripe dashboard | Before the test purchase |
 | Paste the Price id onto the course | Admin, dev then prod | Same |
-| Create the `MOR-purchased` tag | Kit | Before the first sale |
+| Create the `HARW-purchased` tag | Kit | Before the first sale |
 | Upload eight videos, Unlisted with a hash, embeds restricted to the site domains | Vimeo | Before launch |
 | Paste the share URLs into the modules | Admin, Curriculum tab | After upload |
 | NPCP course id and approval date | Admin, Details tab | When NPCP issues them |
@@ -845,7 +845,7 @@ the spec describes become content work rather than engineering work.
 Dev with Stripe test mode, then a real card on prod, refunded.
 
 - [ ] Buy as a new email. Magic link arrives, the course appears under Courses,
-      the entitlement is `source = 'stripe'`, and Kit carries `MOR-purchased`.
+      the entitlement is `source = 'stripe'`, and Kit carries `HARW-purchased`.
 - [ ] Buy while already entitled. The 409 links to the portal.
 - [ ] Cancel at Stripe. Lands on the landing page, not the generic one.
 - [ ] Module 1 plays. Next completes it and advances. Previous does not

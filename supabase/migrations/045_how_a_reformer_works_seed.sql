@@ -16,10 +16,10 @@
 --                         is the wrong home for copy that will be revised.
 --                         They get typed into the Quiz tab.
 --
--- kit_tag MUST stay exactly 'MOR-purchased'. MOR is the course's original
--- working title, The Making of a Reformer; the tag name is internal and
--- was kept when the course was renamed How a Reformer Works.
--- provisionPurchase applies
+-- kit_tag MUST match the Kit tag exactly: 'HARW-purchased'. It was
+-- 'MOR-purchased' until 2026-09-08 (the original working title, The Making
+-- of a Reformer); the Kit tags were renamed in place and 048 moves any
+-- already-seeded row with them. provisionPurchase applies
 -- whatever string sits in that column, and the Kit automations trigger on
 -- that exact name. Rename it and buyers keep receiving the sales sequence
 -- for a course they already own, silently. Migration 039 records the same
@@ -48,7 +48,7 @@ values (
   'course',
   6900,
   60,
-  'MOR-purchased',
+  'HARW-purchased',
   1.0
 )
 on conflict (slug) do update set
