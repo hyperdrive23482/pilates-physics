@@ -3,9 +3,9 @@ export function workshopUrl(slug) {
   if (slug.startsWith('PP-101')) return '/pilates-physics-101'
   if (slug.startsWith('PP-102')) return '/pilates-physics-102'
   // Courses are single products rather than a series, so they map by exact
-  // slug. This is also what stops /workshops/making-of-a-reformer publishing a
+  // slug. This is also what stops /workshops/how-a-reformer-works publishing a
   // second, competing sales page for the same product.
-  if (slug === 'making-of-a-reformer') return '/making-of-a-reformer'
+  if (slug === 'how-a-reformer-works') return '/how-a-reformer-works'
   return `/workshops/${slug}`
 }
 

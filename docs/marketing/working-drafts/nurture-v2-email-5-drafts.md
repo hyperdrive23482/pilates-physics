@@ -124,11 +124,11 @@ I made dozens of decisions like that one. How many gear positions to offer and w
 
 Every one of them turned out to be a load decision wearing a different costume.
 
-That is what The Making of a Reformer online course is. Not a parts list. Each section opens with a decision I had to make, gives you the physics that settled it, and closes with what I picked and why.
+That is what How a Reformer Works online course is. Not a parts list. Each section opens with a decision I had to make, gives you the physics that settled it, and closes with what I picked and why.
 
 You can still get it for **$39** for just two more days.  Then it goes back to $69.
 
-[Get The Making of a Reformer →](LINK)
+[Get How a Reformer Works →](LINK)
 
 Kaleen
 
@@ -186,7 +186,7 @@ That is why the course is built the way it is. Every section opens with a decisi
 
 **Two more days at $39,** then $69.
 
-[Get The Making of a Reformer →](LINK)
+[Get How a Reformer Works →](LINK)
 
 Kaleen
 
@@ -242,11 +242,11 @@ The physics was in my head the whole time. The magnitude of it just never landed
 
 It turned out that every functional design decision I made was actually a load decision. That is the education I did not know I was signing up for when I set out to design my reformer.
 
-The Making of a Reformer: How your machine works and why, is that education, arranged in a convenient mini course so you can understand how each of the reformer components affects how your load is delivered to the client. Along the way, I'll share the design decisions I faced when creating my own reformer, and why I chose what I did.
+How a Reformer Works: inside the mechanisms that make your reformer magical, is that education, arranged in a convenient mini course so you can understand how each of the reformer components affects how your load is delivered to the client. Along the way, I'll share the design decisions I faced when creating my own reformer, and why I chose what I did.
 
 You can grab the course for $39 for another 2 days.  But after that, it goes back to the regular price of $69.
 
-[Get The Making of a Reformer →](LINK)
+[Get How a Reformer Works →](LINK)
 
 Kaleen
 

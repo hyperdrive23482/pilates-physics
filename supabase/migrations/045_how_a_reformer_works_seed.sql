@@ -1,5 +1,5 @@
 -- ============================================================
--- Pilates Physics: The Making of a Reformer
+-- Pilates Physics: How a Reformer Works
 --
 -- Seeds the first course: the product row plus its eight modules, so dev
 -- and prod start from the same curriculum. Everything seeded here is
@@ -16,7 +16,10 @@
 --                         is the wrong home for copy that will be revised.
 --                         They get typed into the Quiz tab.
 --
--- kit_tag MUST stay exactly 'MOR-purchased'. provisionPurchase applies
+-- kit_tag MUST stay exactly 'MOR-purchased'. MOR is the course's original
+-- working title, The Making of a Reformer; the tag name is internal and
+-- was kept when the course was renamed How a Reformer Works.
+-- provisionPurchase applies
 -- whatever string sits in that column, and the Kit automations trigger on
 -- that exact name. Rename it and buyers keep receiving the sales sequence
 -- for a course they already own, silently. Migration 039 records the same
@@ -28,7 +31,7 @@
 -- Stripe price is pasted into the admin. kind = 'course' keeps the row out
 -- of every public listing, which all filter on kind = 'webinar'.
 --
--- See docs/making-of-a-reformer-course-plan.md, Phase 0.
+-- See docs/how-a-reformer-works-course-plan.md, Phase 0.
 -- ============================================================
 
 -- ---------- The product row -----------------------------------
@@ -37,10 +40,10 @@ insert into public.webinars
   (slug, title, subtitle, description,
    status, kind, price_cents, duration_min, kit_tag, npcp_cecs)
 values (
-  'making-of-a-reformer',
-  'The Making of a Reformer',
-  'How your machine works and why',
-  'An on-demand course on the reformer as a machine. Eight modules covering everything that changes load before a body gets on the carriage: what each part does, how springs behave and age, what every adjustment does to stretch, how the ropes and pulleys relate rope travel to carriage travel, and why friction is not the problem most teachers think it is. Taught by someone who designed a reformer, so every module opens with a decision that had to be made and closes with what was chosen and why.',
+  'how-a-reformer-works',
+  'How a Reformer Works',
+  'Inside the mechanisms that make your reformer magical',
+  'An on-demand course on the reformer as a machine. Eight modules covering everything that changes load before a body gets on the carriage: what each part does, how springs behave and age, what every adjustment does to stretch, how the ropes and pulleys relate rope travel to carriage travel, and why friction is not the problem most teachers think it is. Taught by someone who designed a reformer and had to get every one of these right with real parts.',
   'live',
   'course',
   6900,
@@ -96,7 +99,7 @@ cross join (values
   (7, 'How we consider the body', 3,
    'The one thing the machine cannot tell you, and where Pilates Physics 101 picks up.')
 ) as m(sort_order, title, duration_min, summary)
-where w.slug = 'making-of-a-reformer'
+where w.slug = 'how-a-reformer-works'
   and not exists (
     select 1 from public.course_modules cm
     where cm.webinar_id = w.id

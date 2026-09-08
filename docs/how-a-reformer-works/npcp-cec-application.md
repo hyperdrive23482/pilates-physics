@@ -1,6 +1,6 @@
-# The Making of a Reformer
+# How a Reformer Works
 
-*How your machine works and why*
+*Inside the mechanisms that make your reformer magical*
 
 Continuing Education Course Submission
 Prepared for: National Pilates Certification Program (NPCP)

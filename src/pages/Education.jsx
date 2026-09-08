@@ -9,12 +9,12 @@ const PATHS = [
   {
     n: '01',
     label: 'ONLINE COURSE',
-    title: 'The Making of a Reformer',
-    sub: 'How your machine works, and why',
-    body: 'A behind-the-scenes look at reformer design, from spring specs to all the decisions that impact how a body is loaded.',
+    title: 'How a Reformer Works',
+    sub: 'Inside the mechanisms that make your reformer magical',
+    body: 'From spring specs to every adjustment on the frame, what each part of the reformer does to the load on a body, taught by the engineer who designed one.',
     meta: '$69 · 1 NPCP CEC · Instant access',
     ctaLabel: 'Learn more',
-    to: '/making-of-a-reformer',
+    to: '/how-a-reformer-works',
   },
   {
     n: '02',

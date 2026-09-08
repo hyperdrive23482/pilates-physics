@@ -61,7 +61,7 @@ else in it.
 
 Hi {{ subscriber.first_name }},
 
-I just wanted to drop in real quick and remind you that your special $39 price for The Making of a Reformer goes away at midnight tonight.
+I just wanted to drop in real quick and remind you that your special $39 price for How a Reformer Works goes away at midnight tonight.
 
 [Get it now →](LINK)
 
@@ -87,7 +87,7 @@ one sentence too many.
 
 Hi {{ subscriber.first_name }},
 
-$39 on The Making of a Reformer until midnight, then it is $69 for good.
+$39 on How a Reformer Works until midnight, then it is $69 for good.
 
 [Get it before then →](LINK)
 
@@ -160,7 +160,7 @@ the drafts for it.
 
 Hi {{ subscriber.first_name }},
 
-Quick one. The $39 window on The Making of a Reformer closes tonight.
+Quick one. The $39 window on How a Reformer Works closes tonight.
 
 [Get it before midnight →](LINK)
 
@@ -174,7 +174,7 @@ Kaleen
 
 Hi {{ subscriber.first_name }},
 
-Last call. The $39 price on The Making of a Reformer ends tonight.
+Last call. The $39 price on How a Reformer Works ends tonight.
 
 It is about an hour, it covers the whole machine, and it is the answer to the five questions I sent this morning.
 

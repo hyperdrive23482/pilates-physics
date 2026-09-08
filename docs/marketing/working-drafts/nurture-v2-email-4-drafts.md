@@ -15,7 +15,7 @@ unspent and may be worth a main-list newsletter later.
 
 > **Fourth pass. The structure changed, not just the copy.** Email 4 is now the
 > cart open for
-> [The Making of a Reformer](reformer-machine-course-spec.md). The diagnosis
+> [How a Reformer Works](reformer-machine-course-spec.md). The diagnosis
 > still carries the email and the offer is the last movement, not the premise.
 > Earlier passes are recorded at the bottom.
 
@@ -134,11 +134,11 @@ But the spring is only part of what sets it. There are things on that machine th
 
 I know that because I had to learn all of it. I designed a reformer. Every dimension, every adjustment range, every spring specification was a decision I had to make and then defend with physics, and I got a full education in what a reformer actually is on the way through.
 
-I put that education into a short course. It is called **The Making of a Reformer: how your machine works and why.** It is the whole machine, everything that changes load before a body gets on it, and it is about an hour. [CEC line goes here once confirmed.]
+I put that education into a short course. It is called **How a Reformer Works: inside the mechanisms that make your reformer magical.** It is the whole machine, everything that changes load before a body gets on it, and it is about an hour. [CEC line goes here once confirmed.]
 
 You just joined my list, so you have three days at **$39**. After that it goes to its normal $69.
 
-[Get The Making of a Reformer →](LINK)
+[Get How a Reformer Works →](LINK)
 
 Next time I will tell you how a Pilates teacher ended up designing equipment, which is a less flattering story than it sounds.
 
@@ -193,11 +193,11 @@ But the spring is only part of what sets that number. Things on your machine cha
 
 I ended up learning all of them the hard way, because I designed a reformer. Every adjustment range and every spring specification was a decision I had to make and then defend with physics.
 
-That is now a short course. **The Making of a Reformer: how your machine works and why.** The whole machine, everything that changes load before a body gets on it, about an hour. [CEC line goes here once confirmed.]
+That is now a short course. **How a Reformer Works: inside the mechanisms that make your reformer magical.** The whole machine, everything that changes load before a body gets on it, about an hour. [CEC line goes here once confirmed.]
 
 Because you just joined my list, it is **$39 for the next three days**, then its normal $69.
 
-[Get The Making of a Reformer →](LINK)
+[Get How a Reformer Works →](LINK)
 
 Next time, how a Pilates teacher ended up designing equipment. It is a less flattering story than it sounds.
 
@@ -244,11 +244,11 @@ The rest of the machine is the rest of the number. There are things on that refo
 
 I learned the rest because I designed a reformer, and every adjustment range and spring specification on it was a decision I had to make and defend with physics.
 
-It is a short course now. **The Making of a Reformer: how your machine works and why.** About an hour, and it is the whole machine. [CEC line goes here once confirmed.]
+It is a short course now. **How a Reformer Works: inside the mechanisms that make your reformer magical.** About an hour, and it is the whole machine. [CEC line goes here once confirmed.]
 
 You just joined my list, so you have three days at **$39**. It is $69 after that.
 
-[Get The Making of a Reformer →](LINK)
+[Get How a Reformer Works →](LINK)
 
 Next time, the story of how a Pilates teacher ended up designing equipment.
 

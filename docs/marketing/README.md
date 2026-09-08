@@ -69,7 +69,7 @@ record of what was considered. When a finished piece is retired, move it to
 
 | File | What it is |
 |------|------------|
-| [nurture-v2.md](current-copy/nurture-v2.md) | The eight-email sequence that follows the Spring Load Calculator and runs into The Making of a Reformer cart. All eight final. This is the live nurture sequence |
+| [nurture-v2.md](current-copy/nurture-v2.md) | The eight-email sequence that follows the Spring Load Calculator and runs into How a Reformer Works cart. All eight final. This is the live nurture sequence |
 
 > **This is the only nurture sequence.** `nurture-springs-101.md` was a second
 > structure written for the same slot. It was archived on 2026-09-03, and
@@ -83,7 +83,7 @@ record of what was considered. When a finished piece is retired, move it to
 | [nurture-v2-email-2-drafts.md](working-drafts/nurture-v2-email-2-drafts.md) | The three competing drafts of nurture v2 email 2, the enemy. Version A was chosen and now lives in `current-copy/nurture-v2.md` |
 | [nurture-v2-email-3-drafts.md](working-drafts/nurture-v2-email-3-drafts.md) | The three competing drafts of nurture v2 email 3, the misdiagnosis. Version A was chosen and now lives in `current-copy/nurture-v2.md` |
 | [nurture-v2-email-4-drafts.md](working-drafts/nurture-v2-email-4-drafts.md) | The three competing drafts of nurture v2 email 4, the real diagnosis. Awaiting a decision |
-| [reformer-machine-course-spec.md](working-drafts/reformer-machine-course-spec.md) | Course and offer spec for "The Making of a Reformer," the machine-only mini course proposed for the tripwire slot. Outline, learning objectives, title decision, pricing, and the four-email sales sequence |
+| [reformer-machine-course-spec.md](working-drafts/reformer-machine-course-spec.md) | Course and offer spec for "How a Reformer Works," the machine-only mini course proposed for the tripwire slot. Outline, learning objectives, title decision, pricing, and the four-email sales sequence |
 
 ### archive/
 

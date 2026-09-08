@@ -5,7 +5,7 @@ import PricingBlock from '../components/course/PricingBlock'
 import '../styles/ppv2.css'
 import './Workshop.css'
 
-const SLUG = 'making-of-a-reformer'
+const SLUG = 'how-a-reformer-works'
 
 /**
  * The public sales page. $69, and it never mentions a discount.
@@ -17,7 +17,7 @@ const SLUG = 'making-of-a-reformer'
  * Resolved by slug rather than through useCurrentWorkshop, which keys off the
  * PP-101 and PP-102 series prefixes and has no meaning for a course.
  */
-export default function MakingOfAReformer() {
+export default function HowAReformerWorks() {
   const [workshop, setWorkshop] = useState(null)
 
   useEffect(() => {

@@ -1,10 +1,10 @@
-# The Making of a Reformer: Course and Offer Spec
+# How a Reformer Works: Course and Offer Spec
 
 > **Status: working draft.** Nothing in this file is approved. CEC approval is
 > unconfirmed and the discount enforcement mechanism is deliberately deferred.
 
-**The Making of a Reformer**
-*How your machine works and why*
+**How a Reformer Works**
+*Inside the mechanisms that make your reformer magical*
 
 An on-demand mini course on the reformer as a machine. Proposed to fill the
 tripwire slot in the funnel described in
@@ -302,8 +302,8 @@ printed and taped inside a spring cabinet with the brand on it.
 
 ## Title
 
-> **The Making of a Reformer**
-> *How your machine works and why*
+> **How a Reformer Works**
+> *Inside the mechanisms that make your reformer magical*
 
 The title is the one option no one else in Pilates education could ever use,
 because it is only true of someone who designed the machine. It carries warmth
@@ -322,7 +322,7 @@ framing in the H1 subline and the meta description.
 
 ### Naming rules
 
-- **The title and subtitle travel together.** "The Making of a Reformer" alone
+- **The title and subtitle travel together.** "How a Reformer Works" alone
   is ambiguous between documentary and how-to-build. With the subtitle attached
   it is unambiguous. Do not ship the title bare.
 - **No "Physics" in the title.** The buyer has to know instantly that this is
@@ -375,7 +375,7 @@ Kept as a record so these do not get relitigated.
 | Urgency lever | Price only. All content is always included |
 | Content bonus | Deliberately deferred. Can be added later without restructuring the offer |
 | Order bump at PP101 checkout | $39, permanently |
-| Enforcement mechanism | **Resolved.** A second Stripe Price at $39 plus a per-subscriber token, enforced server-side. See [the build plan](../../making-of-a-reformer-build-plan.md) |
+| Enforcement mechanism | **Resolved.** A second Stripe Price at $39 plus a per-subscriber token, enforced server-side. See [the build plan](../../how-a-reformer-works-build-plan.md) |
 
 ### Framing rules
 
@@ -401,7 +401,7 @@ Kept as a record so these do not get relitigated.
 times, and the day-by-day timeline live in
 [current-copy/nurture-v2.md](../current-copy/nurture-v2.md), which is the source
 of truth. The mechanism that makes the deadline in that copy true is the
-Timeline section of [the build plan](../../making-of-a-reformer-build-plan.md).
+Timeline section of [the build plan](../../how-a-reformer-works-build-plan.md).
 
 This section originally carried its own four-email table adapted from Nikki's
 mini sales sequence. It has been removed rather than updated: two copies of a
@@ -440,7 +440,7 @@ This product needs the next misconception, not that one.
 
 ## Open decisions
 
-- [x] ~~Pick the title~~ The Making of a Reformer: How your machine works and why
+- [x] ~~Pick the title~~ How a Reformer Works: inside the mechanisms that make your reformer magical
 - [ ] Confirm CEC approval for on-demand self-study, and how many CECs PP101 carries
 - [x] ~~Decide how identifiable the designed machine is allowed to be~~ **Named.**
   Nurture v2 email 5 states "the Flexia Reformer" outright, which overrides the

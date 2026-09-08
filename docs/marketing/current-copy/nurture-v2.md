@@ -2,7 +2,7 @@
 
 An eight-email sequence that follows the Spring Load Calculator lead magnet and
 runs straight into the cart for
-[The Making of a Reformer](../working-drafts/reformer-machine-course-spec.md).
+[How a Reformer Works](../working-drafts/reformer-machine-course-spec.md).
 Built on the five-beat nurture structure from
 [funnel-strategy-nikki-session.md](../funnel-strategy-nikki-session.md), with the
 mini sales sequence merged into it rather than following it.
@@ -23,7 +23,7 @@ One idea per email. The problem is not solved until email 4.
 > **Three changes from the original plan, all deliberate.**
 >
 > **The tripwire changed.** Emails 1 through 3 were written when it was Nikki's
-> body weight mini course. It is now The Making of a Reformer, a machine-only
+> body weight mini course. It is now How a Reformer Works, a machine-only
 > course that keeps the body out on purpose, because body weight is Pilates
 > Physics 101's thesis. Email 3's body weight seed was replaced with a machine
 > seed. Emails 1 and 2 needed no change: email 1 is already a pure machine
@@ -65,7 +65,7 @@ shorthand.
 
 > **The cart timeline is settled: four calendar days, deadline at end of day.**
 > The mechanism that has to match it lives in the **Timeline** section of
-> [making-of-a-reformer-build-plan.md](../../making-of-a-reformer-build-plan.md),
+> [how-a-reformer-works-build-plan.md](../../how-a-reformer-works-build-plan.md),
 > which owns the Kit schedule and the Stripe deadline. Two things there are
 > load-bearing for this copy. Every Kit delay must be expressed in **days**, or a
 > subscriber who joins at 11pm receives the whole sequence at 11pm. And emails 1
@@ -109,7 +109,7 @@ copy and paste.
 | 4 | Not a new cue. A different load. | 32 | The lever most teacher training glosses over |
 | 5 | So I designed my own reformer | 29 | The question I had to answer about a thousand times |
 | 6 | Five questions about your reformer | 34 | How well do you know your reformer? |
-| 7 | What you get for $39 | 20 | What exactly is in The Making of a Reformer? |
+| 7 | What you get for $39 | 20 | What exactly is in How a Reformer Works? |
 | 8 | $39 ends at midnight | 20 | Last call to learn the mechanics of your reformer for $39 |
 
 **Emails 1 and 2 were left alone on purpose.** Email 1's subject is the first
@@ -367,7 +367,7 @@ Kaleen
   defensible for these beats, but email 4 should probably carry a link.
 - **The machine lines are a deliberate seed.** "Where on that spring's climb,"
   the gear bar, and the footbar point at the tripwire product, which is now
-  [The Making of a Reformer](../working-drafts/reformer-machine-course-spec.md)
+  [How a Reformer Works](../working-drafts/reformer-machine-course-spec.md)
   rather than Nikki's original body weight course. Name the category, do not
   teach it here.
 - **Body weight was removed from this email.** The earlier draft closed on "it
@@ -410,11 +410,11 @@ Most teacher training glosses over this part.
 
 I know that because I came at Pilates from precisely this equipment angle before I ever learned how to teach.  And when it was time to design my own reformer, I had to pick every dimension, every adjustment range, every spring specification.  They needed to be defensible with physics, and I got a full education in what a reformer actually is on the way through.
 
-I put what I learned into a short online course. It's called **The Making of a Reformer: how your machine works and why.** It talks about everything that changes load before a body gets on it, and it is about an hour and is available instantly on purchase. [CEC line goes here once confirmed.]
+I put what I learned into a short online course. It's called **How a Reformer Works: inside the mechanisms that make your reformer magical.** It talks about everything that changes load before a body gets on it, and it is about an hour and is available instantly on purchase. [CEC line goes here once confirmed.]
 
 Because you just joined my list, I want to give you the chance to buy this course for **$39**.  You get the special discount for 4 days. After that it goes back to its normal $69.
 
-[Get The Making of a Reformer →](LINK)
+[Get How a Reformer Works →](LINK)
 
 Kaleen
 
@@ -426,7 +426,7 @@ Kaleen
   settled at four calendar days, which is the only shape that fits five emails at
   one send per morning plus the evening close. This is the single copy edit that
   came out of the timeline pass. The reasoning is in the **Timeline** section of
-  [making-of-a-reformer-build-plan.md](../../making-of-a-reformer-build-plan.md).
+  [how-a-reformer-works-build-plan.md](../../how-a-reformer-works-build-plan.md).
 - **The subject line calls back to email 3 on purpose.** Email 3 closed on "when
   words are not the lever, what is." This subject answers with "the lever," which
   makes the two emails read as one thought even though the body has moved on to
@@ -523,11 +523,11 @@ The physics was in my head the whole time. The magnitude of it just never landed
 
 It turned out that every functional design decision I made was actually a load decision. That is the education I did not know I was signing up for when I set out to design my reformer.
 
-The Making of a Reformer: How your machine works and why, is that education, arranged in a convenient mini course so you can understand how each of the reformer components affects how your load is delivered to the client. Along the way, I'll share the design decisions I faced when creating my own reformer, and why I chose what I did.
+How a Reformer Works: inside the mechanisms that make your reformer magical, is that education, arranged in a convenient mini course so you can understand how each of the reformer components affects how your load is delivered to the client. Along the way, I'll share the design decisions I faced when creating my own reformer, and why I chose what I did.
 
 You can grab the course for $39 for another 2 days.  But after that, it goes back to the regular price of $69.
 
-[Get The Making of a Reformer →](LINK)
+[Get How a Reformer Works →](LINK)
 
 Kaleen
 
@@ -539,7 +539,7 @@ Kaleen
   time." It is set here as "about a thousand times." Revert if that was
   deliberate.
 - **The course title is capitalised differently here than in email 4.** This
-  email says "The Making of a Reformer: How your machine works and why." Email 4
+  email says "How a Reformer Works: inside the mechanisms that make your reformer magical." Email 4
   says "how your machine works and why." Pick one and make both match, since the
   two emails land a day apart.
 - **"Two more days" checks out against the four-day window.** Email 5 lands on
@@ -660,11 +660,11 @@ Regardless, here's a little quiz to help you think about what you do and don't k
 
 **Five.** Why do manufacturers recommend replacing your springs so often?
 
-If you want to know the answers to these questions, you should grab my online course, The Making of a Reformer.  It covers all five, and then some. [CEC line goes here once confirmed.]
+If you want to know the answers to these questions, you should grab my online course, How a Reformer Works.  It covers all five, and then some. [CEC line goes here once confirmed.]
 
 **It is $39 until tomorrow.** After that it goes to $69.
 
-[Get The Making of a Reformer →](LINK)
+[Get How a Reformer Works →](LINK)
 
 Kaleen
 
@@ -762,7 +762,7 @@ five questions outright, is archived in
 
 Hi {{ subscriber.first_name }},
 
-My online course, The Making of a Reformer, covers how and why your machine works the way it does.  If you're wondering what exactly you get for $39, here's a quick overview.
+My online course, How a Reformer Works, covers how and why your machine works the way it does.  If you're wondering what exactly you get for $39, here's a quick overview.
 
 **The parts.** Every component on a reformer, so you know their names and what they do.
 
@@ -780,7 +780,7 @@ About an hour altogether, available the moment you buy, and you can take it in p
 
 **$39 today,** then $69.
 
-[Get The Making of a Reformer →](LINK)
+[Get How a Reformer Works →](LINK)
 
 Kaleen
 
@@ -902,7 +902,7 @@ email 7.
 
 Hi {{ subscriber.first_name }},
 
-I just wanted to drop in real quick and remind you that your special $39 price for The Making of a Reformer goes away at midnight tonight.
+I just wanted to drop in real quick and remind you that your special $39 price for How a Reformer Works goes away at midnight tonight.
 
 [Get it now →](LINK)
 

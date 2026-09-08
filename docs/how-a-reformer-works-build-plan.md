@@ -1,4 +1,4 @@
-# The Making of a Reformer: Build Plan
+# How a Reformer Works: Build Plan
 
 The technical plan for shipping the tripwire course and its four-day
 subscriber offer. Companion to
@@ -11,7 +11,7 @@ This resolves the spec's open decision "Discount enforcement mechanism:
 
 > **Scope note, 2026-09-02.** The course product itself (portal player, quiz,
 > certificate, landing page, education link) is planned in
-> [making-of-a-reformer-course-plan.md](making-of-a-reformer-course-plan.md).
+> [how-a-reformer-works-course-plan.md](how-a-reformer-works-course-plan.md).
 > This file keeps the $39 offer machinery only. Migration numbers below
 > (042/043/044) are stale: 042 and 043 now belong to activity logging, and
 > the course plan starts at 044.
@@ -24,7 +24,7 @@ This resolves the spec's open decision "Discount enforcement mechanism:
 | Deadline shape | End of day, fixed timezone, not tag time plus N hours | A ragged expiry contradicts "today," "tomorrow," and "midnight" in the copy. See "Timeline" |
 | Kit structure | Two sequences with a visual automation carrying the handoff between them | Already built. See "The Kit flow as built" |
 | Handoff tag | `in-MOR-sequence`, applied once nurture completes | Starts the offer clock and enrols them in the cart sequence. This is the tag the cron polls |
-| Purchase tag | `MOR-purchased` | `webinars.kit_tag` must match this string exactly, or the buyer is never removed from the cart sequence |
+| Purchase tag | `MOR-purchased` (MOR is the original working title, The Making of a Reformer; tag names were kept through the rename) | `webinars.kit_tag` must match this string exactly, or the buyer is never removed from the cart sequence |
 | Offer identity | Opaque token in a Kit custom field | Survives cross-device; no PII in URLs |
 | Clock start | When the Kit tag is applied, not on click | Deadline is printable in the email and immune to link prefetch |
 | Sync method | Vercel cron poll, every 15 minutes | Reuses existing cron infrastructure; easier to debug than a webhook |
@@ -92,7 +92,7 @@ greenfield design.
 | Sequence | Emails |
 |----------|--------|
 | Spring Calc Welcome | A leftover transactional delivery email, then nurture emails 1, 2, 3 |
-| Making of a Reformer | Cart emails 4, 5, 6, 7, 8 |
+| How a Reformer Works | Cart emails 4, 5, 6, 7, 8 |
 
 The offer lives entirely inside the second sequence. Nothing in nurture carries a
 link that needs a token, which is what makes the handoff safe.
@@ -103,14 +103,14 @@ link that needs a token, which is what makes the handoff safe.
 Spring Calc Welcome   spring-calc  -> +in-nurture -> [Spring Calc Welcome seq]
                                    -> -in-nurture -> +in-MOR-sequence
 
-MOR Email Sequence    in-MOR-sequence -> [Making of a Reformer seq]
+MOR Email Sequence    in-MOR-sequence -> [How a Reformer Works seq]
                                       -> +MOR-didnotbuy
 
 MOR Purchase          MOR-purchased -> -MOR-didnotbuy -> -in-MOR-sequence
 ```
 
 Plus one classic automation rule: when `MOR-purchased` is applied, unsubscribe
-from the Making of a Reformer sequence.
+from the How a Reformer Works sequence.
 
 **That rule, not the tag removal, is what stops the sales emails.** Removing
 `in-MOR-sequence` does not pull anyone out of a sequence already running. If the
@@ -171,16 +171,16 @@ respect the sequence schedule and hour-based delays bypass it.
 | Route | Audience | Price shown | Indexed |
 |-------|----------|-------------|---------|
 | `/education` | Public | none, a card only | yes |
-| `/making-of-a-reformer` | Public | $69 | yes |
+| `/how-a-reformer-works` | Public | $69 | yes |
 | `/offer/reformer?t=TOKEN` | Email only | $39 + countdown | **noindex** |
-| `/workshops/making-of-a-reformer` | Nobody, by design | redirect | no |
-| `/portal/making-of-a-reformer` | Buyers | none | no |
+| `/workshops/how-a-reformer-works` | Nobody, by design | redirect | no |
+| `/portal/how-a-reformer-works` | Buyers | none | no |
 
 The offer page must carry `noindex`. The spec's framing rule is that the public
 page shows $69 only. If Google surfaces a $39 page, $69 stops reading as real
 to anyone who browses.
 
-**`/workshops/making-of-a-reformer` has to redirect, not render.** Left alone it
+**`/workshops/how-a-reformer-works` has to redirect, not render.** Left alone it
 resolves: `BrandedWorkshopRedirect` falls through to the generic
 `WorkshopSalesPage` for any slug it does not recognise, which would publish a
 second indexable $69 page for the same product. See Phase 1.
@@ -192,7 +192,7 @@ are **not the same page**.
 
 | Page | Price | Says about the discount |
 |------|-------|-------------------------|
-| `/making-of-a-reformer` | $69 | Nothing. Ever. |
+| `/how-a-reformer-works` | $69 | Nothing. Ever. |
 | `/offer/reformer?t=X` **active** | $39 | Countdown, deadline named |
 | `/offer/reformer?t=X` **expired** | $69 | "Your window closed Thursday" |
 
@@ -209,15 +209,15 @@ nothing dishonest happened.
 
 ## Phase 0: Data model
 
-- [ ] **Migration `042_making_of_a_reformer.sql`**
+- [ ] **Migration `042_how_a_reformer_works.sql`**
 
 Add `'course'` to the `webinars_kind_check` constraint, which is currently
 `webinar | tool | resource` per migration 034. Then seed the course row:
 
 ```sql
 insert into public.webinars (slug, title, subtitle, status, kind, price_cents, kit_tag)
-values ('making-of-a-reformer', 'The Making of a Reformer',
-        'How your machine works and why', 'live', 'course', 6900, 'MOR-purchased');
+values ('how-a-reformer-works', 'How a Reformer Works',
+        'Inside the mechanisms that make your reformer magical', 'live', 'course', 6900, 'MOR-purchased');
 ```
 
 **`kit_tag` must be `MOR-purchased`, exactly.** `provisionPurchase` applies
@@ -276,7 +276,7 @@ long page and they will drift.
        └─ ExpiredPricing   // $69, window-closed context
 ```
 
-`/making-of-a-reformer` renders `CourseSalesBody` with `PublicPricing`.
+`/how-a-reformer-works` renders `CourseSalesBody` with `PublicPricing`.
 `/offer/reformer` renders the same body and picks Active or Expired from what
 `/api/offer` returned. Three pages to the visitor, one sales page to maintain.
 
@@ -288,7 +288,7 @@ framing need real layout.
 
 - [ ] `src/components/course/PricingBlock.jsx` with the three variants
 
-- [ ] `src/pages/MakingOfAReformer.jsx`, routed at `/making-of-a-reformer`.
+- [ ] `src/pages/HowAReformerWorks.jsx`, routed at `/how-a-reformer-works`.
       Buy button posts to the existing checkout with no `offerToken`, and
       `allow_promotion_codes: true` stays on for this path.
 
@@ -297,7 +297,7 @@ framing need real layout.
 
 ```js
 // src/lib/workshop.js
-if (slug === 'making-of-a-reformer') return '/making-of-a-reformer'
+if (slug === 'how-a-reformer-works') return '/how-a-reformer-works'
 
 // src/App.jsx, BrandedWorkshopRedirect
 if (url !== `/workshops/${slug}`) return <Navigate to={url} replace />
@@ -307,7 +307,7 @@ if (url !== `/workshops/${slug}`) return <Navigate to={url} replace />
 branded page," and PP101 and PP102 both rely on it. The current guard hard-codes
 a `/pilates-physics` prefix, so a third branded page needs it generalised.
 
-This is what makes `/workshops/making-of-a-reformer` redirect instead of
+This is what makes `/workshops/how-a-reformer-works` redirect instead of
 rendering a duplicate sales page. It also repairs the full-price `cancel_url`
 for free, because `create-session.js` sends abandoned checkouts to
 `/workshops/{slug}` and that path now lands on the real page. Only the offer
@@ -682,7 +682,7 @@ enforced.
 ### Two sequences, with the handoff in an automation
 
 Already built this way. "The Kit flow as built" has the exact structure: Spring
-Calc Welcome carries nurture, the Making of a Reformer sequence carries the cart,
+Calc Welcome carries nurture, the How a Reformer Works sequence carries the cart,
 and the automation between them applies `in-MOR-sequence`.
 
 What the schedule still needs:

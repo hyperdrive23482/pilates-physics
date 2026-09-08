@@ -24,7 +24,7 @@
 --
 -- Modules are deliberately NOT locked to a sequence. See course_progress.
 --
--- See docs/making-of-a-reformer-course-plan.md, Phase 0.
+-- See docs/how-a-reformer-works-course-plan.md, Phase 0.
 -- ============================================================
 
 -- ---------- 1. The 'course' kind ------------------------------

@@ -63,26 +63,26 @@ const MODULES = [
   },
 ]
 
-const DECISIONS = [
+const TRADEOFFS = [
   {
     label: 'SIZE',
     title: 'Four constraints, one frame',
-    body: 'Carriage width and length, a height low enough to stand on under an eight-foot ceiling, and a frame that ships in more than one box. Every one of those pulls against the others, and all four are visible in the finished machine.',
+    body: 'Carriage width and length, a height low enough to stand on under an eight-foot ceiling, and a frame that ships in more than one box. Every one of those pulls against the others, and all four are visible in whichever machine you stand on.',
   },
   {
     label: 'SPRINGS',
-    title: 'Stiffness and longevity are one decision',
+    title: 'Stiffness and longevity are one choice',
     body: 'Sourcing springs means choosing stiffness, coating and fatigue life together. That includes the reason the color wears off the ones in your studio, which has a real engineering explanation behind it.',
   },
   {
     label: 'ADJUSTMENTS',
     title: 'Where to stop',
-    body: 'Three gear positions instead of more. A footbar that does not pivot but still locks and still works as a kickstand. Every adjustment range is a decision about where to stop, and each one changes what you can do with the machine.',
+    body: 'How many gear positions. Whether the footbar pivots. How far the headrest and shoulder rests go. Every adjustment range is a choice about where to stop, and each one changes what the machine can do to the load.',
   },
   {
     label: 'BEARINGS',
     title: 'Taking friction off the table',
-    body: 'Bearings were specified to make friction negligible, and quiet, and low maintenance, all at once. Knowing how negligible meant having to decide how negligible to make it.',
+    body: 'Wheels and bearings are specified to make friction negligible, quiet and low maintenance all at once. Knowing how negligible is the difference between a myth and a measurement.',
   },
 ]
 
@@ -150,14 +150,13 @@ export default function CourseSalesBody({ pricing }) {
 
         <div className="container">
           <div className="workshop-hero__inner">
-            <div className="kicker">§ 01 · The Making of a Reformer</div>
+            <div className="kicker">§ 01 · How a Reformer Works</div>
             <h1 className="workshop-hero__title">
               You own more machine than <span className="italic accent">you are using.</span>
             </h1>
             <p className="workshop-hero__lede">
-              How your machine works and why. An on-demand course on everything
-              that changes the load before a body ever gets on the carriage,
-              from someone who had to design one.
+              An on-demand course on everything that changes the load before a
+              body ever gets on the carriage, from someone who had to design one.
             </p>
 
             <div className="workshop-hero__cta">
@@ -202,7 +201,7 @@ export default function CourseSalesBody({ pricing }) {
             </div>
             <div className="course-ladder__step course-ladder__step--current">
               <span className="mono accent">02</span>
-              <h3>The Making of a Reformer</h3>
+              <h3>How a Reformer Works</h3>
               <p>The whole machine. Everything that changes load before a body touches it.</p>
             </div>
             <div className="course-ladder__step">
@@ -238,27 +237,29 @@ export default function CourseSalesBody({ pricing }) {
         </div>
       </section>
 
-      {/* ── § 04 The design story ────────────────────────────────────────── */}
+      {/* ── § 04 Why a designer is teaching it ───────────────────────────── */}
       <section className="section-pad section--inset workshop-framework">
         <div className="container">
           <div className="workshop-framework__head-wrap">
-            <div className="kicker">§ 04 · Why it is called that</div>
+            <div className="kicker">§ 04 · Why a designer is teaching it</div>
             <h2 className="workshop-framework__head">
               Every part of your reformer is a{' '}
-              <span className="italic accent">decision somebody made.</span>
+              <span className="italic accent">tradeoff somebody made.</span>
             </h2>
             <p className="workshop-framework__lede">
-              I designed the Flexia Reformer. That means I had to make these
-              decisions and live with them, and each module opens with one of
-              them: here is the choice, here is what each option does to the
-              load, here is what I picked and why. It is the same technical
-              content either way. It is a great deal easier to remember with
-              the reasoning attached.
+              I designed the Flexia Reformer, which meant living with every one
+              of these tradeoffs: carriage size against ceiling height, spring
+              stiffness against spring life, how many gear positions is enough.
+              This course is not the story of my machine. It is the physics
+              underneath every reformer, taught by someone who has had to get
+              it right with real parts. Each module gives you the choice, what
+              each option does to the load, and how to read the answer on the
+              machine in your own studio.
             </p>
           </div>
 
           <div className="course-decisions">
-            {DECISIONS.map((d) => (
+            {TRADEOFFS.map((d) => (
               <article className="fcard" key={d.label}>
                 <div className="fcard__label mono accent">{d.label}</div>
                 <h3 className="fcard__title">{d.title}</h3>

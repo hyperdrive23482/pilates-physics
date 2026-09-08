@@ -1,4 +1,10 @@
-# The Making of a Reformer: Course Product Plan
+# How a Reformer Works: Course Product Plan
+
+> **Renamed September 2026.** The course shipped as How a Reformer Works,
+> slug `how-a-reformer-works`. Kit tags keep the `MOR-` prefix from the
+> original working title. Some of the Flexia design decisions are not being
+> shared, so the "here is what I chose and why" module shape described below
+> is no longer a promise the sales page makes.
 
 The plan for a new product type. Not a workshop with videos attached, but a
 course delivered inside the portal: eight modules in a set sequence, each one a
@@ -8,7 +14,7 @@ gate. Public landing page at $69, linked from the education page.
 
 Companion to two existing docs:
 
-- [making-of-a-reformer-build-plan.md](making-of-a-reformer-build-plan.md)
+- [how-a-reformer-works-build-plan.md](how-a-reformer-works-build-plan.md)
   owns the $39 four-day subscriber offer: the Kit flow, the token cron, the
   offer page, and the checkout branch. **None of that is in this plan.** It
   builds on top of what this plan ships, and its own build order puts it last.
@@ -60,13 +66,13 @@ is the product row. `course_modules` is the curriculum.
 
 | Item | Value |
 |------|-------|
-| Where it lives | The portal, at `/portal/making-of-a-reformer` |
+| Where it lives | The portal, at `/portal/how-a-reformer-works` |
 | Delivery | In the portal, in a defined order, freely navigable |
 | Modules | 8, one Vimeo video each |
 | Navigation | Previous and Next, with a module list always visible |
 | Assessment | 10 questions, scored, at the end |
 | Certificate | Auto-generated NPCP PDF on a pass, same design as workshops |
-| Landing page | Public, at `/making-of-a-reformer` |
+| Landing page | Public, at `/how-a-reformer-works` |
 | Price | $69, one-time |
 | Access | Instant on purchase, no expiry |
 | CEC | 1 NPCP CEC |
@@ -289,7 +295,7 @@ create policy "Admins read all attempts" on public.quiz_attempts
 - [ ] Add `'module_complete'`, `'quiz_submit'`, and `'course_complete'` to the
       `activity_events` type constraint from migration 042.
 
-### `supabase/migrations/045_making_of_a_reformer_seed.sql`
+### `supabase/migrations/045_how_a_reformer_works_seed.sql`
 
 - [ ] The product row:
 
@@ -298,8 +304,8 @@ insert into public.webinars
   (slug, title, subtitle, description, status, kind, price_cents,
    duration_min, kit_tag, npcp_cecs)
 values
-  ('making-of-a-reformer', 'The Making of a Reformer',
-   'How your machine works and why', '<description, no em dashes>',
+  ('how-a-reformer-works', 'How a Reformer Works',
+   'Inside the mechanisms that make your reformer magical', '<description, no em dashes>',
    'live', 'course', 6900, 60, 'MOR-purchased', 1.0)
 on conflict (slug) do update set
   kind = 'course', status = 'live', price_cents = 6900,
@@ -699,7 +705,7 @@ The NPCP audit trail is the `quiz_attempts` row plus the existing
 > Kaleen's pass**, particularly the bio and the design-decision section, which
 > put words in her mouth about her own machine.
 >
-> Added: `src/pages/MakingOfAReformer.jsx`, `src/hooks/useCheckout.js`,
+> Added: `src/pages/HowAReformerWorks.jsx`, `src/hooks/useCheckout.js`,
 > `src/components/course/` with `CourseSalesBody.jsx`, `PricingBlock.jsx` and
 > `course-sales.css`.
 > Changed: `App.jsx`, `src/lib/workshop.js`, `Education.jsx`,
@@ -722,7 +728,7 @@ The NPCP audit trail is the `quiz_attempts` row plus the existing
 >    this ships without until there is art for it. Already tracked in the open
 >    questions.
 
-### `src/pages/MakingOfAReformer.jsx` at `/making-of-a-reformer`
+### `src/pages/HowAReformerWorks.jsx` at `/how-a-reformer-works`
 
 - [ ] Build it in the shape of `PilatesPhysics101.jsx`: const arrays at the
       top, mapped into the existing card markup, styled with `ppv2.css` and
@@ -756,12 +762,12 @@ Sections, drawing copy from the spec:
 
 ### Routing
 
-- [ ] Add the `/making-of-a-reformer` route beside the PP101 and PP102 routes.
+- [ ] Add the `/how-a-reformer-works` route beside the PP101 and PP102 routes.
 - [ ] `workshopUrl`: add
-      `if (slug === 'making-of-a-reformer') return '/making-of-a-reformer'`.
+      `if (slug === 'how-a-reformer-works') return '/how-a-reformer-works'`.
 - [ ] `BrandedWorkshopRedirect`: change the guard from
       `url.startsWith('/pilates-physics')` to ``url !== `/workshops/${slug}` ``.
-      Without it, `/workshops/making-of-a-reformer` renders the generic sales
+      Without it, `/workshops/how-a-reformer-works` renders the generic sales
       page as a second copy of the product, and that is also where Stripe sends
       abandoned checkouts.
 - [ ] `create-session.js` needs no change. Add a comment on the status gate
@@ -770,7 +776,7 @@ Sections, drawing copy from the spec:
 ### Education page
 
 - [ ] Update the first `PATHS` entry: `meta: '$69. 1 NPCP CEC. Instant
-      access'`, `ctaLabel: 'Learn more'`, `to: '/making-of-a-reformer'`, and
+      access'`, `ctaLabel: 'Learn more'`, `to: '/how-a-reformer-works'`, and
       drop "Coming soon".
 - [ ] The hero says "Five ways to learn" over six cards. Fix the count.
 

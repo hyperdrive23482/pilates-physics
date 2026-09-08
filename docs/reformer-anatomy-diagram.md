@@ -1,7 +1,7 @@
 # Reformer Anatomy Diagram — build notes and handoff
 
 Reference for the interactive labeled reformer diagram built for **Module 1
-("The machine, named")** of *The Making of a Reformer*. See
+("The machine, named")** of *How a Reformer Works*. See
 [reformer-machine-course-spec.md](marketing/working-drafts/reformer-machine-course-spec.md),
 where this is listed under "Interactive tool requirements" as *Labeled reformer
 diagram — to build*.

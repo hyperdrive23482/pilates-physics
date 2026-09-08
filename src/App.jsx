@@ -58,7 +58,7 @@ import AdminBlogPosts from './pages/admin/AdminBlogPosts'
 import AdminBlogPostEdit from './pages/admin/AdminBlogPostEdit'
 import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
-import MakingOfAReformer from './pages/MakingOfAReformer'
+import HowAReformerWorks from './pages/HowAReformerWorks'
 
 // Any /workshops/<slug> URL (a Stripe cancel return, say) bounces to that
 // product's branded page when it has one; everything else renders the generic
@@ -121,10 +121,10 @@ export default function App() {
           }
         />
         <Route
-          path="/making-of-a-reformer"
+          path="/how-a-reformer-works"
           element={
             <PageWrapper>
-              <MakingOfAReformer />
+              <HowAReformerWorks />
             </PageWrapper>
           }
         />

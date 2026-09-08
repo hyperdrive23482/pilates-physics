@@ -12,10 +12,10 @@ import '../ui/RegisterCard.css'
 // silently reverting. Keeping the body and the price separate now is what
 // makes that a new component rather than a second copy of the whole page.
 //
-// See docs/making-of-a-reformer-build-plan.md, "Three pricing blocks".
+// See docs/how-a-reformer-works-build-plan.md, "Three pricing blocks".
 
 export default function PricingBlock({ workshop }) {
-  const slug = workshop?.slug ?? 'making-of-a-reformer'
+  const slug = workshop?.slug ?? 'how-a-reformer-works'
   const { checkout, status, errorMsg, portalUrl, user, signOut, needsLastName } =
     useCheckout(slug)
 

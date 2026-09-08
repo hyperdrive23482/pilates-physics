@@ -92,11 +92,11 @@ Regardless, here's a little quiz to help you think about what you do and don't k
 
 **Five.** Why do manufacturers recommend replacing your springs so often?
 
-If you want to know the answers to these questions, you should grab my online course, The Making of a Reformer.  It covers all five, and then some. [CEC line goes here once confirmed.]
+If you want to know the answers to these questions, you should grab my online course, How a Reformer Works.  It covers all five, and then some. [CEC line goes here once confirmed.]
 
 **It is $39 until tomorrow.** After that it goes to $69.
 
-[Get The Making of a Reformer →](LINK)
+[Get How a Reformer Works →](LINK)
 
 Kaleen
 
@@ -141,11 +141,11 @@ I am not answering them here. That is the course. But notice which ones made you
 
 If two or more gave you pause, I want to be clear about what that means, because it is not a knock on you. Nobody teaches this. It is not in most teacher trainings, it is not in the manuals, and the people who do know it mostly learned it by taking a machine apart or building one. That is not a gap in your teaching. It is a gap in what you were handed.
 
-The Making of a Reformer covers all five and the rest of the machine with them. [CEC line goes here once confirmed.]
+How a Reformer Works covers all five and the rest of the machine with them. [CEC line goes here once confirmed.]
 
 **$39 until tonight,** then $69.
 
-[Get The Making of a Reformer →](LINK)
+[Get How a Reformer Works →](LINK)
 
 Kaleen
 

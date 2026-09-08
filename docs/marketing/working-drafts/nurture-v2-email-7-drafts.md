@@ -1,4 +1,4 @@
-# Nurture v2, Email 7: what exactly is in The Making of a Reformer
+# Nurture v2, Email 7: what exactly is in How a Reformer Works
 
 **Version B was selected and edited by Kaleen. The final copy lives in
 [current-copy/nurture-v2.md](../current-copy/nurture-v2.md).** A is kept below as
@@ -79,7 +79,7 @@ the strongest of the two, because every answer is a small reversal and five smal
 reversals in a row is the best argument this product has.
 
 **Subject line options**
-1. What exactly is in The Making of a Reformer?
+1. What exactly is in How a Reformer Works?
 2. The answers to yesterday's five questions
 3. Answers, and what else is in there
 
@@ -129,7 +129,7 @@ The whole thing is about an hour, it is available the moment you buy it, and you
 
 **$39 today.** After that it is $69.
 
-[Get The Making of a Reformer →](LINK)
+[Get How a Reformer Works →](LINK)
 
 Kaleen
 
@@ -143,7 +143,7 @@ Pick this if the answers do not survive Kaleen's physics review, or if giving
 five answers away on the last day feels like too much.
 
 **Subject line options**
-1. What exactly is in The Making of a Reformer?
+1. What exactly is in How a Reformer Works?
 
 **Preview text:** 8 modules in one hour of on-demand video
 
@@ -151,7 +151,7 @@ five answers away on the last day feels like too much.
 
 Hi {{ subscriber.first_name }},
 
-My online course, The Making of a Reformer, covers how and why your machine works the way it does.  If you're wondering what exactly you get for $39, here's a quick overview.
+My online course, How a Reformer Works, covers how and why your machine works the way it does.  If you're wondering what exactly you get for $39, here's a quick overview.
 
 **The parts. ** Every component on a reformer, so you know their names and what they do.
 
@@ -169,7 +169,7 @@ About an hour altogether, available the moment you buy, and you can take it in p
 
 **$39 today,** then $69.
 
-[Get The Making of a Reformer →](LINK)
+[Get How a Reformer Works →](LINK)
 
 Kaleen
 
