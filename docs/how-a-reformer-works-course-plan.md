@@ -337,8 +337,8 @@ the admin afterwards.
 - [ ] Quiz questions are **not** seeded. They get typed into the Quiz tab once
       it exists. The six questions are drafted in
       docs/how-a-reformer-works/npcp-cec-application.md, Section 10, and their
-      per-answer explanations are not written yet. A migration is the wrong
-      home for copy that will be revised.
+      per-answer explanations in Section 11 of the same file. A migration is
+      the wrong home for copy that will be revised.
 
 ### Push
 

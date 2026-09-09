@@ -222,8 +222,11 @@ export default function QuizEditor({ workshop }) {
 // actually costs to fail one. Spelling that out here stops the two drifting
 // apart silently.
 function PassMarkBanner({ count, passPct }) {
+  // Mirrors gradeQuiz() in api/course/quiz.js, which rounds the threshold up.
+  // Worth showing, because the rounding bites hardest on short quizzes: at an
+  // 80% pass mark, six questions allows one wrong answer and ten allows two.
   const needed = count > 0 ? Math.ceil((passPct / 100) * count) : 0
-  const ok = count === 10
+  const ok = count > 0
   return (
     <div
       style={{
@@ -242,11 +245,10 @@ function PassMarkBanner({ count, passPct }) {
         · pass mark {passPct}%
         {count > 0 && `, so ${needed} of ${count} correct to pass`}
       </span>
-      {count !== 10 && (
+      {count === 0 && (
         <div style={{ fontSize: '0.75rem', color: 'var(--color-ink-muted)', marginTop: '0.3rem' }}>
-          {count < 10
-            ? `The course is specified as a ten question assessment. ${10 - count} to go.`
-            : 'More than ten questions. Intentional?'}
+          Add questions to enable the assessment. Until then nobody can pass,
+          so no certificate can be issued.
         </div>
       )}
       <div style={{ fontSize: '0.75rem', color: 'var(--color-ink-muted)', marginTop: '0.3rem' }}>

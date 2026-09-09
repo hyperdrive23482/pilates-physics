@@ -460,10 +460,10 @@ This product needs the next misconception, not that one.
 - [x] ~~Write the quiz questions against the learning objectives~~ Six
   questions and an answer key are drafted in
   [npcp-cec-application.md](../../how-a-reformer-works/npcp-cec-application.md),
-  Section 10. **Two items remain:** the per-answer explanations are
-  unwritten, and the sales page promises one on every answer. And the
-  answer key marks question 4 as C, which is the answer module 4 exists
-  to disprove. Check it before the questions are typed into the admin
+  Section 10, and the per-answer explanations in Section 11. **One item
+  remains:** the answer key marks question 4 as C, which is the answer
+  module 4 exists to disprove. Fix it before the questions are typed into
+  the admin
 - [ ] Settle chair vs tower vs Cadillac naming for the follow-on editions, matching PP102
 - [ ] Count the real second-order effects now living inside module 3. If there are three or four solid ones, the trickle-down hook holds. If it is really only gearing out, the primary ad hook and the cart-open email should switch to pulleys
 - [ ] Discount enforcement mechanism

@@ -69,7 +69,7 @@ export default function PricingBlock({ workshop }) {
       </div>
 
       <ul className="course-buy__list">
-        <li>8 modules, about an hour of video</li>
+        <li>8 modules, 1 hour of video</li>
         <li>Certificate of completion on passing</li>
         <li>Instant access, yours to keep</li>
       </ul>

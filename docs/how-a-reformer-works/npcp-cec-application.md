@@ -211,3 +211,75 @@ Six multiple-choice questions. Each question has one correct answer. Correct ans
 | 4 | C |
 | 5 | B |
 | 6 | D |
+
+---
+
+## 11. Answer explanations
+
+Drafted for the product, not for the application. Every attempt returns these to
+the learner, right or wrong, because the sales page promises an explanation on
+every answer and a failed attempt is meant to be worth something. They are typed
+into the `explanation` field on each question in the admin Quiz tab, alongside
+the prompt, the choices and the correct answer.
+
+Written to name the reason rather than restate the answer, and to point at the
+module the question came from.
+
+**Question 1.** Hooke's law says a spring's force is proportional to how far it
+is stretched. Push the carriage away from the footbar and the springs get
+longer, so the load climbs the whole way out and drops the whole way back. It is
+not a fixed number set by the colour on the end. This is why the same spring
+feels light at the start of footwork and heaviest at full extension, and why
+where an exercise sits in the carriage travel matters as much as which spring
+you clipped on.
+
+**Question 2.** Spring colour is a manufacturer's label, not a specification.
+There is no shared industry standard, and stiffness comes from the physical
+design of the spring: the diameter of the wire, the diameter of the coil, and
+how many coils sit over what length. Two springs both called red can behave
+noticeably differently. Coating and initial tension are real, and initial
+tension does change the force it takes to begin the stretch, but neither is what
+sets the stiffness.
+
+**Question 3.** Where the gear bar sits decides how long the springs are before
+anyone moves. Setting the carriage closer to the footbar means the springs start
+shorter, so a full push stretches them farther and the load at the end of the
+range is higher. The spring constant has not changed. What changed is how much
+stretch the exercise asks for, and stretch is what sets the load. This is the
+clearest case of an adjustment that changes the work without changing a spring.
+
+**Question 4.** The ropes do not hand the spring tension straight to the client.
+The rope travels farther than the carriage does, and any system that trades
+distance trades force in the opposite direction, so the force at the handle is
+less than the tension in the spring. It is not a free discount. The spring is
+still stretching while the client pulls, so what they feel still climbs through
+the range. Half is the shorthand. Half is not the whole story.
+
+**Question 5.** The carriage rolls. Its wheels carry whatever sits on it and
+pass that weight into the rails rather than into the springs. Ten pounds of
+dumbbell adds ten pounds on the wheels, and the only part that reaches the
+exercise is the extra rolling friction, a small fraction of a pound. Resistance
+on a reformer comes from spring stretch. Friction is the reason this feels like
+it should be true, and the reason it is not.
+
+**Question 6.** All three change what the body feels. Spring configuration sets
+where the load starts and how quickly it climbs. Wheels and track decide how
+much of a push goes into moving the carriage rather than into overcoming the
+machine. Strap material and footbar position change the geometry the force
+arrives through. None of that makes one tradition better than the other. It
+means the same exercise on a classical and a contemporary machine is not the
+same amount of work, and knowing which differences matter is what lets you teach
+confidently on either.
+
+### One correction the answer key needs first
+
+**Question 4 is keyed to C, and C is the misconception the question is testing.**
+C says the rope transmits spring tension to the hands unchanged. Option A is the
+physics, and it is what module 4 exists to teach: the rope travels farther than
+the carriage, so the force at the handle is lower than the spring tension while
+still climbing as the spring stretches. The explanation above is written for A.
+
+As it stands, every learner who understands module 4 is marked wrong on this
+question, and on a six-question quiz at an 80 percent pass mark that single
+answer is the difference between passing and failing. Confirm the intent, then
+correct the key before the questions are entered in the admin.
