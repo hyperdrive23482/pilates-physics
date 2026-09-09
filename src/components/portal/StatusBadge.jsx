@@ -7,6 +7,7 @@ import {
   Clock,
   BookOpen,
   GraduationCap,
+  CheckCircle,
 } from 'lucide-react'
 
 const config = {
@@ -18,6 +19,8 @@ const config = {
   tool: { label: 'Interactive Tool', color: 'var(--color-accent)', icon: Sparkles },
   resource: { label: 'Free Resource', color: 'var(--color-accent)', icon: BookOpen },
   course: { label: 'On-Demand Course', color: 'var(--color-accent)', icon: GraduationCap },
+  in_progress: { label: 'In Progress', color: 'var(--color-accent)', icon: PlayCircle },
+  course_complete: { label: 'Completed', color: 'var(--color-accent)', icon: CheckCircle },
 }
 
 export default function StatusBadge({ status }) {

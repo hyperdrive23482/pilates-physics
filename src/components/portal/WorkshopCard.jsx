@@ -15,6 +15,19 @@ export default function WorkshopCard({ workshop, linkTo, progress }) {
       })
     : null
 
+  // Courses have no live/recorded lifecycle from the learner's side, so the
+  // badge reflects where they are in the course rather than workshop.status.
+  const badgeStatus =
+    workshop.kind === 'tool' || workshop.kind === 'resource'
+      ? workshop.kind
+      : workshop.kind === 'course'
+      ? progress && progress.total > 0 && progress.done >= progress.total
+        ? 'course_complete'
+        : progress && progress.done > 0
+        ? 'in_progress'
+        : 'course'
+      : workshop.status
+
   return (
     <Link
       to={linkTo}
@@ -42,13 +55,7 @@ export default function WorkshopCard({ workshop, linkTo, progress }) {
         />
       )}
 
-      <StatusBadge
-        status={
-          workshop.kind === 'tool' || workshop.kind === 'resource'
-            ? workshop.kind
-            : workshop.status
-        }
-      />
+      <StatusBadge status={badgeStatus} />
 
       <h3
         style={{

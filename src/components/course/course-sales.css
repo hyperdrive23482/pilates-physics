@@ -11,8 +11,31 @@
 }
 
 .course-ladder__step {
+  display: block;
   border: 1px solid var(--rule, rgba(0, 0, 0, 0.12));
   padding: 1.25rem;
+}
+
+/* Rungs 1 and 3 are links, so the free one is reachable. Styled to read as
+   the same card, not as body-copy links, with the affordance on hover. */
+.course-ladder__step--link {
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.course-ladder__step--link:hover,
+.course-ladder__step--link:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.course-ladder__cta {
+  margin-top: 1.75rem;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  opacity: 0.85;
+  max-width: 62ch;
 }
 
 /* The rung being sold. Marked rather than described, so the sequence reads
@@ -33,6 +56,14 @@
   line-height: 1.55;
   opacity: 0.75;
   margin: 0;
+}
+
+/* ── Section sub-lines ──────────────────────────────────────────────── */
+/* The count-and-runtime line that used to be a headline, demoted under one. */
+.course-subline {
+  margin: 0.85rem 0 0;
+  font-size: 0.92rem;
+  opacity: 0.7;
 }
 
 /* ── The syllabus ───────────────────────────────────────────────────── */
@@ -83,6 +114,11 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
   margin-top: 2.5rem;
+}
+
+/* The value beat is three cards, not four. Two-up would leave one stranded. */
+.course-decisions--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 /* ── FAQ ────────────────────────────────────────────────────────────── */
@@ -174,7 +210,8 @@
 /* ── Narrow ─────────────────────────────────────────────────────────── */
 @media (max-width: 860px) {
   .course-ladder,
-  .course-decisions {
+  .course-decisions,
+  .course-decisions--three {
     grid-template-columns: 1fr;
   }
 }

@@ -11,6 +11,14 @@ import './course-sales.css'
 // Copy rules, from the spec: no em dashes, the title and subtitle travel
 // together, "your machine" carries the possessive framing, and no mention of
 // any discount ever appears here.
+//
+// Section order follows the StoryBrand beats rather than the product's own
+// shape: problem, stakes, empathy, value, answer, guide, plan, objections,
+// close. The two sections a reader would expect but will not find are the
+// designer's tradeoff cards and a standalone certificate section. Both were
+// cut deliberately. The Flexia credibility lives in the bio now, and the
+// certificate is one card in "what you get" plus an FAQ answer, which is the
+// only place the no-CEC fact is stated.
 
 const MODULES = [
   {
@@ -63,26 +71,24 @@ const MODULES = [
   },
 ]
 
-const TRADEOFFS = [
+// The value beat. Adaptation, deliberately not progression: the survey data
+// behind customer-language.md produced adaptation language and none about
+// progressing a client, so the page promises the one that is grounded.
+const VALUE = [
   {
-    label: 'SIZE',
-    title: 'Four constraints, one frame',
-    body: 'Carriage width and length, a height low enough to stand on under an eight-foot ceiling, and a frame that ships in more than one box. Every one of those pulls against the others, and all four are visible in whichever machine you stand on.',
+    label: 'OPTIONS',
+    title: 'More dials than the spring',
+    body: 'The spring is the loudest adjustment on the machine. It is rarely the only one that would work, and often not the one that fits. The gear, the footbar and the ropes each change the load on their own, and any of them is available to you.',
   },
   {
-    label: 'SPRINGS',
-    title: 'Stiffness and longevity are one choice',
-    body: 'Sourcing springs means choosing stiffness, coating and fatigue life together. That includes the reason the color wears off the ones in your studio, which has a real engineering explanation behind it.',
+    label: 'INTERACTIONS',
+    title: 'Change one thing, three others move',
+    body: 'Adjustments do not act alone. Raise the footbar and you have changed more than the footbar. Predicting where a setup actually lands means knowing what travels with what, and that is the part almost nobody was taught.',
   },
   {
-    label: 'ADJUSTMENTS',
-    title: 'Where to stop',
-    body: 'How many gear positions. Whether the footbar pivots. How far the headrest and shoulder rests go. Every adjustment range is a choice about where to stop, and each one changes what the machine can do to the load.',
-  },
-  {
-    label: 'BEARINGS',
-    title: 'Taking friction off the table',
-    body: 'Wheels and bearings are specified to make friction negligible, quiet and low maintenance all at once. Knowing how negligible is the difference between a myth and a measurement.',
+    label: 'LANGUAGE',
+    title: 'An answer better than "it depends"',
+    body: 'Say what a change is going to do and why you chose it, in words a client understands. That is the difference between adjusting a machine and teaching someone.',
   },
 ]
 
@@ -96,43 +102,75 @@ const INCLUDED = [
   {
     n: '02',
     label: 'ASSESSMENT',
-    title: 'A ten question quiz',
-    body: 'Scored, with an explanation on every answer. Retake it as many times as you need.',
+    title: 'A six question quiz',
+    body: 'Scored, with an explanation on every answer, right or wrong. Retake it as many times as you need.',
   },
   {
     n: '03',
     label: 'CERTIFICATE',
-    title: 'Your certificate',
-    body: 'Generated the moment you pass, with your name on it, ready to download whenever you need it again.',
+    title: 'A certificate of completion',
+    body: 'Generated the moment you pass, with your name and the date on it, ready to download whenever you need it again.',
   },
   {
     n: '04',
     label: 'ACCESS',
     title: 'Yours to keep',
-    body: 'No expiry and no subscription. New modules and resources appear in your portal at no extra cost.',
+    body: 'No expiry and no subscription. Updates and new resources appear in your portal at no extra cost.',
+  },
+]
+
+// The plan, and the only transitional CTA on the page now that the hero has
+// none. Rungs 1 and 3 are links on purpose: the free one has to be reachable
+// or the page offers a visitor exactly one option, $69 or leave.
+const LADDER = [
+  {
+    n: '01',
+    title: 'Spring calculator',
+    body: 'Spring weight at any stretch. Free.',
+    to: '/spring-calculator',
+  },
+  {
+    n: '02',
+    title: 'How a Reformer Works',
+    body: 'The whole machine. Everything that changes load before a body touches it.',
+    current: true,
+  },
+  {
+    n: '03',
+    title: 'Pilates Physics 101',
+    body: 'What happens when a body meets that load, and practical teaching tips for real classes.',
+    to: '/pilates-physics-101',
   },
 ]
 
 const FAQ = [
   {
+    q: 'I have taught on reformers for years. Is there anything here for me?',
+    a: 'Almost certainly. Most of us can set a machine correctly and still not be able to say what the gear change did to the load. Knowing your machine by feel is real, and it is a different thing from being able to predict it, or explain it to a client who asks.',
+  },
+  {
     q: 'Do I need Pilates Physics 101 first?',
-    a: 'No, and this is the better place to start. This course is about the machine on its own: everything that changes load before a body gets on it. Pilates Physics 101 is what happens when a body meets that load. Each one makes the other easier, in either order.',
+    a: 'No, and this is the better place to start. This course is about the machine on its own: everything that changes load before a body gets on it. Pilates Physics 101 is what happens when a body meets that load, and how to change your teaching to accommodate that. Each one makes the next easier.',
   },
   {
     q: 'Is this about one brand of reformer?',
-    a: 'No. The physics is the same on every reformer, and the course is written to be fair across brands. Where machines genuinely differ, that difference is the teaching point rather than a sales pitch.',
+    a: 'No. The physics is the same on every reformer, and the course is written to be fair across brands. I use examples from several machines, and the concepts are meant to be absorbed and applied by you, together with your teaching intention.',
   },
   {
     q: 'I am not a math person. Is that a problem?',
-    a: 'Not at all. There is no math you have to do. Everything is explained in terms of what you can see and feel on the equipment, which is where it belongs.',
+    a: 'Not at all. There is no math you have to do. I use math to explain concepts, but it always comes back to terms you can see and feel on the equipment.',
+  },
+  {
+    q: 'Does this carry NPCP continuing education credit?',
+    a: 'Not yet. Currently you get a certificate of completion with your name and the date you passed.',
+  },
+  {
+    q: 'What if I do not pass the quiz?',
+    a: 'You can take it as many times as you need to pass. There is no limit and no penalty, and every question comes back with an explanation, so a failed attempt is genuinely useful. Passing is what issues the certificate.',
   },
   {
     q: 'How long do I have access?',
     a: 'Indefinitely. It is a one-time purchase, it lives in your portal, and there is no subscription.',
-  },
-  {
-    q: 'What if I do not pass the quiz?',
-    a: 'You take it again. There is no limit and no penalty, and every question comes back with an explanation, so a failed attempt is genuinely useful. Passing is what issues the certificate.',
   },
   {
     q: 'Is this a repair or maintenance course?',
@@ -154,9 +192,15 @@ export default function CourseSalesBody({ pricing }) {
             <h1 className="workshop-hero__title">
               You own more machine than <span className="italic accent">you are using.</span>
             </h1>
+            {/* The subtitle rides inside the lede rather than as its own line.
+                The spec's naming rules say the title and subtitle travel
+                together, because the title alone is ambiguous between a
+                documentary and build instructions. They do not say where, and
+                no other hero on the site carries a subtitle element. */}
             <p className="workshop-hero__lede">
-              An on-demand course on everything that changes the load before a
-              body ever gets on the carriage, from someone who had to design one.
+              An on-demand course on the mechanisms that make your reformer
+              magical. Taught by an engineer and Pilates instructor who designed
+              one.
             </p>
 
             <div className="workshop-hero__cta">
@@ -176,50 +220,90 @@ export default function CourseSalesBody({ pricing }) {
         <span className="cross br"></span>
       </section>
 
-      {/* ── § 02 Who it is for ───────────────────────────────────────────── */}
+      {/* ── § 02 The cost of not knowing ─────────────────────────────────── */}
+      {/* The stakes beat. "Nearly everything" rather than "everything" is
+          deliberate: module 1 teaches which parts change load and which do
+          not, so the headrest and shoulder rests would make the stronger
+          claim false. */}
       <section className="section-pad section--inset workshop-why">
         <div className="container">
-          <div className="kicker">§ 02 · Who this is for</div>
+          <div className="kicker">§ 02 · The cost of not knowing</div>
+          <h2 className="workshop-why__head">
+            The same spring is not the same load{' '}
+            <span className="italic accent">once you adjust anything.</span>
+          </h2>
+          <p className="workshop-why__body">
+            Move the gear bar and the load changes. Move the footbar and it
+            changes again. Both times you are on the same spring. Nearly
+            everything you adjust on a reformer changes the spring stretch, and
+            the stretch is what sets the load, whether or not you meant to
+            change it. We were all shown how to adjust the machine. Almost
+            nobody was shown what each adjustment trades away.
+          </p>
+        </div>
+      </section>
+
+      {/* ── § 03 Who it is for ───────────────────────────────────────────── */}
+      <section className="section-pad section--inset workshop-why">
+        <div className="container">
+          <div className="kicker">§ 03 · Who this is for</div>
           <h2 className="workshop-why__head">
             You adjust the gear bar and three other things{' '}
             <span className="italic accent">quietly move.</span>
           </h2>
           <p className="workshop-why__body">
             Most of us were taught the settings without being taught the
-            machine. You know which spring feels right, and you may not know
-            why the same spring feels different at the other end of the
-            carriage, or what the footbar height did to the load you just set.
-            This is the course that closes that gap. It is for instructors who
-            want to reason about their equipment instead of memorizing it.
+            machine. You know which spring feels right for you. Choosing
+            settings for the person in front of you is a different question,
+            and your training was never going to get to it in the time it had.
+            This course is for Pilates instructors who want to reason about
+            their equipment settings instead of memorizing them.
           </p>
+        </div>
+      </section>
 
-          <div className="course-ladder">
-            <div className="course-ladder__step">
-              <span className="mono accent">01</span>
-              <h3>Spring calculator</h3>
-              <p>One spring, one number. Free.</p>
-            </div>
-            <div className="course-ladder__step course-ladder__step--current">
-              <span className="mono accent">02</span>
-              <h3>How a Reformer Works</h3>
-              <p>The whole machine. Everything that changes load before a body touches it.</p>
-            </div>
-            <div className="course-ladder__step">
-              <span className="mono accent">03</span>
-              <h3>Pilates Physics 101</h3>
-              <p>What happens when a body meets that load.</p>
-            </div>
+      {/* ── § 04 What you can do with it ─────────────────────────────────── */}
+      <section className="section-pad section--inset workshop-framework">
+        <div className="container">
+          <div className="workshop-framework__head-wrap">
+            <div className="kicker">§ 04 · What you can do with it</div>
+            <h2 className="workshop-framework__head">
+              The best instructors always have{' '}
+              <span className="italic accent">another option to offer.</span>
+            </h2>
+            <p className="workshop-framework__lede">
+              When your teaching intent is not landing, what do you reach for?
+              Knowing your options is half of it. The other half is knowing how
+              they interact, because one change on a reformer moves others with
+              it. That is what lets you make the adjustment on purpose and say
+              why.
+            </p>
+          </div>
+
+          <div className="course-decisions course-decisions--three">
+            {VALUE.map((v) => (
+              <article className="fcard" key={v.label}>
+                <div className="fcard__label mono accent">{v.label}</div>
+                <h3 className="fcard__title">{v.title}</h3>
+                <p className="fcard__body">{v.body}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── § 03 The syllabus ────────────────────────────────────────────── */}
+      {/* ── § 05 The syllabus ────────────────────────────────────────────── */}
+      {/* Titles and runtimes match migration 045 exactly. They total 56
+          minutes plus roughly 5 for the quiz, which is what makes "about an
+          hour" true. Do not edit one here without editing the seed and the
+          admin Curriculum tab. */}
       <section className="section-pad section--inset workshop-topics">
         <div className="container">
-          <div className="kicker">§ 03 · What is inside</div>
+          <div className="kicker">§ 05 · What is inside</div>
           <h2 className="workshop-topics__head">
-            Eight modules. <span className="italic accent">About an hour.</span>
+            The whole machine, <span className="italic accent">not just the springs.</span>
           </h2>
+          <p className="course-subline">Eight modules, about an hour, brand agnostic.</p>
           <div className="course-modules">
             {MODULES.map((m) => (
               <article className="course-module" key={m.n}>
@@ -237,45 +321,42 @@ export default function CourseSalesBody({ pricing }) {
         </div>
       </section>
 
-      {/* ── § 04 Why a designer is teaching it ───────────────────────────── */}
-      <section className="section-pad section--inset workshop-framework">
+      {/* ── § 06 Bio ─────────────────────────────────────────────────────── */}
+      {/* All of the page's authority, since the designer's tradeoff section was
+          cut. The headline carries the claim rather than the name, because a
+          skimmer reading only headlines would otherwise never meet it. */}
+      <section className="section-pad section--inset course-bio">
         <div className="container">
-          <div className="workshop-framework__head-wrap">
-            <div className="kicker">§ 04 · Why a designer is teaching it</div>
-            <h2 className="workshop-framework__head">
-              Every part of your reformer is a{' '}
-              <span className="italic accent">tradeoff somebody made.</span>
-            </h2>
-            <p className="workshop-framework__lede">
-              I designed the Flexia Reformer, which meant living with every one
-              of these tradeoffs: carriage size against ceiling height, spring
-              stiffness against spring life, how many gear positions is enough.
-              This course is not the story of my machine. It is the physics
-              underneath every reformer, taught by someone who has had to get
-              it right with real parts. Each module gives you the choice, what
-              each option does to the load, and how to read the answer on the
-              machine in your own studio.
-            </p>
-          </div>
-
-          <div className="course-decisions">
-            {TRADEOFFS.map((d) => (
-              <article className="fcard" key={d.label}>
-                <div className="fcard__label mono accent">{d.label}</div>
-                <h3 className="fcard__title">{d.title}</h3>
-                <p className="fcard__body">{d.body}</p>
-              </article>
-            ))}
-          </div>
+          <div className="kicker">§ 06 · Who is teaching</div>
+          <h2 className="workshop-why__head">
+            I have spent as much time with a reformer apart{' '}
+            <span className="italic accent">as assembled.</span>
+          </h2>
+          <p className="workshop-why__body">
+            Engineer, Pilates instructor, and the designer of the world&rsquo;s
+            first smart Pilates machine. Sourcing springs, specifying bearings,
+            and deciding where an adjustment should start and stop are all
+            things I have had to get right with real parts, on a machine
+            thousands of people would use. I built Pilates Physics because the
+            explanations I wanted did not exist. In this course I teach the way
+            reformers work, so you do not have to stumble through the endless
+            experiments and guesswork to figure it out yourself.
+          </p>
+          <p className="workshop-why__body">
+            <Link to="/about" className="course-inline-link">
+              More about me and the work
+              <ArrowSvg />
+            </Link>
+          </p>
         </div>
       </section>
 
-      {/* ── § 05 What you get ────────────────────────────────────────────── */}
+      {/* ── § 07 What you get ────────────────────────────────────────────── */}
       <section className="section-pad section--inset workshop-included">
         <div className="container">
-          <div className="kicker">§ 05 · What you get</div>
+          <div className="kicker">§ 07 · What you get</div>
           <h2 className="workshop-included__head">
-            Everything, the moment <span className="italic accent">you buy.</span>
+            One payment, and <span className="italic accent">nothing expires.</span>
           </h2>
           <div className="course-decisions">
             {INCLUDED.map((i) => (
@@ -289,53 +370,61 @@ export default function CourseSalesBody({ pricing }) {
         </div>
       </section>
 
-      {/* ── § 06 The certificate ─────────────────────────────────────────── */}
-      <section className="section-pad section--inset course-cec">
+      {/* ── § 08 Where this sits ─────────────────────────────────────────── */}
+      <section className="section-pad section--inset workshop-why">
         <div className="container">
-          <div className="kicker">§ 06 · The certificate</div>
+          <div className="kicker">§ 08 · Where this sits</div>
           <h2 className="workshop-why__head">
-            A certificate <span className="italic accent">earned, not attended.</span>
+            Each step is wider than <span className="italic accent">the one below it.</span>
           </h2>
-          <p className="workshop-why__body">
-            Work through the modules, pass the ten question quiz, and your
-            certificate is generated with your name on it. Download it then or
-            any time afterwards. It records the course and the date you
-            passed. It does not carry NPCP continuing education credit.
-          </p>
-        </div>
-      </section>
 
-      {/* ── § 07 Bio ─────────────────────────────────────────────────────── */}
-      <section className="section-pad section--inset course-bio">
-        <div className="container">
-          <div className="kicker">§ 07 · Who is teaching</div>
-          <h2 className="workshop-why__head">
-            Kaleen <span className="italic accent">Canevari.</span>
-          </h2>
-          <p className="workshop-why__body">
-            Engineer, Pilates instructor, and the designer of the Flexia
-            Reformer. I have spent as much time with the equipment apart as I
-            have with it assembled, and I built Pilates Physics because the
-            explanations I wanted did not exist. I teach the machine the way I
-            had to learn it: as a set of decisions, each one with a
-            consequence you can feel.
-          </p>
-          <p className="workshop-why__body">
-            <Link to="/about" className="course-inline-link">
-              More about me and the work
+          <div className="course-ladder">
+            {LADDER.map((step) => {
+              const inner = (
+                <>
+                  <span className="mono accent">{step.n}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.body}</p>
+                </>
+              )
+              return step.current ? (
+                <div
+                  className="course-ladder__step course-ladder__step--current"
+                  key={step.n}
+                >
+                  {inner}
+                </div>
+              ) : (
+                <Link
+                  to={step.to}
+                  className="course-ladder__step course-ladder__step--link"
+                  key={step.n}
+                >
+                  {inner}
+                </Link>
+              )
+            })}
+          </div>
+
+          {/* The page's only transitional CTA. The hero's was removed, so if
+              this one goes the page offers nothing to a visitor who is not
+              ready to spend $69. */}
+          <p className="course-ladder__cta">
+            Not ready to buy? The spring calculator is free, and it answers the
+            first question this course picks up.{' '}
+            <Link to="/spring-calculator" className="course-inline-link">
+              Open the calculator
               <ArrowSvg />
             </Link>
           </p>
         </div>
       </section>
 
-      {/* ── § 08 FAQ ─────────────────────────────────────────────────────── */}
+      {/* ── § 09 FAQ ─────────────────────────────────────────────────────── */}
       <section className="section-pad section--inset workshop-faq">
         <div className="container">
-          <div className="kicker">§ 08 · Questions</div>
-          <h2 className="workshop-faq__head">
-            Before you <span className="italic accent">buy.</span>
-          </h2>
+          <div className="kicker">§ 09 · Questions</div>
+          <h2 className="workshop-faq__head">Frequently asked questions</h2>
           <div className="course-faq">
             {FAQ.map((f) => (
               <details className="course-faq__item" key={f.q}>
@@ -347,13 +436,15 @@ export default function CourseSalesBody({ pricing }) {
         </div>
       </section>
 
-      {/* ── § 09 Buy ─────────────────────────────────────────────────────── */}
+      {/* ── § 10 Buy ─────────────────────────────────────────────────────── */}
       <section className="section-pad section--inset course-buy" id="buy">
         <div className="container">
-          <div className="kicker">§ 09 · Get the course</div>
+          <div className="kicker">§ 10 · Get the course</div>
           <h2 className="workshop-included__head">
-            Start in <span className="italic accent">about a minute.</span>
+            Walk into your next class with{' '}
+            <span className="italic accent">more than one lever.</span>
           </h2>
+          <p className="course-subline">One payment. Instant access. Yours to keep.</p>
           <div className="course-buy__inner">{pricing}</div>
         </div>
       </section>

@@ -11,7 +11,7 @@
 
 The plan for a new product type. Not a workshop with videos attached, but a
 course delivered inside the portal: eight modules in a set sequence, each one a
-Vimeo video, a scored ten-question quiz at the end, and an NPCP certificate
+Vimeo video, a scored six-question quiz at the end, and an NPCP certificate
 issued on a pass. Nothing is locked, so the sequence is a path rather than a
 gate. Public landing page at $69, linked from the education page.
 
@@ -73,7 +73,7 @@ is the product row. `course_modules` is the curriculum.
 | Delivery | In the portal, in a defined order, freely navigable |
 | Modules | 8, one Vimeo video each |
 | Navigation | Previous and Next, with a module list always visible |
-| Assessment | 10 questions, scored, at the end |
+| Assessment | 6 questions, scored, at the end |
 | Certificate | Auto-generated NPCP PDF on a pass, same design as workshops |
 | Landing page | Public, at `/how-a-reformer-works` |
 | Price | $69, one-time |
@@ -335,8 +335,10 @@ Seeded so dev and prod start identical. Everything about them is editable in
 the admin afterwards.
 
 - [ ] Quiz questions are **not** seeded. They get typed into the Quiz tab once
-      it exists. The spec's open item "write the ten quiz questions" is still
-      open, and a migration is the wrong home for copy that will be revised.
+      it exists. The six questions are drafted in
+      docs/how-a-reformer-works/npcp-cec-application.md, Section 10, and their
+      per-answer explanations are not written yet. A migration is the wrong
+      home for copy that will be revised.
 
 ### Push
 
@@ -448,7 +450,7 @@ list, inline edit form, reorder arrows, and delete confirm this needs.
 - [ ] Ordered question list, same interaction pattern.
 - [ ] Per question: prompt, four choice inputs, a correct-answer radio, and an
       optional explanation shown to the learner after grading.
-- [ ] A "10 of 10 questions" counter against the pass mark, because a pass mark
+- [ ] A "6 of 6 questions" counter against the pass mark, because a pass mark
       is meaningless if the count drifts.
 - [ ] Refuse to save a question with fewer than two choices or no correct
       answer marked.
@@ -642,7 +644,7 @@ through the modules was never the evidence.
 
 ### `CourseQuiz.jsx`
 
-- [ ] Ten questions, submit enabled once all are answered.
+- [ ] Six questions, submit enabled once all are answered.
 - [ ] The soft incomplete-progress note above the questions, when it applies.
 - [ ] Result screen: score, pass or fail, per-question feedback, and either a
       certificate button or a retake button.
@@ -839,7 +841,7 @@ the spec describes become content work rather than engineering work.
 | Upload eight videos, Unlisted with a hash, embeds restricted to the site domains | Vimeo | Before launch |
 | Paste the share URLs into the modules | Admin, Curriculum tab | After upload |
 | NPCP course id and approval date | Admin, Details tab | When NPCP issues them |
-| Write and enter the ten questions | Admin, Quiz tab | Before launch |
+| Write and enter the six questions | Admin, Quiz tab | Before launch |
 
 ---
 
@@ -896,7 +898,7 @@ The offer plan picks up after step 7.
 - [ ] NPCP course id and approval date. The spec still marks the CEC
       unconfirmed for on-demand delivery. This brief says 1 CEC, so confirm
       before the landing page is public.
-- [ ] The ten questions and explanations. Typed into the admin, so they do not
+- [ ] The six questions and explanations. Typed into the admin, so they do not
       block the build.
 - [ ] The eight Vimeo URLs.
 - [ ] Should completed courses appear anywhere besides the portal dashboard?

@@ -132,7 +132,7 @@ deliberate. Running under is the risk for CEC purposes.
 | 5 | Friction | 8 | Video + worked math | The myth-bust. Rolling vs starting friction, and the fact that friction reverses direction |
 | 6 | Classical vs contemporary | 5 | Side by side + text | Physics takes no side. Same exercise, different load, neither wrong |
 | 7 | How we consider the body | 3 | Video | The handoff to Pilates Physics 101 |
-| - | Final assessment | 5 | Quiz, 10 questions | CEC requirement |
+| - | Final assessment | 5 | Quiz, 6 questions | CEC requirement |
 
 **Total: 61 minutes.**
 
@@ -230,8 +230,8 @@ the handoff to Pilates Physics 101.
   those two assets are writing a check the content does not cash.
 - **Module 7 is a handoff, not a pitch.** Ending on what the course does not
   cover converts better than a hard close, and it preframes 101.
-- **The quiz is ten questions,** with content pending whatever the CEC body
-  actually requires.
+- **The quiz is six questions,** drafted in the NPCP CEC application, Section 10,
+  one per learning objective.
 
 ### Neutrality watch on module 6
 
@@ -291,7 +291,7 @@ wins that comparison. It belongs above the fold and in every email.
 | 3 | Worked second-order examples | To build |
 | 4 | Load curve animation across carriage travel | To build |
 | 5 | Worked friction math, including the direction reversal | To build |
-| - | Final quiz, ten questions | To build |
+| - | Final quiz, six questions | To build |
 
 The calculator is free. Everything else is the production cost, and modules 2
 and 3 carry most of it.
@@ -457,7 +457,13 @@ This product needs the next misconception, not that one.
 - [ ] Decide where the same-day action goes now that springs no longer closes the course. Options: end module 7 with the inspection prompt, put the checklist download on the completion screen, or send it as a post-purchase email
 - [ ] Resolve whether pulley height actually matters, which is currently an open question inside module 4 rather than a teaching point
 - [ ] Spell out the bio credentials in module 0 (BB, equipment maintenance, Flexia) in the form they should be said out loud on camera
-- [ ] Write the ten quiz questions against the learning objectives once the CEC requirements are known
+- [x] ~~Write the quiz questions against the learning objectives~~ Six
+  questions and an answer key are drafted in
+  [npcp-cec-application.md](../../how-a-reformer-works/npcp-cec-application.md),
+  Section 10. **Two items remain:** the per-answer explanations are
+  unwritten, and the sales page promises one on every answer. And the
+  answer key marks question 4 as C, which is the answer module 4 exists
+  to disprove. Check it before the questions are typed into the admin
 - [ ] Settle chair vs tower vs Cadillac naming for the follow-on editions, matching PP102
 - [ ] Count the real second-order effects now living inside module 3. If there are three or four solid ones, the trickle-down hook holds. If it is really only gearing out, the primary ad hook and the cart-open email should switch to pulleys
 - [ ] Discount enforcement mechanism

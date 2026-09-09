@@ -852,14 +852,15 @@ what already exists.
 | Comp access for specific people | `grant-entitlement.js`, `bulk-grant-entitlement.js`, `AdminUsers.jsx` | Near zero. Already works for any `webinars` row |
 | Reopen one person's window by hand | Nothing yet | Small. One admin action that resets `expires_at` on a `subscriber_offers` row. See "Missed-the-window requests" |
 | Feedback survey | `webinars.survey_config` jsonb + `workshop_feedback.responses` jsonb (migration 025) + `AdminWorkshopFeedback.jsx` | Near zero. Migration 025 was built workshop-agnostic. Write a JSON config |
-| Graded quiz, 10 questions, CEC | Nothing. Surveys collect, they do not score | **Real build.** Scoring, pass threshold, retakes, attempt storage. Ties to `course_progress` and the certificate |
+| Graded quiz, 6 questions, CEC | Nothing. Surveys collect, they do not score | **Real build.** Scoring, pass threshold, retakes, attempt storage. Ties to `course_progress` and the certificate |
 | PDF worksheet and inspection checklist | `api/_lib/build-certificate.js`, pdfkit already a dependency | Medium. Design work more than code |
 | Downloads | `webinar_content` type `download`, admin storage (migration 005) | Near zero. Seed rows |
 | Certificate | `api/certificate/[workshopId].js` exists with NPCP fields (migration 024) | Small, gated on the quiz existing |
 
 Everything except the quiz is a config change or a seed row. The quiz is the
 only genuinely new admin surface, and it is blocked on the spec's open item:
-write the ten questions once CEC requirements are known.
+write the six questions once CEC requirements are known. They are drafted in
+docs/how-a-reformer-works/npcp-cec-application.md, Section 10.
 
 ---
 
