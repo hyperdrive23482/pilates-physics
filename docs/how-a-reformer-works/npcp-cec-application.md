@@ -9,15 +9,28 @@ Instructor: Kaleen Canevari
 Delivery: Online, on-demand, self-paced
 Contact hours requested: 1.0 hour
 
-> Markdown archive of the final submission, converted from the exported PDF
-> on 2026-09-02. The Google Doc is the submitted version; this file is the
-> repo copy.
+> Markdown archive of the Google Doc, which is the version that gets
+> submitted. First converted from the exported PDF on 2026-09-02, and
+> re-synced 2026-09-09 after the Doc was updated to match the shipped
+> course.
+>
+> That update dropped the "design selections" module shape (the Flexia
+> design decisions are not being shared), renamed the course from The
+> Making of a Reformer, moved the quiz out of the module list, added
+> module 7, and reset the runtimes and pass mark to what migration 045
+> actually seeds. Sections 1 through 10 below match the Doc.
+> **Section 11 is repo-only** and has never been part of the submission.
+>
+> The Doc carries no header block, so the five lines above exist only
+> here. If NPCP wants provider, delivery mode and contact hours inside
+> the document rather than on their own form, they have to be added
+> there.
 
 ---
 
 ## 1. Course Description
 
-This course examines the reformer as a mechanical system and explains how each component delivers and adjusts load. Participants learn reformer anatomy, apply Hooke's Law to spring resistance, and see through measured examples how the footbar, gear bar, spring pre-tension, rope length, and pulleys change the resistance a client experiences. Carriage friction is quantified with a worked calculation, and the mechanical differences between classical and contemporary reformers are compared. Each module closes with the design decisions the instructor made for her own reformer, presented as a brand-neutral case study in engineering tradeoffs (see Section 9 for disclosure).
+This course examines the reformer as a mechanical system and explains how each component delivers and adjusts load. Participants learn reformer anatomy, apply Hooke's Law to spring resistance, and see through measured examples how the footbar, gear bar, spring pre-tension, rope length, and pulleys change the resistance a client experiences. Spring wear is treated alongside the law that bounds it, including where Hooke's Law stops applying and what to look for when inspecting a spring. Carriage friction is quantified with a worked calculation, and the mechanical differences between classical and contemporary reformers are compared without favoring either tradition. The course closes by naming what a machine-only account of load leaves out, which is where the body enters. All technical content is presented so that it applies equally to reformers from any manufacturer.
 
 ## 2. Target Audience and Prerequisites
 
@@ -27,15 +40,16 @@ Certified Pilates teachers and teachers in training who instruct on the reformer
 
 Upon completion of this course, the participant will be able to:
 
-1. Identify the principal components of a reformer and describe the adjustment or load function of each.
-2. State Hooke's Law, including the initial tension term, and explain why spring resistance increases as the spring stretches.
+1. Identify the principal components of a reformer, and describe which of them change load and which do not.
+2. State Hooke's Law, including the initial tension term, explain why spring resistance increases as the spring stretches, and identify where the law stops applying.
 3. Read a spring resistance chart and compare resistance across spring weights and across manufacturers.
 4. Describe the design factors that determine a spring's stiffness.
 5. Identify the factors that shorten spring life, and recognize spring safety hazards that warrant inspection or replacement.
-6. Predict how common reformer settings change the range of spring extension.
-7. Explain how pulleys change spring load delivery.
-8. Understand wheel friction's role in spring load.
+6. Predict how each reformer adjustment changes the range of spring extension, including the second-order effects of a single change.
+7. Explain how the rope and pulley arrangement relates rope travel to carriage travel, and how that changes the load delivered.
+8. Evaluate the role of carriage friction in perceived load, and identify the conditions under which a teacher would notice it.
 9. Compare the springs, wheels, straps, and footbars of classical and contemporary reformers and explain how each factor affects the feel.
+10. Recognize the limits of a machine-only account of load, and identify where the dimensions and position of the body change what a given setting produces.
 
 ## 4. Course Outline and Time Allocation
 
@@ -43,17 +57,21 @@ Upon completion of this course, the participant will be able to:
 |--------|-------|---------|
 | 0 | Introduction | 3 |
 | 1 | Reformer Anatomy | 6 |
-| 2 | All About Springs | 15 |
+| 2 | Springs | 14 |
 | 3 | Reformer Adjustments | 10 |
 | 4 | Pulleys | 7 |
-| 5 | Carriage Friction | 7 |
-| 6 | Classical and Contemporary | 10 |
-| 7 | Quiz | 5 |
-| | **Total** | **63** |
+| 5 | Friction | 8 |
+| 6 | Classical and Contemporary | 5 |
+| 7 | How We Consider the Body | 3 |
+| | Final Assessment (Quiz) | 5 |
+| | **Total** | **61** |
+
+Runtimes match the `course_modules` rows seeded by migration 045, which total
+56 minutes of module content plus roughly 5 for the quiz.
 
 ## 5. Detailed Module Content
 
-Each module opens with its learning objectives, presents the technical content, and closes with a short "design selections" section describing the choices the instructor made for that component of her own reformer design and the reasoning behind them. The design selections are used as an instructional device to show that every reformer's features are the result of engineering tradeoffs. The technical content is presented so that it applies equally to all reformer brands.
+Each module opens with its learning objectives and presents the technical content through worked examples and measured data. Photographs and examples are drawn from several manufacturers, the technical content applies equally to all reformer brands, and no module recommends one machine over another.
 
 ### Module 0: Introduction
 
@@ -70,9 +88,9 @@ Objective: establish a common vocabulary for the parts that adjust or deliver lo
 - Foot end: gear bar and gear positions, with examples from several manufacturers; spring pre-tension options; footbar, with examples from several manufacturers.
 - Carriage: top and underside, including wheels and spring attachment.
 - Head end: risers, pulleys, and ropes, with riser examples from several manufacturers.
-- Design selections: carriage dimensions; adjustable shoulder rests; fixed risers; gear positions; no pre-load spring option; adjustable footbar.
+- Machine dimensions: the four competing size constraints behind every reformer, and how the distance from shoulder rest to footbar governs who the machine fits.
 
-### Module 2: All About Springs
+### Module 2: Springs
 
 Objectives: Hooke's Law; reading a spring resistance chart; the design factors that affect spring feel; correctly labeling spring behavior; spring lifespan; identifying safety hazards.
 
@@ -84,7 +102,7 @@ Objectives: Hooke's Law; reading a spring resistance chart; the design factors t
 - Responsible spring use: regular inspection and replacement, for liability and for consistency of client experience.
 - Spring design factors that determine the spring constant: coil diameter, wire diameter, and coil length.
 - Materials and coatings: music wire (high-carbon, cold-drawn, pre-tempered steel); uncoated, zinc plated, electroplated, and passivated finishes.
-- Design selections: spring weights; a longer coil body for extended lifespan.
+- Inspecting your own springs: what to look for, and why each manufacturer's own replacement guidance is the reference rather than a fixed interval.
 
 ### Module 3: Reformer Adjustments
 
@@ -96,7 +114,7 @@ Objective: know the levers available to fit the client and change load. Every ad
 - Spring pre-tension: the "top deck" or "button" pre-stretches the spring, shifting the resistance range higher on the force curve. The same effect can be produced by combining the carriage stopper with the gear bar. Measured example: supine arms, regular versus pre-tensioned.
 - Rope length (long versus short loops): the longer the rope, the earlier the client works on the force curve. Measured example: supine arms, long loop versus short loop.
 - Shoulder rests: wide versus narrow.
-- Design selections: four-way adjustable footbar; three gear positions; no spring pre-tension option; infinitely adjustable ropes; two-way adjustable shoulder rests.
+- Second-order effects: one adjustment moves more than one variable, worked through with examples so a teacher can predict the whole result of a single change.
 
 ### Module 4: Pulleys
 
@@ -105,16 +123,16 @@ Objective: how pulleys change spring load delivery.
 - Examination of the common statement that pulleys cut the load of the springs in half.
 - Pulleys and spring stretch: the relationship between rope travel and carriage travel, illustrated step by step.
 - Pulley position: low versus high, and the effect on load delivery.
-- Design selections: pulley selection and placement.
+- Where the load actually peaks across the carriage travel, and what that means for where an exercise sits in the range.
 
-### Module 5: Carriage Friction
+### Module 5: Friction
 
 Objective: how friction affects resistance.
 
 - Two kinds of friction: rolling friction while moving, and static friction when starting to move.
 - Worked calculation of carriage wheel friction using the friction coefficient and normal force. Example: a carriage plus client of 250 pounds on wheels with a friction coefficient of 0.002 produces about half a pound of friction force.
 - Direction of the friction force when pushing out versus coming in: friction always opposes motion, so it adds to the load in one direction and subtracts in the other.
-- Design selections: use of proven off-the-shelf wheel and bearing hardware.
+- The one scenario in which a teacher would genuinely notice friction, and the caveat behind the calculation, which assumes a maintained machine with round wheels and a clean track.
 
 ### Module 6: Classical and Contemporary
 
@@ -125,27 +143,38 @@ Objective: understand which mechanical factors influence the "feel" of a reforme
 - Wheels: differences in wheel and track design.
 - Straps: differences in strap material and geometry.
 - Footbar: differences in footbar position and adjustability.
-- Design selections: framed as a question for the participant, which tool best supports your teaching intent.
+- Neutrality: the module takes no position on which tradition is better. It closes with a question for the participant, which machine best supports your teaching intent.
 
-### Module 7: Quiz
+### Module 7: How We Consider the Body
 
-- Six-question multiple-choice assessment covering all learning objectives. Questions and answer key are provided in Section 10.
+- Objective: recognize what the machine alone cannot tell a teacher about load.
+- Everything up to this point is load before a body is on the carriage.
+- Where the dimensions and position of the body change what a given setting actually produces for that client.
+- Handoff: what a full treatment of the body and load covers, and where the participant can continue it.
+
+### Final Assessment
+
+- Six-question multiple-choice assessment covering the course learning objectives. Questions and answer key are provided in Section 10.
+- Administered online at the end of the course and graded automatically. Scoring, retakes and the certificate are described in Section 6.
 
 ## 6. Assessment
 
-- Format: six-question multiple-choice quiz administered online at the conclusion of the course.
-- Passing score: [to be confirmed, proposed 5 of 6 correct, 83 percent]. Participants may retake the assessment.
-- A certificate of completion is issued upon passing.
+- Format: six-question multiple-choice quiz, administered online at the conclusion of the course and graded automatically.
+- Passing score: 80 percent, which is 5 of 6 correct. Participants may retake the assessment without limit, and every attempt is recorded.
+- Every question returns a written explanation once an attempt is submitted, whether or not the participant answered it correctly. A certificate of completion carrying the participant name and the date passed is issued upon passing, and can be downloaded again at any time.
 
 ## 7. Instructional Materials
 
-- Recorded video lectures with slides, one per module.
+- Recorded video lectures with slides, one per module, delivered in a set sequence inside the course portal.
 - Labeled photographs of reformer components from multiple manufacturers.
+- Interactive reformer parts diagram with labels.
+- Adjustment simulator showing how a single setting changes starting stretch and load through range with nobody on the machine.
+- Downloadable spring inspection checklist.
 - Interactive spring load calculator (pilatesphysics.com/spring-calculator).
-- Spring resistance charts.
+- Spring resistance charts and a cross-manufacturer comparison table.
 - Measured load examples for each reformer adjustment.
 - Pulley and spring stretch animation.
-- Worked friction calculation.
+- Worked friction calculation, including the direction reversal.
 
 ## 8. Instructor Qualifications
 
@@ -153,7 +182,7 @@ Kaleen Canevari is a mechanical engineer and Pilates instructor. She is a former
 
 ## 9. Disclosure
 
-The instructor led the design of the Flexia reformer as founder of the company that manufactures it. She sold the company in 2025 and is no longer involved in its operations, although she advises the company from time to time. References to that design in this course are used as an instructional case study to illustrate engineering tradeoffs. The course does not recommend any reformer brand, and all technical content applies equally to reformers from any manufacturer.
+The instructor led the design of the Flexia reformer as founder of the company that manufactures it. She sold the company in 2025 and is no longer involved in its operations, although she advises the company from time to time. That background informs the technical content, but the course does not feature, demonstrate, or draw its examples from that machine. The course does not recommend any reformer brand, and all technical content applies equally to reformers from any manufacturer.
 
 ## 10. Assessment Questions and Answer Key
 
@@ -197,8 +226,8 @@ Six multiple-choice questions. Each question has one correct answer. Correct ans
 **Question 6.** Which of the following mechanical differences between classical and contemporary reformers affects how the resistance feels?
 
 - A. Spring type and configuration.
-- B. Wheel and track design.
-- C. Strap material and footbar position.
+- B. Wheel design.
+- C. Strap material.
 - D. All of the above.
 
 ### Answer key
@@ -212,15 +241,24 @@ Six multiple-choice questions. Each question has one correct answer. Correct ans
 | 5 | B |
 | 6 | D |
 
+> **Question 4 is keyed to C on purpose.** Confirmed 2026-09-09. A reformer
+> pulley changes the direction of the force, not its size, so the rope
+> carries the spring tension to the hands. The "half" everyone quotes comes
+> from two straps sharing one spring, which is what module 4 unpacks. An
+> earlier revision of this file argued for A and was wrong; the Q4
+> explanation in Section 11 still carries that argument and needs rewriting
+> before the questions go into the admin.
+
 ---
 
 ## 11. Answer explanations
 
-Drafted for the product, not for the application. Every attempt returns these to
-the learner, right or wrong, because the sales page promises an explanation on
-every answer and a failed attempt is meant to be worth something. They are typed
-into the `explanation` field on each question in the admin Quiz tab, alongside
-the prompt, the choices and the correct answer.
+Repo-only, and never part of the submission. Drafted for the product: every
+attempt returns these to the learner, right or wrong, because the sales page
+promises an explanation on every answer and a failed attempt is meant to be
+worth something. They are typed into the `explanation` field on each question
+in the admin Quiz tab, alongside the prompt, the choices and the correct
+answer.
 
 Written to name the reason rather than restate the answer, and to point at the
 module the question came from.
@@ -248,7 +286,8 @@ range is higher. The spring constant has not changed. What changed is how much
 stretch the exercise asks for, and stretch is what sets the load. This is the
 clearest case of an adjustment that changes the work without changing a spring.
 
-**Question 4.** The ropes do not hand the spring tension straight to the client.
+**Question 4.** *Needs rewriting. The paragraph below argues for A, and the
+answer is C.* The ropes do not hand the spring tension straight to the client.
 The rope travels farther than the carriage does, and any system that trades
 distance trades force in the opposite direction, so the force at the handle is
 less than the tension in the spring. It is not a free discount. The spring is
@@ -270,16 +309,3 @@ arrives through. None of that makes one tradition better than the other. It
 means the same exercise on a classical and a contemporary machine is not the
 same amount of work, and knowing which differences matter is what lets you teach
 confidently on either.
-
-### One correction the answer key needs first
-
-**Question 4 is keyed to C, and C is the misconception the question is testing.**
-C says the rope transmits spring tension to the hands unchanged. Option A is the
-physics, and it is what module 4 exists to teach: the rope travels farther than
-the carriage, so the force at the handle is lower than the spring tension while
-still climbing as the spring stretches. The explanation above is written for A.
-
-As it stands, every learner who understands module 4 is marked wrong on this
-question, and on a six-question quiz at an 80 percent pass mark that single
-answer is the difference between passing and failing. Confirm the intent, then
-correct the key before the questions are entered in the admin.
