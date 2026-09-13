@@ -4,10 +4,13 @@
 > slug `how-a-reformer-works`. Kit tags were renamed from `MOR-` to `HARW-`, and
 > migration 048 moved `kit_tag` with them. The Flexia design decisions are not being
 > shared, so the "here is what I chose and why" module shape described below
-> is no longer a promise the sales page makes. **There is no NPCP CEC as of
-> 2026-09-08**: `npcp_cecs` is null (045 and 049), the certificate is a plain
-> certificate of completion, and no copy claims a CEC. The CEC material below is
-> kept for when approval is pursued.
+> is no longer a promise the sales page makes. **NPCP approved 1 CEC on
+> 2026-09-11**, and migration 051 reverses 049's clearing of `npcp_cecs`. It
+> seeds all three NPCP fields together -- 1.0 CECs, course id `20245-10188`,
+> approval date 2026-09-11 -- because the certificate renders the NPCP block as
+> soon as any one of them is set, so a partial fill would print em dashes on a
+> credential. The sales page, education card and email sequence all name the
+> credit again. The CEC material below is live, not aspirational.
 
 The plan for a new product type. Not a workshop with videos attached, but a
 course delivered inside the portal: eight modules in a set sequence, each one a

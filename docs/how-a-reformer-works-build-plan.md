@@ -391,11 +391,12 @@ path needs the API to do anything, which is Phase 3.
 - [x] ~~Add a card to the `PATHS` array in `src/pages/Education.jsx`~~
 
 It slots between the spring calculator and PP101, which is the ladder the spec
-describes. The meta shipped as `$69 · 1 hour · Instant access`. **No CEC:**
-migration 049 set `npcp_cecs` to null because NPCP approval had not landed by
-2026-09-08, and null is what makes `build-certificate.js` issue a plain
-certificate of completion. If approval arrives it is set in the admin, and
-re-downloads pick it up.
+describes. **The CEC arrived after all:** NPCP approved 1 CEC on 2026-09-11, so
+migration 051 reverses 049 and the card meta now reads
+`$69 · 1 hour · 1 NPCP CEC`. 051 seeds all three NPCP fields together -- course
+id `20245-10188`, approved 2026-09-11 -- because the certificate prints the
+block once any one of them is set, so a partial fill would render em dashes on a
+credential.
 
 ### Pricing block copy
 
@@ -419,10 +420,12 @@ that $39 was a trick. That protects $69 instead of undermining it.
 > calculator, and the inspection checklist are all still included, exactly as
 > they were.
 
-**The CEC came out of that list on 2026-09-13 and must not go back in** unless
-NPCP approval actually lands. The course ships without one, so naming it as
-still-included would put a false claim on the one page whose entire job is
-proving nothing dishonest happened.
+**The CEC belongs in that list again.** It was removed on 2026-09-08 when the
+course was going to ship without one; NPCP approved 1 CEC on 2026-09-11, so the
+expired copy should name it alongside the modules, the calculator and the
+checklist. The rule behind both edits is the same: this is the one page whose
+entire job is proving nothing dishonest happened, so the list has to be exactly
+true on the day it renders.
 
 **Public.** No mention of any of the above.
 
@@ -818,10 +821,12 @@ worth knowing before writing anything against these tables:
   and Next marks one done without watching anything. The record that carries a
   certificate is a passed `quiz_attempts` row, which is the only thing here that
   cannot be clicked through
-- **There is no CEC.** This phase justified `course_progress` by the CEC
-  completion requirement. Migration 049 set `npcp_cecs` to null and the course
-  ships with a plain certificate of completion. The table still earns its place
-  for resume, the progress bar, and the soft prompt on the quiz
+- **The CEC is real, but `course_progress` is still not what carries it.** This
+  phase justified the table by the CEC completion requirement, and NPCP did
+  approve 1 CEC on 2026-09-11 (migration 051). The record behind the credit is a
+  passed `quiz_attempts` row, though -- the only thing here that cannot be
+  clicked through. `course_progress` earns its place for resume, the progress
+  bar, and the soft prompt on the quiz
 
 ---
 
@@ -1164,7 +1169,7 @@ what already exists.
 | ~~Graded quiz, 6 questions~~ | **Shipped.** `QuizEditor`, `api/course/quiz.js`, `CourseQuiz`, `quiz_attempts`, `quiz_pass_pct` on the product row | Done. The six questions are typed into the Quiz tab, not seeded |
 | PDF worksheet and inspection checklist | `api/_lib/build-certificate.js`, pdfkit already a dependency | Medium. Design work more than code |
 | Downloads | `webinar_content` type `download`, admin storage (migration 005) | Near zero. Seed rows |
-| ~~Certificate~~ | **Shipped.** `api/certificate/[workshopId].js`, built at download time from the row | Done. Prints as a plain certificate of completion while `npcp_cecs` is null |
+| ~~Certificate~~ | **Shipped.** `api/certificate/[workshopId].js`, built at download time from the row | Done. Carries 1 NPCP CEC, course id `20245-10188`, approved 2026-09-11, all seeded by 051 |
 
 The quiz and the certificate are done, which was the only entry here costed as a
 real build. Everything still on this list is a config change, a seed row, or a

@@ -12,7 +12,7 @@ const PATHS = [
     title: 'How a Reformer Works',
     sub: 'Inside the mechanisms that make your reformer magical',
     body: 'From spring specs to every adjustment on the frame, what each part of the reformer does to the load on a body, taught by an engineer who designed one.',
-    meta: '$69 · 1 hour · Instant access',
+    meta: '$69 · 1 hour · 1 NPCP CEC',
     ctaLabel: 'Learn more',
     to: '/how-a-reformer-works',
   },

@@ -10,7 +10,11 @@
 -- Deliberately NOT seeded:
 --   stripe_price_id       differs between the test and live Stripe accounts
 --   npcp_cecs             no NPCP approval as of 2026-09-08. Null keeps the
---                         NPCP row off the certificate (build-certificate.js)
+--                         NPCP row off the certificate (build-certificate.js).
+--                         SUPERSEDED: approval landed 2026-09-13 and migration
+--                         051 sets this to 1.0. Left null here because 049
+--                         sits between them and the history should read
+--                         straight.
 --   npcp_course_id        not issued yet
 --   npcp_approval_date    not issued yet
 --   vimeo_url             videos not shot yet; modules render "coming soon"

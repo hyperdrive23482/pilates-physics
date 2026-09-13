@@ -91,10 +91,13 @@ that is not stated does not work. The rule lives in
    opens a cart at $39 while the public page shows $69, so that mechanism has to
    exist before any of emails 4 through 8 can send.
 
-**The CEC question is settled: there is no CEC.** As of 2026-09-08 the course
-carries no NPCP continuing education credit, so the "[CEC line goes here once
-confirmed.]" placeholders in emails 4, 6 and 7 were deleted and no email asserts
-one. If approval ever lands, email 4 is where a single CEC line belongs.
+**The CEC question is settled the other way: there is 1 NPCP CEC.** Approval
+landed on 2026-09-11 (migration 051), reversing the 2026-09-08 position that the
+course would ship without one. **Email 4 carries the single CEC line**, which is
+where the earlier note said it belonged, and **email 7 names it** in the
+what-you-get list. Emails 5, 6 and 8 stay silent by choice: 5 is the origin
+story, 6 is the self-quiz, and 8 is three sentences at 8pm where a new fact reads
+as a new argument at the wrong hour.
 
 ### Subject line pass, 2026-08-21
 
@@ -412,11 +415,11 @@ Most teacher training glosses over this part.
 
 I know that because I came at Pilates from precisely this equipment angle before I ever learned how to teach.  And when it was time to design my own reformer, I had to pick every dimension, every adjustment range, every spring specification.  They needed to be defensible with physics, and I got a full education in what a reformer actually is on the way through.
 
-I put what I learned into a short online course. It's called **How a Reformer Works: inside the mechanisms that make your reformer magical.** It talks about everything that changes load before a body gets on it, and it is about an hour and is available instantly on purchase.
+I put what I learned into a short online course. It's called **How a Reformer Works: inside the mechanisms that make your reformer magical.** It talks about everything that changes load before a body gets on it, and it is about an hour and is available instantly on purchase. It is also approved for **1 NPCP CEC**, issued when you pass the quiz at the end.
 
 Because you just joined my list, I want to give you the chance to buy this course for **$39**.  You get the special discount for 4 days. After that it goes back to its normal $69.
 
-[Get How a Reformer Works →](LINK)
+[Get How a Reformer Works →](https://pilatesphysics.com/offer/reformer?t={{ subscriber.offer_token }})
 
 Kaleen
 
@@ -444,11 +447,14 @@ Kaleen
 
 - **The greeting line was added** to match emails 1 through 3. Kaleen's rewrite
   started at "When a client doesn't get it."
-- **`LINK` is a placeholder,** and it has to resolve to something that actually
-  charges $39. That is the discount enforcement mechanism, still deferred in
-  [the course spec](../working-drafts/reformer-machine-course-spec.md). Nothing
-  in emails 4 through 8 can send until it exists.
-- **The CEC placeholder was removed on 2026-09-08.** No CEC, so no line.
+- **The link is live.** `https://pilatesphysics.com/offer/reformer?t={{ subscriber.offer_token }}`
+  Paste it exactly, merge tag included. The token is written into Kit by
+  `api/cron/mint-offers.js`, and the server re-validates it at checkout, so the
+  $39 is enforced rather than advertised. If the field is ever empty the URL ends
+  `?t=` and the page offers to email the link rather than erroring.
+- **The CEC line is back.** NPCP approved 1 CEC on 2026-09-11, so the
+  sentence the 2026-09-08 note deleted has returned to the course paragraph.
+  This is the only email carrying the full statement.
 - **No P.S.** Emails 1, 2, and 3 all have one. Not a problem, but it is a break
   in pattern worth making on purpose rather than by omission.
 - **No forward tease to email 5.** The earlier drafts ended on one. This version
@@ -528,7 +534,7 @@ How a Reformer Works: inside the mechanisms that make your reformer magical, is 
 
 You can grab the course for $39 for another 2 days.  But after that, it goes back to the regular price of $69.
 
-[Get How a Reformer Works →](LINK)
+[Get How a Reformer Works →](https://pilatesphysics.com/offer/reformer?t={{ subscriber.offer_token }})
 
 Kaleen
 
@@ -550,11 +556,13 @@ Kaleen
   day 2 and the cart closes end of day 4, so the two days remaining after today
   are day 3 and day 4. It understates by a few hours rather than over-promising,
   which is the safe direction. No edit needed.
-- **`LINK` is the same placeholder** as email 4, and the same blocker: the
-  discount enforcement mechanism is still deferred in
-  [the course spec](../working-drafts/reformer-machine-course-spec.md).
-- **No CEC line in this email,** by choice. If the CEC lands, email 4 is where it
-  belongs.
+- **The link is live.** `https://pilatesphysics.com/offer/reformer?t={{ subscriber.offer_token }}`
+  Paste it exactly, merge tag included. The token is written into Kit by
+  `api/cron/mint-offers.js`, and the server re-validates it at checkout, so the
+  $39 is enforced rather than advertised. If the field is ever empty the URL ends
+  `?t=` and the page offers to email the link rather than erroring.
+- **No CEC line in this email,** by choice, and still right now that the CEC
+  exists. Email 4 states it and email 7 lists it; this one is the origin story.
 - **No P.S.,** consistent with email 4. Emails 1, 2, and 3 all carry one. The
   pattern break starts at the cart open.
 - **Double spaces and a few trailing spaces are preserved** from Kaleen's edit.
@@ -668,7 +676,7 @@ If you want to know the answers to these questions, you should grab my online co
 
 **It is $39 until tomorrow.** After that it goes to $69.
 
-[Get How a Reformer Works →](LINK)
+[Get How a Reformer Works →](https://pilatesphysics.com/offer/reformer?t={{ subscriber.offer_token }})
 
 Kaleen
 
@@ -681,10 +689,13 @@ Kaleen
   day. This line is what surfaced the conflict in the original three-day plan,
   where emails 6 and 7 were both stacked on day 3 and this sentence promised a day
   that did not exist. The window is now four calendar days. No edit needed.
-- **The CEC placeholder was removed on 2026-09-08.** No CEC, so no line.
-- **`LINK` is the same placeholder** as emails 4 and 5, and the same blocker: the
-  discount enforcement mechanism is still deferred in
-  [the course spec](../working-drafts/reformer-machine-course-spec.md).
+- **No CEC line here,** deliberately, though the course now carries one. This
+  email is the self-quiz; the credit is stated in emails 4 and 7.
+- **The link is live.** `https://pilatesphysics.com/offer/reformer?t={{ subscriber.offer_token }}`
+  Paste it exactly, merge tag included. The token is written into Kit by
+  `api/cron/mint-offers.js`, and the server re-validates it at checkout, so the
+  $39 is enforced rather than advertised. If the field is ever empty the URL ends
+  `?t=` and the page offers to email the link rather than erroring.
 - **Question 5 needs something citable behind it.** "Why do manufacturers
   recommend replacing your springs so often" asserts that they do. Have a
   specific manufacturer interval to point to before this ships, since it is the
@@ -779,11 +790,11 @@ My online course, How a Reformer Works, is exactly what it sounds like. If you'r
 
 **Classical and contemporary comparison.** A level-headed look at materials and design differences between classical and contemporary reformers.
 
-About an hour altogether, available the moment you buy, and you can take it in pieces.
+About an hour altogether, available the moment you buy, and you can take it in pieces. Pass the six question quiz at the end and you earn **1 NPCP CEC**, with a certificate carrying the details you need to submit it.
 
 **$39 today,** then $69.
 
-[Get How a Reformer Works →](LINK)
+[Get How a Reformer Works →](https://pilatesphysics.com/offer/reformer?t={{ subscriber.offer_token }})
 
 Kaleen
 
@@ -829,10 +840,14 @@ Kaleen
   inside the closing bold markers, which breaks the emphasis when rendered;
   removed. And "body weight and wheel design *affects*" is a compound subject, so
   it is now "affect." Revert either if they were deliberate.
-- **The CEC placeholder was removed on 2026-09-08,** same as emails 4 and 6.
-- **`LINK` is the same placeholder** and the same blocker as emails 4 through 6:
-  the discount enforcement mechanism is still deferred in
-  [the course spec](../working-drafts/reformer-machine-course-spec.md).
+- **The CEC is named here.** NPCP approved it on 2026-09-11. This email lists
+  what $39 buys,
+  so the credit belongs in the list. Email 4 makes the fuller statement.
+- **The link is live.** `https://pilatesphysics.com/offer/reformer?t={{ subscriber.offer_token }}`
+  Paste it exactly, merge tag included. The token is written into Kit by
+  `api/cron/mint-offers.js`, and the server re-validates it at checkout, so the
+  $39 is enforced rather than advertised. If the field is ever empty the URL ends
+  `?t=` and the page offers to email the link rather than erroring.
 - **"$39 today" is deliberately vaguer** than email 6's "until tomorrow" and email
   8's "tonight," because the cart timeline is a separate pass. All three need to
   agree before any of them send.
@@ -906,7 +921,7 @@ Hi {{ subscriber.first_name }},
 
 I just wanted to drop in real quick and remind you that your special $39 price for How a Reformer Works goes away at midnight tonight.
 
-[Get it now →](LINK)
+[Get it now →](https://pilatesphysics.com/offer/reformer?t={{ subscriber.offer_token }})
 
 Hope to see you in there.
 
@@ -935,14 +950,17 @@ Kaleen
 - **"Midnight" is a placeholder** and it has to match whatever the cart actually
   enforces, with a timezone named if the list spans more than one. This is part of
   the timeline pass along with email 6's "until tomorrow."
-- **`LINK` is the same placeholder** and the same blocker as emails 4 through 7:
-  the discount enforcement mechanism is still deferred in
-  [the course spec](../working-drafts/reformer-machine-course-spec.md).
+- **The link is live.** `https://pilatesphysics.com/offer/reformer?t={{ subscriber.offer_token }}`
+  Paste it exactly, merge tag included. The token is written into Kit by
+  `api/cron/mint-offers.js`, and the server re-validates it at checkout, so the
+  $39 is enforced rather than advertised. If the field is ever empty the URL ends
+  `?t=` and the page offers to email the link rather than erroring.
 - **Check Kit's send-time default.** This is the only evening send in eight
   emails. A list-wide morning default would override it silently and land this on
   top of email 7.
-- **No P.S. and no CEC,** both consistent with emails 4 through 7 and both correct
-  here. Anything more is a new argument at the wrong hour.
+- **No P.S. and no CEC.** The course does carry 1 NPCP CEC as of 2026-09-11, and
+  it still does not belong here: this is three sentences at 8pm, and a fact the
+  reader last saw in email 7 reads as a new argument at the wrong hour.
 
 ### Notes on the edit
 

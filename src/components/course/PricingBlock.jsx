@@ -158,7 +158,7 @@ export default function PricingBlock({
 
       <ul className="course-buy__list">
         <li>8 modules, 1 hour of video</li>
-        <li>Certificate of completion on passing</li>
+        <li>Certificate worth 1 NPCP CEC on passing</li>
         <li>Instant access, yours to keep</li>
       </ul>
 

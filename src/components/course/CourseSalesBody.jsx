@@ -18,7 +18,9 @@ import './course-sales.css'
 // Three sections a reader might expect are deliberately absent. The designer's
 // tradeoff cards and a standalone certificate section were cut, so the Flexia
 // credibility lives in the bio and the certificate is one card in "what you
-// get" plus an FAQ answer, which is the only place the no-CEC fact is stated.
+// get" plus an FAQ answer, which is where the CEC is stated. NPCP approved
+// 1 CEC on 2026-09-11 (migration 051), reversing the no-CEC copy that shipped
+// between 2026-09-08 and then.
 // The "who this is for" section was cut too. Its empathy beat now rides in
 // the last two sentences of § 02, which honour the training rather than
 // implying it failed, and the first FAQ answer backs it up.
@@ -75,8 +77,8 @@ const INCLUDED = [
   {
     n: '03',
     label: 'CERTIFICATE',
-    title: 'A certificate of completion',
-    body: 'Generated the moment you pass, with your name and the date on it, ready to download whenever you need it again.',
+    title: 'A certificate worth 1 NPCP CEC',
+    body: 'Generated the moment you pass, with your name, the date, and the NPCP details on it, ready to download whenever you need it again.',
   },
   {
     n: '04',
@@ -116,6 +118,7 @@ const SPECS = [
   { k: 'Duration', v: '1 hour' },
   { k: 'Assessment', v: '6 question quiz' },
   { k: 'Certificate', v: 'On passing' },
+  { k: 'NPCP CEC', v: '1.0' },
   { k: 'Access', v: 'No expiry' },
 ]
 
@@ -138,7 +141,7 @@ const FAQ = [
   },
   {
     q: 'Does this carry NPCP continuing education credit?',
-    a: 'Not yet. Currently you get a certificate of completion with your name and the date you passed.',
+    a: 'Yes. The course is approved for 1 NPCP CEC, issued when you pass the quiz. Your certificate carries your name, the date you passed, and the NPCP details you need to submit it.',
   },
   {
     q: 'What if I do not pass the quiz?',
