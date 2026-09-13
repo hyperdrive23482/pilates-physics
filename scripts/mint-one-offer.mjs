@@ -22,7 +22,6 @@
 //   --key K    offer_key. Default "manual-test", deliberately not a real
 //              campaign key -- see the guard below.
 
-import { supabaseAdmin } from '../api/_lib/supabase-admin.js'
 import { endOfOfferWindow, formatDeadline } from '../api/_lib/offer.js'
 import crypto from 'node:crypto'
 
@@ -72,6 +71,12 @@ const host = (() => {
     return '(unparseable VITE_SUPABASE_URL)'
   }
 })()
+// Imported here, not at the top. api/_lib/supabase-admin.js constructs its
+// client on import and createClient throws on a missing key, so an eager import
+// would crash with a supabase-js stack trace before the env check above ever
+// ran -- burying the one line that says what to do about it.
+const { supabaseAdmin } = await import('../api/_lib/supabase-admin.js')
+
 console.log(`database : ${host}`)
 console.log(`email    : ${email}`)
 console.log(`offer_key: ${offerKey}`)
