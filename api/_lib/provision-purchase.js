@@ -149,6 +149,32 @@ export async function provisionPurchase(session, { siteUrl, purchasedAt } = {}) 
     }
   }
 
+  // ---- Close the offer window (non-fatal) ----
+  //
+  // Lives here rather than in the webhook because this function is the funnel
+  // every provisioning path goes through, and a purchase provisioned by any
+  // other route must not leave a spent token still spendable.
+  //
+  // `.is('redeemed_at', null)` makes a retry a no-op instead of overwriting the
+  // original redemption time and payer, which matters because this function is
+  // called repeatedly for the same session by design.
+  //
+  // redeemed_email is the address that ACTUALLY paid, which is not always the
+  // address the offer was minted for -- forwarded links are allowed to work,
+  // and this column is how often that happens becomes visible. See the build
+  // plan, "Decided, 2026-09-13".
+  //
+  // Non-fatal on purpose: the entitlement is already granted above, and
+  // throwing here would make Stripe retry a purchase that fully succeeded.
+  if (meta.offer_id) {
+    const { error: offerErr } = await supabaseAdmin
+      .from('subscriber_offers')
+      .update({ redeemed_at: new Date().toISOString(), redeemed_email: email })
+      .eq('id', meta.offer_id)
+      .is('redeemed_at', null)
+    if (offerErr) console.error('offer redemption stamp failed:', offerErr)
+  }
+
   // ---- Login email (non-fatal, sent at most once per session) ----
   // Logged-in buyers already have a browser session, so no link is needed.
   let emailStatus = 'skipped'

@@ -14,9 +14,13 @@ import { supabase } from '../lib/supabase'
  * rest off the session. Everyone else sends their name and email, which is
  * what the account gets created from.
  *
- * States: idle | loading | error | already_enrolled
+ * `offerToken` is the $39 window's token, passed by the offer page and absent
+ * everywhere else. The server re-validates it; nothing the client says about it
+ * is trusted.
+ *
+ * States: idle | loading | error | already_enrolled | offer_expired
  */
-export function useCheckout(slug) {
+export function useCheckout(slug, { offerToken } = {}) {
   const { user, signOut } = useEnrollment()
   const [status, setStatus] = useState('idle')
   const [errorMsg, setErrorMsg] = useState('')
@@ -52,12 +56,22 @@ export function useCheckout(slug) {
             ? { slug, lastName }
             : { slug }
           : { slug, email, firstName, lastName }
+        if (offerToken) body.offerToken = offerToken
 
         const res = await fetch('/api/checkout/create-session', {
           method: 'POST',
           headers,
           body: JSON.stringify(body),
         })
+
+        // The window closed between page load and clicking buy. Not an error
+        // the buyer caused, and deliberately not a silent drop to $69: let the
+        // offer page re-fetch and re-render as expired, so paying full price is
+        // a fresh, deliberate click rather than a surprise on the Stripe page.
+        if (res.status === 410) {
+          setStatus('offer_expired')
+          return
+        }
 
         // Already owns it. Not an error: send them to the thing they bought.
         if (res.status === 409) {
@@ -79,7 +93,7 @@ export function useCheckout(slug) {
         setStatus('error')
       }
     },
-    [slug, user, needsLastName],
+    [slug, user, needsLastName, offerToken],
   )
 
   return { checkout, status, errorMsg, portalUrl, user, signOut, needsLastName }
