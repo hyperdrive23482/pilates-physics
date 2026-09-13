@@ -164,8 +164,15 @@ whole handoff is legible in one screen.
 - [ ] **Activate "HARW Email Sequence" and "HARW Purchase".** Both are toggled
       off. Inactive automations do not accept subscribers, and switching one on
       later does not retroactively enrol anyone whose trigger already fired.
-      Nobody is in flight today, so the cost is zero, but this has to happen
-      before anyone finishes nurture and before any backfill wave
+      **"Nobody is in flight today" expired. As of 2026-09-13 there are 40.**
+      They finished nurture, were tagged `in-HARW-sequence` by the handoff
+      automation, and have received nothing because the sequence automation is
+      still off. Activating it will not reach them: their trigger already fired.
+      They need the tag removed and re-applied once everything else is live, and
+      that has to happen BEFORE `MINT_OFFERS_ENABLED` is set, or they spend
+      their one `reformer-nurture` offer on a window with no emails behind it.
+      Verify the "does not retroactively enrol" behaviour with one test
+      subscriber first -- the whole remediation depends on it being true
 - [ ] **Decide on the leftover transactional email.** `api/springs101.js` already
       sends a magic link through Resend at claim time, and that is the email that
       actually gets them into the portal. A Kit email covering the same moment
@@ -421,7 +428,44 @@ proving nothing dishonest happened.
 
 ---
 
-## Phase 2: The offer machinery
+## Phase 2: The offer machinery — code shipped, manual steps outstanding
+
+**Built 2026-09-13.** Everything in this phase that is code exists and builds.
+What is left is 2a and 2b, which are dashboard work.
+
+| File | What |
+|---|---|
+| `api/_lib/offer.js` | `endOfOfferWindow` and `formatDeadline` added beside `isOfferValid` |
+| `api/_lib/kit.js` | `listSubscribersByTag`, `updateSubscriberFields` |
+| `api/cron/mint-offers.js` | **New.** The minting job |
+| `api/offer.js` | **New.** The four states |
+| `api/offer/recover.js` | **New.** Mails the link, never renders it |
+| `api/_lib/resend.js` | `sendOfferLinkEmail` |
+| `src/pages/OfferPage.jsx` | **New.** Routed at `/offer/reformer` |
+| `src/components/course/PricingBlock.jsx` | Active and Expired variants |
+| `vercel.json` | The cron, `maxDuration: 60`, and the `X-Robots-Tag` header |
+
+**Kit's API was checked rather than assumed.** Three facts came back that this
+plan had not accounted for, and each changed the code:
+
+- **Pagination is by cursor, not page number.** `listSubscribersByTag` takes an
+  `after` cursor, not `{ page }` as this plan originally specified
+- **The rate limit is 120 requests per rolling 60 seconds** per API key. That is
+  what sets `MAX_WRITES_PER_RUN = 40` at one write per 600ms, comfortably inside
+  the 60s `maxDuration`, and still 3,840 offers a day at a 15-minute cadence
+- **An unknown custom-field key is not an error.** Kit accepts the write,
+  ignores the key, and mentions it in a `warnings` array. So
+  `updateSubscriberFields` **throws on warnings**: without that, a missing
+  `offer_token` field would look like success, the cron would stamp
+  `kit_synced_at`, and the merge field would render blank in the one email that
+  carries the link, silently, for everyone
+
+**The clock anchors on `tagged_at`, not on mint time.** The subscriber listing
+already returns it, so it costs nothing, and it is what the decisions table
+means by "clock start: when the Kit tag is applied". One guard on top: if
+honouring `tagged_at` would hand someone a window with under two days left —
+which happens only after a multi-day cron outage — the cron re-anchors to now
+and logs it. A link that works beats a link that apologises for our downtime.
 
 ### 2a. Stripe setup, one time
 
@@ -435,7 +479,10 @@ The tags, sequences, and automations already exist. See "The Kit flow as built"
 for the structure and for the five changes it still needs. What is missing here
 is only the pair of custom fields.
 
-- [ ] Custom fields: `offer_token`, `offer_deadline`
+- [ ] Custom fields: `offer_token`, `offer_deadline`. **Create these before the
+      first cron run.** `updateSubscriberFields` throws rather than pretending to
+      succeed, so until they exist every row simply stays in the retry queue —
+      but nothing mints into Kit either
 - [ ] Everything under "What still has to change"
 
 **No new tag is needed.** `in-HARW-sequence` is the trigger the cron polls, and
@@ -448,8 +495,9 @@ the difference between "usually fine" and "cannot race."
 
 ### 2c. `api/cron/mint-offers.js`
 
-- [ ] Add to the `crons` array in `vercel.json` alongside `publish-scheduled`
-- [ ] Reuse the `CRON_SECRET` bearer check from `publish-scheduled.js` verbatim
+- [x] ~~Add to the `crons` array in `vercel.json` alongside `publish-scheduled`~~
+      Done, with `maxDuration: 60` for this function
+- [x] ~~Reuse the `CRON_SECRET` bearer check from `publish-scheduled.js` verbatim~~
 
 Each run:
 
@@ -505,11 +553,13 @@ thousand Kit field writes will not finish in one invocation. Kit rate-limits
 the v4 API, so add a delay between writes and verify the current ceiling in
 their docs before settling on a batch size.
 
-- [ ] Two new functions in `api/_lib/kit.js`, following the tag-cache pattern
-      already in that file:
-      - `listSubscribersByTag(tagName, { page })` for step 1. Nothing in the file
-        covers this today. `buildSubscriberFilter` is broadcast-only
-      - `updateSubscriberFields(subscriberId, fields)` for step 4
+- [x] ~~Two new functions in `api/_lib/kit.js`~~ Built, with two signature
+      changes forced by the real API:
+      - `listSubscribersByTag(tagName, { after, perPage })` — cursor pagination,
+        not `{ page }`
+      - `updateSubscriberFields(subscriberId, emailAddress, fields)` —
+        `email_address` is required by `PUT /v4/subscribers/{id}` even when only
+        fields change
 
 ### 2d. `api/offer.js` and `src/pages/OfferPage.jsx`
 
@@ -538,7 +588,7 @@ discount to any address entered into it, which is exactly the coupon code that
 "Why there is no Stripe coupon" takes credit for eliminating. One post in a
 studio Facebook group and the token stops meaning anything.
 
-- [ ] **`POST /api/offer/recover`**, taking `{ email }`
+- [x] ~~**`POST /api/offer/recover`**, taking `{ email }`~~
 
 ```
 1. look up subscriber_offers by email, newest row
@@ -563,7 +613,7 @@ does not, because the response the browser sees is identical in both.
 A redeemed row sends nothing. They already own the course, and the portal link
 belongs in the purchase email, not here.
 
-- [ ] **`sendOfferLinkEmail({ to, url, deadlineLabel })` in `api/_lib/resend.js`**
+- [x] ~~**`sendOfferLinkEmail({ to, url, deadlineLabel, expired })` in `api/_lib/resend.js`**~~
 
 Follow `sendContactAcknowledgement`: inline HTML and text built in the function,
 `escapeHtml` on anything interpolated, the shared `FROM`. No template file. The
@@ -964,7 +1014,7 @@ Kit, all manual:
 - [ ] Sequence schedule 9am, all delays in days
 - [ ] Cart sequence enabled all seven days
 - [ ] Email 8 as an 11-hour delay off email 7
-- [ ] Email 8 body: deadline from `{{ offer_deadline }}` with a `default:`
+- [ ] Email 8 body: deadline from `{{ subscriber.offer_deadline }}` with a `default:`
       fallback, timezone named
 - [ ] Decide on the leftover transactional email
 
@@ -1081,15 +1131,16 @@ sold at full price. That has happened. What is left runs straight through.
 2. ~~**Checkout branch** (Phase 3)~~ **Done 2026-09-13.** Lint clean, 12/12 on
    the predicate test. Needs `TRIPWIRE_OFFER_PRICE_ID` in Vercel before the
    offer path can run: the route 500s loudly rather than quietly selling at $69
-3. **Offer machinery** (Phase 2): the Stripe $39 Price, the two `kit.js`
-   functions, `api/cron/mint-offers.js`, `api/offer.js`, `OfferPage.jsx`, and the
-   Active and Expired variants of the existing `PricingBlock`
-4. **Recovery** (Phase 2d): `api/offer/recover.js` and `sendOfferLinkEmail`. Its
-   own step because it is the one piece that can quietly become a discount
-   dispenser if it is built the obvious way
-5. **`X-Robots-Tag: noindex`** on `/offer/(.*)` in `vercel.json`. Small, easy to
-   forget, and the entire $69 framing rests on it
-6. **Kit**, all manual: the list under "What to change, in order"
+3. ~~**Offer machinery** (Phase 2)~~ **Done 2026-09-13**, except the Stripe $39
+   Price, which is dashboard work. Cron, both API routes, the page and both
+   pricing variants are built, linted and rendered
+4. ~~**Recovery** (Phase 2d)~~ **Done.** `api/offer/recover.js` and
+   `sendOfferLinkEmail`. Kept a separate step because it is the one piece that
+   quietly becomes a discount dispenser if built the obvious way
+5. ~~**`X-Robots-Tag: noindex`** on `/offer/(.*)` in `vercel.json`~~ **Done**,
+   and set again by `api/offer.js` on its own response
+6. **Kit**, all manual: the list under "What to change, in order" — **this is
+   now the critical path**
 7. **The backfill**, in waves, once everything above is live
 
 **Checkout before the cron, reversing the original order.** The server-side token

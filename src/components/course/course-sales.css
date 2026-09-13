@@ -168,6 +168,36 @@
   background: var(--accent);
 }
 
+/* The $39 window. The countdown reads as a fact because the deadline is named
+   directly under it, not as a bare ticking clock. */
+.course-buy__window {
+  margin: 0 0 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.course-buy__countdown {
+  font-family: var(--pp-font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.course-buy__deadline,
+.course-buy__closed {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+.course-buy__closed {
+  margin: 0 0 1.1rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--rule);
+}
+
 .course-inline-link {
   display: inline-flex;
   align-items: center;

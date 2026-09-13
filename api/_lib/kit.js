@@ -226,3 +226,72 @@ export async function updateBroadcast(id, { subject, previewText, contentHtml, c
   const data = await res.json()
   return data.broadcast ?? data
 }
+
+// ---------------------------------------------------------------------------
+// Offer minting support (api/cron/mint-offers.js)
+// ---------------------------------------------------------------------------
+
+// One cursor-page of the subscribers carrying `tagName`.
+//
+// Kit v4 paginates by cursor, not page number: pass the previous call's
+// `nextCursor` back as `after`. `per_page` maxes out at 1000 and defaults to
+// 500 server-side.
+//
+// The response carries each subscriber's `fields` and their `tagged_at`, which
+// is why the cron never has to make a second call per person: tagged_at is the
+// offer clock's start, and fields shows what Kit already holds.
+//
+// `status` defaults to 'active' on Kit's side, which is what we want -- there is
+// no reason to mint an offer for a bounced or cancelled address.
+export async function listSubscribersByTag(tagName, { perPage = 500, after = null } = {}) {
+  const tagId = await resolveTagId(tagName)
+  const params = new URLSearchParams({ per_page: String(perPage) })
+  if (after) params.set('after', after)
+
+  const res = await fetch(`${KIT_BASE}/tags/${tagId}/subscribers?${params}`, {
+    headers: headers(),
+  })
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(`Kit listSubscribersByTag ${res.status}: ${body}`)
+  }
+  const data = await res.json()
+  const page = data.pagination ?? {}
+  return {
+    subscribers: data.subscribers ?? [],
+    nextCursor: page.has_next_page ? page.end_cursor : null,
+  }
+}
+
+// Write custom fields onto one subscriber.
+//
+// THROWS ON WARNINGS, AND THAT IS THE POINT. Kit does not reject an unknown
+// custom-field key: it accepts the request, ignores the key, and mentions it in
+// a `warnings` array. If `offer_token` has not been created in the Kit
+// dashboard, every write would appear to succeed, the cron would stamp
+// kit_synced_at, and the merge field would render blank in the one email that
+// carries the link -- silently, for every subscriber, with no way to notice
+// after the fact. Treating a warning as a failure means the retry queue holds
+// those rows until the field actually exists.
+//
+// `email_address` is required by the endpoint even when only fields change.
+export async function updateSubscriberFields(subscriberId, emailAddress, fields) {
+  const res = await fetch(`${KIT_BASE}/subscribers/${subscriberId}`, {
+    method: 'PUT',
+    headers: headers(),
+    body: JSON.stringify({ email_address: emailAddress, fields }),
+  })
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(`Kit updateSubscriberFields ${res.status}: ${body}`)
+  }
+  const data = await res.json()
+  const warnings = data.warnings ?? []
+  if (warnings.length) {
+    throw new Error(
+      `Kit updateSubscriberFields accepted but ignored fields: ${JSON.stringify(warnings)}. ` +
+        `Create the custom fields in the Kit dashboard first.`,
+    )
+  }
+  return data
+}

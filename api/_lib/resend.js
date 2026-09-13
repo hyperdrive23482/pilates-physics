@@ -429,3 +429,70 @@ export async function sendSurveyFeedbackEmail({
   if (error) throw new Error(`Resend send failed: ${error.message ?? JSON.stringify(error)}`)
   return data
 }
+
+// The recovery email from api/offer/recover.js.
+//
+// Two shapes, one function, because the alternative is sending nothing to the
+// person whose window already closed -- and they were just told to check their
+// inbox. An inbox that never fills is the dead end that route exists to remove.
+//
+// Inline HTML rather than a template file, following sendContactAcknowledgement
+// above. The magic-link template is the exception in this file, and it exists
+// only because Supabase's hosted email shares it.
+export async function sendOfferLinkEmail({ to, url, deadlineLabel, expired = false }) {
+  const safeUrl = escapeHtml(url)
+  const safeDeadline = escapeHtml(deadlineLabel)
+
+  const subject = expired
+    ? 'Your $39 window has closed — How a Reformer Works'
+    : 'Your link to How a Reformer Works for $39'
+
+  const bodyHtml = expired
+    ? `<p>Your $39 window closed on ${safeDeadline}.</p>
+       <p>The course is $69. Nothing about it has changed — every module, the
+       calculator, and the inspection checklist are all still included, exactly
+       as they were.</p>`
+    : `<p>Here is your link. It works until <strong>${safeDeadline}</strong>, and
+       after that the course is $69 — same course, same everything.</p>`
+
+  const bodyText = expired
+    ? `Your $39 window closed on ${deadlineLabel}.
+
+The course is $69. Nothing about it has changed - every module, the calculator, and the inspection checklist are all still included, exactly as they were.`
+    : `Here is your link. It works until ${deadlineLabel}, and after that the course is $69 - same course, same everything.`
+
+  const cta = expired ? 'See the course' : 'Open your $39 link'
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1C1A17; line-height: 1.6; max-width: 560px;">
+      <p>Hi,</p>
+      ${bodyHtml}
+      <p style="margin: 1.5rem 0;">
+        <a href="${safeUrl}" style="display: inline-block; padding: 0.75rem 1.5rem; background: #1C1A17; color: #fff; text-decoration: none; border-radius: 2px;">${cta}</a>
+      </p>
+      <p style="margin: 1.5rem 0 0; font-size: 0.85rem; color: #666;">
+        If the button does not work, paste this into your browser:<br>
+        <a href="${safeUrl}">${safeUrl}</a>
+      </p>
+      <p style="margin-top: 1.5rem;">— Kaleen</p>
+    </div>
+  `.trim()
+
+  const text = `Hi,
+
+${bodyText}
+
+${url}
+
+- Kaleen`
+
+  const { data, error } = await getResend().emails.send({
+    from: FROM,
+    to,
+    subject,
+    html,
+    text,
+  })
+  if (error) throw new Error(`Resend send failed: ${error.message ?? JSON.stringify(error)}`)
+  return data
+}

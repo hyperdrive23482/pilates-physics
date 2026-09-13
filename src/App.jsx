@@ -59,6 +59,7 @@ import AdminBlogPostEdit from './pages/admin/AdminBlogPostEdit'
 import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
 import HowAReformerWorks from './pages/HowAReformerWorks'
+import OfferPage from './pages/OfferPage'
 
 // Any /workshops/<slug> URL (a Stripe cancel return, say) bounces to that
 // product's branded page when it has one; everything else renders the generic
@@ -125,6 +126,16 @@ export default function App() {
           element={
             <PageWrapper>
               <HowAReformerWorks />
+            </PageWrapper>
+          }
+        />
+        {/* The $39 window. Same sales body, different pricing block, and
+            noindex via the X-Robots-Tag header in vercel.json. */}
+        <Route
+          path="/offer/reformer"
+          element={
+            <PageWrapper>
+              <OfferPage />
             </PageWrapper>
           }
         />
