@@ -45,7 +45,9 @@ export default function OfferPage() {
   let pricing = null
 
   if (loadError) {
-    pricing = <RecoveryCard note="Something went wrong finding your window. Enter your email and we'll send the link again." />
+    pricing = (
+      <RecoveryCard note="Something went wrong finding your discount link. Enter the address you subscribed with and we'll send it again." />
+    )
   } else if (!data) {
     pricing = null
   } else if (data.state === 'redeemed') {
@@ -88,6 +90,13 @@ export default function OfferPage() {
  * answers identically whether or not the address was found. Rendering $39 for
  * any address typed into a public page is the coupon code that not using a
  * Stripe coupon was supposed to eliminate.
+ *
+ * The copy names the discount on purpose. Someone lands here holding a broken
+ * link they were told was worth $39, and "let's find your link" does not tell
+ * them they are in the right place -- it reads like a generic error and they
+ * leave. Naming it costs nothing that matters: the page is noindex, it is
+ * linked from nowhere, and the form grants no access, it only sends mail to an
+ * address that already had an offer.
  */
 function RecoveryCard({ note }) {
   const [email, setEmail] = useState('')
@@ -128,10 +137,10 @@ function RecoveryCard({ note }) {
 
   return (
     <div className="register-card">
-      <h3 className="register-card__title">Let's find your link</h3>
+      <h3 className="register-card__title">Let's find your custom link for a discount</h3>
       <p className="register-card__body">
         {note ??
-          "This link is missing the part that identifies you — some email apps trim it. Enter the address you subscribed with and we'll send it again."}
+          "This link is missing the part that identifies you so you can get the exclusive discount — some email apps trim it. Enter the address you subscribed with and we'll send it again."}
       </p>
       <form onSubmit={handleSubmit} className="pp-form">
         <div className="pp-form__field">
@@ -146,7 +155,7 @@ function RecoveryCard({ note }) {
           />
         </div>
         <button type="submit" disabled={status === 'loading'} className="btn btn--block">
-          {status === 'loading' ? 'Sending…' : 'Email me the link'}
+          {status === 'loading' ? 'Sending…' : 'Email me my discount link'}
           {status !== 'loading' && <ArrowSvg />}
         </button>
       </form>
