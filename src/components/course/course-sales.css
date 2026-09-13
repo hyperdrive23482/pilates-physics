@@ -168,6 +168,40 @@
   background: var(--accent);
 }
 
+/* ── Hero price ─────────────────────────────────────────────────────── */
+/* Above the fold on all three variants. The struck price only renders on the
+   active offer, where $39 is meaningless without the number it replaced. */
+.ppv2 .course-hero__price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 0 28px;
+  font-family: var(--pp-font-serif);
+}
+
+.ppv2 .course-hero__was {
+  font-size: 24px;
+  line-height: 1;
+  color: var(--ink-soft);
+  text-decoration: line-through;
+}
+
+.ppv2 .course-hero__now {
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -0.015em;
+  color: var(--accent);
+}
+
+.ppv2 .course-hero__unit {
+  font-family: var(--pp-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
 /* The $39 window. The countdown reads as a fact because the deadline is named
    directly under it, not as a bare ticking clock. */
 .course-buy__window {

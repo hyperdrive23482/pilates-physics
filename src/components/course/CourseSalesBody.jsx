@@ -157,7 +157,7 @@ const FAQ = [
   },
 ]
 
-export default function CourseSalesBody({ pricing }) {
+export default function CourseSalesBody({ pricing, heroPricing }) {
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
       {/* ── § 01 Hero ────────────────────────────────────────────────────── */}
@@ -185,12 +185,10 @@ export default function CourseSalesBody({ pricing }) {
               one.
             </p>
 
-            <div className="workshop-hero__cta">
-              <a href="#buy" className="btn btn--lg">
-                Get instant access
-                <ArrowSvg />
-              </a>
-            </div>
+            {/* The price and the CTA both vary by variant, so the hero takes
+                them as a node for the same reason the buy card is one: nothing
+                in this shared body may hardcode a price. See HeroPricing. */}
+            {heroPricing}
             <p className="workshop-hero__meta">
               <span className="workshop-hero__meta-k">On demand</span>
               8 modules · 1 hour
@@ -405,26 +403,10 @@ export default function CourseSalesBody({ pricing }) {
         </div>
       </section>
 
-      {/* ── § 08 FAQ ─────────────────────────────────────────────────────── */}
-      <section className="section-pad section--inset workshop-faq">
-        <div className="container">
-          <div className="kicker">§ 08 · Questions</div>
-          <h2 className="workshop-faq__head">Frequently asked questions</h2>
-          <div className="course-faq">
-            {FAQ.map((f) => (
-              <details className="course-faq__item" key={f.q}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── § 09 Buy ─────────────────────────────────────────────────────── */}
+      {/* ── § 08 Buy ─────────────────────────────────────────────────────── */}
       <section className="section-pad section--inset workshop-details">
         <div className="container">
-          <div className="kicker">§ 09 · Get the course</div>
+          <div className="kicker">§ 08 · Get the course</div>
           <h2 className="workshop-included__head">
             Walk into your next class with{' '}
             <span className="italic accent">more than one lever.</span>
@@ -450,6 +432,23 @@ export default function CourseSalesBody({ pricing }) {
           </div>
         </div>
       </section>
+
+      {/* ── § 09 FAQ ─────────────────────────────────────────────────────── */}
+      <section className="section-pad section--inset workshop-faq">
+        <div className="container">
+          <div className="kicker">§ 09 · Questions</div>
+          <h2 className="workshop-faq__head">Frequently asked questions</h2>
+          <div className="course-faq">
+            {FAQ.map((f) => (
+              <details className="course-faq__item" key={f.q}>
+                <summary>{f.q}</summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
     </div>
   )
 }

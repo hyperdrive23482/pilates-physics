@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import CourseSalesBody from '../components/course/CourseSalesBody'
 import PricingBlock from '../components/course/PricingBlock'
+import HeroPricing from '../components/course/HeroPricing'
 import ArrowSvg from '../components/ui/ArrowSvg'
 import '../styles/ppv2.css'
 import './Workshop.css'
@@ -80,7 +81,21 @@ export default function OfferPage() {
     )
   }
 
-  return <CourseSalesBody pricing={pricing} />
+  // The hero mirrors the card's variant off the same response, so the two can
+  // never show different prices on one screen.
+  const heroPricing = (
+    <HeroPricing
+      workshop={data?.workshop}
+      offer={
+        data?.state === 'active'
+          ? { token: data.token, deadline: data.deadline, expiresAt: data.expiresAt }
+          : null
+      }
+      expired={data?.state === 'expired'}
+    />
+  )
+
+  return <CourseSalesBody heroPricing={heroPricing} pricing={pricing} />
 }
 
 /**

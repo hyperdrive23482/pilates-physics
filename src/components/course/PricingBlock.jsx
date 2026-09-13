@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCheckout } from '../../hooks/useCheckout'
 import ArrowSvg from '../ui/ArrowSvg'
+import { OFFER_PRICE_LABEL, fullPriceLabel, isActiveOffer } from './coursePricing'
 import '../ui/RegisterCard.css'
 
 // The only part of the course sales page that varies.
@@ -71,8 +72,9 @@ export default function PricingBlock({
 
   // `expired` wins. A closed window must never price at $39 or send a token,
   // however it was rendered: showing the discount next to "your window closed"
-  // is the contradiction the expired state exists to prevent.
-  const active = Boolean(offer?.token) && !expired
+  // is the contradiction the expired state exists to prevent. Shared with the
+  // hero so the two cannot land on different variants.
+  const active = isActiveOffer(offer, expired)
 
   const { checkout, status, errorMsg, portalUrl, user, signOut, needsLastName } = useCheckout(
     slug,
@@ -89,8 +91,8 @@ export default function PricingBlock({
     if (status === 'offer_expired' && onOfferExpired) onOfferExpired()
   }, [status, onOfferExpired])
 
-  const fullPrice = workshop?.price_cents ? `$${(workshop.price_cents / 100).toFixed(0)}` : '$69'
-  const price = active ? '$39' : fullPrice
+  const fullPrice = fullPriceLabel(workshop)
+  const price = active ? OFFER_PRICE_LABEL : fullPrice
   const closedOn = deadline ?? offer?.deadline
   const purchasable = Boolean(workshop?.stripe_price_id)
   const loading = status === 'loading'

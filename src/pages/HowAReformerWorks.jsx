@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import CourseSalesBody from '../components/course/CourseSalesBody'
 import PricingBlock from '../components/course/PricingBlock'
+import HeroPricing from '../components/course/HeroPricing'
 import '../styles/ppv2.css'
 import './Workshop.css'
 
@@ -37,5 +38,10 @@ export default function HowAReformerWorks() {
 
   // The body renders immediately; only the pricing block waits on the row.
   // A visitor should never watch a sales page load.
-  return <CourseSalesBody pricing={<PricingBlock workshop={workshop} />} />
+  return (
+    <CourseSalesBody
+      heroPricing={<HeroPricing workshop={workshop} />}
+      pricing={<PricingBlock workshop={workshop} />}
+    />
+  )
 }
