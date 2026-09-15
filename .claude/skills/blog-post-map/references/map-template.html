@@ -1,0 +1,764 @@
+<!--
+  Blog post structure map. Template for the blog-post-map skill.
+  Replace __TITLE__, __SLUG__ and the BLOCKS array. Nothing else should
+  need editing between posts.
+-->
+<title>__TITLE__ structure map</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  /* Pilates Physics v2 tokens. Deliberately single-theme: this page is an
+     internal tool for a dark-ground brand, so it commits to that world and
+     paints every colour explicitly rather than inverting. */
+  :root {
+    --bg: #0e0d0b;
+    --bg-2: #1a1813;
+    --bg-3: #24201a;
+    --ink: #E3E3E3;
+    --ink-soft: rgba(227,227,227,0.65);
+    --ink-faint: rgba(227,227,227,0.42);
+    --rule: rgba(227,227,227,0.18);
+    --grid: rgba(227,227,227,0.045);
+    --accent: #f09f26;
+    --accent-ink: #1c1a17;
+    --accent-warm: #c07c17;
+    --serif: "Source Serif 4", "Source Serif Pro", Georgia, serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--bg);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.55;
+    margin: 0;
+    padding: 0 20px 96px;
+  }
+
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  /* ---- header ---- */
+  header { padding: 40px 0 22px; border-bottom: 1px solid var(--rule); }
+  .kicker {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--accent); margin: 0 0 10px;
+  }
+  h1 {
+    font-size: 30px; font-weight: 400; line-height: 1.2; margin: 0 0 6px;
+    text-wrap: balance;
+  }
+  h1 .it { font-style: italic; color: var(--accent); }
+  .meta {
+    font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint);
+    display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 12px;
+  }
+  .meta b { color: var(--ink-soft); font-weight: 400; }
+
+  /* ---- toolbar ---- */
+  .bar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    padding: 16px 0; position: sticky; top: 0; z-index: 5;
+    background: var(--bg); border-bottom: 1px solid var(--rule);
+  }
+  .bar .spacer { flex: 1 1 auto; }
+  button {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.04em;
+    color: var(--ink); background: var(--bg-2); border: 1px solid var(--rule);
+    padding: 7px 12px; cursor: pointer; border-radius: 2px;
+  }
+  button:hover { border-color: var(--accent); color: var(--accent); }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button.primary {
+    background: var(--accent); color: var(--accent-ink);
+    border-color: var(--accent); font-weight: 500;
+  }
+  button.primary:hover { background: var(--accent-warm); color: var(--accent-ink); }
+  button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+  .save {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-faint);
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-faint); }
+  .save[data-state="saved"] .dot { background: var(--accent); }
+  .save[data-state="saving"] .dot { background: var(--accent-warm); }
+  .save[data-state="local"] .dot { background: var(--rule); }
+
+  /* ---- threads panel ---- */
+  .threads {
+    border: 1px solid var(--rule); background: var(--bg-2);
+    padding: 18px 20px; margin: 22px 0 0; border-radius: 2px;
+  }
+  .threads h2 {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--ink-soft); font-weight: 400;
+    margin: 0 0 14px;
+  }
+  .tlist { display: grid; gap: 9px; }
+  .trow {
+    display: grid; grid-template-columns: 1fr auto; gap: 12px;
+    align-items: baseline; font-size: 14.5px;
+    border-bottom: 1px dotted var(--rule); padding-bottom: 8px;
+  }
+  .trow:last-child { border-bottom: 0; padding-bottom: 0; }
+  .trow .arc { font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); }
+  .trow.dead .name { color: var(--accent); }
+  .badge {
+    font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.1em; padding: 2px 7px; border-radius: 2px;
+    border: 1px solid var(--rule); color: var(--ink-faint); white-space: nowrap;
+  }
+  .badge.dead { border-color: var(--accent); color: var(--accent); }
+  .badge.orphan { border-color: var(--accent-warm); color: var(--accent-warm); }
+  .empty { color: var(--ink-faint); font-size: 14px; font-style: italic; }
+
+  /* ---- blocks ---- */
+  .blocks { margin-top: 26px; display: grid; gap: 2px; }
+  .block {
+    display: grid;
+    grid-template-columns: 70px 1fr minmax(0, 210px);
+    gap: 0 16px; align-items: start;
+    padding: 12px 12px 12px 0; border: 1px solid transparent;
+    border-radius: 2px; position: relative;
+  }
+  .block:hover, .block:focus-within { background: var(--bg-2); border-color: var(--rule); }
+  .block.cut { opacity: 0.4; }
+  .block.cut .label { text-decoration: line-through; }
+  .block[data-depth="1"] { margin-left: 34px; }
+  .block[data-depth="2"] { margin-left: 68px; }
+  .block[data-depth="1"]::before, .block[data-depth="2"]::before {
+    content: ""; position: absolute; left: -18px; top: 0; bottom: 0;
+    border-left: 1px solid var(--rule);
+  }
+  .num {
+    font-family: var(--mono); font-size: 12px; color: var(--accent);
+    padding-top: 4px; font-variant-numeric: tabular-nums;
+    display: flex; align-items: baseline; justify-content: flex-end; gap: 7px;
+  }
+  .block[data-depth="1"] .num, .block[data-depth="2"] .num { color: var(--ink-faint); }
+  .grip {
+    color: var(--ink-faint); cursor: grab; line-height: 1; font-size: 13px;
+    opacity: 0; transition: opacity 120ms; user-select: none;
+    padding: 0 2px; border-radius: 2px;
+  }
+  .block:hover .grip, .block:focus-within .grip, .grip:focus-visible { opacity: 1; }
+  .grip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .grip:active { cursor: grabbing; }
+  .block.dragging { opacity: 0.45; }
+  .block.dragging .grip { cursor: grabbing; }
+  .block.drop-before { box-shadow: inset 0 2px 0 0 var(--accent); }
+  .block.drop-after { box-shadow: inset 0 -2px 0 0 var(--accent); }
+  .body { min-width: 0; }
+  .label {
+    font-size: 18px; line-height: 1.35; outline: none; display: block;
+    padding: 1px 3px; margin-left: -3px; border-radius: 2px;
+  }
+  .block[data-depth="0"] .label { font-size: 21px; }
+  .summary {
+    font-size: 14.5px; color: var(--ink-soft); line-height: 1.5; outline: none;
+    display: block; padding: 1px 3px; margin: 3px 0 0 -3px; border-radius: 2px;
+  }
+  [contenteditable]:focus { background: var(--bg-3); box-shadow: 0 0 0 1px var(--accent); }
+  [contenteditable]:empty::before {
+    content: attr(data-placeholder); color: var(--ink-faint); font-style: italic;
+  }
+  .anchor {
+    font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint);
+    margin-top: 5px; display: block; overflow-wrap: anywhere;
+  }
+  .side { display: grid; gap: 6px; justify-items: end; }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; }
+  .chip {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+    padding: 2px 6px; border-radius: 2px; border: 1px solid var(--rule);
+    color: var(--ink-soft); white-space: nowrap;
+  }
+  .chip.opens { border-color: var(--accent); color: var(--accent); }
+  .chip.closes { border-color: var(--ink-soft); }
+  .chip.deadflag { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .thin {
+    font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint);
+    background: transparent; border: 1px solid var(--rule); border-radius: 2px;
+    padding: 3px 6px; width: 100%; max-width: 210px;
+  }
+  .thin:focus { outline: none; border-color: var(--accent); color: var(--ink); }
+  .ctrl {
+    display: flex; gap: 3px; opacity: 0; transition: opacity 120ms;
+    justify-content: flex-end; flex-wrap: wrap;
+  }
+  .block:hover .ctrl, .block:focus-within .ctrl { opacity: 1; }
+  .ctrl button { padding: 3px 7px; font-size: 10.5px; }
+
+  .note {
+    font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint);
+    border-left: 2px solid var(--rule); padding: 8px 0 8px 14px; margin: 26px 0 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+  @media (max-width: 760px) {
+    .block { grid-template-columns: 46px 1fr; }
+    .side { grid-column: 1 / -1; justify-items: start; margin-top: 8px; }
+    .chips, .ctrl { justify-content: flex-start; }
+    .block[data-depth="1"] { margin-left: 18px; }
+    .block[data-depth="2"] { margin-left: 36px; }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="kicker">Post structure map</p>
+    <h1>__TITLE__</h1>
+    <div class="meta">
+      <span><b>slug</b> __SLUG__</span>
+      <span><b>blocks</b> <span id="m-count">0</span></span>
+      <span><b>threads</b> <span id="m-threads">0</span></span>
+      <span><b>dead ends</b> <span id="m-dead">0</span></span>
+    </div>
+  </header>
+
+  <div class="bar">
+    <button id="add" class="primary">Add block</button>
+    <button id="toggle-threads" aria-pressed="true">Threads</button>
+    <button id="toggle-anchors" aria-pressed="false">Anchors</button>
+    <span class="spacer"></span>
+    <span class="save" id="save" data-state="local"><span class="dot"></span><span id="save-text">local only</span></span>
+  </div>
+
+  <section class="threads" id="threads">
+    <h2>Threads</h2>
+    <div class="tlist" id="tlist"></div>
+  </section>
+
+  <div class="blocks" id="blocks"></div>
+
+  <p class="note">
+    Structure only. Edit labels, summaries, order and depth here, then tell Claude
+    the map is ready and the post prose gets rewritten to match. A thread opened by
+    one block and never closed by a later one is a dead end.
+    <br><br>
+    Drag a block by the grip in the left gutter. Its sub-blocks travel with it, and
+    so does the prose when the post is rebuilt. The arrow buttons do the same thing
+    one position at a time, which is the way that works on a touchscreen.
+  </p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var SLUG = "__SLUG__";
+  var DOC_PATH = "maps/" + SLUG;
+
+  var BLOCKS = /*__BLOCKS__*/[];
+
+  var state = { blocks: BLOCKS.map(normalize) };
+  var db = null;
+  var lastLocalEdit = 0;
+  var writeTimer = null;
+  var showThreads = true;
+  var showAnchors = false;
+
+  function normalize(b, i) {
+    return {
+      id: b.id || ("b" + (i + 1) + "-" + Math.random().toString(36).slice(2, 7)),
+      depth: Math.max(0, Math.min(2, b.depth || 0)),
+      label: b.label || "",
+      summary: b.summary || "",
+      anchor: b.anchor || "",
+      opens: Array.isArray(b.opens) ? b.opens.slice() : [],
+      closes: Array.isArray(b.closes) ? b.closes.slice() : [],
+      status: b.status === "cut" || b.status === "new" ? b.status : "keep"
+    };
+  }
+
+  function numbering() {
+    var live = state.blocks;
+    var startZero = live.length > 0 && !live[0].anchor;
+    var c = [startZero ? -1 : 0, 0, 0];
+    var out = {};
+    for (var i = 0; i < live.length; i++) {
+      var d = live[i].depth;
+      c[d] = c[d] + 1;
+      if (d < 1) { c[1] = 0; }
+      if (d < 2) { c[2] = 0; }
+      out[live[i].id] = c.slice(0, d + 1).join(".");
+    }
+    return out;
+  }
+
+  function threadReport() {
+    var seen = {};
+    var order = [];
+    state.blocks.forEach(function (b, idx) {
+      if (b.status === "cut") return;
+      b.opens.forEach(function (t) {
+        if (!seen[t]) { seen[t] = { name: t, open: null, close: null }; order.push(t); }
+        if (seen[t].open === null) seen[t].open = idx;
+      });
+      b.closes.forEach(function (t) {
+        if (!seen[t]) { seen[t] = { name: t, open: null, close: null }; order.push(t); }
+        if (seen[t].close === null || seen[t].close < idx) seen[t].close = idx;
+      });
+    });
+    return order.map(function (t) {
+      var r = seen[t];
+      r.dead = r.open !== null && (r.close === null || r.close <= r.open);
+      r.orphan = r.open === null && r.close !== null;
+      return r;
+    });
+  }
+
+  function deadThreadNames() {
+    var m = {};
+    threadReport().forEach(function (r) { if (r.dead) m[r.name] = true; });
+    return m;
+  }
+
+  /* ---------- render ---------- */
+
+  function render() {
+    var nums = numbering();
+    var dead = deadThreadNames();
+    var host = document.getElementById("blocks");
+    host.textContent = "";
+
+    state.blocks.forEach(function (b, idx) {
+      var el = document.createElement("div");
+      el.className = "block" + (b.status === "cut" ? " cut" : "");
+      el.setAttribute("data-depth", String(b.depth));
+      el.setAttribute("data-id", b.id);
+      el.setAttribute("data-idx", String(idx));
+      el.addEventListener("dragstart", onDragStart);
+      el.addEventListener("dragend", onDragEnd);
+
+      var num = document.createElement("div");
+      num.className = "num";
+
+      var grip = document.createElement("span");
+      grip.className = "grip";
+      grip.textContent = "⠿";
+      grip.tabIndex = 0;
+      grip.setAttribute("role", "button");
+      grip.setAttribute("aria-label", "Drag to reorder block " + nums[b.id] +
+        ". Children move with it. Arrow buttons also move this block.");
+      grip.addEventListener("mousedown", function () { el.draggable = true; });
+      grip.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowUp") { e.preventDefault(); move(idx, -1); }
+        if (e.key === "ArrowDown") { e.preventDefault(); move(idx, 1); }
+      });
+      num.appendChild(grip);
+
+      var n = document.createElement("span");
+      n.textContent = nums[b.id];
+      num.appendChild(n);
+      el.appendChild(num);
+
+      var body = document.createElement("div");
+      body.className = "body";
+
+      var label = document.createElement("span");
+      label.className = "label";
+      label.contentEditable = "true";
+      label.spellcheck = false;
+      label.setAttribute("data-placeholder", "Block label");
+      label.textContent = b.label;
+      label.addEventListener("input", function () { edit(b.id, "label", label.textContent); });
+      label.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") { e.preventDefault(); label.blur(); }
+      });
+      body.appendChild(label);
+
+      var sum = document.createElement("span");
+      sum.className = "summary";
+      sum.contentEditable = "true";
+      sum.spellcheck = false;
+      sum.setAttribute("data-placeholder", "What this block does");
+      sum.textContent = b.summary;
+      sum.addEventListener("input", function () { edit(b.id, "summary", sum.textContent); });
+      body.appendChild(sum);
+
+      if (showAnchors && b.anchor) {
+        var a = document.createElement("span");
+        a.className = "anchor";
+        a.textContent = b.anchor;
+        body.appendChild(a);
+      }
+      el.appendChild(body);
+
+      var side = document.createElement("div");
+      side.className = "side";
+
+      var chips = document.createElement("div");
+      chips.className = "chips";
+      b.opens.forEach(function (t) {
+        var c = document.createElement("span");
+        c.className = "chip " + (dead[t] ? "deadflag" : "opens");
+        c.textContent = (dead[t] ? "dead: " : "opens: ") + t;
+        chips.appendChild(c);
+      });
+      b.closes.forEach(function (t) {
+        var c = document.createElement("span");
+        c.className = "chip closes";
+        c.textContent = "closes: " + t;
+        chips.appendChild(c);
+      });
+      if (chips.children.length) side.appendChild(chips);
+
+      var ctrl = document.createElement("div");
+      ctrl.className = "ctrl";
+      ctrl.appendChild(btn("↑", "Move up", function () { move(idx, -1); }));
+      ctrl.appendChild(btn("↓", "Move down", function () { move(idx, 1); }));
+      ctrl.appendChild(btn("→", "Indent", function () { depth(b.id, 1); }));
+      ctrl.appendChild(btn("←", "Outdent", function () { depth(b.id, -1); }));
+      ctrl.appendChild(btn("+", "Add block below", function () { addAfter(idx); }));
+      ctrl.appendChild(btn(b.status === "cut" ? "restore" : "cut",
+        b.status === "cut" ? "Restore block" : "Mark as cut",
+        function () { edit(b.id, "status", b.status === "cut" ? "keep" : "cut"); }));
+      ctrl.appendChild(btn("×", "Delete block", function () { remove(b.id); }));
+      side.appendChild(ctrl);
+
+      var tin = document.createElement("input");
+      tin.className = "thin";
+      tin.value = threadString(b);
+      tin.setAttribute("aria-label", "Threads for block " + nums[b.id]);
+      tin.placeholder = "+thread, -thread";
+      tin.addEventListener("change", function () { setThreads(b.id, tin.value); });
+      side.appendChild(tin);
+
+      el.appendChild(side);
+      host.appendChild(el);
+    });
+
+    renderThreads();
+    document.getElementById("m-count").textContent =
+      String(state.blocks.filter(function (b) { return b.status !== "cut"; }).length);
+  }
+
+  function threadString(b) {
+    return b.opens.map(function (t) { return "+" + t; })
+      .concat(b.closes.map(function (t) { return "-" + t; })).join(", ");
+  }
+
+  function setThreads(id, raw) {
+    var opens = [], closes = [];
+    raw.split(",").forEach(function (part) {
+      var s = part.trim();
+      if (!s) return;
+      if (s.charAt(0) === "-") { closes.push(s.slice(1).trim()); }
+      else { opens.push(s.replace(/^\+/, "").trim()); }
+    });
+    var b = find(id);
+    if (!b) return;
+    b.opens = opens.filter(Boolean);
+    b.closes = closes.filter(Boolean);
+    touch();
+    render();
+  }
+
+  function renderThreads() {
+    var panel = document.getElementById("threads");
+    panel.hidden = !showThreads;
+    var rows = threadReport();
+    var nums = numbering();
+    var host = document.getElementById("tlist");
+    host.textContent = "";
+
+    document.getElementById("m-threads").textContent = String(rows.length);
+    document.getElementById("m-dead").textContent =
+      String(rows.filter(function (r) { return r.dead; }).length);
+
+    if (!rows.length) {
+      var e = document.createElement("p");
+      e.className = "empty";
+      e.textContent = "No threads tagged yet. Use the field on a block: +name to open, -name to close.";
+      host.appendChild(e);
+      return;
+    }
+
+    rows.forEach(function (r) {
+      var row = document.createElement("div");
+      row.className = "trow" + (r.dead ? " dead" : "");
+      var left = document.createElement("div");
+      var nm = document.createElement("span");
+      nm.className = "name";
+      nm.textContent = r.name;
+      left.appendChild(nm);
+      var arc = document.createElement("span");
+      arc.className = "arc";
+      var o = r.open !== null ? nums[state.blocks[r.open].id] : "—";
+      var c = r.close !== null ? nums[state.blocks[r.close].id] : "—";
+      arc.textContent = "  opens " + o + "  →  closes " + c;
+      left.appendChild(arc);
+      row.appendChild(left);
+
+      var badge = document.createElement("span");
+      if (r.dead) { badge.className = "badge dead"; badge.textContent = "dead end"; }
+      else if (r.orphan) { badge.className = "badge orphan"; badge.textContent = "closed, never opened"; }
+      else { badge.className = "badge"; badge.textContent = "resolves"; }
+      row.appendChild(badge);
+      host.appendChild(row);
+    });
+  }
+
+  function btn(text, title, fn) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.textContent = text;
+    b.title = title;
+    b.setAttribute("aria-label", title);
+    b.addEventListener("click", fn);
+    return b;
+  }
+
+  /* ---------- mutations ---------- */
+
+  function find(id) {
+    for (var i = 0; i < state.blocks.length; i++) {
+      if (state.blocks[i].id === id) return state.blocks[i];
+    }
+    return null;
+  }
+
+  function edit(id, field, value) {
+    var b = find(id);
+    if (!b || b[field] === value) return;
+    b[field] = value;
+    touch();
+    if (field === "status") render();
+  }
+
+  function indexOf(id) {
+    for (var i = 0; i < state.blocks.length; i++) {
+      if (state.blocks[i].id === id) return i;
+    }
+    return -1;
+  }
+
+  /* Indent and outdent carry the subtree, so a section keeps its own beats
+     instead of dropping them into the level above. */
+  function depth(id, delta) {
+    var i = indexOf(id);
+    if (i < 0) return;
+    var next = Math.max(0, Math.min(2, state.blocks[i].depth + delta));
+    if (next === state.blocks[i].depth) return;
+    var shift = next - state.blocks[i].depth;
+    var len = subtreeLen(i);
+    for (var k = i; k < i + len; k++) {
+      state.blocks[k].depth = Math.max(0, Math.min(2, state.blocks[k].depth + shift));
+    }
+    normalizeDepths();
+    touch();
+    render();
+  }
+
+  /* A block owns the blocks below it that are deeper than it. Every move,
+     dragged or clicked, carries that subtree along. */
+  function subtreeLen(i) {
+    var d = state.blocks[i].depth, j = i + 1;
+    while (j < state.blocks.length && state.blocks[j].depth > d) j++;
+    return j - i;
+  }
+
+  /* No block may sit more than one level deeper than the block above it,
+     or the numbering stops meaning anything. Run after every structural move. */
+  function normalizeDepths() {
+    var prev = -1;
+    for (var i = 0; i < state.blocks.length; i++) {
+      var max = i === 0 ? 0 : prev + 1;
+      if (state.blocks[i].depth > max) state.blocks[i].depth = max;
+      prev = state.blocks[i].depth;
+    }
+  }
+
+  function relocate(from, len, to) {
+    if (to >= from && to <= from + len) return false;
+    var moved = state.blocks.splice(from, len);
+    if (to > from) to -= len;
+    var args = [to, 0].concat(moved);
+    Array.prototype.splice.apply(state.blocks, args);
+    normalizeDepths();
+    return true;
+  }
+
+  function move(idx, delta) {
+    var len = subtreeLen(idx);
+    var to;
+    if (delta < 0) {
+      var p = idx - 1;
+      while (p >= 0 && state.blocks[p].depth > state.blocks[idx].depth) p--;
+      if (p < 0) return;
+      to = p;
+    } else {
+      var next = idx + len;
+      if (next >= state.blocks.length) return;
+      to = next + subtreeLen(next);
+    }
+    if (!relocate(idx, len, to)) return;
+    touch();
+    render();
+  }
+
+  /* ---------- drag and drop ---------- */
+
+  var drag = { from: -1, len: 0, target: -1 };
+
+  function clearMarks() {
+    var list = document.querySelectorAll(".block");
+    for (var i = 0; i < list.length; i++) {
+      list[i].classList.remove("drop-before");
+      list[i].classList.remove("drop-after");
+    }
+  }
+
+  function onDragStart(e) {
+    var el = e.currentTarget;
+    drag.from = Number(el.getAttribute("data-idx"));
+    drag.len = subtreeLen(drag.from);
+    drag.target = -1;
+    el.classList.add("dragging");
+    if (e.dataTransfer) {
+      e.dataTransfer.effectAllowed = "move";
+      try { e.dataTransfer.setData("text/plain", state.blocks[drag.from].id); } catch (err) {}
+    }
+  }
+
+  function onDragEnd() {
+    clearMarks();
+    var el = document.querySelector(".block.dragging");
+    if (el) { el.classList.remove("dragging"); el.draggable = false; }
+    drag.from = -1;
+    drag.target = -1;
+  }
+
+  function onDragOver(e) {
+    if (drag.from < 0) return;
+    e.preventDefault();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+    var els = Array.prototype.slice.call(document.querySelectorAll(".block"));
+    var target = els.length;
+    for (var i = 0; i < els.length; i++) {
+      var r = els[i].getBoundingClientRect();
+      if (e.clientY < r.top + r.height / 2) { target = i; break; }
+    }
+    if (target === drag.target) return;
+    drag.target = target;
+    clearMarks();
+    if (target < els.length) els[target].classList.add("drop-before");
+    else if (els.length) els[els.length - 1].classList.add("drop-after");
+  }
+
+  function onDrop(e) {
+    if (drag.from < 0) return;
+    e.preventDefault();
+    var from = drag.from, len = drag.len, to = drag.target;
+    var ok = to >= 0 && relocate(from, len, to);
+    onDragEnd();
+    if (ok) { touch(); render(); }
+  }
+
+  function addAfter(idx) {
+    var at = typeof idx === "number" ? idx + 1 : state.blocks.length;
+    var d = typeof idx === "number" ? state.blocks[idx].depth : 0;
+    state.blocks.splice(at, 0, normalize({ depth: d, label: "", summary: "", status: "new" }, at));
+    touch();
+    render();
+    var el = document.querySelectorAll(".block")[at];
+    if (el) el.querySelector(".label").focus();
+  }
+
+  function remove(id) {
+    state.blocks = state.blocks.filter(function (b) { return b.id !== id; });
+    touch();
+    render();
+  }
+
+  /* ---------- persistence ---------- */
+
+  function setSave(stateName, text) {
+    var el = document.getElementById("save");
+    el.setAttribute("data-state", stateName);
+    document.getElementById("save-text").textContent = text;
+  }
+
+  function touch() {
+    lastLocalEdit = Date.now();
+    if (!db) { setSave("local", "local only"); return; }
+    setSave("saving", "saving");
+    clearTimeout(writeTimer);
+    writeTimer = setTimeout(write, 700);
+  }
+
+  function write() {
+    if (!db) return;
+    db.doc(DOC_PATH).set({
+      slug: SLUG,
+      blocks: state.blocks,
+      updatedAt: Date.now()
+    }).then(function () {
+      setSave("saved", "saved");
+    }).catch(function (err) {
+      var code = err && err.code ? err.code : "unavailable";
+      if (code === "not_granted" || code === "revoked" || code === "capability_disabled") {
+        db = null;
+        setSave("local", "local only");
+      } else {
+        setSave("local", "not saved: " + code);
+      }
+    });
+  }
+
+  function adopt(data) {
+    if (!data || !Array.isArray(data.blocks)) return;
+    if (Date.now() - lastLocalEdit < 2000) return;
+    var incoming = JSON.stringify(data.blocks);
+    if (incoming === JSON.stringify(state.blocks)) return;
+    state.blocks = data.blocks.map(normalize);
+    render();
+    setSave("saved", "saved");
+  }
+
+  render();
+
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("db").then(function (ns) {
+      if (!ns) { setSave("local", "local only"); return; }
+      db = ns;
+      setSave("saved", "synced");
+      db.doc(DOC_PATH).onSnapshot(function (snap) {
+        if (snap && snap.exists) adopt(snap.data());
+      }, function () { /* transient; subscription self-recovers */ });
+    }).catch(function () { setSave("local", "local only"); });
+  }
+
+  var blocksHost = document.getElementById("blocks");
+  blocksHost.addEventListener("dragover", onDragOver);
+  blocksHost.addEventListener("drop", onDrop);
+  blocksHost.addEventListener("dragleave", function (e) {
+    if (!blocksHost.contains(e.relatedTarget)) { clearMarks(); drag.target = -1; }
+  });
+  /* A grip press arms draggable; release it again so the editable text in the
+     block stays selectable the rest of the time. */
+  document.addEventListener("mouseup", function () {
+    if (drag.from >= 0) return;
+    var armed = document.querySelectorAll('.block[draggable="true"]');
+    for (var i = 0; i < armed.length; i++) { armed[i].draggable = false; }
+  });
+
+  document.getElementById("add").addEventListener("click", function () { addAfter(); });
+  document.getElementById("toggle-threads").addEventListener("click", function (e) {
+    showThreads = !showThreads;
+    e.currentTarget.setAttribute("aria-pressed", String(showThreads));
+    renderThreads();
+  });
+  document.getElementById("toggle-anchors").addEventListener("click", function (e) {
+    showAnchors = !showAnchors;
+    e.currentTarget.setAttribute("aria-pressed", String(showAnchors));
+    render();
+  });
+})();
+</script>
