@@ -34,19 +34,30 @@ async function upsertSubscriber(email, firstName) {
 
 let allTagsCache = []
 
+// Kit caps /tags at 500 per page and paginates by cursor, so this has to loop.
+// Unpaginated, a newly created tag past the first page is simply invisible:
+// resolveTagId throws "tag not found" for it while every older tag keeps
+// resolving, which reads like a typo in the tag name rather than a paging bug.
 async function loadTagsIntoCache() {
-  const res = await fetch(`${KIT_BASE}/tags`, { headers: headers() })
-  if (!res.ok) {
-    const body = await res.text()
-    throw new Error(`Kit GET /tags ${res.status}: ${body}`)
-  }
-  const data = await res.json()
   tagCache.clear()
   allTagsCache = []
-  for (const tag of data.tags || []) {
-    tagCache.set(tag.name, tag.id)
-    allTagsCache.push({ id: tag.id, name: tag.name })
-  }
+  let after = null
+  do {
+    const params = new URLSearchParams({ per_page: '500' })
+    if (after) params.set('after', after)
+    const res = await fetch(`${KIT_BASE}/tags?${params}`, { headers: headers() })
+    if (!res.ok) {
+      const body = await res.text()
+      throw new Error(`Kit GET /tags ${res.status}: ${body}`)
+    }
+    const data = await res.json()
+    for (const tag of data.tags || []) {
+      tagCache.set(tag.name, tag.id)
+      allTagsCache.push({ id: tag.id, name: tag.name })
+    }
+    const page = data.pagination ?? {}
+    after = page.has_next_page ? page.end_cursor : null
+  } while (after)
   tagCacheFetchedAt = Date.now()
 }
 
@@ -95,10 +106,65 @@ async function applyTag(tagId, email) {
   return res.json()
 }
 
+// Kit has no endpoint that sets a subscriber's state. POST /v4/subscribers says
+// so outright -- "Updating the subscriber state with this endpoint is not
+// supported at this time" -- so it honours `state` only when CREATING someone.
+// For anyone who already exists it updates the first name, ignores the state
+// and returns 200.
+//
+// That is how a paying customer ends up tagged but invisible. Most buyers first
+// arrive as a lead through a double opt-in form, and if they never click the
+// confirmation they sit in `inactive` forever. Tagging them still returns 200
+// and the tag really is attached -- but Kit's UI, every tag query and every
+// broadcast audience default to active-only, so they are silently excluded from
+// the emails they just paid for. Nothing throws, so nothing is logged.
+//
+// Adding them to a SINGLE opt-in form is the only documented way back. The form
+// is never embedded anywhere and nobody ever sees it; it exists purely as this
+// switch. Kit applies the change asynchronously -- the 201 still reports the old
+// state, and it flips a minute or so later -- so there is no point reading the
+// state back here to confirm it landed.
+async function addSubscriberToForm(formId, email) {
+  const res = await fetch(`${KIT_BASE}/forms/${formId}/subscribers`, {
+    method: 'POST',
+    headers: headers(),
+    body: JSON.stringify({ email_address: email }),
+  })
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(`Kit addSubscriberToForm ${res.status}: ${body}`)
+  }
+  return res.json()
+}
+
 export async function tagSubscriber(email, firstName, tagName) {
-  await upsertSubscriber(email, firstName)
+  const upserted = await upsertSubscriber(email, firstName)
+
   const tagId = await resolveTagId(tagName)
   await applyTag(tagId, email)
+
+  // Tag first, activate second, deliberately: the tag is the record of what
+  // they bought and has to land even if activation fails. The other order would
+  // let a form error cost us the tag as well.
+  const state = upserted?.subscriber?.state
+  if (!state || state === 'active') return
+
+  if (state !== 'inactive') {
+    // cancelled / bounced / complained -- they unsubscribed, hard-bounced or
+    // reported spam. Re-activating those is not ours to do.
+    console.warn(`Kit: ${email} is ${state}, tagged but left as-is`)
+    return
+  }
+
+  // Thrown, not swallowed, so it reaches stripe_events.error as 'kit_failed'
+  // instead of leaving another buyer stranded where nobody would look.
+  if (!process.env.KIT_PURCHASE_FORM_ID) {
+    throw new Error(
+      `Kit subscriber ${email} is inactive and KIT_PURCHASE_FORM_ID is not set, ` +
+        `so they were tagged "${tagName}" but remain invisible to every broadcast.`,
+    )
+  }
+  await addSubscriberToForm(process.env.KIT_PURCHASE_FORM_ID, email)
 }
 
 async function loadTemplatesIntoCache() {
