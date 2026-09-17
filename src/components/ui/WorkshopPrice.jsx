@@ -20,14 +20,19 @@ export default function WorkshopPrice({ pricing, fallback = null }) {
 // outside it the button label carries the price, as it always has, and a price
 // block that appeared for no reason would just be clutter. The struck number is
 // the point. $99 means nothing without the $129 it replaced.
+//
+// The price you pay leads and the struck price trails it, with the deadline on
+// its own line underneath.
 export function EarlyBirdHeroPrice({ pricing }) {
   if (!pricing.earlyBird) return null
   return (
-    <p className="workshop-hero__price">
-      <span className="workshop-hero__price-k">Early bird</span>
-      <s className="workshop-hero__was">{pricing.fullPrice}</s>
-      <span className="workshop-hero__now">{pricing.price}</span>
-      <span className="workshop-hero__unit">until {pricing.endsLabel}</span>
-    </p>
+    <div className="workshop-hero__price">
+      <p className="workshop-hero__price-row">
+        <span className="workshop-hero__price-k">Early bird</span>
+        <span className="workshop-hero__now">{pricing.price}</span>
+        <s className="workshop-hero__was">{pricing.fullPrice}</s>
+      </p>
+      <p className="workshop-hero__unit">Until {pricing.endsLabel}</p>
+    </div>
   )
 }

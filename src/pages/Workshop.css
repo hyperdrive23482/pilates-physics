@@ -64,11 +64,14 @@
  * bird is on (EarlyBirdHeroPrice). Same sizes as .course-hero__price so the two
  * sales heroes read as one system. */
 .ppv2 .workshop-hero__price {
+  margin: 0 0 28px;
+}
+.ppv2 .workshop-hero__price-row {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
   gap: 12px;
-  margin: 0 0 28px;
+  margin: 0;
   font-family: var(--pp-font-serif);
 }
 .ppv2 .workshop-hero__price-k,
@@ -79,7 +82,7 @@
   text-transform: uppercase;
 }
 .ppv2 .workshop-hero__price-k { color: var(--accent); }
-.ppv2 .workshop-hero__unit { color: var(--ink-soft); }
+.ppv2 .workshop-hero__unit { color: var(--ink-soft); margin: 10px 0 0; }
 .ppv2 .workshop-hero__was {
   font-size: 24px;
   line-height: 1;
