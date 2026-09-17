@@ -150,10 +150,15 @@ export default async function handler(req, res) {
         },
       ],
       customer_email: resolvedEmail,
-      // No stacking on either discounted path: $39 and early bird are already
-      // the discount, and an unrelated active promotion code must not compound
-      // them.
-      allow_promotion_codes: pricing === 'full',
+      // Codes are allowed on top of early bird, deliberately: it is how a 100%
+      // code can test the early bird price end to end on production. The cost
+      // is that any active public code compounds with it, so early bird and a
+      // public code should not run at the same time.
+      //
+      // The $39 offer still refuses to stack. That one is a private link with
+      // a token behind it, not a price anyone can see, and a code on top of it
+      // has no way to be deliberate.
+      allow_promotion_codes: !offer,
       success_url: `${origin}/workshops/${slug}/success?session_id={CHECKOUT_SESSION_ID}`,
       // Built from the validated row, never from anything the client posted, or
       // this parameter becomes an open redirect.

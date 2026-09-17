@@ -592,8 +592,9 @@ export default function WorkshopForm({
               />
             </Field>
             <span style={{ fontSize: '0.72rem', color: 'var(--color-ink-muted)' }}>
-              While early bird is on, the page shows the regular price struck through,
-              checkout charges the early bird price, and promo codes are turned off.
+              While early bird is on, the page shows the regular price struck through
+              and checkout charges the early bird price. Promo codes still work, and
+              stack on top of it, so avoid running a public code at the same time.
             </span>
           </div>
         </details>
