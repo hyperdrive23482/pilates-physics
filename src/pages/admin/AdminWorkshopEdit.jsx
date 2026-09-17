@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, useSearchParams, Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
@@ -89,6 +89,13 @@ export default function AdminWorkshopEdit() {
   const [moduleTotalMin, setModuleTotalMin] = useState(null)
 
   const cloneSlug = isNew ? searchParams.get('from') : null
+  // Built once per source row, not on every render. The form resets when it is
+  // handed a different row, and this page re-renders whenever Supabase
+  // re-announces the session on tab focus.
+  const cloneInitial = useMemo(
+    () => (cloneSource ? cloneDefaults(cloneSource) : null),
+    [cloneSource],
+  )
   const isCourse = workshop?.kind === 'course'
   const tabs = tabsFor(workshop?.kind)
 
@@ -318,7 +325,8 @@ export default function AdminWorkshopEdit() {
           ) : (
             <WorkshopForm
               key={isNew ? cloneSource?.id ?? 'blank' : workshop?.id}
-              initial={isNew ? (cloneSource ? cloneDefaults(cloneSource) : null) : workshop}
+              initial={isNew ? cloneInitial : workshop}
+              draftKey={isNew ? `new:${cloneSlug ?? 'blank'}` : workshop?.id}
               onSubmit={save}
               submitLabel={
                 isNew ? (cloneSource ? 'Create copy' : 'Create workshop') : 'Save changes'

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   earlyBirdEndsAt,
   earlyBirdLastDay,
@@ -34,6 +34,105 @@ function toLocalInput(iso) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 
+const EMPTY_FORM = {
+  title: '',
+  slug: '',
+  subtitle: '',
+  description: '',
+  price_cents: '',
+  kind: 'webinar',
+  quiz_pass_pct: 80,
+  status: 'draft',
+  zoom_link: '',
+  zoom_passcode: '',
+  scheduled_at: '',
+  duration_min: '',
+  recording_url: '',
+  hero_image_url: '',
+  kit_tag: '',
+  stripe_price_id: '',
+  early_bird_price_cents: '',
+  early_bird_stripe_price_id: '',
+  // A Pacific calendar day ('YYYY-MM-DD'), saved as 11:59:59pm PT that day.
+  early_bird_last_day: '',
+  bonus_webinar_id: '',
+  bonus_starts_at: '',
+  bonus_ends_at: '',
+  npcp_cecs: '',
+  npcp_course_id: '',
+  npcp_approval_date: '',
+}
+
+function formFromRow(row) {
+  return {
+    title: row.title ?? '',
+    slug: row.slug ?? '',
+    subtitle: row.subtitle ?? '',
+    description: row.description ?? '',
+    price_cents: row.price_cents ?? '',
+    kind: row.kind ?? 'webinar',
+    quiz_pass_pct: row.quiz_pass_pct ?? 80,
+    status: row.status ?? 'draft',
+    zoom_link: row.zoom_link ?? '',
+    zoom_passcode: row.zoom_passcode ?? '',
+    scheduled_at: toLocalInput(row.scheduled_at),
+    duration_min: row.duration_min ?? '',
+    recording_url: row.recording_url ?? '',
+    hero_image_url: row.hero_image_url ?? '',
+    kit_tag: row.kit_tag ?? '',
+    stripe_price_id: row.stripe_price_id ?? '',
+    early_bird_price_cents: row.early_bird_price_cents ?? '',
+    early_bird_stripe_price_id: row.early_bird_stripe_price_id ?? '',
+    early_bird_last_day: earlyBirdLastDay(row.early_bird_ends_at),
+    bonus_webinar_id: row.bonus_webinar_id ?? '',
+    bonus_starts_at: toLocalInput(row.bonus_starts_at),
+    bonus_ends_at: toLocalInput(row.bonus_ends_at),
+    npcp_cecs: row.npcp_cecs ?? '',
+    npcp_course_id: row.npcp_course_id ?? '',
+    npcp_approval_date: row.npcp_approval_date ?? '',
+  }
+}
+
+// The version of a row: its id plus when it was last saved. Two fetches of an
+// unchanged row share a base; a save produces a new one.
+function baseOf(row) {
+  return row ? `${row.id ?? ''}|${row.updated_at ?? ''}` : 'blank'
+}
+
+// Drafts live in sessionStorage: per tab, so two admin tabs never overwrite
+// each other, and kept across a reload of that tab. Storage can be missing or
+// throw (private windows, blocked site data), and a draft is a convenience,
+// so every access fails quietly.
+const DRAFT_PREFIX = 'pp-admin-workshop-draft:'
+
+function readDraft(key) {
+  if (!key) return null
+  try {
+    const raw = window.sessionStorage.getItem(DRAFT_PREFIX + key)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
+
+function writeDraft(key, value) {
+  if (!key) return
+  try {
+    window.sessionStorage.setItem(DRAFT_PREFIX + key, JSON.stringify(value))
+  } catch {
+    // Storage full or unavailable; the form still works, it just won't survive a reload.
+  }
+}
+
+function clearDraft(key) {
+  if (!key) return
+  try {
+    window.sessionStorage.removeItem(DRAFT_PREFIX + key)
+  } catch {
+    // Nothing to clean up if storage is unavailable.
+  }
+}
+
 export default function WorkshopForm({
   initial,
   onSubmit,
@@ -48,71 +147,62 @@ export default function WorkshopForm({
   // The kind is locked once a row exists: changing it on a live product moves
   // it between portal renderers and orphans whatever the old one relied on.
   lockKind = false,
+  // Where this form keeps unsaved typing, one key per workshop (or per new
+  // form). Omit to turn drafts off.
+  draftKey = null,
 }) {
-  const [form, setForm] = useState({
-    title: '',
-    slug: '',
-    subtitle: '',
-    description: '',
-    price_cents: '',
-    kind: 'webinar',
-    quiz_pass_pct: 80,
-    status: 'draft',
-    zoom_link: '',
-    zoom_passcode: '',
-    scheduled_at: '',
-    duration_min: '',
-    recording_url: '',
-    hero_image_url: '',
-    kit_tag: '',
-    stripe_price_id: '',
-    early_bird_price_cents: '',
-    early_bird_stripe_price_id: '',
-    // A Pacific calendar day ('YYYY-MM-DD'), saved as 11:59:59pm PT that day.
-    early_bird_last_day: '',
-    bonus_webinar_id: '',
-    bonus_starts_at: '',
-    bonus_ends_at: '',
-    npcp_cecs: '',
-    npcp_course_id: '',
-    npcp_approval_date: '',
-  })
+  const [form, setForm] = useState(EMPTY_FORM)
   const [slugTouched, setSlugTouched] = useState(false)
   const [error, setError] = useState(null)
   const [dirty, setDirty] = useState(false)
+  const [restored, setRestored] = useState(false)
+
+  // Which version of the row the form was last loaded from. The form resets
+  // only when this changes, never merely because `initial` is a new object.
+  //
+  // Resetting on the object was the bug: Supabase re-announces the session
+  // every time the tab regains focus, the page re-renders, and any parent that
+  // builds `initial` during render (the clone form did) handed down a "new"
+  // row and wiped whatever had been typed.
+  const loadedBaseRef = useRef(undefined)
 
   useEffect(() => {
-    if (!initial) return
-    setForm({
-      title: initial.title ?? '',
-      slug: initial.slug ?? '',
-      subtitle: initial.subtitle ?? '',
-      description: initial.description ?? '',
-      price_cents: initial.price_cents ?? '',
-      kind: initial.kind ?? 'webinar',
-      quiz_pass_pct: initial.quiz_pass_pct ?? 80,
-      status: initial.status ?? 'draft',
-      zoom_link: initial.zoom_link ?? '',
-      zoom_passcode: initial.zoom_passcode ?? '',
-      scheduled_at: toLocalInput(initial.scheduled_at),
-      duration_min: initial.duration_min ?? '',
-      recording_url: initial.recording_url ?? '',
-      hero_image_url: initial.hero_image_url ?? '',
-      kit_tag: initial.kit_tag ?? '',
-      stripe_price_id: initial.stripe_price_id ?? '',
-      early_bird_price_cents: initial.early_bird_price_cents ?? '',
-      early_bird_stripe_price_id: initial.early_bird_stripe_price_id ?? '',
-      early_bird_last_day: earlyBirdLastDay(initial.early_bird_ends_at),
-      bonus_webinar_id: initial.bonus_webinar_id ?? '',
-      bonus_starts_at: toLocalInput(initial.bonus_starts_at),
-      bonus_ends_at: toLocalInput(initial.bonus_ends_at),
-      npcp_cecs: initial.npcp_cecs ?? '',
-      npcp_course_id: initial.npcp_course_id ?? '',
-      npcp_approval_date: initial.npcp_approval_date ?? '',
-    })
-    setSlugTouched(true)
+    const base = baseOf(initial)
+    if (loadedBaseRef.current === base) return
+    loadedBaseRef.current = base
+
+    // Typing survives a reload of this tab, e.g. Chrome discarding a
+    // background tab while the admin is off copying a price ID from Stripe.
+    // Only restored onto the same version of the row it was typed against: if
+    // the row has been saved since, the draft is stale and silently dropped.
+    const draft = readDraft(draftKey)
+    if (draft && draft.base === base) {
+      setForm({ ...EMPTY_FORM, ...draft.form })
+      setSlugTouched(Boolean(draft.slugTouched))
+      setDirty(true)
+      setRestored(true)
+      return
+    }
+    if (draft) clearDraft(draftKey)
+
+    setForm(initial ? formFromRow(initial) : EMPTY_FORM)
+    setSlugTouched(Boolean(initial))
     setDirty(false)
-  }, [initial])
+    setRestored(false)
+  }, [initial, draftKey])
+
+  useEffect(() => {
+    if (dirty) writeDraft(draftKey, { base: loadedBaseRef.current, form, slugTouched })
+  }, [draftKey, dirty, form, slugTouched])
+
+  function discardDraft() {
+    clearDraft(draftKey)
+    setForm(initial ? formFromRow(initial) : EMPTY_FORM)
+    setSlugTouched(Boolean(initial))
+    setDirty(false)
+    setRestored(false)
+    setError(null)
+  }
 
   function update(field, value) {
     setDirty(true)
@@ -219,7 +309,9 @@ export default function WorkshopForm({
 
     try {
       await onSubmit(payload)
+      clearDraft(draftKey)
       setDirty(false)
+      setRestored(false)
     } catch (err) {
       setError(err.message ?? 'Save failed')
     }
@@ -685,6 +777,27 @@ export default function WorkshopForm({
           )}
         </div>
       </details>
+
+      {restored && dirty && (
+        <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.8rem', margin: 0 }}>
+          Restored your unsaved changes from earlier in this tab.{' '}
+          <button
+            type="button"
+            onClick={discardDraft}
+            style={{
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              color: 'var(--color-accent)',
+              font: 'inherit',
+              textDecoration: 'underline',
+              cursor: 'pointer',
+            }}
+          >
+            Discard them
+          </button>
+        </p>
+      )}
 
       {error && (
         <p style={{ color: '#ff7d7d', fontSize: '0.85rem', margin: 0 }}>{error}</p>
