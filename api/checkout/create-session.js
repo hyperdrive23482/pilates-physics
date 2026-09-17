@@ -2,6 +2,7 @@ import { stripe } from '../_lib/stripe.js'
 import { supabaseAdmin } from '../_lib/supabase-admin.js'
 import { logActivity } from '../_lib/log-activity.js'
 import { isOfferValid } from '../_lib/offer.js'
+import { isEarlyBirdActive } from '../_lib/early-bird.js'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -10,7 +11,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { slug, email, firstName, lastName, offerToken } = req.body ?? {}
+    const { slug, email, firstName, lastName, offerToken, expectEarlyBird } = req.body ?? {}
     if (!slug) return res.status(400).json({ error: 'slug is required' })
 
     // Resolve logged-in user (optional)
@@ -30,7 +31,9 @@ export default async function handler(req, res) {
     // Look up workshop
     const { data: workshop, error: webErr } = await supabaseAdmin
       .from('webinars')
-      .select('id, title, slug, status, stripe_price_id, kit_tag')
+      .select(
+        'id, title, slug, status, kind, stripe_price_id, kit_tag, early_bird_price_cents, early_bird_stripe_price_id, early_bird_ends_at',
+      )
       .eq('slug', slug)
       .maybeSingle()
     if (webErr) throw webErr
@@ -111,20 +114,46 @@ export default async function handler(req, res) {
       offer = row
     }
 
+    // ---- Workshop early bird ------------------------------------------
+    //
+    // Same shape as the offer: a second Price, not a coupon, so this date check
+    // is the whole enforcement layer. The server clock decides, never the page.
+    // The offer and early bird never meet (courses vs workshops), but the offer
+    // wins if they ever do, since it is the one with a validated token behind it.
+    const earlyBird = !offer && isEarlyBirdActive(workshop)
+
+    // The page showed the early bird price and the window shut before the
+    // click landed. 410 rather than a silent charge at full price, so the card
+    // re-renders at full price and paying it is a deliberate second click.
+    //
+    // The reverse (page showed full price, server says early bird) falls
+    // through and charges the lower price. Nobody minds being undercharged.
+    if (expectEarlyBird && !earlyBird && !offer) {
+      return res.status(410).json({ earlyBirdEnded: true })
+    }
+
+    const pricing = offer ? 'offer' : earlyBird ? 'early_bird' : 'full'
+    const priceId = offer
+      ? process.env.TRIPWIRE_OFFER_PRICE_ID
+      : earlyBird
+      ? workshop.early_bird_stripe_price_id
+      : workshop.stripe_price_id
+
     const origin = `${req.headers['x-forwarded-proto'] ?? 'https'}://${req.headers.host}`
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: [
         {
-          price: offer ? process.env.TRIPWIRE_OFFER_PRICE_ID : workshop.stripe_price_id,
+          price: priceId,
           quantity: 1,
         },
       ],
       customer_email: resolvedEmail,
-      // No stacking on the offer path: $39 is already the discount, and an
-      // unrelated active promotion code must not compound it.
-      allow_promotion_codes: !offer,
+      // No stacking on either discounted path: $39 and early bird are already
+      // the discount, and an unrelated active promotion code must not compound
+      // them.
+      allow_promotion_codes: pricing === 'full',
       success_url: `${origin}/workshops/${slug}/success?session_id={CHECKOUT_SESSION_ID}`,
       // Built from the validated row, never from anything the client posted, or
       // this parameter becomes an open redirect.
@@ -140,6 +169,9 @@ export default async function handler(req, res) {
         last_name: lastName ?? user?.user_metadata?.last_name ?? '',
         // Closes the loop: provisionPurchase stamps redeemed_at on this row.
         offer_id: offer?.id ?? '',
+        // Which Price this session charged, so a refund or dispute can be
+        // matched to the price the buyer was shown.
+        pricing,
       },
     })
 
@@ -153,7 +185,7 @@ export default async function handler(req, res) {
       source: 'server',
       webinarId: workshop.id,
       webinarSlug: workshop.slug,
-      metadata: { label: session.id, ...(offer ? { offer_id: offer.id } : {}) },
+      metadata: { label: session.id, pricing, ...(offer ? { offer_id: offer.id } : {}) },
     })
 
     return res.status(200).json({ url: session.url })

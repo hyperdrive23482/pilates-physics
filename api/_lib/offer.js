@@ -47,7 +47,7 @@ export const OFFER_TZ = 'America/Los_Angeles'
 export const OFFER_WINDOW_DAYS = 4
 
 // What clock time is it in `timeZone` at this instant?
-function zonedParts(ts, timeZone) {
+export function zonedParts(ts, timeZone) {
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone,
     hour12: false,
@@ -76,7 +76,7 @@ function zoneOffset(ts, timeZone) {
 // land on the wrong side of a DST transition, and re-reading the offset at the
 // corrected instant settles it. This is the standard fix and it is why the
 // tests include both DST boundaries.
-function zonedToUtc({ y, m, d, hh, mm, ss }, timeZone) {
+export function zonedToUtc({ y, m, d, hh, mm, ss }, timeZone) {
   const naive = Date.UTC(y, m - 1, d, hh, mm, ss)
   const first = naive - zoneOffset(naive, timeZone)
   const second = naive - zoneOffset(first, timeZone)

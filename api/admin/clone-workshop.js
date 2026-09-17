@@ -14,6 +14,8 @@ const COPY_FIELDS = [
   'hero_image_url',
   'kit_tag',
   'stripe_price_id',
+  'early_bird_price_cents',
+  'early_bird_stripe_price_id',
   'npcp_cecs',
   'npcp_course_id',
   'npcp_approval_date',
@@ -32,6 +34,9 @@ const RESET_DEFAULTS = {
   bonus_webinar_id: null,
   bonus_starts_at: null,
   bonus_ends_at: null,
+  // An inherited deadline would put the new cohort on early bird, or show it
+  // as already ended, before anyone chose a date for it.
+  early_bird_ends_at: null,
 }
 
 // Everything the admin create form is allowed to set on the new row.
@@ -46,6 +51,7 @@ const OVERRIDE_FIELDS = [
   'bonus_webinar_id',
   'bonus_starts_at',
   'bonus_ends_at',
+  'early_bird_ends_at',
 ]
 
 const CONTENT_FIELDS = ['type', 'title', 'description', 'available_after', 'sort_order']

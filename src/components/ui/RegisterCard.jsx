@@ -1,23 +1,32 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCheckout } from '../../hooks/useCheckout'
 import { isRegistrationOpen } from '../../lib/workshop'
+import { useWorkshopPricing } from '../../lib/workshopPricing'
 import WaitlistForm from './WaitlistForm'
 import ArrowSvg from './ArrowSvg'
 import './RegisterCard.css'
 
 export default function RegisterCard({ workshop }) {
+  // Set once the server has refused an early bird checkout because the window
+  // closed. Forces full price even if this viewer's clock still says early
+  // bird, so the card and the next checkout agree with the server.
+  const [earlyBirdEnded, setEarlyBirdEnded] = useState(false)
+  const pricing = useWorkshopPricing(workshop, { ended: earlyBirdEnded })
+
   // The request itself lives in useCheckout, shared with the course pricing
   // block so the two cannot drift apart. This component owns only the form.
   const { checkout, status, errorMsg, portalUrl, user, signOut, needsLastName } =
-    useCheckout(workshop.slug)
+    useCheckout(workshop.slug, { expectEarlyBird: pricing.earlyBird })
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
 
-  const price = workshop.price_cents
-    ? `$${(workshop.price_cents / 100).toFixed(0)}`
-    : 'Free'
+  useEffect(() => {
+    if (status === 'early_bird_ended') setEarlyBirdEnded(true)
+  }, [status])
+
+  const price = pricing.price ?? 'Free'
 
   const registrationOpen = isRegistrationOpen(workshop)
 
@@ -57,9 +66,26 @@ export default function RegisterCard({ workshop }) {
   return (
     <div className="register-card">
       <div className="register-card__price-row">
+        {pricing.earlyBird && <s className="register-card__was">{pricing.fullPrice}</s>}
         <span className="register-card__price">{price}</span>
-        <span className="register-card__price-unit">one-time</span>
+        <span className="register-card__price-unit">
+          {pricing.earlyBird ? 'early bird' : 'one-time'}
+        </span>
       </div>
+
+      {pricing.earlyBird && (
+        <p className="register-card__early-bird">
+          Early bird ends {pricing.endsLabel}. Then {pricing.fullPrice}.
+        </p>
+      )}
+
+      {/* The window closed between page load and the click. Say so, rather
+          than letting the price change under them without a word. */}
+      {status === 'early_bird_ended' && (
+        <p className="register-card__early-bird">
+          Early bird pricing just ended. The workshop is now {price}.
+        </p>
+      )}
 
       {user ? (
         <>
@@ -92,7 +118,7 @@ export default function RegisterCard({ workshop }) {
             disabled={status === 'loading'}
             className="btn btn--block"
           >
-            {status === 'loading' ? 'Redirecting to Stripe…' : `Register — ${price}`}
+            {status === 'loading' ? 'Redirecting to Stripe…' : `Register. ${price}`}
             {status !== 'loading' && <ArrowSvg />}
           </button>
         </>
@@ -141,7 +167,7 @@ export default function RegisterCard({ workshop }) {
             disabled={status === 'loading'}
             className="btn btn--block"
           >
-            {status === 'loading' ? 'Redirecting to Stripe…' : `Register — ${price}`}
+            {status === 'loading' ? 'Redirecting to Stripe…' : `Register. ${price}`}
             {status !== 'loading' && <ArrowSvg />}
           </button>
         </form>

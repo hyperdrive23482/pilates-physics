@@ -38,6 +38,9 @@ function cloneDefaults(source) {
     bonus_webinar_id: null,
     bonus_starts_at: null,
     bonus_ends_at: null,
+    // The prices carry over; the deadline belonged to the old cohort. Without
+    // a last day the copy's early bird stays off until one is picked.
+    early_bird_ends_at: null,
   }
 }
 

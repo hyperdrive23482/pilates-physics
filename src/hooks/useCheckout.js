@@ -18,9 +18,13 @@ import { supabase } from '../lib/supabase'
  * everywhere else. The server re-validates it; nothing the client says about it
  * is trusted.
  *
- * States: idle | loading | error | already_enrolled | offer_expired
+ * `expectEarlyBird` says the page is showing a workshop's early bird price. The
+ * server still decides the price from its own clock; this only lets it refuse
+ * (410) instead of charging full price to someone who clicked on the lower one.
+ *
+ * States: idle | loading | error | already_enrolled | offer_expired | early_bird_ended
  */
-export function useCheckout(slug, { offerToken } = {}) {
+export function useCheckout(slug, { offerToken, expectEarlyBird = false } = {}) {
   const { user, signOut } = useEnrollment()
   const [status, setStatus] = useState('idle')
   const [errorMsg, setErrorMsg] = useState('')
@@ -57,6 +61,7 @@ export function useCheckout(slug, { offerToken } = {}) {
             : { slug }
           : { slug, email, firstName, lastName }
         if (offerToken) body.offerToken = offerToken
+        if (expectEarlyBird) body.expectEarlyBird = true
 
         const res = await fetch('/api/checkout/create-session', {
           method: 'POST',
@@ -68,8 +73,12 @@ export function useCheckout(slug, { offerToken } = {}) {
         // the buyer caused, and deliberately not a silent drop to $69: let the
         // offer page re-fetch and re-render as expired, so paying full price is
         // a fresh, deliberate click rather than a surprise on the Stripe page.
+        //
+        // The early bird deadline passing mid-visit comes back the same way,
+        // told apart by the body.
         if (res.status === 410) {
-          setStatus('offer_expired')
+          const data = await res.json().catch(() => ({}))
+          setStatus(data.earlyBirdEnded ? 'early_bird_ended' : 'offer_expired')
           return
         }
 
@@ -93,7 +102,7 @@ export function useCheckout(slug, { offerToken } = {}) {
         setStatus('error')
       }
     },
-    [slug, user, needsLastName, offerToken],
+    [slug, user, needsLastName, offerToken, expectEarlyBird],
   )
 
   return { checkout, status, errorMsg, portalUrl, user, signOut, needsLastName }

@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import { useWorkshops } from '../hooks/useWorkshops'
 import WaitlistForm from '../components/ui/WaitlistForm'
 import StatusBadge from '../components/portal/StatusBadge'
+import WorkshopPrice from '../components/ui/WorkshopPrice'
+import { getWorkshopPricing } from '../lib/workshopPricing'
 import { Calendar, Clock, ArrowRight } from 'lucide-react'
 
 function Section({ children, style = {} }) {
@@ -26,9 +28,10 @@ function CatalogCard({ workshop }) {
       })
     : null
 
-  const price = workshop.price_cents
-    ? `$${(workshop.price_cents / 100).toFixed(0)}`
-    : 'Free'
+  // No deadline timer here: a catalog card left open past the deadline shows
+  // the old price until the next visit, and the sales page it links to is
+  // where the price is enforced and re-checked.
+  const pricing = getWorkshopPricing(workshop)
 
   return (
     <Link
@@ -94,7 +97,10 @@ function CatalogCard({ workshop }) {
             <Clock size={13} /> {workshop.duration_min} min
           </span>
         )}
-        <span style={{ fontWeight: '600', color: 'var(--color-ink)' }}>{price}</span>
+        <span style={{ fontWeight: '600', color: 'var(--color-ink)' }}>
+          <WorkshopPrice pricing={pricing} fallback="Free" />
+          {pricing.earlyBird && <span style={{ fontWeight: 400 }}> early bird</span>}
+        </span>
       </div>
 
       <div

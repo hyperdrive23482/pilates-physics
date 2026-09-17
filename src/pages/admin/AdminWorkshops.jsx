@@ -6,6 +6,7 @@ import { useAllWorkshops } from '../../hooks/admin/useAllWorkshops'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import { supabase } from '../../lib/supabase'
 import AdminNav from '../../components/admin/AdminNav'
+import { isEarlyBirdActive, formatEarlyBirdEnd } from '../../../api/_lib/early-bird.js'
 
 function formatCents(cents) {
   return `$${((cents ?? 0) / 100).toFixed(2)}`
@@ -182,6 +183,18 @@ export default function AdminWorkshops() {
                     </Td>
                     <Td mono>
                       {w.price_cents != null ? `$${(w.price_cents / 100).toFixed(2)}` : '—'}
+                      {isEarlyBirdActive(w) && (
+                        <span
+                          title={`Early bird $${(w.early_bird_price_cents / 100).toFixed(2)}`}
+                          style={{
+                            display: 'block',
+                            fontSize: '0.65rem',
+                            color: 'var(--color-ink-muted)',
+                          }}
+                        >
+                          EB until {formatEarlyBirdEnd(w.early_bird_ends_at).split(',')[0]}
+                        </span>
+                      )}
                     </Td>
                     <Td align="right" mono>
                       {formatCents(revenueByWorkshop[w.id])}

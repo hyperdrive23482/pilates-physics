@@ -3,6 +3,8 @@ import { useWorkshop } from '../hooks/useWorkshops'
 import RegisterCard from '../components/ui/RegisterCard'
 import StatusBadge from '../components/portal/StatusBadge'
 import ArrowSvg from '../components/ui/ArrowSvg'
+import WorkshopPrice, { EarlyBirdHeroPrice } from '../components/ui/WorkshopPrice'
+import { useWorkshopPricing } from '../lib/workshopPricing'
 import '../styles/ppv2.css'
 import './Workshop.css'
 
@@ -30,6 +32,8 @@ const INCLUDED = [
 export default function WorkshopSalesPage() {
   const { slug } = useParams()
   const { workshop, loading } = useWorkshop(slug)
+  // Above the early returns: a hook cannot sit behind them.
+  const pricing = useWorkshopPricing(workshop)
 
   if (loading) {
     return (
@@ -69,9 +73,7 @@ export default function WorkshopSalesPage() {
       })
     : null
 
-  const price = workshop.price_cents
-    ? `$${(workshop.price_cents / 100).toFixed(0)}`
-    : 'Free'
+  const price = pricing.price ?? 'Free'
 
   const heroStyle = workshop.hero_image_url
     ? { '--workshop-hero-image': `url(${workshop.hero_image_url})` }
@@ -82,7 +84,7 @@ export default function WorkshopSalesPage() {
     { k: 'Time', v: time || 'TBD' },
     { k: 'Duration', v: workshop.duration_min ? `${workshop.duration_min} minutes` : 'TBD' },
     { k: 'Format', v: 'Live via Zoom · recording included' },
-    { k: 'Price', v: price },
+    { k: 'Price', v: <WorkshopPrice pricing={pricing} fallback="Free" /> },
   ]
 
   return (
@@ -103,9 +105,10 @@ export default function WorkshopSalesPage() {
               <p className="workshop-hero__lede">{workshop.subtitle}</p>
             )}
 
+            <EarlyBirdHeroPrice pricing={pricing} />
             <div className="workshop-hero__cta">
               <a href="#register" className="btn btn--lg">
-                Register Now — {price}
+                Register Now. {price}
                 <ArrowSvg />
               </a>
             </div>

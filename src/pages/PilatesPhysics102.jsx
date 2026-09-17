@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import RegisterCard from '../components/ui/RegisterCard'
 import WaitlistForm from '../components/ui/WaitlistForm'
 import ArrowSvg from '../components/ui/ArrowSvg'
+import WorkshopPrice, { EarlyBirdHeroPrice } from '../components/ui/WorkshopPrice'
+import { useWorkshopPricing } from '../lib/workshopPricing'
 import { useCurrentWorkshop } from '../hooks/useWorkshops'
 import { isRegistrationOpen, formatWorkshopWhen } from '../lib/workshop'
 import '../styles/ppv2.css'
@@ -112,7 +114,7 @@ const FAQ = [
 export default function PilatesPhysics102() {
   const { workshop, loading } = useCurrentWorkshop('PP-102')
   const registrationOpen = isRegistrationOpen(workshop)
-  const price = workshop?.price_cents ? `$${(workshop.price_cents / 100).toFixed(0)}` : null
+  const pricing = useWorkshopPricing(workshop)
   const dateLong = workshop?.scheduled_at
     ? new Date(workshop.scheduled_at).toLocaleDateString('en-US', {
         weekday: 'long',
@@ -128,10 +130,10 @@ export default function PilatesPhysics102() {
     { k: 'Location', v: 'Zoom' },
     { k: 'Format', v: 'Live · recording included' },
     { k: 'NPCP CECs', v: '2.0' },
-    { k: 'Price', v: price || 'To be announced' },
+    { k: 'Price', v: <WorkshopPrice pricing={pricing} fallback="To be announced" /> },
   ]
   const ctaLabel = registrationOpen
-    ? `Register Now.${price ? ` ${price}` : ''}`
+    ? `Register Now.${pricing.price ? ` ${pricing.price}` : ''}`
     : 'Join Waitlist'
 
   return (
@@ -153,6 +155,7 @@ export default function PilatesPhysics102() {
               of force.
             </p>
 
+            <EarlyBirdHeroPrice pricing={pricing} />
             <div className="workshop-hero__cta">
               <a href="#register" className="btn btn--lg">
                 {ctaLabel}

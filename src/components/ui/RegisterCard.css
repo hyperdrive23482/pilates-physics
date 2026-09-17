@@ -46,6 +46,20 @@
   text-transform: uppercase;
   color: var(--ink-soft);
 }
+/* Early bird: the regular price, struck, ahead of the early bird price. */
+.ppv2 .register-card__was {
+  font-family: var(--pp-font-serif);
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink-soft);
+  text-decoration: line-through;
+}
+.ppv2 .register-card__early-bird {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0;
+}
 
 .ppv2 .register-card__user {
   font-size: 14px;

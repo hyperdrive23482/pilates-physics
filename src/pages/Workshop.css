@@ -60,6 +60,39 @@
 }
 .ppv2 .workshop-hero__meta-k { color: var(--accent); text-transform: uppercase; margin-right: 8px; }
 
+/* Early bird price, between the lede and the CTA. Only rendered while early
+ * bird is on (EarlyBirdHeroPrice). Same sizes as .course-hero__price so the two
+ * sales heroes read as one system. */
+.ppv2 .workshop-hero__price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 0 28px;
+  font-family: var(--pp-font-serif);
+}
+.ppv2 .workshop-hero__price-k,
+.ppv2 .workshop-hero__unit {
+  font-family: var(--pp-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ppv2 .workshop-hero__price-k { color: var(--accent); }
+.ppv2 .workshop-hero__unit { color: var(--ink-soft); }
+.ppv2 .workshop-hero__was {
+  font-size: 24px;
+  line-height: 1;
+  color: var(--ink-soft);
+  text-decoration: line-through;
+}
+.ppv2 .workshop-hero__now {
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -0.015em;
+  color: var(--accent);
+}
+
 /* ── § Who it's for ───────────────────────────────────────────────────────── */
 .ppv2 .workshop-who__head {
   font-size: clamp(40px, 4.6vw, 72px);

@@ -1,4 +1,9 @@
 import { useState, useEffect } from 'react'
+import {
+  earlyBirdEndsAt,
+  earlyBirdLastDay,
+  formatEarlyBirdEnd,
+} from '../../../api/_lib/early-bird.js'
 
 const STATUSES = ['draft', 'upcoming', 'live', 'awaiting_recording', 'complete', 'archived']
 
@@ -61,6 +66,10 @@ export default function WorkshopForm({
     hero_image_url: '',
     kit_tag: '',
     stripe_price_id: '',
+    early_bird_price_cents: '',
+    early_bird_stripe_price_id: '',
+    // A Pacific calendar day ('YYYY-MM-DD'), saved as 11:59:59pm PT that day.
+    early_bird_last_day: '',
     bonus_webinar_id: '',
     bonus_starts_at: '',
     bonus_ends_at: '',
@@ -91,6 +100,9 @@ export default function WorkshopForm({
       hero_image_url: initial.hero_image_url ?? '',
       kit_tag: initial.kit_tag ?? '',
       stripe_price_id: initial.stripe_price_id ?? '',
+      early_bird_price_cents: initial.early_bird_price_cents ?? '',
+      early_bird_stripe_price_id: initial.early_bird_stripe_price_id ?? '',
+      early_bird_last_day: earlyBirdLastDay(initial.early_bird_ends_at),
       bonus_webinar_id: initial.bonus_webinar_id ?? '',
       bonus_starts_at: toLocalInput(initial.bonus_starts_at),
       bonus_ends_at: toLocalInput(initial.bonus_ends_at),
@@ -130,6 +142,32 @@ export default function WorkshopForm({
     }
 
     const isCourse = form.kind === 'course'
+    const isWorkshop = form.kind === 'webinar'
+
+    // Early bird. The price and its Stripe price ID travel together; the last
+    // day is what switches it on, so a price pair with no day is allowed and
+    // dormant (which is exactly what a clone inherits).
+    const ebPriceSet = form.early_bird_price_cents !== '' && form.early_bird_price_cents != null
+    const ebIdSet = String(form.early_bird_stripe_price_id ?? '').trim() !== ''
+    const ebEndsAt = form.early_bird_last_day ? earlyBirdEndsAt(form.early_bird_last_day) : null
+    if (isWorkshop) {
+      if (ebPriceSet !== ebIdSet) {
+        return setError('Early bird needs both a price and a Stripe price ID, or neither')
+      }
+      if (form.early_bird_last_day && !ebPriceSet) {
+        return setError('Early bird last day needs an early bird price and Stripe price ID')
+      }
+      if (
+        ebPriceSet &&
+        form.price_cents !== '' &&
+        Number(form.early_bird_price_cents) >= Number(form.price_cents)
+      ) {
+        return setError('Early bird price must be lower than the regular price')
+      }
+      if (ebEndsAt && form.scheduled_at && ebEndsAt >= new Date(form.scheduled_at)) {
+        return setError('Early bird must end before the workshop starts')
+      }
+    }
 
     const payload = {
       title: form.title.trim(),
@@ -164,6 +202,13 @@ export default function WorkshopForm({
       hero_image_url: form.hero_image_url.trim() || null,
       kit_tag: form.kit_tag.trim() || null,
       stripe_price_id: form.stripe_price_id.trim() || null,
+      // Workshops only. Cleared on anything else, so a course can never carry
+      // a dormant early bird that none of its pages would show.
+      early_bird_price_cents:
+        isWorkshop && ebPriceSet ? Number(form.early_bird_price_cents) : null,
+      early_bird_stripe_price_id:
+        isWorkshop && ebIdSet ? form.early_bird_stripe_price_id.trim() : null,
+      early_bird_ends_at: isWorkshop && ebEndsAt ? ebEndsAt.toISOString() : null,
       bonus_webinar_id: form.bonus_webinar_id || null,
       bonus_starts_at: form.bonus_starts_at ? new Date(form.bonus_starts_at).toISOString() : null,
       bonus_ends_at: form.bonus_ends_at ? new Date(form.bonus_ends_at).toISOString() : null,
@@ -186,6 +231,15 @@ export default function WorkshopForm({
 
   const isCourse = form.kind === 'course'
   const isEvent = form.kind === 'webinar'
+
+  const ebEndsAtPreview = form.early_bird_last_day
+    ? earlyBirdEndsAt(form.early_bird_last_day)
+    : null
+  const ebStatus = !ebEndsAtPreview
+    ? 'off'
+    : ebEndsAtPreview > new Date()
+    ? `on until ${formatEarlyBirdEnd(ebEndsAtPreview)}`
+    : `ended ${formatEarlyBirdEnd(ebEndsAtPreview)}`
   const usesDerivedDuration = isCourse && derivedDurationMin != null && derivedDurationMin > 0
 
   return (
@@ -428,6 +482,70 @@ export default function WorkshopForm({
           />
         </Field>
       </Row>
+
+      {isEvent && (
+        <details
+          style={{
+            border: '1px solid var(--color-rule)',
+            padding: '1rem 1.25rem',
+            background: 'var(--color-surface)',
+          }}
+        >
+          <summary
+            style={{
+              cursor: 'pointer',
+              fontSize: '0.85rem',
+              fontWeight: 500,
+              color: 'var(--color-ink)',
+              fontFamily: 'var(--font-serif)',
+            }}
+          >
+            Early bird pricing ({ebStatus})
+          </summary>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+            <Row>
+              <Field
+                label="Early bird price (cents)"
+                hint="e.g. 9900 = $99.00. Must match the Stripe price."
+              >
+                <input
+                  type="number"
+                  min="0"
+                  value={form.early_bird_price_cents}
+                  onChange={(e) => update('early_bird_price_cents', e.target.value)}
+                  style={inputStyle}
+                />
+              </Field>
+              <Field
+                label="Early bird Stripe price ID"
+                hint="A second price on the same Stripe product, e.g. price_..."
+              >
+                <input
+                  type="text"
+                  value={form.early_bird_stripe_price_id}
+                  onChange={(e) => update('early_bird_stripe_price_id', e.target.value)}
+                  style={inputStyle}
+                />
+              </Field>
+            </Row>
+            <Field
+              label="Early bird last day"
+              hint="Early bird ends at 11:59pm Pacific on this day. Leave blank to turn it off."
+            >
+              <input
+                type="date"
+                value={form.early_bird_last_day}
+                onChange={(e) => update('early_bird_last_day', e.target.value)}
+                style={inputStyle}
+              />
+            </Field>
+            <span style={{ fontSize: '0.72rem', color: 'var(--color-ink-muted)' }}>
+              While early bird is on, the page shows the regular price struck through,
+              checkout charges the early bird price, and promo codes are turned off.
+            </span>
+          </div>
+        </details>
+      )}
 
       <details
         style={{
