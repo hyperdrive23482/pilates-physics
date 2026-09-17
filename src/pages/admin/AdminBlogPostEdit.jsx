@@ -7,6 +7,8 @@ import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import AdminNav from '../../components/admin/AdminNav'
 import FileUpload from '../../components/admin/FileUpload'
 import InlineImageUpload from '../../components/admin/InlineImageUpload'
+import DraftRestoredNotice from '../../components/admin/DraftRestoredNotice'
+import { draftBase, readDraft, writeDraft, clearDraft } from '../../lib/formDrafts'
 
 const STATUS_LABELS = {
   draft: 'Draft',
@@ -19,6 +21,21 @@ function toDatetimeLocal(iso) {
   const d = new Date(iso)
   const pad = (n) => String(n).padStart(2, '0')
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
+// The editable fields of a post, in the shape the form and its draft use.
+function fieldsFromPost(post) {
+  return {
+    title: post.title ?? '',
+    slug: post.slug ?? '',
+    excerpt: post.excerpt ?? '',
+    bodyMd: post.body_markdown ?? '',
+    featuredImageUrl: post.featured_image_url ?? '',
+    featuredImageAlt: post.featured_image_alt ?? '',
+    status: post.status ?? 'draft',
+    scheduledFor: toDatetimeLocal(post.scheduled_for),
+    publishedAt: toDatetimeLocal(post.published_at),
+  }
 }
 
 function fromDatetimeLocal(local) {
@@ -50,6 +67,24 @@ export default function AdminBlogPostEdit() {
   const [saving, setSaving] = useState(false)
   const [savedAt, setSavedAt] = useState(null)
   const dirtyRef = useRef(false)
+  const [restored, setRestored] = useState(false)
+
+  // Unsaved typing is kept for this tab, against the version of the post it
+  // was typed on. See src/lib/formDrafts.js.
+  const draftKey = `blog:${id}`
+  const baseRef = useRef(null)
+
+  const applyFields = useCallback((f) => {
+    setTitle(f.title ?? '')
+    setSlug(f.slug ?? '')
+    setExcerpt(f.excerpt ?? '')
+    setBodyMd(f.bodyMd ?? '')
+    setFeaturedImageUrl(f.featuredImageUrl ?? '')
+    setFeaturedImageAlt(f.featuredImageAlt ?? '')
+    setStatus(f.status ?? 'draft')
+    setScheduledFor(f.scheduledFor ?? '')
+    setPublishedAt(f.publishedAt ?? '')
+  }, [])
 
   const refetch = useCallback(async () => {
     setLoading(true)
@@ -58,22 +93,60 @@ export default function AdminBlogPostEdit() {
       setPost(data.post)
       setLinkedPieces(data.linked_pieces ?? [])
       if (!dirtyRef.current) {
-        setTitle(data.post.title ?? '')
-        setSlug(data.post.slug ?? '')
-        setExcerpt(data.post.excerpt ?? '')
-        setBodyMd(data.post.body_markdown ?? '')
-        setFeaturedImageUrl(data.post.featured_image_url ?? '')
-        setFeaturedImageAlt(data.post.featured_image_alt ?? '')
-        setStatus(data.post.status ?? 'draft')
-        setScheduledFor(toDatetimeLocal(data.post.scheduled_for))
-        setPublishedAt(toDatetimeLocal(data.post.published_at))
+        const base = draftBase(data.post)
+        baseRef.current = base
+        const draft = readDraft(draftKey, base)
+        if (draft) {
+          // Typing from before this tab reloaded, onto the same version of the
+          // post. A post saved since then has a new base and the draft is gone.
+          applyFields(draft)
+          dirtyRef.current = true
+          setRestored(true)
+        } else {
+          applyFields(fieldsFromPost(data.post))
+        }
       }
       setError(null)
     } catch (e) {
       setError(e.message)
     }
     setLoading(false)
-  }, [request, id])
+  }, [request, id, draftKey, applyFields])
+
+  // Save the draft on every edit. Refetches set these fields too, but only
+  // while nothing is dirty, and then there is nothing to keep.
+  useEffect(() => {
+    if (!dirtyRef.current || !baseRef.current) return
+    writeDraft(draftKey, baseRef.current, {
+      title,
+      slug,
+      excerpt,
+      bodyMd,
+      featuredImageUrl,
+      featuredImageAlt,
+      status,
+      scheduledFor,
+      publishedAt,
+    })
+  }, [
+    draftKey,
+    title,
+    slug,
+    excerpt,
+    bodyMd,
+    featuredImageUrl,
+    featuredImageAlt,
+    status,
+    scheduledFor,
+    publishedAt,
+  ])
+
+  function discardDraft() {
+    clearDraft(draftKey)
+    dirtyRef.current = false
+    setRestored(false)
+    if (post) applyFields(fieldsFromPost(post))
+  }
 
   useEffect(() => {
     refetch()
@@ -115,7 +188,9 @@ export default function AdminBlogPostEdit() {
           published_at: publishedAt ? fromDatetimeLocal(publishedAt) : null,
         },
       })
+      clearDraft(draftKey)
       dirtyRef.current = false
+      setRestored(false)
       setSavedAt(new Date())
       await refetch()
     } catch (e) {
@@ -133,7 +208,9 @@ export default function AdminBlogPostEdit() {
         method: 'PATCH',
         body: { status: 'draft' },
       })
+      clearDraft(draftKey)
       dirtyRef.current = false
+      setRestored(false)
       await refetch()
     } catch (e) {
       alert(`Unpublish failed: ${e.message}`)
@@ -257,6 +334,9 @@ export default function AdminBlogPostEdit() {
                 </a>
               )}
             </div>
+            {restored && (
+              <DraftRestoredNotice onDiscard={discardDraft} style={{ marginTop: '0.75rem' }} />
+            )}
             {linkedPieces.length > 0 && (
               <p style={{ fontSize: '0.75rem', color: 'var(--color-ink-muted)', marginTop: '0.5rem' }}>
                 Linked from {linkedPieces.length} content piece(s) — body edits here may be

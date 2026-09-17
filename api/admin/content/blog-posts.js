@@ -1,6 +1,7 @@
 import { supabaseAdmin } from '../../_lib/supabase-admin.js'
 import { requireAdmin } from '../../_lib/require-admin.js'
 import { renderMarkdown } from '../../_lib/markdown.js'
+import { reserveUniqueBlogSlug } from '../../_lib/blog-slug.js'
 
 const VALID_STATUS = new Set(['draft', 'scheduled', 'published'])
 
@@ -40,6 +41,37 @@ export default async function handler(req, res) {
         .order('updated_at', { ascending: false })
       if (error) throw error
       return res.status(200).json({ posts: data ?? [] })
+    }
+
+    // A standalone post, written straight in the admin with no content piece
+    // and no newsletter behind it. Created as an empty draft and edited from
+    // there, so nothing is public until the editor sets it to published.
+    if (req.method === 'POST') {
+      const title = String(req.body?.title ?? '').trim()
+      if (!title) return res.status(400).json({ error: 'title required' })
+
+      const slug = await reserveUniqueBlogSlug(slugify(title) || 'untitled-post')
+
+      const { data, error } = await supabaseAdmin
+        .from('blog_posts')
+        .insert({
+          slug,
+          title,
+          // body_markdown is NOT NULL. Empty rather than placeholder text, so
+          // there is nothing to publish by accident: the editor refuses to
+          // save a post with no body.
+          body_markdown: '',
+          status: 'draft',
+        })
+        .select()
+        .single()
+      if (error) {
+        if (error.code === '23505') {
+          return res.status(409).json({ error: `The slug "${slug}" was just taken. Try again.` })
+        }
+        throw error
+      }
+      return res.status(201).json({ post: data })
     }
 
     if (req.method === 'PATCH') {
@@ -120,7 +152,7 @@ export default async function handler(req, res) {
       return res.status(204).end()
     }
 
-    res.setHeader('Allow', 'GET, PATCH, DELETE')
+    res.setHeader('Allow', 'GET, POST, PATCH, DELETE')
     return res.status(405).json({ error: 'Method not allowed' })
   } catch (err) {
     console.error('content/blog-posts error:', err)

@@ -78,6 +78,7 @@ export default function AdminAnnouncementEdit() {
             onSubmit={save}
             submitLabel={isNew ? 'Create announcement' : 'Save changes'}
             busy={saving}
+            draftKey={isNew ? 'new' : announcement?.id}
           />
         )}
       </main>

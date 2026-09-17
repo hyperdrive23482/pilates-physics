@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
-import { Link } from 'react-router-dom'
-import { ChevronLeft, Image as ImageIcon } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { ChevronLeft, Image as ImageIcon, Plus } from 'lucide-react'
 import { useEnrollment } from '../../hooks/useEnrollment'
 import { useAdminAPI } from '../../hooks/admin/useAdminAPI'
 import AdminNav from '../../components/admin/AdminNav'
@@ -18,6 +18,26 @@ export default function AdminBlogPosts() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [filter, setFilter] = useState('all')
+  const [creating, setCreating] = useState(false)
+  const navigate = useNavigate()
+
+  // Asks for the title up front because the slug is built from it, and a slug
+  // is awkward to change once a post has been shared.
+  async function createPost() {
+    const title = window.prompt('Title for the new post')?.trim()
+    if (!title) return
+    setCreating(true)
+    try {
+      const { post } = await request('/api/admin/content/blog-posts', {
+        method: 'POST',
+        body: { title },
+      })
+      navigate(`/admin/content/blog-posts/${post.id}`)
+    } catch (e) {
+      window.alert(`Could not create the post: ${e.message}`)
+      setCreating(false)
+    }
+  }
 
   const refetch = useCallback(async () => {
     setLoading(true)
@@ -91,10 +111,31 @@ export default function AdminBlogPosts() {
               Blog posts
             </h1>
             <p style={{ fontSize: '0.85rem', color: 'var(--color-ink-muted)', margin: '0.4rem 0 0' }}>
-              Direct edits to every row in the blog. Use this for seeded or legacy posts that
-              never went through the editorial pipeline.
+              Every post on the blog. Write a standalone post here, or edit one that came
+              from the content pipeline or a seed.
             </p>
           </div>
+          <button
+            type="button"
+            onClick={createPost}
+            disabled={creating}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              padding: '0.7rem 1.1rem',
+              background: 'var(--color-accent)',
+              color: 'var(--color-accent-ink)',
+              border: 'none',
+              cursor: creating ? 'wait' : 'pointer',
+              fontSize: '0.85rem',
+              fontWeight: 500,
+              fontFamily: 'inherit',
+              opacity: creating ? 0.7 : 1,
+            }}
+          >
+            <Plus size={14} /> {creating ? 'Creating…' : 'New post'}
+          </button>
         </div>
 
         <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1.25rem' }}>

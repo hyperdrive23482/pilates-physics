@@ -4,6 +4,8 @@ import {
   earlyBirdLastDay,
   formatEarlyBirdEnd,
 } from '../../../api/_lib/early-bird.js'
+import { draftBase, readDraft, writeDraft, clearDraft } from '../../lib/formDrafts'
+import DraftRestoredNotice from './DraftRestoredNotice'
 
 const STATUSES = ['draft', 'upcoming', 'live', 'awaiting_recording', 'complete', 'archived']
 
@@ -93,46 +95,6 @@ function formFromRow(row) {
   }
 }
 
-// The version of a row: its id plus when it was last saved. Two fetches of an
-// unchanged row share a base; a save produces a new one.
-function baseOf(row) {
-  return row ? `${row.id ?? ''}|${row.updated_at ?? ''}` : 'blank'
-}
-
-// Drafts live in sessionStorage: per tab, so two admin tabs never overwrite
-// each other, and kept across a reload of that tab. Storage can be missing or
-// throw (private windows, blocked site data), and a draft is a convenience,
-// so every access fails quietly.
-const DRAFT_PREFIX = 'pp-admin-workshop-draft:'
-
-function readDraft(key) {
-  if (!key) return null
-  try {
-    const raw = window.sessionStorage.getItem(DRAFT_PREFIX + key)
-    return raw ? JSON.parse(raw) : null
-  } catch {
-    return null
-  }
-}
-
-function writeDraft(key, value) {
-  if (!key) return
-  try {
-    window.sessionStorage.setItem(DRAFT_PREFIX + key, JSON.stringify(value))
-  } catch {
-    // Storage full or unavailable; the form still works, it just won't survive a reload.
-  }
-}
-
-function clearDraft(key) {
-  if (!key) return
-  try {
-    window.sessionStorage.removeItem(DRAFT_PREFIX + key)
-  } catch {
-    // Nothing to clean up if storage is unavailable.
-  }
-}
-
 export default function WorkshopForm({
   initial,
   onSubmit,
@@ -147,10 +109,11 @@ export default function WorkshopForm({
   // The kind is locked once a row exists: changing it on a live product moves
   // it between portal renderers and orphans whatever the old one relied on.
   lockKind = false,
-  // Where this form keeps unsaved typing, one key per workshop (or per new
-  // form). Omit to turn drafts off.
+  // Where this form keeps unsaved typing, one per workshop (or per new form).
+  // Omit to turn drafts off. See src/lib/formDrafts.js.
   draftKey = null,
 }) {
+  const storageKey = draftKey ? `workshop:${draftKey}` : null
   const [form, setForm] = useState(EMPTY_FORM)
   const [slugTouched, setSlugTouched] = useState(false)
   const [error, setError] = useState(null)
@@ -167,36 +130,33 @@ export default function WorkshopForm({
   const loadedBaseRef = useRef(undefined)
 
   useEffect(() => {
-    const base = baseOf(initial)
+    const base = draftBase(initial)
     if (loadedBaseRef.current === base) return
     loadedBaseRef.current = base
 
     // Typing survives a reload of this tab, e.g. Chrome discarding a
     // background tab while the admin is off copying a price ID from Stripe.
-    // Only restored onto the same version of the row it was typed against: if
-    // the row has been saved since, the draft is stale and silently dropped.
-    const draft = readDraft(draftKey)
-    if (draft && draft.base === base) {
+    const draft = readDraft(storageKey, base)
+    if (draft) {
       setForm({ ...EMPTY_FORM, ...draft.form })
       setSlugTouched(Boolean(draft.slugTouched))
       setDirty(true)
       setRestored(true)
       return
     }
-    if (draft) clearDraft(draftKey)
 
     setForm(initial ? formFromRow(initial) : EMPTY_FORM)
     setSlugTouched(Boolean(initial))
     setDirty(false)
     setRestored(false)
-  }, [initial, draftKey])
+  }, [initial, storageKey])
 
   useEffect(() => {
-    if (dirty) writeDraft(draftKey, { base: loadedBaseRef.current, form, slugTouched })
-  }, [draftKey, dirty, form, slugTouched])
+    if (dirty) writeDraft(storageKey, loadedBaseRef.current, { form, slugTouched })
+  }, [storageKey, dirty, form, slugTouched])
 
   function discardDraft() {
-    clearDraft(draftKey)
+    clearDraft(storageKey)
     setForm(initial ? formFromRow(initial) : EMPTY_FORM)
     setSlugTouched(Boolean(initial))
     setDirty(false)
@@ -309,7 +269,7 @@ export default function WorkshopForm({
 
     try {
       await onSubmit(payload)
-      clearDraft(draftKey)
+      clearDraft(storageKey)
       setDirty(false)
       setRestored(false)
     } catch (err) {
@@ -778,26 +738,7 @@ export default function WorkshopForm({
         </div>
       </details>
 
-      {restored && dirty && (
-        <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.8rem', margin: 0 }}>
-          Restored your unsaved changes from earlier in this tab.{' '}
-          <button
-            type="button"
-            onClick={discardDraft}
-            style={{
-              background: 'none',
-              border: 'none',
-              padding: 0,
-              color: 'var(--color-accent)',
-              font: 'inherit',
-              textDecoration: 'underline',
-              cursor: 'pointer',
-            }}
-          >
-            Discard them
-          </button>
-        </p>
-      )}
+      {restored && dirty && <DraftRestoredNotice onDiscard={discardDraft} />}
 
       {error && (
         <p style={{ color: '#ff7d7d', fontSize: '0.85rem', margin: 0 }}>{error}</p>

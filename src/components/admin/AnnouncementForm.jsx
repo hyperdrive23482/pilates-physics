@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import AnnouncementBar from '../ui/AnnouncementBar'
+import { draftBase, readDraft, writeDraft, clearDraft } from '../../lib/formDrafts'
+import DraftRestoredNotice from './DraftRestoredNotice'
 
 function toLocalInput(iso) {
   if (!iso) return ''
@@ -9,35 +11,77 @@ function toLocalInput(iso) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 
+const EMPTY_FORM = {
+  message: '',
+  link_url: '',
+  link_text: '',
+  starts_at: '',
+  ends_at: '',
+  enabled: true,
+}
+
+function formFromRow(row) {
+  return {
+    message: row.message ?? '',
+    link_url: row.link_url ?? '',
+    link_text: row.link_text ?? '',
+    starts_at: toLocalInput(row.starts_at),
+    ends_at: toLocalInput(row.ends_at),
+    enabled: row.enabled ?? true,
+  }
+}
+
 export default function AnnouncementForm({
   initial,
   onSubmit,
   submitLabel = 'Save',
   busy = false,
+  // Where unsaved typing is kept: one per announcement, or 'new'. Omit to turn
+  // drafts off. See src/lib/formDrafts.js.
+  draftKey = null,
 }) {
-  const [form, setForm] = useState({
-    message: '',
-    link_url: '',
-    link_text: '',
-    starts_at: '',
-    ends_at: '',
-    enabled: true,
-  })
+  const storageKey = draftKey ? `announcement:${draftKey}` : null
+  const [form, setForm] = useState(EMPTY_FORM)
   const [error, setError] = useState(null)
+  const [dirty, setDirty] = useState(false)
+  const [restored, setRestored] = useState(false)
+
+  // Reload the form only when the row itself changes (a different
+  // announcement, or a save), not whenever the page re-renders.
+  const loadedBaseRef = useRef(undefined)
 
   useEffect(() => {
-    if (!initial) return
-    setForm({
-      message: initial.message ?? '',
-      link_url: initial.link_url ?? '',
-      link_text: initial.link_text ?? '',
-      starts_at: toLocalInput(initial.starts_at),
-      ends_at: toLocalInput(initial.ends_at),
-      enabled: initial.enabled ?? true,
-    })
-  }, [initial])
+    const base = draftBase(initial)
+    if (loadedBaseRef.current === base) return
+    loadedBaseRef.current = base
+
+    const draft = readDraft(storageKey, base)
+    if (draft) {
+      setForm({ ...EMPTY_FORM, ...draft })
+      setDirty(true)
+      setRestored(true)
+      return
+    }
+
+    setForm(initial ? formFromRow(initial) : EMPTY_FORM)
+    setDirty(false)
+    setRestored(false)
+  }, [initial, storageKey])
+
+  useEffect(() => {
+    if (dirty) writeDraft(storageKey, loadedBaseRef.current, form)
+  }, [storageKey, dirty, form])
+
+  function discardDraft() {
+    clearDraft(storageKey)
+    setForm(initial ? formFromRow(initial) : EMPTY_FORM)
+    setDirty(false)
+    setRestored(false)
+    setError(null)
+  }
 
   function update(field, value) {
+    setDirty(true)
     setForm((f) => ({ ...f, [field]: value }))
   }
 
@@ -66,6 +110,9 @@ export default function AnnouncementForm({
 
     try {
       await onSubmit(payload)
+      clearDraft(storageKey)
+      setDirty(false)
+      setRestored(false)
     } catch (err) {
       setError(err.message ?? 'Save failed')
     }
@@ -217,6 +264,8 @@ export default function AnnouncementForm({
           <span>Enabled</span>
         </label>
       </Field>
+
+      {restored && dirty && <DraftRestoredNotice onDiscard={discardDraft} />}
 
       {error && (
         <p style={{ color: '#ff7d7d', fontSize: '0.85rem', margin: 0 }}>{error}</p>

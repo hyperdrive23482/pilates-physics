@@ -3,21 +3,7 @@ import { requireAdmin } from '../../_lib/require-admin.js'
 import { renderMarkdown } from '../../_lib/markdown.js'
 import { createBroadcast, updateBroadcast } from '../../_lib/kit.js'
 import { buildEmailHtml } from '../../_lib/content-email.js'
-
-async function reserveUniqueBlogSlug(baseSlug) {
-  let slug = baseSlug
-  let n = 2
-  while (true) {
-    const { data: existing } = await supabaseAdmin
-      .from('blog_posts')
-      .select('id')
-      .eq('slug', slug)
-      .maybeSingle()
-    if (!existing) return slug
-    slug = `${baseSlug}-${n++}`
-    if (n > 200) return slug
-  }
-}
+import { reserveUniqueBlogSlug } from '../../_lib/blog-slug.js'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
