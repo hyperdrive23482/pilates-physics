@@ -52,8 +52,14 @@ export default async function handler(req, res) {
       stripe_price_id: course.stripe_price_id,
     }
 
+    // Two very different situations, and the page has to say different things
+    // about them. A blank `t` means Kit had no offer_token to merge in, or a
+    // scanner ate the query string: we were never told who this is. A `t` we
+    // cannot find means the link was real once and is not recoverable from the
+    // URL alone. Collapsing them into one message is what leaves someone
+    // holding a dead link with no idea whether it expired or simply broke.
     if (!token) {
-      return res.status(200).json({ state: 'unknown', workshop })
+      return res.status(200).json({ state: 'unknown', reason: 'missing_token', workshop })
     }
 
     const { data: row, error: rowErr } = await supabaseAdmin
@@ -64,7 +70,7 @@ export default async function handler(req, res) {
     if (rowErr) throw rowErr
 
     if (!row || row.webinar_id !== course.id) {
-      return res.status(200).json({ state: 'unknown', workshop })
+      return res.status(200).json({ state: 'unknown', reason: 'unrecognized_token', workshop })
     }
 
     if (row.redeemed_at) {

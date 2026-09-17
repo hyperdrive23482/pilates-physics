@@ -35,6 +35,14 @@ const SAME_ANSWER = {
   message: 'If you have an open window, the link is on its way to that inbox.',
 }
 
+// The response tells the caller nothing, which is the point, and it told US
+// nothing either, which was a mistake. "I filled in the form and no email came"
+// had six possible causes and no way to tell them apart from the outside. The
+// server log is not the enumeration surface the response is, so name the branch
+// there. Private to the Vercel log; never reflected to the client.
+const trace = (outcome, email, extra) =>
+  console.log(`offer recover: ${outcome} <${email}>${extra ? ` ${extra}` : ''}`)
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST')
@@ -57,7 +65,10 @@ export default async function handler(req, res) {
       .select('id')
       .eq('slug', COURSE_SLUG)
       .maybeSingle()
-    if (!course) return res.status(200).json(SAME_ANSWER)
+    if (!course) {
+      trace('no_course_row', email, COURSE_SLUG)
+      return res.status(200).json(SAME_ANSWER)
+    }
 
     // Newest first: a re-run campaign mints a second row under a new offer_key,
     // and the current one is the one worth recovering.
@@ -74,9 +85,13 @@ export default async function handler(req, res) {
 
     // Nothing to recover. They already own it, or were never minted an offer.
     // The portal link belongs in the purchase email, not here.
-    if (!row || row.redeemed_at) return res.status(200).json(SAME_ANSWER)
+    if (!row || row.redeemed_at) {
+      trace(row ? 'already_redeemed' : 'no_offer_row', email)
+      return res.status(200).json(SAME_ANSWER)
+    }
 
     if (row.recovery_sent_at && Date.now() - new Date(row.recovery_sent_at).getTime() < THROTTLE_MS) {
+      trace('throttled', email, `last sent ${row.recovery_sent_at}`)
       return res.status(200).json(SAME_ANSWER)
     }
 
@@ -104,10 +119,12 @@ export default async function handler(req, res) {
       .eq('id', row.id)
     if (stampErr) console.error('recovery_sent_at stamp failed:', stampErr)
 
+    trace(expired ? 'sent_expired_notice' : 'sent_offer_link', email)
     return res.status(200).json(SAME_ANSWER)
   } catch (err) {
     // Even a failure answers the same way. An error here is ours, and the
     // shape of the response must not become a way to probe the list.
+    trace('failed', email, err.message)
     console.error('offer recover error:', err)
     return res.status(200).json(SAME_ANSWER)
   }

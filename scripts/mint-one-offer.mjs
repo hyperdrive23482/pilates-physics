@@ -26,7 +26,20 @@ import { endOfOfferWindow, formatDeadline } from '../api/_lib/offer.js'
 import crypto from 'node:crypto'
 
 const COURSE_SLUG = 'how-a-reformer-works'
-const SITE = process.env.SITE_BASE_URL ?? 'https://pilatesphysics.com'
+const SITE = (process.env.SITE_BASE_URL ?? 'https://pilatesphysics.com').replace(/[/]$/, '')
+
+// WHICH DATABASE THE ROW LANDS IN AND WHICH SITE THE LINK ASKS ARE SET BY TWO
+// UNRELATED VARIABLES, and when they disagree the printed link is dead on
+// arrival. The row goes to whatever VITE_SUPABASE_URL points at; the URL
+// defaults to prod; prod has never heard of a token minted in dev, so
+// /api/offer answers "unknown" and the page renders the recovery form. That is
+// indistinguishable from a real expired window from the outside, and it cost a
+// full round of debugging once already: a Kit preview whose $39 link landed on
+// "let's find your custom link".
+//
+// So the mismatch is refused before anything is written, rather than printed.
+const PROD_SUPABASE_REF = 'vvoceaaelejovohhqjsu'
+const PROD_SITE = 'https://pilatesphysics.com'
 
 // Using a live campaign key here would burn the person's real offer: the unique
 // index on (offer_key, lower(email)) means the cron will then skip them
@@ -71,6 +84,32 @@ const host = (() => {
     return '(unparseable VITE_SUPABASE_URL)'
   }
 })()
+const dbIsProd = host.startsWith(`${PROD_SUPABASE_REF}.`)
+const siteIsProd = SITE === PROD_SITE
+if (dbIsProd !== siteIsProd) {
+  console.error(`Refusing to mint: the database and the link do not match.`)
+  console.error('')
+  console.error(`  database  ${host} (${dbIsProd ? 'prod' : 'not prod'})`)
+  console.error(`  link      ${SITE} (${siteIsProd ? 'prod' : 'not prod'})`)
+  console.error('')
+  if (siteIsProd) {
+    console.error('A token minted here does not exist in prod. Opening the printed')
+    console.error('link, or pasting the token into Kit and previewing an email, gives')
+    console.error('the recovery form and no way to tell that from a closed window.')
+    console.error('')
+    console.error('Test against the site that reads the same database. stage runs')
+    console.error('on the dev project, so a dev token works there and only there:')
+    console.error('  SITE_BASE_URL=https://stage.pilatesphysics.com node --env-file=.env scripts/mint-one-offer.mjs ...')
+    console.error('')
+    console.error('Or mint in prod, by pointing VITE_SUPABASE_URL and')
+    console.error('SUPABASE_SERVICE_ROLE_KEY at the prod project for this run.')
+  } else {
+    console.error('The row is going to prod but the link points somewhere else.')
+    console.error(`Drop SITE_BASE_URL to use ${PROD_SITE}.`)
+  }
+  process.exit(2)
+}
+
 // Imported here, not at the top. api/_lib/supabase-admin.js constructs its
 // client on import and createClient throws on a missing key, so an eager import
 // would crash with a supabase-js stack trace before the env check above ever

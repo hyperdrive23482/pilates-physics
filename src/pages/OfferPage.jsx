@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import CourseSalesBody from '../components/course/CourseSalesBody'
 import PricingBlock from '../components/course/PricingBlock'
 import HeroPricing from '../components/course/HeroPricing'
+import { fullPriceLabel } from '../components/course/coursePricing'
 import ArrowSvg from '../components/ui/ArrowSvg'
 import '../styles/ppv2.css'
 import './Workshop.css'
@@ -47,7 +48,10 @@ export default function OfferPage() {
 
   if (loadError) {
     pricing = (
-      <RecoveryCard note="Something went wrong finding your discount link. Enter the address you subscribed with and we'll send it again." />
+      <RecoveryCard
+        note="Something went wrong finding your discount link. Enter the address you subscribed with and we'll send it again."
+        fullPrice={fullPriceLabel(null)}
+      />
     )
   } else if (!data) {
     pricing = null
@@ -63,7 +67,7 @@ export default function OfferPage() {
       </div>
     )
   } else if (data.state === 'unknown') {
-    pricing = <RecoveryCard />
+    pricing = <RecoveryCard reason={data.reason} fullPrice={fullPriceLabel(data.workshop)} />
   } else if (data.state === 'expired') {
     pricing = (
       <PricingBlock workshop={data.workshop} expired deadline={data.deadline} />
@@ -98,6 +102,16 @@ export default function OfferPage() {
   return <CourseSalesBody heroPricing={heroPricing} pricing={pricing} />
 }
 
+// Why the link did not work, in the visitor's terms. `unrecognized_token` is
+// the one that matters: the link WAS real, so an expired window is the most
+// likely explanation and the copy has to say so rather than blaming Gmail.
+const BODY = {
+  missing_token:
+    "This link is missing the part that identifies you, so we cannot tell which discount window is yours. Some email apps trim it. Enter the address you subscribed with and we'll send the link again.",
+  unrecognized_token:
+    "We could not match this link to a discount window. Either your email app trimmed it, or the window it belonged to has already closed. Enter the address you subscribed with and we'll send your link if it is still open.",
+}
+
 /**
  * The recovery form.
  *
@@ -112,8 +126,16 @@ export default function OfferPage() {
  * leave. Naming it costs nothing that matters: the page is noindex, it is
  * linked from nowhere, and the form grants no access, it only sends mail to an
  * address that already had an offer.
+ *
+ * IT MUST NEVER LEAVE EXPIRY UNSAID. The server cannot tell this visitor their
+ * window closed, because it does not know who they are -- but it can stop
+ * implying the only possible cause is a mangled link. A card that blames the
+ * email client, followed by a confirmation that promises mail, sends someone
+ * whose window simply ran out away believing the site is broken and still owes
+ * them $39. So the body names a closed window as a live possibility, and the
+ * confirmation says what silence means.
  */
-function RecoveryCard({ note }) {
+function RecoveryCard({ note, reason, fullPrice = '$69' }) {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState('idle')
   const [message, setMessage] = useState('')
@@ -146,6 +168,17 @@ function RecoveryCard({ note }) {
       <div className="register-card">
         <h3 className="register-card__title">Check your inbox</h3>
         <p className="register-card__body">{message}</p>
+        <p className="register-card__body">
+          If nothing arrives in a few minutes, it means one of two things: a typo in
+          the address, or a window that has already closed. A closed window is not a
+          broken link. The course is {fullPrice}, and nothing about it has changed.
+          Every module, the calculator, and the inspection checklist are all still
+          included, exactly as they were.
+        </p>
+        <Link to="/how-a-reformer-works" className="btn btn--block">
+          See the course
+          <ArrowSvg />
+        </Link>
       </div>
     )
   }
@@ -153,10 +186,7 @@ function RecoveryCard({ note }) {
   return (
     <div className="register-card">
       <h3 className="register-card__title">Let's find your custom link for a discount</h3>
-      <p className="register-card__body">
-        {note ??
-          "This link is missing the part that identifies you so you can get the exclusive discount — some email apps trim it. Enter the address you subscribed with and we'll send it again."}
-      </p>
+      <p className="register-card__body">{note ?? BODY[reason] ?? BODY.missing_token}</p>
       <form onSubmit={handleSubmit} className="pp-form">
         <div className="pp-form__field">
           <label className="pp-form__label">Email</label>
