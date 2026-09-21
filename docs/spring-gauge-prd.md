@@ -79,7 +79,7 @@ Target: **under 6 minutes per reformer.**
 ### Deferred to v2+
 
 - **Warning and alert rules of any kind.** Thresholds are derived from year-one data, not chosen in advance (§10). Designed now so the schema supports them; not built.
-- Two-point measurement (force at two lengths) to derive spring rate `k` and preload `F₀` rather than a single point force
+- Two-point measurement (force at two lengths) to derive spring rate `k` and preload `F₀` rather than a single point force. **Candidate for promotion from deferred to planned** — it produces the `(k × stretch) + b` model that existing Pilates Physics content already teaches, and resolves the positioning tension in §5.7.
 - Bluetooth / native mobile app
 - Adjustable strut length for cross-brand comparability
 - Tower, Chair, Cadillac and Springboard spring measurement
@@ -174,6 +174,10 @@ If the device cannot pass this, no amount of firmware, dashboard, or data model 
 2. ~~**Clearance for the strut**~~ — **confirmed**. A clear, straight, axial load path exists. End-fitting geometry still needs detailing against the actual bar and wheel faces (§5.3).
 3. ~~**Force range**~~ — **3–30 lbf per spring.** Substantially lower than the original 10–40 lbf assumption, and it changes both the sensor spec (§6.1) and the error budget (§5.3).
 
+   **Independently cross-checked against existing Pilates Physics measurements.** The six-brand spring curves behind `docs/blog-drafts/a-spring-is-not-one-weight.md` give starting tension and rate per brand and colour. Projected to 8" of extension: a Balanced Body red (8 lbf at home, ~44 at full stretch) lands near 18 lbf; a Peak red (17 lbf at home, gentle climb) near 26; the lightest Align springs start near zero and land near 3. The 3–30 lbf range holds.
+
+   **One caution.** Align's strong green — the steepest spring in that whole comparison, finishing around 83 lbf — projects to roughly 29–30 lbf at 8", i.e. right at the ceiling with no margin, and higher still if carriage travel is shorter than assumed. **Treat 35 lbf as the design ceiling rather than 30.** The 20 kg cell (44 lbf FS) already accommodates this; the firmware warn threshold in §7.3 should be checked against it.
+
 **Still open:**
 
 4. **Settling behaviour.** How long after insertion does a spring's force stop creeping? Sets the stability window in §7.3.
@@ -243,7 +247,28 @@ One caveat to resolve: manufacturers publish colour and weight *classes*, not fo
 | **Long-term instrument stability** | **±1% over 12 months**, verified by check standard | **The critical spec.** |
 | Screening band vs. nominal | ±10% | Incoming inspection. |
 
-### 5.7 Validate the premise before building the instrument
+### 5.7 Positioning: a single number, against "a spring is not one weight"
+
+**A conflict with existing Pilates Physics content, worth resolving before any marketing copy is written.**
+
+The post drafted at `docs/blog-drafts/a-spring-is-not-one-weight.md` argues — correctly, and as its central thesis — that a spring's resistance is a slope rather than a value, and that *"you cannot rank two springs with a single number, because the ranking itself changes depending on how far the carriage has traveled."*
+
+This device reports a single number.
+
+Someone will notice, and the sharpest version of the objection comes from our own best content. It needs an answer that is true rather than a deflection.
+
+**The answer: the device's number is a tracking standard, not a characterization.**
+
+Two different questions are being confused:
+
+- *"How heavy is this spring?"* — genuinely unanswerable with one number. That is the blog's thesis and it stands.
+- *"Has **this** spring changed?"* — answerable with one number, provided it is taken at a fixed extension every time. Comparing a spring to itself at 8" over four quarters is valid precisely because everything except the spring is held constant.
+
+The product measures the second question. The copy must say so plainly and must not imply the first. A line like *"the force this spring produces at a standard 8-inch extension"* is accurate; *"your red spring is 18 pounds"* reproduces exactly the error the blog exists to correct.
+
+**This materially strengthens the case for two-point measurement in v2.** Force at two lengths yields `k` and `F₀` — which is precisely the `Force = (k × stretch) + b` model the blog already teaches. A v2 device would output the thing the content says is the correct way to describe a spring, rather than the thing it says is insufficient. That is unusually tight product-content alignment and is an argument for promoting it from "deferred" to "planned."
+
+### 5.8 Validate the premise before building the instrument
 
 Questions 1–3 and part of 5 are now answered. What a digital luggage scale and an 8" steel bar still buy, for about $15 before any custom hardware, is the question underneath the whole project — **is spring drift actually detectable at the magnitude assumed?** If a five-year-old spring reads within noise of a new one, the product thesis needs revisiting before money is spent. Measure the oldest and newest springs available, at both ends of the weight range.
 
@@ -636,7 +661,8 @@ Calibration masses add roughly $40 if known weights are not already on hand.
 Each phase has a gate. Do not pass a gate on optimism.
 
 **Phase 0 — Validate the premise (1 afternoon, ~$15).**
-Geometry and force range are now measured (§5.5). What remains is the thesis itself: luggage scale + 8" steel bar, oldest available spring versus newest, at both ends of the weight range.
+Geometry and force range are now measured (§5.5), and cross-check against the existing six-brand curves. **Start by documenting the method that produced those curves** (§16 item 20) — it is already a working apparatus and may shortcut this phase entirely.
+What remains is the thesis itself: oldest available spring versus newest, at both ends of the weight range.
 *Gate: is drift detectable at the magnitude assumed? If not, stop and rethink.*
 
 **Phase 1 — Bench rig (1 weekend).**
@@ -711,7 +737,7 @@ The last one is the real test. A device that gets used twice and goes in a drawe
 
 ### Data and platform
 
-10. **Does manufacturer spec exist as a number at 8" extension?** Manufacturers publish colour and weight *classes*, not force-at-extension curves. If no usable nominal exists, the ±10% screening band needs a **Pilates Physics reference table** built by measuring new springs, by brand and colour. A durable product asset, and unbudgeted work. Resolve early; it gates incoming inspection.
+10. ~~**Does manufacturer spec exist as a number at 8" extension?**~~ **Largely answered, and better than expected.** Manufacturers publish colour and weight *classes* rather than curves — but Pilates Physics has already measured force-vs-extension for six brands (`docs/blog-drafts/a-spring-is-not-one-weight.md`). Those curves yield `k` and `F₀` per brand and colour, from which nominal force at 8" is a direct calculation. The reference table behind incoming inspection is therefore mostly **existing work to be formalized, not new work to be funded.** Remaining: confirm the underlying data is new-spring data, decide the tolerance band per tier, and land it in `spring_types` (§9.2).
 11. **Multi-tenancy scope — the largest unscoped engineering item** (§9.1). Does a two-location studio get one tenant or two? What happens to data when a staff member leaves? Can an instructor working at three studios see all three? Is there a Pilates Physics admin view across customers, and what does that imply for the data-use language in the terms? One paragraph of design exists; this needs a real pass.
 12. **Device identity and provisioning.** How does a per-device API key get onto the device at manufacture? What happens when a studio sells the device, or it is stolen? Key rotation? Named in §8 and §9 but never designed.
 13. **What happens to the device if Pilates Physics stops running the service?** Hardware outlives companies, and a studio evaluating a capital purchase will ask. Local-first storage (§8.1) already covers most of it — worth making an explicit commitment rather than an accident of architecture.
@@ -724,7 +750,7 @@ The last one is the real test. A device that gets used twice and goes in a drawe
 17. **Pricing and business model.** Device sale only, or device + subscription for the cloud record? Affects whether the backend is a cost centre or a revenue line.
 18. **How is the year-one cohort sold?** §10 makes year one descriptive — no warnings — which weakens the conventional pitch. The honest framings are a **design-partner programme** (priced differently, explicitly about helping build the reference data, with something given back) or a straight sale led entirely on the consistency view, which does work from day one. Shapes the marketing copy, the onboarding, and what the first cohort pays. Decide before the first sales conversation, not after.
 19. **There is no purchase case in this document.** §3 has jobs but no answer to "why does an owner spend this money." The ROI argument looks strong and is entirely absent: springs cost real money, and replacing on evidence rather than on calendar is a number that can actually be computed. **Recommended next section to write** — it is short, and it decides whether the rest gets built.
-20. **Prior art — unchecked.** Industrial spring-rate testers exist, and someone in the Pilates world may have tried this. Worth knowing before Phase 2, both for design ideas and for whether this walks into a patent.
+20. **Prior art — partly answered from inside the building.** Whatever method produced the six-brand curves (item 10) is already a working spring-measurement apparatus, and its repeatability characteristics are directly relevant to §5.4. **Document that method before designing a new one** — it may already answer questions Phase 0 and Phase 1 are scheduled to ask. External prior art (industrial spring-rate testers, anyone in the Pilates world who has tried this) is still unchecked, and matters both for design ideas and for patent exposure.
 21. **Warranty, disclaimer, and terms** — legal review required before first sale (§12.2).
 
 ---
