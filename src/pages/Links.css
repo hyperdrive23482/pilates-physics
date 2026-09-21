@@ -1,0 +1,136 @@
+/* Links page — v2 design system.
+ * Shared primitives in src/styles/ppv2.css. This file holds links-specific
+ * layout.
+ *
+ * This page is a single centred panel rather than the usual stack of banded
+ * sections, so it owns its own vertical centring instead of using .section-pad
+ * and .container. Everything else — tokens, grid paper, corner crosses, mono
+ * micro-type — comes from ppv2.css unchanged.
+ */
+
+.ppv2.links-page {
+  min-height: 100vh;
+  display: flex;
+}
+
+.ppv2 .links-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 24px 88px;
+}
+
+.ppv2 .links-shell {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* ── Identity ─────────────────────────────────────────────────────────────── */
+.ppv2 .links-id {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+/* The navbar wordmark, enlarged and stacked. Deliberately far smaller than the
+ * ppv2 h1 scale — it is a brand mark, not a page headline. text-indent offsets
+ * the trailing letter-space so the centring reads true. */
+.ppv2 .links-wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  font-family: var(--pp-font-mono);
+  font-size: 28px;
+  line-height: 1.05;
+  letter-spacing: 0.16em;
+  text-indent: 0.16em;
+  text-transform: uppercase;
+}
+.ppv2 .links-wordmark__pilates {
+  color: var(--ink);
+  font-weight: 600;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 5px;
+}
+.ppv2 .links-wordmark__physics {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.ppv2 .links-role {
+  margin: 0;
+  font-family: var(--pp-font-mono);
+  font-size: 11.5px;
+  line-height: 1.6;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* ── Link stack ───────────────────────────────────────────────────────────── */
+/* Buttons are the shared .btn / .btn--ghost primitives, unchanged apart from
+ * letting a long label wrap instead of overflowing the column. */
+.ppv2 .links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ppv2 .links-list .btn {
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ── Newsletter ───────────────────────────────────────────────────────────── */
+.ppv2 .links-signup {
+  border-top: 1px solid var(--rule);
+  padding-top: 32px;
+}
+/* Well below the ppv2 h2 scale on purpose: this is a form label, not a section
+ * head, and it lives in a 460px column. */
+.ppv2 .links-signup__head {
+  font-size: 22px;
+  line-height: 1.25;
+  margin: 12px 0 20px;
+  text-wrap: pretty;
+}
+
+/* The Kit embed is styled globally in src/index.css against the :root tokens,
+ * which match the ppv2 palette closely enough to leave alone. Three things do
+ * need undoing here: the compact variant lays its fields out in a row for the
+ * footer, Kit reserves 56px at the top of the form body for the header that
+ * compact hides, and it gutters the body by 10px a side — which throws every
+ * edge out of line with the buttons above. */
+.ppv2 .links-signup__form .formkit-form [data-style="clean"] {
+  padding: 0 !important;
+}
+.ppv2 .links-signup__form .formkit-fields {
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+.ppv2 .links-signup__form .formkit-field,
+.ppv2 .links-signup__form .formkit-submit {
+  flex: 0 0 auto !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+.ppv2 .links-signup__form .formkit-input {
+  padding: 0.85rem 1rem !important;
+  font-size: 1rem !important;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .ppv2 .links-panel { padding: 48px 20px 64px; }
+  .ppv2 .links-shell { gap: 32px; }
+  .ppv2 .links-wordmark { font-size: 24px; }
+  .ppv2 .links-signup { padding-top: 26px; }
+  .ppv2 .links-signup__head { font-size: 20px; }
+}
