@@ -60,6 +60,7 @@ import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
 import HowAReformerWorks from './pages/HowAReformerWorks'
 import OfferPage from './pages/OfferPage'
+import LinksPage from './pages/Links'
 
 // Any /workshops/<slug> URL (a Stripe cancel return, say) bounces to that
 // product's branded page when it has one; everything else renders the generic
@@ -101,6 +102,10 @@ export default function App() {
             </PageWrapper>
           }
         />
+        {/* Link-in-bio page for the social profiles. Renders without
+            PageWrapper on purpose: no navbar, footer or announcement bar, so
+            the link stack is the whole page. */}
+        <Route path="/links" element={<LinksPage />} />
         {/* New top-level pages */}
         <Route
           path="/spring-calculator"
