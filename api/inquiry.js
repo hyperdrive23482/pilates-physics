@@ -8,6 +8,10 @@ const PP101_OPTIONS = new Set(['yes', 'add-to-purchase'])
 const EQUIPMENT_OPTIONS = new Set(['Reformer', 'Tower', 'Chair', 'Cadillac', 'Other'])
 const MAIN_CAREER_OPTIONS = new Set(['yes', 'no'])
 const PAYMENT_PLAN_OPTIONS = new Set(['upfront', 'monthly'])
+// Keep in step with src/lib/mentorship.js.
+const MENTORSHIP_YEARS_OPTIONS = new Set(['<1', '1-2', '3-5', '5+'])
+const MENTORSHIP_PLAN_OPTIONS = new Set(['full', 'two'])
+const MENTORSHIP_EQUIPMENT_OPTIONS = new Set(['Reformer', 'Tower', 'Chair', 'Cadillac', 'Mat only', 'Other'])
 
 function trimString(value) {
   return typeof value === 'string' ? value.trim() : ''
@@ -104,6 +108,70 @@ function validateApplication(body) {
   }
 }
 
+// The /mentorship/apply form. Payment is invoiced on acceptance, so the form
+// captures who they are, how they teach, and which invoice to send.
+function validateMentorship(body) {
+  const name = trimString(body.name)
+  const email = trimString(body.email)
+  const city = trimString(body.city)
+  const yearsTeaching = trimString(body.yearsTeaching)
+  const mainCareer = trimString(body.mainCareer)
+  const trainingBackground = trimString(body.trainingBackground)
+  const goalsAndInterest = trimString(body.goalsAndInterest)
+  const paymentPlan = trimString(body.paymentPlan)
+  const equipment = Array.isArray(body.equipment) ? body.equipment : []
+  const acknowledgement = body.acknowledgement === true
+  const privatesPerWeek = parseNonNegativeInt(body.privatesPerWeek)
+  const groupsPerWeek = parseNonNegativeInt(body.groupsPerWeek)
+
+  if (!name) return { error: 'Name is required' }
+  if (!email) return { error: 'Email is required' }
+  if (!yearsTeaching) return { error: 'Please tell me how long you have been teaching' }
+  if (!mainCareer) return { error: 'Please tell me whether teaching Pilates is your main career' }
+  if (privatesPerWeek === null) return { error: 'Please enter a valid number of privates per week (0 to 100)' }
+  if (groupsPerWeek === null) return { error: 'Please enter a valid number of group classes per week (0 to 100)' }
+  if (equipment.length === 0) return { error: 'Please select at least one piece of equipment' }
+  if (!trainingBackground) return { error: 'Please describe your training and certifications' }
+  if (!goalsAndInterest) return { error: 'Please tell me why this program and what you want out of it' }
+  if (!paymentPlan) return { error: 'Please pick a payment option' }
+  if (!acknowledgement) return { error: 'Please confirm the participation note' }
+  if (name.length > 200) return { error: 'Name is too long' }
+  if (email.length > 320) return { error: 'Email is too long' }
+  if (city.length > 200) return { error: 'City is too long' }
+  if (trainingBackground.length > 2000) return { error: 'Training background is too long (max 2000 characters)' }
+  if (goalsAndInterest.length > 2000) return { error: 'Your answer is too long (max 2000 characters)' }
+  if (!EMAIL_RE.test(email)) return { error: 'Please enter a valid email address' }
+  if (!MENTORSHIP_YEARS_OPTIONS.has(yearsTeaching)) return { error: 'Please select a valid years-teaching option' }
+  if (!MAIN_CAREER_OPTIONS.has(mainCareer)) return { error: 'Please select a valid main-career option' }
+  if (!MENTORSHIP_PLAN_OPTIONS.has(paymentPlan)) return { error: 'Please select a valid payment option' }
+  for (const item of equipment) {
+    if (!MENTORSHIP_EQUIPMENT_OPTIONS.has(item)) return { error: 'Invalid equipment option' }
+  }
+
+  return {
+    payload: {
+      name,
+      email,
+      city,
+      yearsTeaching,
+      mainCareer,
+      privatesPerWeek,
+      groupsPerWeek,
+      equipment,
+      trainingBackground,
+      goalsAndInterest,
+      paymentPlan,
+      acknowledgement,
+    },
+  }
+}
+
+const VALIDATORS = {
+  inquiry: validateInquiry,
+  application: validateApplication,
+  mentorship: validateMentorship,
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST')
@@ -118,11 +186,12 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true })
     }
 
-    if (kind !== 'inquiry' && kind !== 'application') {
+    const validate = Object.prototype.hasOwnProperty.call(VALIDATORS, kind) ? VALIDATORS[kind] : null
+    if (!validate) {
       return res.status(400).json({ error: 'Unknown inquiry kind' })
     }
 
-    const result = kind === 'inquiry' ? validateInquiry(body) : validateApplication(body)
+    const result = validate(body)
     if (result.error) return res.status(400).json({ error: result.error })
 
     await sendInquiryEmail({ kind, ...result.payload })

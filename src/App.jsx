@@ -61,6 +61,8 @@ import BlogPost from './pages/BlogPost'
 import HowAReformerWorks from './pages/HowAReformerWorks'
 import OfferPage from './pages/OfferPage'
 import LinksPage from './pages/Links'
+import Mentorship from './pages/Mentorship'
+import MentorshipApply from './pages/MentorshipApply'
 
 // Any /workshops/<slug> URL (a Stripe cancel return, say) bounces to that
 // product's branded page when it has one; everything else renders the generic
@@ -141,6 +143,26 @@ export default function App() {
           element={
             <PageWrapper>
               <OfferPage />
+            </PageWrapper>
+          }
+        />
+        {/* 8-week small-group mentorship. Applications post to /api/inquiry
+            (kind: mentorship); payment is invoiced on acceptance until a
+            Stripe path for the two-payment plan is wired. See
+            docs/mentorship-program-spec.md. */}
+        <Route
+          path="/mentorship"
+          element={
+            <PageWrapper>
+              <Mentorship />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/mentorship/apply"
+          element={
+            <PageWrapper>
+              <MentorshipApply />
             </PageWrapper>
           }
         />

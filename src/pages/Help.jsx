@@ -145,10 +145,13 @@ export default function Help() {
         session wraps. If it's been more than a week, let us know.
       </p>
 
-      <h3 style={h3Style}>Do you offer 1-on-1 mentorship?</h3>
+      <h3 style={h3Style}>Do you offer mentorship?</h3>
       <p style={pStyle}>
-        Mentorship slots are limited and open periodically. Mention "mentorship" in your
-        message below and we'll let you know when the next cohort opens.
+        Yes. The 8-week small-group mentorship runs October 21 to December 16, 2026, and
+        you can apply on the{' '}
+        <Link to="/mentorship" style={{ color: 'var(--color-accent)' }}>mentorship page</Link>.
+        Private 1-on-1 slots are limited and open periodically. Mention "mentorship" in
+        your message below and we'll let you know when they open.
       </p>
 
       <h3 style={h3Style}>Can I get a refund?</h3>

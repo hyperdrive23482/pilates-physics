@@ -194,6 +194,19 @@ const PAYMENT_PLAN_LABEL = {
   monthly: '$600/mo for 3 months',
 }
 
+// /mentorship reserve form. Keep in step with src/pages/Mentorship.jsx and
+// docs/mentorship-program-spec.md.
+const MENTORSHIP_YEARS_LABEL = {
+  '<1': 'Less than 1 year',
+  '1-2': '1 to 2 years',
+  '3-5': '3 to 5 years',
+  '5+': 'More than 5 years',
+}
+const MENTORSHIP_PLAN_LABEL = {
+  full: '$399 one-time payment',
+  two: '2 payments of $229 ($458 total)',
+}
+
 export async function sendInquiryEmail({ kind, ...payload }) {
   const to = process.env.CONTACT_TO_EMAIL || 'kaleen@pilatesphysics.com'
 
@@ -299,25 +312,98 @@ export async function sendInquiryEmail({ kind, ...payload }) {
     return data
   }
 
+  if (kind === 'mentorship') {
+    const {
+      name,
+      email,
+      city,
+      yearsTeaching,
+      mainCareer,
+      privatesPerWeek,
+      groupsPerWeek,
+      equipment,
+      trainingBackground,
+      goalsAndInterest,
+      paymentPlan,
+    } = payload
+    const yearsLabel = MENTORSHIP_YEARS_LABEL[yearsTeaching] || yearsTeaching
+    const planLabel = MENTORSHIP_PLAN_LABEL[paymentPlan] || paymentPlan
+    const careerLabel = MAIN_CAREER_LABEL[mainCareer] || mainCareer
+    const equipmentLabel = (equipment || []).join(', ')
+    const safeName = escapeHtml(name)
+    const safeEmail = escapeHtml(email)
+    const safeCity = escapeHtml(city || '(not provided)')
+    const safeYears = escapeHtml(yearsLabel)
+    const safeCareer = escapeHtml(careerLabel)
+    const safePrivates = escapeHtml(String(privatesPerWeek))
+    const safeGroups = escapeHtml(String(groupsPerWeek))
+    const safeEquipment = escapeHtml(equipmentLabel)
+    const safeTraining = escapeHtml(trainingBackground).replace(/\n/g, '<br>')
+    const safeGoals = escapeHtml(goalsAndInterest).replace(/\n/g, '<br>')
+    const safePlan = escapeHtml(planLabel)
+
+    const html = `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1C1A17; line-height: 1.6;">
+        <p style="margin: 0 0 1rem; font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 0.08em;">New mentorship application from /mentorship/apply</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Name:</strong> ${safeName}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
+        <p style="margin: 0 0 0.5rem;"><strong>City / region:</strong> ${safeCity}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Years teaching:</strong> ${safeYears}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Pilates as main career:</strong> ${safeCareer}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Privates per week:</strong> ${safePrivates}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Group classes per week:</strong> ${safeGroups}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Equipment:</strong> ${safeEquipment}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Payment option:</strong> ${safePlan}</p>
+        <p style="margin: 1.5rem 0 0.5rem;"><strong>Training and certifications:</strong></p>
+        <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeTraining}</div>
+        <p style="margin: 1.5rem 0 0.5rem;"><strong>Why this program and what they want out of it:</strong></p>
+        <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeGoals}</div>
+        <p style="margin: 1.5rem 0 0; font-size: 0.85rem; color: #666;">Applicant confirmed the participation note. On acceptance, send ${safeName} a Stripe invoice for the option above. Reply directly to this email to respond.</p>
+      </div>
+    `.trim()
+
+    const text = `New mentorship application from /mentorship/apply\n\nName: ${name}\nEmail: ${email}\nCity / region: ${city || '(not provided)'}\nYears teaching: ${yearsLabel}\nPilates as main career: ${careerLabel}\nPrivates per week: ${privatesPerWeek}\nGroup classes per week: ${groupsPerWeek}\nEquipment: ${equipmentLabel}\nPayment option: ${planLabel}\n\nTraining and certifications:\n${trainingBackground}\n\nWhy this program and what they want out of it:\n${goalsAndInterest}\n\nApplicant confirmed the participation note. On acceptance, send a Stripe invoice for the option above. Reply directly to this email to respond.`
+
+    const { data, error } = await getResend().emails.send({
+      from: FROM,
+      to,
+      subject: `Mentorship application: ${name} (${planLabel})`,
+      html,
+      text,
+      replyTo: email,
+    })
+    if (error) throw new Error(`Resend send failed: ${error.message ?? JSON.stringify(error)}`)
+    return data
+  }
+
   throw new Error(`Unknown inquiry kind: ${kind}`)
+}
+
+const ACK_COPY = {
+  application: {
+    subject: 'Your PP-301 application — Pilates Physics',
+    html: `<p>Thanks for applying to Pilates Physics 301 — your application came through.</p>
+       <p>I review every application personally, and you'll hear back from me within a week.</p>`,
+    text: `Thanks for applying to Pilates Physics 301 — your application came through.\n\nI review every application personally, and you'll hear back from me within a week.`,
+  },
+  mentorship: {
+    subject: 'Your mentorship application. Pilates Physics',
+    html: `<p>Thanks for applying to the 8-week mentorship. Your application came through.</p>
+       <p>I read every application personally, in the order they arrive, and you will hear back from me within a week. If it is a fit, your invoice for the payment option you picked comes with the acceptance, and your place is confirmed once it is paid.</p>`,
+    text: `Thanks for applying to the 8-week mentorship. Your application came through.\n\nI read every application personally, in the order they arrive, and you will hear back from me within a week. If it is a fit, your invoice for the payment option you picked comes with the acceptance, and your place is confirmed once it is paid.`,
+  },
+  inquiry: {
+    subject: 'Thanks for reaching out — Pilates Physics',
+    html: `<p>Thanks for reaching out — your inquiry came through, and I'll get back to you within a few days.</p>`,
+    text: `Thanks for reaching out — your inquiry came through, and I'll get back to you within a few days.`,
+  },
 }
 
 export async function sendInquiryAcknowledgement({ kind, to, name }) {
   const safeName = escapeHtml(name)
 
-  const isApplication = kind === 'application'
-  const subject = isApplication
-    ? 'Your PP-301 application — Pilates Physics'
-    : 'Thanks for reaching out — Pilates Physics'
-
-  const bodyHtml = isApplication
-    ? `<p>Thanks for applying to Pilates Physics 301 — your application came through.</p>
-       <p>I review every application personally, and you'll hear back from me within a week.</p>`
-    : `<p>Thanks for reaching out — your inquiry came through, and I'll get back to you within a few days.</p>`
-
-  const bodyText = isApplication
-    ? `Thanks for applying to Pilates Physics 301 — your application came through.\n\nI review every application personally, and you'll hear back from me within a week.`
-    : `Thanks for reaching out — your inquiry came through, and I'll get back to you within a few days.`
+  const copy = ACK_COPY[kind] ?? ACK_COPY.inquiry
+  const { subject, html: bodyHtml, text: bodyText } = copy
 
   const html = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1C1A17; line-height: 1.6; max-width: 560px;">

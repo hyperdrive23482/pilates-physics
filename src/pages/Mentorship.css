@@ -1,0 +1,169 @@
+/* Mentorship page — v2 design system.
+ * Borrows the workshop-* section classes wholesale (hero, why, framework,
+ * details, instructor, included, FAQ, CTA), the same way the course sales
+ * page does. Only what workshops do not have lives here: the week-by-week
+ * schedule and the reserve card's second payment line.
+ */
+
+/* ── § Schedule (week-by-week rows) ──────────────────────────────────────── */
+.ppv2 .mentorship-schedule {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--rule);
+}
+.ppv2 .mentorship-schedule__row {
+  display: grid;
+  grid-template-columns: 88px 128px minmax(0, 1fr);
+  gap: 28px;
+  align-items: baseline;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.ppv2 .mentorship-schedule__week {
+  font-family: var(--pp-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.ppv2 .mentorship-schedule__date {
+  font-family: var(--pp-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.ppv2 .mentorship-schedule__title {
+  font-family: var(--pp-font-serif);
+  font-size: 22px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0;
+  font-weight: 400;
+}
+/* The week off reads as a note in the list, not a session. */
+.ppv2 .mentorship-schedule__row--off .mentorship-schedule__week { color: var(--ink-faint); }
+.ppv2 .mentorship-schedule__row--off .mentorship-schedule__title {
+  color: var(--ink-soft);
+  font-style: italic;
+  font-size: 18px;
+}
+
+/* ── § Apply card: the second payment option and the short list ──────────── */
+.ppv2 .mentorship-reserve__plan {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.ppv2 .mentorship-reserve__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.ppv2 .mentorship-reserve__list li {
+  padding-left: 18px;
+  position: relative;
+}
+.ppv2 .mentorship-reserve__list li::before {
+  content: '·';
+  position: absolute;
+  left: 4px;
+  color: var(--accent);
+  font-family: var(--pp-font-mono);
+}
+
+/* ── Application page (/mentorship/apply) ─────────────────────────────────── */
+.ppv2 .mentorship-apply__back {
+  display: inline-block;
+  margin-bottom: 40px;
+}
+.ppv2 .mentorship-apply__head {
+  font-size: clamp(40px, 4.6vw, 64px);
+  line-height: 1.04;
+  letter-spacing: -0.012em;
+  margin: 18px 0 16px;
+  font-weight: 400;
+  max-width: 22ch;
+}
+.ppv2 .mentorship-apply__lede {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0 0 40px;
+  max-width: 62ch;
+}
+.ppv2 .mentorship-apply__panel {
+  background: var(--bg-3);
+  border: 1px solid var(--rule);
+  padding: 36px;
+}
+.ppv2 .mentorship-apply__checks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 18px;
+}
+.ppv2 .mentorship-apply__check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: var(--pp-font-serif);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  cursor: pointer;
+}
+.ppv2 .mentorship-apply__check input {
+  accent-color: var(--accent);
+  margin: 4px 0 0;
+  flex-shrink: 0;
+}
+.ppv2 .mentorship-apply__check--ack {
+  padding: 18px;
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+}
+.ppv2 .mentorship-reserve__success {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ppv2 .mentorship-reserve__success-head {
+  font-family: var(--pp-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+.ppv2 .mentorship-reserve__success-body {
+  font-family: var(--pp-font-serif);
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .ppv2 .mentorship-schedule__row {
+    grid-template-columns: 72px 104px minmax(0, 1fr);
+    gap: 18px;
+  }
+}
+@media (max-width: 700px) {
+  .ppv2 .mentorship-schedule__row {
+    grid-template-columns: 72px minmax(0, 1fr);
+    row-gap: 6px;
+  }
+  .ppv2 .mentorship-schedule__title { grid-column: 1 / -1; }
+  .ppv2 .mentorship-apply__panel { padding: 26px; }
+  .ppv2 .mentorship-apply__checks { grid-template-columns: repeat(2, 1fr); }
+}
