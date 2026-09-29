@@ -38,8 +38,8 @@ const PATHS = [
   },
   {
     n: '04',
-    label: '8-WEEK SMALL GROUP',
-    title: 'Mentorship',
+    label: '8 WEEKS, VIRTUAL',
+    title: 'Group Mentoring Program',
     sub: 'For teachers in their first five years',
     body: 'Weekly group sessions, two private sessions with Kaleen, and feedback on the classes you actually teach. Teaching craft, strength, and the physics underneath both.',
     meta: 'Oct 21 to Dec 16 · $399 · By application',
@@ -48,16 +48,6 @@ const PATHS = [
   },
   {
     n: '05',
-    label: 'PRIVATE, VIRTUAL',
-    title: '1:1 Mentoring',
-    sub: 'Your questions, your clients, your equipment',
-    body: "Virtual sessions to work through the questions your training never covered, on your equipment, at your pace. Limited slots. $220 per session.",
-    meta: 'By inquiry',
-    ctaLabel: 'Inquire',
-    href: '#inquiry',
-  },
-  {
-    n: '06',
     label: 'ON-SITE OR VIRTUAL',
     title: 'Custom Workshops',
     sub: 'Built for your team',
@@ -67,7 +57,7 @@ const PATHS = [
     href: '#inquiry',
   },
   {
-    n: '07',
+    n: '06',
     label: 'FOR TEACHER TRAINING PROGRAMS',
     title: 'Licensed Curriculum Module',
     sub: 'Pilates Physics to empower your graduates',
@@ -144,12 +134,12 @@ export default function Education() {
           <div className="education-hero__inner">
             <div className="kicker">§ 01 · Education</div>
             <h1 className="education-hero__title">
-              Seven ways to learn the <span className="italic accent">physics of Pilates.</span>
+              Six ways to learn the <span className="italic accent">physics of Pilates.</span>
             </h1>
             <p className="education-hero__lede">
-              Online workshops, a small-group mentorship, private mentoring, and
-              licensed teacher-training modules. Pick the depth that fits where
-              you are right now.
+              Online workshops, a small-group mentorship, and licensed
+              teacher-training modules. Pick the depth that fits where you are
+              right now.
             </p>
           </div>
         </div>
