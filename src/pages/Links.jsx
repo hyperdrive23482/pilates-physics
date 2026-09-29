@@ -16,6 +16,10 @@ import './Links.css'
 // react-router avoids a full page reload.
 const LINK_ITEMS = [
   {
+    label: 'Group Mentorship Program (Oct 2026)',
+    href: '/mentorship',
+  },
+  {
     label: 'Free Spring Calculator',
     href: '/spring-calculator',
     primary: true,
