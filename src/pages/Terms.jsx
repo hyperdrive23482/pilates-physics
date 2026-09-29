@@ -104,7 +104,7 @@ export default function Terms() {
       </p>
       <p style={pStyle}>
         <strong>All sales are final.</strong> We do not offer refunds on workshops, courses,
-        recordings, or any other digital products. Once your purchase is complete, you have
+        programs, recordings, or any other digital products. Once your purchase is complete, you have
         immediate access to the associated materials and scheduled sessions, and no refund
         will be issued for any reason — including inability to attend a live session, change
         of mind, or failure to use the purchased content. Recordings of live sessions are

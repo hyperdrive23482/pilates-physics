@@ -121,6 +121,8 @@ function validateMentorship(body) {
   const paymentPlan = trimString(body.paymentPlan)
   const equipment = Array.isArray(body.equipment) ? body.equipment : []
   const acknowledgement = body.acknowledgement === true
+  const paymentAcknowledgement = body.paymentAcknowledgement === true
+  const remoAcknowledgement = body.remoAcknowledgement === true
   const privatesPerWeek = parseNonNegativeInt(body.privatesPerWeek)
   const groupsPerWeek = parseNonNegativeInt(body.groupsPerWeek)
 
@@ -135,6 +137,7 @@ function validateMentorship(body) {
   if (!goalsAndInterest) return { error: 'Please tell me why this program and what you want out of it' }
   if (!paymentPlan) return { error: 'Please pick a payment option' }
   if (!acknowledgement) return { error: 'Please confirm the participation note' }
+  if (!paymentAcknowledgement) return { error: 'Please confirm the payment note' }
   if (name.length > 200) return { error: 'Name is too long' }
   if (email.length > 320) return { error: 'Email is too long' }
   if (city.length > 200) return { error: 'City is too long' }
@@ -162,6 +165,8 @@ function validateMentorship(body) {
       goalsAndInterest,
       paymentPlan,
       acknowledgement,
+      paymentAcknowledgement,
+      remoAcknowledgement,
     },
   }
 }

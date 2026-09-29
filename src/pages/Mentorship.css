@@ -89,16 +89,9 @@
   font-size: clamp(40px, 4.6vw, 64px);
   line-height: 1.04;
   letter-spacing: -0.012em;
-  margin: 18px 0 16px;
+  margin: 18px 0 40px;
   font-weight: 400;
   max-width: 22ch;
-}
-.ppv2 .mentorship-apply__lede {
-  font-size: 18px;
-  line-height: 1.6;
-  color: var(--ink-soft);
-  margin: 0 0 40px;
-  max-width: 62ch;
 }
 .ppv2 .mentorship-apply__panel {
   background: var(--bg-3);
@@ -125,6 +118,17 @@
   margin: 4px 0 0;
   flex-shrink: 0;
 }
+.ppv2 .mentorship-apply__remo-note {
+  margin: 0 0 16px;
+}
+.ppv2 .mentorship-apply__check--ack a,
+.ppv2 .mentorship-apply__remo-note a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ppv2 .mentorship-apply__check--ack a:hover,
+.ppv2 .mentorship-apply__remo-note a:hover { color: var(--accent-warm); }
 .ppv2 .mentorship-apply__check--ack {
   padding: 18px;
   border: 1px solid var(--rule);

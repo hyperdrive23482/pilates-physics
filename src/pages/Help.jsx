@@ -156,7 +156,7 @@ export default function Help() {
 
       <h3 style={h3Style}>Can I get a refund?</h3>
       <p style={pStyle}>
-        All sales are final — we don't offer refunds on workshops, courses, or recordings.
+        All sales are final. We don't offer refunds on workshops, courses, programs, or recordings.
         Because recordings are posted to your portal after each live session, your access
         doesn't depend on attending live. If a technical issue is blocking you from
         accessing purchased content, message us below and we'll sort it out. See section 5

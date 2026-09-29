@@ -325,7 +325,9 @@ export async function sendInquiryEmail({ kind, ...payload }) {
       trainingBackground,
       goalsAndInterest,
       paymentPlan,
+      remoAcknowledgement,
     } = payload
+    const remoLabel = remoAcknowledgement ? 'Yes' : 'No'
     const yearsLabel = MENTORSHIP_YEARS_LABEL[yearsTeaching] || yearsTeaching
     const planLabel = MENTORSHIP_PLAN_LABEL[paymentPlan] || paymentPlan
     const careerLabel = MAIN_CAREER_LABEL[mainCareer] || mainCareer
@@ -354,6 +356,7 @@ export async function sendInquiryEmail({ kind, ...payload }) {
         <p style="margin: 0 0 0.5rem;"><strong>Group classes per week:</strong> ${safeGroups}</p>
         <p style="margin: 0 0 0.5rem;"><strong>Equipment:</strong> ${safeEquipment}</p>
         <p style="margin: 0 0 0.5rem;"><strong>Payment option:</strong> ${safePlan}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Excited to use Remo Educator:</strong> ${remoLabel}</p>
         <p style="margin: 1.5rem 0 0.5rem;"><strong>Training and certifications:</strong></p>
         <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeTraining}</div>
         <p style="margin: 1.5rem 0 0.5rem;"><strong>Why this program and what they want out of it:</strong></p>
@@ -362,7 +365,7 @@ export async function sendInquiryEmail({ kind, ...payload }) {
       </div>
     `.trim()
 
-    const text = `New mentorship application from /mentorship/apply\n\nName: ${name}\nEmail: ${email}\nCity / region: ${city || '(not provided)'}\nYears teaching: ${yearsLabel}\nPilates as main career: ${careerLabel}\nPrivates per week: ${privatesPerWeek}\nGroup classes per week: ${groupsPerWeek}\nEquipment: ${equipmentLabel}\nPayment option: ${planLabel}\n\nTraining and certifications:\n${trainingBackground}\n\nWhy this program and what they want out of it:\n${goalsAndInterest}\n\nApplicant confirmed the participation note. On acceptance, send a Stripe invoice for the option above. Reply directly to this email to respond.`
+    const text = `New mentorship application from /mentorship/apply\n\nName: ${name}\nEmail: ${email}\nCity / region: ${city || '(not provided)'}\nYears teaching: ${yearsLabel}\nPilates as main career: ${careerLabel}\nPrivates per week: ${privatesPerWeek}\nGroup classes per week: ${groupsPerWeek}\nEquipment: ${equipmentLabel}\nPayment option: ${planLabel}\nExcited to use Remo Educator: ${remoLabel}\n\nTraining and certifications:\n${trainingBackground}\n\nWhy this program and what they want out of it:\n${goalsAndInterest}\n\nApplicant confirmed the participation note. On acceptance, send a Stripe invoice for the option above. Reply directly to this email to respond.`
 
     const { data, error } = await getResend().emails.send({
       from: FROM,

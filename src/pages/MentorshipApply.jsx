@@ -3,9 +3,6 @@ import { Link } from 'react-router-dom'
 import ArrowSvg from '../components/ui/ArrowSvg'
 import {
   MENTORSHIP_PATH,
-  PRICE_FULL,
-  PRICE_INSTALLMENT,
-  PRICE_INSTALLMENT_TOTAL,
   YEARS_OPTIONS,
   PLAN_OPTIONS,
   EQUIPMENT_OPTIONS,
@@ -26,6 +23,8 @@ export default function MentorshipApply() {
   const [goalsAndInterest, setGoalsAndInterest] = useState('')
   const [paymentPlan, setPaymentPlan] = useState('')
   const [acknowledgement, setAcknowledgement] = useState(false)
+  const [paymentAcknowledgement, setPaymentAcknowledgement] = useState(false)
+  const [remoAcknowledgement, setRemoAcknowledgement] = useState(false)
   const [website, setWebsite] = useState('')
   const [status, setStatus] = useState('idle')
   const [errorMsg, setErrorMsg] = useState('')
@@ -50,6 +49,11 @@ export default function MentorshipApply() {
       setStatus('error')
       return
     }
+    if (!paymentAcknowledgement) {
+      setErrorMsg('Please confirm the payment note to continue.')
+      setStatus('error')
+      return
+    }
     setStatus('loading')
     setErrorMsg('')
 
@@ -71,6 +75,8 @@ export default function MentorshipApply() {
           goalsAndInterest,
           paymentPlan,
           acknowledgement,
+          paymentAcknowledgement,
+          remoAcknowledgement,
           website,
         }),
       })
@@ -95,14 +101,6 @@ export default function MentorshipApply() {
           <h1 className="mentorship-apply__head">
             Apply to join the <span className="italic accent">fall cohort.</span>
           </h1>
-          <p className="mentorship-apply__lede">
-            Eight weeks, October 21 to December 16, Wednesdays at 9:00am PT.
-            Tell me about your teaching and what you want out of it. I read
-            every application personally, in the order they arrive, and you will
-            hear back within a week. {PRICE_FULL} one-time, or two payments of{' '}
-            {PRICE_INSTALLMENT} ({PRICE_INSTALLMENT_TOTAL} in total), invoiced
-            once you are accepted.
-          </p>
 
           <div className="mentorship-apply__panel">
             {status === 'success' ? (
@@ -295,6 +293,46 @@ export default function MentorshipApply() {
                     happens, but showing up is what makes the feedback worth it.
                   </span>
                 </label>
+
+                <label className="mentorship-apply__check mentorship-apply__check--ack">
+                  <input
+                    type="checkbox"
+                    checked={paymentAcknowledgement}
+                    onChange={(e) => setPaymentAcknowledgement(e.target.checked)}
+                    disabled={loading}
+                  />
+                  <span>
+                    I understand that upon acceptance I'll be sent an invoice via
+                    Stripe. Once payment is received my spot is confirmed. Read
+                    the refund policy in our{' '}
+                    <a href="/terms" target="_blank" rel="noopener noreferrer">
+                      terms
+                    </a>
+                    .
+                  </span>
+                </label>
+
+                <div className="pp-form__field">
+                  <label className="pp-form__label">Remo Educator</label>
+                  <p className="pp-form__help mentorship-apply__remo-note">
+                    In order to get individualized feedback from me on your
+                    sessions, early access to Remo Educator is included in the
+                    program. Read more about it{' '}
+                    <a href="https://remopilates.com/educator" target="_blank" rel="noopener noreferrer">
+                      here
+                    </a>
+                    .
+                  </p>
+                  <label className="mentorship-apply__check">
+                    <input
+                      type="checkbox"
+                      checked={remoAcknowledgement}
+                      onChange={(e) => setRemoAcknowledgement(e.target.checked)}
+                      disabled={loading}
+                    />
+                    <span>Yes! I'm excited to use this!</span>
+                  </label>
+                </div>
 
                 <input
                   type="text"
