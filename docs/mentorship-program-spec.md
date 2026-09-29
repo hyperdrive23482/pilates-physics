@@ -10,7 +10,8 @@ file first, then the page and the product.
 | Name | Kaleen's 8-week mentorship program |
 | For | Pilates teachers with less than 5 years of experience |
 | Dates | October 21 to December 16, 2026 |
-| Group meetings | Wednesdays, 9:00 to 10:30am PT |
+| Applications close | October 8, 2026 (read in the order they arrive) |
+| Group meetings | Wednesdays, 9:00 to 10:30am Pacific (GMT-7 Oct 21 and 28, GMT-8 from Nov 4; US clocks change Nov 1) |
 | Week off | November 25 (Thanksgiving week) |
 | Sessions | 8 group sessions, all recorded |
 | Private sessions | 2 x 60-minute virtual mentoring sessions with Kaleen |

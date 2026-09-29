@@ -10,6 +10,8 @@ export const PRICE_FULL = '$399'
 export const PRICE_INSTALLMENT = '$229'
 export const PRICE_INSTALLMENT_TOTAL = '$458'
 
+export const APPLY_DEADLINE = 'October 8'
+
 export const YEARS_OPTIONS = [
   { value: '<1', label: 'Less than 1 year' },
   { value: '1-2', label: '1 to 2 years' },

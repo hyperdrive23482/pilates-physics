@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import ArrowSvg from '../components/ui/ArrowSvg'
-import { PRICE_FULL, PRICE_INSTALLMENT, PRICE_INSTALLMENT_TOTAL, APPLY_PATH } from '../lib/mentorship'
+import { PRICE_FULL, PRICE_INSTALLMENT, PRICE_INSTALLMENT_TOTAL, APPLY_PATH, APPLY_DEADLINE } from '../lib/mentorship'
 import '../styles/ppv2.css'
 import './Workshop.css'
 import '../components/ui/RegisterCard.css'
@@ -20,7 +20,7 @@ const COVER = [
     n: '02',
     label: 'STRENGTH',
     title: 'Pilates that builds strength',
-    body: 'The principles of strength training and how to program them into your classes, alongside the connection and control you already teach.',
+    body: 'The principles of strength training and how to apply them in a Pilates class, so clients who want to get stronger get the most out of every session.',
   },
   {
     n: '03',
@@ -43,11 +43,9 @@ const SCHEDULE = [
 ]
 
 const SPECS = [
+  { k: 'Deadline', v: `Applications close ${APPLY_DEADLINE}` },
   { k: 'Dates', v: 'October 21 to December 16, 2026' },
-  { k: 'Time', v: 'Wednesdays, 9:00 to 10:30am PT' },
-  { k: 'Week off', v: 'November 25, Thanksgiving week' },
-  { k: 'Group', v: '8 live sessions, 90 minutes each, all recorded' },
-  { k: 'Private', v: '2 sessions with Kaleen, 60 minutes each' },
+  { k: 'Time', v: 'Wednesdays, 9:00 to 10:30am Pacific (GMT-7 in October, GMT-8 from November 4)' },
   { k: 'Hours', v: '14 contact hours' },
   { k: 'Format', v: 'Virtual, small group' },
   { k: 'Price', v: `${PRICE_FULL} one-time, or 2 payments of ${PRICE_INSTALLMENT}` },
@@ -58,32 +56,32 @@ const INCLUDED = [
     n: '01',
     label: 'GROUP SESSIONS',
     title: 'Eight live sessions',
-    body: '90 minutes every Wednesday with the cohort. Every session is recorded, so a missed week is a recording, not a gap.',
+    body: '90 minutes every Wednesday on Zoom with the cohort. Every session is recorded and posted in your portal the same day.',
   },
   {
     n: '02',
     label: 'PRIVATE SESSIONS',
     title: 'Two private sessions',
-    body: '60 minutes each, one-on-one with Kaleen, scheduled around your week. Your clients, your equipment, your questions.',
+    body: '60 minutes each, one-on-one via Zoom with me, scheduled around your week. Your clients, your equipment, your questions.',
   },
   {
     n: '03',
     label: 'TEACHING REVIEW',
     title: 'Your teaching, reviewed',
-    body: 'Free access to Remo for the program. Record the sessions you teach, share them with Kaleen, and get feedback on the real thing.',
+    body: 'Free access to Remo for the program. Record the sessions you teach, share them with me, and get feedback on the real thing.',
   },
   {
     n: '04',
     label: 'SMALL GROUP',
     title: 'A cohort you can hear',
-    body: 'Few enough people that everyone teaches, everyone gets feedback, and the discussion is about the clients you actually have.',
+    body: 'Few enough people that everyone gets personal feedback and the discussion is about the clients you actually have.',
   },
 ]
 
 const FAQ = [
   {
     q: 'Do I need to have taken Pilates Physics 101 first?',
-    a: 'No. Weeks 3 and 4 cover the physics from the start, in plain language, on the reformer. If you have already taken 101, those weeks are your chance to apply it to your own teaching.',
+    a: `No. Weeks 3 and 4 cover the physics from the start, in plain language, on the reformer. If you have already taken 101, those weeks are a great chance to review the theory and ask questions about how you're applying the principles.`,
   },
   {
     q: 'I have been teaching more than five years. Can I still join?',
@@ -91,7 +89,7 @@ const FAQ = [
   },
   {
     q: 'What is Remo?',
-    a: 'Remo is a notetaker for Pilates instructors that Kaleen built. It records the sessions you teach and turns them into a summary you can share. For this program you get free access, so you can record your teaching and send it to Kaleen for review. There is nothing to buy.',
+    a: 'Remo is a notetaking app for Pilates instructors that I built. It records the audio of sessions you teach and turns it into a summary you can share. For this program you get free access, so you can record your teaching and send it to me for review. No strings.',
   },
   {
     q: 'What if I cannot make a Wednesday?',
@@ -99,15 +97,15 @@ const FAQ = [
   },
   {
     q: 'How do the private sessions work?',
-    a: 'Two 60-minute virtual sessions, one-on-one with Kaleen. You schedule them any time during the eight weeks. A good pattern is one early to set a goal and one late to review your progress.',
+    a: 'Two 60-minute virtual sessions, one-on-one with me. You schedule them any time during the eight weeks. A good pattern is one early to set a goal and one late to review your progress.',
   },
   {
     q: 'How does the application work?',
-    a: 'Fill in the form on the application page. It asks about your teaching, your equipment, and what you want from the eight weeks. Kaleen reads every application personally, in the order they arrive, and replies within a week.',
+    a: `Fill in the form on the application page. It asks about your teaching, your equipment, and what you want from the eight weeks. I read every application personally, in the order they arrive, and reply within a week. Applications close ${APPLY_DEADLINE}.`,
   },
   {
     q: 'How does payment work?',
-    a: `Once you are accepted, Kaleen sends you a Stripe invoice for the option you chose: ${PRICE_FULL} once, or two payments of ${PRICE_INSTALLMENT} (${PRICE_INSTALLMENT_TOTAL} in total). Your spot is confirmed once the first payment clears.`,
+    a: `Once you are accepted, I send you a Stripe invoice for the option you chose: ${PRICE_FULL} once, or two payments of ${PRICE_INSTALLMENT} (${PRICE_INSTALLMENT_TOTAL} in total). Your spot is confirmed once the first payment clears.`,
   },
   {
     q: 'How much time does it take each week?',
@@ -123,27 +121,22 @@ function ApplyCard() {
         <span className="register-card__price-unit">one-time</span>
       </div>
       <p className="mentorship-reserve__plan">
-        Or two payments of {PRICE_INSTALLMENT}, {PRICE_INSTALLMENT_TOTAL} in total.
+        Or two payments of {PRICE_INSTALLMENT}.
       </p>
       <h3 className="register-card__title">Apply to join the cohort</h3>
       <p className="register-card__body">
         The group is small, so it is by application. Tell me about your
         teaching and what you want out of the eight weeks. I read every one,
-        and you will hear back within a week. Your invoice comes with your
-        acceptance.
+        and you will hear back within a week. Payment invoice sent once your
+        application is accepted.
       </p>
-      <ul className="mentorship-reserve__list">
-        <li>8 group sessions, recorded</li>
-        <li>2 private sessions with Kaleen</li>
-        <li>Remo access to record and review your teaching</li>
-      </ul>
       <Link to={APPLY_PATH} className="btn btn--block">
         Apply now
         <ArrowSvg />
       </Link>
       <p className="register-card__meta">
-        Applications are read in the order they arrive. Spots are confirmed
-        once the first payment clears.
+        Applications close {APPLY_DEADLINE} and are read in the order they
+        arrive. Spots are confirmed once the first payment clears.
       </p>
     </div>
   )
@@ -164,11 +157,11 @@ export default function Mentorship() {
           <div className="workshop-hero__inner">
             <div className="kicker">§ 01 · 8-week mentorship</div>
             <h1 className="workshop-hero__title">
-              From the script to <span className="italic accent">the body in front of you.</span>
+              The skills that fill a class <span className="italic accent">are not fancy choreography.</span>
             </h1>
             <p className="workshop-hero__lede">
-              A small-group mentorship for Pilates teachers in their first five
-              years. Weekly group sessions, two private sessions with Kaleen, and
+              Join a small-group mentorship for Pilates teachers in their first five
+              years. Weekly group sessions, two private sessions with me, and
               feedback on the classes you actually teach.
             </p>
 
@@ -180,7 +173,7 @@ export default function Mentorship() {
             </div>
             <p className="workshop-hero__meta">
               <span className="workshop-hero__meta-k">Live</span>
-              October 21 to December 16, 2026 · Wednesdays 9:00am PT · recordings included
+              October 21 to December 16, 2026 · applications close {APPLY_DEADLINE}
             </p>
           </div>
         </div>
@@ -193,17 +186,20 @@ export default function Mentorship() {
       <section className="section-pad section--inset workshop-why">
         <div className="container">
           <div className="kicker">§ 02 · Who this is for</div>
-          <h2 className="workshop-why__head">
-            Your training gave you the settings and the script. <span className="italic accent">Now you want the why.</span>
-          </h2>
-          <p className="workshop-why__body">
-            Somewhere in the first few years, the script stops being enough. A
-            client does not fit the standard setting. A mixed-level class needs
-            three versions of the same exercise. You want to add strength work
-            without losing what makes it Pilates. This mentorship is eight weeks
-            of working through exactly that, in a small group, with Kaleen
-            watching you teach.
-          </p>
+          <div className="mentorship-why__grid">
+            <h2 className="workshop-why__head">
+              Your training gave you the settings and the script. <span className="italic accent">Now you want the why.</span>
+            </h2>
+            <p className="workshop-why__body">
+              Somewhere in the first few years, the script stops being enough. A
+              client does not fit the standard setting. A mixed-level class needs
+              three versions of the same exercise. You want to add strength work
+              without losing what makes it Pilates. This mentorship is eight weeks
+              of working through exactly that, in a small group, with me
+              reviewing the classes you actually teach. The result is a class people
+              come back to, week after week.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -213,11 +209,11 @@ export default function Mentorship() {
           <div className="workshop-framework__head-wrap">
             <div className="kicker">§ 03 · What we cover</div>
             <h2 className="workshop-framework__head">
-              Three threads, <span className="italic accent">one class at a time.</span>
+              The three skills <span className="italic accent">that fill a class.</span>
             </h2>
             <p className="workshop-framework__lede">
-              Every week pulls on one of these. Your own recordings are where
-              they come together.
+              Learn each one, then apply it in your own classes, with me by
+              your side.
             </p>
           </div>
 
@@ -241,13 +237,12 @@ export default function Mentorship() {
       <section className="section-pad-l section--inset workshop-topics">
         <div className="container">
           <div className="workshop-topics__head">
-            <div className="kicker">§ 04 · The eight weeks</div>
+            <div className="kicker">§ 04 · Schedule</div>
             <h2 className="workshop-topics__title">
-              Wednesdays, 9:00 to 10:30am PT, <span className="italic accent">all recorded.</span>
+              Eight weeks that <span className="italic accent">build on each other.</span>
             </h2>
             <p className="workshop-topics__lede">
-              Live on Zoom. Miss one and the recording is in your portal.
-              Thanksgiving week is off.
+              Live on Zoom. All recordings posted in your portal the same day.
             </p>
           </div>
 
@@ -306,25 +301,29 @@ export default function Mentorship() {
             <div className="workshop-instructor__body">
               <div className="kicker">§ 06 · Your mentor</div>
               <h2 className="workshop-instructor__head">
-                Meet <span className="italic accent">Kaleen.</span>
+                Hi! I'm <span className="italic accent">Kaleen.</span>
               </h2>
               <p className="workshop-instructor__role">Mechanical Engineer · Pilates Instructor since 2014</p>
 
               <p>
-                Mechanical engineer first, Pilates instructor since 2014. Kaleen
-                has spent over a decade at the intersection of the two: as a
-                design engineer at Balanced Body, running an equipment
+                I was a mechanical engineer before I was a Pilates instructor,
+                and I've spent over a decade at the intersection of the two: as
+                a design engineer at Balanced Body, running an equipment
                 maintenance business, designing a reformer from the springs up,
                 and building software for working instructors.
               </p>
               <p>
-                Pilates Physics is where she brings that engineering lens to
+                I still teach every week. My mat class at the Y grew so full it
+                needed an attendance cap, the first in its history.
+              </p>
+              <p>
+                Pilates Physics is where I bring that engineering lens to
                 instructor education. The mentorship is the closest version of
                 it: a small group, your real classes, and the why behind every
                 decision you make on the equipment.
               </p>
 
-              <Link to="/about" className="arrow-link">More about Kaleen →</Link>
+              <Link to="/about" className="arrow-link">More about me →</Link>
             </div>
           </div>
         </div>
@@ -382,14 +381,10 @@ export default function Mentorship() {
       {/* ── § 09 Final CTA ───────────────────────────────────────────────── */}
       <section className="workshop-cta section--inset">
         <div className="container container--narrow">
-          <div className="kicker">§ 09 · Apply</div>
-          <h2 className="workshop-cta__head">
-            Eight weeks. A small group. <span className="italic accent">Your teaching, watched closely.</span>
+          <div className="kicker">§ 09 · Applications close {APPLY_DEADLINE}</div>
+          <h2 className="workshop-cta__head mentorship-cta__head">
+            Eight weeks. A small group. <span className="italic accent">Your teaching, reviewed closely.</span>
           </h2>
-          <p className="workshop-cta__lede">
-            October 21 to December 16. Wednesdays at 9:00am PT, two private
-            sessions, and feedback on the classes you actually teach.
-          </p>
           <Link to={APPLY_PATH} className="btn btn--lg">
             Apply now. {PRICE_FULL}
             <ArrowSvg />
