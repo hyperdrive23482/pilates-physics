@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Momentum Graphs</title>
+<style>
+  :root {
+    --bg: #0e0d0b; --bg-2: #1a1813; --ink: #E3E3E3; --ink-soft: rgba(227,227,227,.65);
+    --rule: rgba(227,227,227,.18); --accent: #f09f26;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, sans-serif; }
+  main { max-width: 1000px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-family: Georgia, serif; font-weight: 500; margin: 0 0 4px; }
+  p.lede { color: var(--ink-soft); margin: 0 0 20px; }
+  .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 20px;
+    background: var(--bg-2); border: 1px solid var(--rule); border-radius: 8px; padding: 16px; margin-bottom: 28px; }
+  label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--ink-soft); }
+  input, select { background: var(--bg); color: var(--ink); border: 1px solid var(--rule); border-radius: 4px; padding: 6px 8px; font: inherit; }
+  .row { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
+  button { background: var(--accent); color: #1c1a17; border: 0; border-radius: 4px; padding: 7px 12px; font: 600 13px system-ui, sans-serif; cursor: pointer; }
+  button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--rule); }
+  .note { grid-column: 1 / -1; font-size: 13px; color: var(--ink-soft); }
+  figure { margin: 0 0 36px; }
+  canvas { width: 100%; height: auto; display: block; border: 1px solid var(--rule); border-radius: 6px; }
+  figcaption { margin-top: 8px; font-size: 13px; color: var(--ink-soft); }
+  figcaption code { color: var(--ink); }
+  .alt { margin-top: 6px; padding: 8px 10px; background: var(--bg-2); border-left: 3px solid var(--accent); font-size: 13px; }
+  .bar { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Momentum graphs</h1>
+  <p class="lede">Four graphs for the momentum post. Adjust the model if needed, then download each as a PNG. Image names match the placeholders in momentum.md.</p>
+
+  <div class="controls">
+    <label>Spring force at 0" (lbs)<input id="f0" type="number" value="26" step="1"></label>
+    <label>Spring force at full stretch (lbs)<input id="f1" type="number" value="88" step="1"></label>
+    <label>Full stretch (inches)<input id="d" type="number" value="18" step="1"></label>
+    <label>Moving mass, body + carriage (lbs)<input id="mass" type="number" value="200" step="5"></label>
+    <label>Slow rep, out and back (seconds)<input id="tSlow" type="number" value="6" step="0.1"></label>
+    <div class="row">
+      <label style="flex:1">Fast rep, out and back (seconds)<input id="tFast" type="number" value="2.43" step="0.01"></label>
+      <button class="ghost" id="natural" title="Set the fast rep to the pace where muscle force stays flat">Match 57 lb peak</button>
+    </div>
+    <label>Theme<select id="theme"><option value="dark">Dark (site)</option><option value="light">Light</option></select></label>
+    <label>Model note on image<select id="foot"><option value="1">Show</option><option value="0">Hide</option></select></label>
+    <div class="note" id="summary"></div>
+  </div>
+
+  <div id="figs"></div>
+</main>
+
+<script>
+const LBF_PER_IN_PER_KG_RAD2 = 0.0254 * 0.224809; // m*w^2*(in) -> lbf
+const W = 1600, H = 900;
+
+const FIGS = [
+  { id: 'IMG_MOMENTUM_SPRING', file: 'momentum-1-spring-force.png', title: 'Spring force across one footwork rep',
+    muscle: null, shade: false,
+    alt: 'Spring force across one footwork rep on red, red, and green springs. It rises in a straight line from {f0} lbs at 0 inches of stretch to {f1} lbs at {d} inches, then falls back to {f0} lbs as the carriage returns.' },
+  { id: 'IMG_MOMENTUM_SLOW', file: 'momentum-2-slow-rep.png', title: 'Slow rep: muscle force vs. spring force',
+    muscle: 'slow', shade: false,
+    alt: 'Slow footwork rep with muscle force plotted over spring force. Muscle force starts slightly above the springs, crosses them at mid-range, and peaks at about {slowPeak} lbs, just under the {f1} lb spring peak.' },
+  { id: 'IMG_MOMENTUM_SLOW_GAP', file: 'momentum-3-slow-gap.png', title: 'Slow rep: the gap is the carriage speeding up or slowing down',
+    muscle: 'slow', shade: true,
+    alt: 'Shaded gap between muscle force and spring force on a slow footwork rep. The gap stays small through the whole rep, showing the carriage barely speeds up or slows down.' },
+  { id: 'IMG_MOMENTUM_FAST', file: 'momentum-4-fast-rep.png', title: 'Fast rep: same springs, bigger gap, lower peak',
+    muscle: 'fast', shade: true,
+    alt: 'Fast footwork rep. Muscle force holds near {fastPeak} lbs while spring force rises from {f0} to {f1} lbs and back, leaving a large shaded gap between the two curves.' },
+];
+
+const $ = id => document.getElementById(id);
+const num = id => parseFloat($(id).value);
+
+function params() {
+  const f0 = num('f0'), f1 = num('f1'), d = num('d');
+  const k = (f1 - f0) / d;                 // lbf per inch
+  const mKg = num('mass') / 2.20462;
+  const c = T => mKg * Math.pow(2 * Math.PI / T, 2) * LBF_PER_IN_PER_KG_RAD2; // lbf per inch of (A - x)
+  return { f0, f1, d, k, mKg, cSlow: c(num('tSlow')), cFast: c(num('tFast')) };
+}
+
+// Rep follows x = A(1 - cos wt), A = d/2, so carriage acceleration is w^2 (A - x).
+// Muscle force = spring force + m * a, which is linear in x for each half of the rep.
+const spring = (p, x) => p.f0 + p.k * x;
+const muscle = (p, x, c) => spring(p, x) + c * (p.d / 2 - x);
+const peak = (p, c) => Math.max(muscle(p, 0, c), muscle(p, p.d, c));
+
+function palette() {
+  return $('theme').value === 'dark'
+    ? { bg: '#0e0d0b', ink: '#E3E3E3', soft: 'rgba(227,227,227,.62)', grid: 'rgba(227,227,227,.09)', axis: 'rgba(227,227,227,.4)',
+        spring: '#E3E3E3', muscle: '#f09f26', up: 'rgba(240,159,38,.30)', down: 'rgba(120,170,220,.30)', downLine: '#8db6dc' }
+    : { bg: '#ffffff', ink: '#1c1a17', soft: 'rgba(28,26,23,.62)', grid: 'rgba(28,26,23,.08)', axis: 'rgba(28,26,23,.45)',
+        spring: '#1c1a17', muscle: '#c07c17', up: 'rgba(240,159,38,.28)', down: 'rgba(60,110,170,.22)', downLine: '#3c6eaa' };
+}
+
+function draw(canvas, fig, p) {
+  const ctx = canvas.getContext('2d');
+  const C = palette();
+  const L = 150, R = 60, T = 170, B = 190;
+  const pw = W - L - R, ph = H - T - B;
+  const yMax = Math.ceil((Math.max(p.f1, peak(p, p.cSlow), peak(p, p.cFast)) + 10) / 20) * 20;
+  const path = 2 * p.d;                                  // out and back
+  const X = s => L + (s / path) * pw;                    // s = distance travelled along the rep
+  const Y = f => T + ph - (f / yMax) * ph;
+  const xAt = s => (s <= p.d ? s : path - s);            // stretch at that point
+
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+
+  // Title
+  ctx.fillStyle = C.ink; ctx.font = '500 44px Georgia, serif'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText(fig.title, L, 76);
+
+  // Grid + y labels
+  ctx.font = '26px system-ui, sans-serif'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (let f = 0; f <= yMax; f += 20) {
+    ctx.strokeStyle = C.grid; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(L, Y(f)); ctx.lineTo(L + pw, Y(f)); ctx.stroke();
+    ctx.fillStyle = C.soft; ctx.fillText(f, L - 18, Y(f));
+  }
+  // x labels: stretch out and back
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  const step = p.d / 6;
+  for (let s = 0; s <= path + 1e-9; s += step) {
+    ctx.strokeStyle = C.grid; ctx.beginPath(); ctx.moveTo(X(s), T); ctx.lineTo(X(s), T + ph); ctx.stroke();
+    ctx.fillStyle = C.soft; ctx.fillText(Math.round(xAt(s)) + '"', X(s), T + ph + 14);
+  }
+  // Axes
+  ctx.strokeStyle = C.axis; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, T + ph); ctx.lineTo(L + pw, T + ph); ctx.stroke();
+  // Turnaround marker
+  ctx.setLineDash([8, 8]); ctx.beginPath(); ctx.moveTo(X(p.d), T); ctx.lineTo(X(p.d), T + ph); ctx.stroke(); ctx.setLineDash([]);
+
+  // Axis titles
+  ctx.fillStyle = C.ink; ctx.font = '28px system-ui, sans-serif';
+  ctx.fillText('Spring stretch', L + pw / 2, T + ph + 56);
+  ctx.fillStyle = C.soft; ctx.font = '24px system-ui, sans-serif';
+  ctx.fillText('carriage out  →', X(p.d / 2), T + ph + 96);
+  ctx.fillText('←  carriage home', X(p.d * 1.5), T + ph + 96);
+  ctx.save(); ctx.translate(48, T + ph / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = C.ink; ctx.font = '28px system-ui, sans-serif'; ctx.textBaseline = 'middle';
+  ctx.fillText('Force (lbs)', 0, 0); ctx.restore();
+
+  const N = 400;
+  const c = fig.muscle === 'slow' ? p.cSlow : fig.muscle === 'fast' ? p.cFast : null;
+
+  // Shading between curves: speeding up in the first half of each direction, slowing in the second
+  if (fig.shade && c !== null) {
+    for (let i = 0; i < N; i++) {
+      const s0 = path * i / N, s1 = path * (i + 1) / N, sm = (s0 + s1) / 2;
+      const q = sm % p.d;
+      ctx.fillStyle = q < p.d / 2 ? C.up : C.down;
+      ctx.beginPath();
+      ctx.moveTo(X(s0), Y(spring(p, xAt(s0))));
+      ctx.lineTo(X(s1), Y(spring(p, xAt(s1))));
+      ctx.lineTo(X(s1), Y(muscle(p, xAt(s1), c)));
+      ctx.lineTo(X(s0), Y(muscle(p, xAt(s0), c)));
+      ctx.closePath(); ctx.fill();
+    }
+  }
+
+  const line = (fn, color, width, dash) => {
+    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash || []); ctx.lineJoin = 'round';
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) { const s = path * i / N; const px = X(s), py = Y(fn(xAt(s))); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+    ctx.stroke(); ctx.setLineDash([]);
+  };
+  line(x => spring(p, x), C.spring, 5);
+  if (c !== null) line(x => muscle(p, x, c), C.muscle, 6);
+
+  // Point labels
+  const dot = (s, f, color, text, dx, dy, align) => {
+    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(X(s), Y(f), 9, 0, Math.PI * 2); ctx.fill();
+    ctx.font = '600 28px system-ui, sans-serif'; ctx.textAlign = align || 'left'; ctx.textBaseline = 'middle';
+    ctx.strokeStyle = C.bg; ctx.lineWidth = 10; ctx.lineJoin = 'round';
+    ctx.strokeText(text, X(s) + dx, Y(f) + dy);
+    ctx.fillText(text, X(s) + dx, Y(f) + dy);
+  };
+  dot(0, p.f0, C.spring, Math.round(p.f0) + ' lbs', 18, 26);
+  dot(p.d, p.f1, C.spring, Math.round(p.f1) + ' lbs', 20, -24);
+  if (c !== null) {
+    const pk = peak(p, c);
+    const sPk = muscle(p, p.d, c) >= muscle(p, 0, c) - 0.01 ? p.d : 0;
+    if (sPk === p.d) dot(sPk, pk, C.muscle, 'muscle peak ' + Math.round(pk) + ' lbs', 0, 140, 'center');
+    else dot(0, pk, C.muscle, 'muscle peak ' + Math.round(pk) + ' lbs', 18, -30);
+  }
+
+  // Legend
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.font = '26px system-ui, sans-serif';
+  let lx = L, ly = T - 44;
+  const items = [['Spring force', C.spring, 'line']];
+  if (c !== null) items.push(['Muscle force', C.muscle, 'line']);
+  if (fig.shade) items.push(['Speeding up', C.up, 'box'], ['Slowing down', C.down, 'box']);
+  const widths = items.map(it => ctx.measureText(it[0]).width + 70);
+  items.forEach((it, i) => {
+    if (it[2] === 'line') { ctx.strokeStyle = it[1]; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 40, ly); ctx.stroke(); }
+    else { ctx.fillStyle = it[1]; ctx.fillRect(lx, ly - 13, 40, 26); }
+    ctx.fillStyle = C.ink; ctx.fillText(it[0], lx + 50, ly);
+    lx += widths[i];
+  });
+
+  // Model note
+  if ($('foot').value === '1') {
+    ctx.fillStyle = C.soft; ctx.font = '22px system-ui, sans-serif'; ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic';
+    let note = 'Footwork, red + red + green springs, ' + p.d + '" stretch';
+    if (c !== null) note += ' · ' + num('mass') + ' lb moving mass · ' + (fig.muscle === 'slow' ? num('tSlow') : num('tFast')) + ' s rep';
+    ctx.fillText(note, W - R, H - 18);
+    ctx.textAlign = 'left'; ctx.fillText('pilatesphysics.com', L, H - 18);
+  }
+}
+
+function altText(fig, p) {
+  const vals = { f0: Math.round(p.f0), f1: Math.round(p.f1), d: p.d,
+    slowPeak: Math.round(peak(p, p.cSlow)), fastPeak: Math.round(peak(p, p.cFast)) };
+  return fig.alt.replace(/\{(\w+)\}/g, (_, k) => vals[k]);
+}
+
+function build() {
+  const host = $('figs'); host.innerHTML = '';
+  FIGS.forEach(fig => {
+    const el = document.createElement('figure');
+    el.innerHTML = `<canvas width="${W}" height="${H}"></canvas>
+      <figcaption>Placeholder <code>${fig.id}</code> · file <code>${fig.file}</code>
+        <div class="alt"></div>
+        <div class="bar"><button data-act="png">Download PNG</button><button class="ghost" data-act="alt">Copy alt text</button></div>
+      </figcaption>`;
+    host.appendChild(el);
+    fig.el = el;
+    el.querySelector('[data-act="png"]').onclick = () => {
+      const a = document.createElement('a');
+      a.download = fig.file; a.href = el.querySelector('canvas').toDataURL('image/png'); a.click();
+    };
+    el.querySelector('[data-act="alt"]').onclick = e => {
+      navigator.clipboard.writeText(el.querySelector('.alt').textContent).then(() => {
+        e.target.textContent = 'Copied'; setTimeout(() => e.target.textContent = 'Copy alt text', 1200);
+      });
+    };
+  });
+  render();
+}
+
+function render() {
+  const p = params();
+  FIGS.forEach(fig => {
+    draw(fig.el.querySelector('canvas'), fig, p);
+    fig.el.querySelector('.alt').textContent = altText(fig, p);
+  });
+  const ps = peak(p, p.cSlow), pf = peak(p, p.cFast);
+  $('summary').textContent = `Slow rep muscle peak: ${ps.toFixed(1)} lbs. Fast rep muscle peak: ${pf.toFixed(1)} lbs. ` +
+    `If you change the model, update the numbers in the post text and alt text to match.`;
+}
+
+$('natural').onclick = () => {
+  const p = params();
+  // Muscle force is flat (lowest possible peak, the spring midpoint) when m*w^2 matches the spring rate.
+  const w = Math.sqrt(p.k / (p.mKg * LBF_PER_IN_PER_KG_RAD2));
+  $('tFast').value = (2 * Math.PI / w).toFixed(2);
+  render();
+};
+document.querySelectorAll('input, select').forEach(i => i.addEventListener('input', render));
+build();
+</script>
+</body>
+</html>
