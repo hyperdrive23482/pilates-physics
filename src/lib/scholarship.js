@@ -7,16 +7,18 @@ export const SCHOLARSHIP_PATH = '/scholarship'
 // api/inquiry.js.
 export const MIN_CHARS = 150
 
+// seriesPrefix courses are dated cohorts, and the form shows the next date
+// (or TBD). onDemand courses have no date.
 export const COURSE_OPTIONS = [
-  { value: 'pp101', label: 'Pilates Physics 101', price: '$19', full: '$129' },
-  { value: 'pp102', label: 'Pilates Physics 102', price: '$19', full: '$129' },
-  { value: 'harw', label: 'How a Reformer Works', price: '$9', full: '$69' },
+  { value: 'pp101', label: 'Pilates Physics 101', price: '$19', full: '$129', seriesPrefix: 'PP-101' },
+  { value: 'pp102', label: 'Pilates Physics 102', price: '$19', full: '$129', seriesPrefix: 'PP-102' },
+  { value: 'harw', label: 'How a Reformer Works', price: '$9', full: '$69', onDemand: true },
 ]
 
+// 'other' requires a short description (pathStageOther).
 export const STAGE_OPTIONS = [
-  { value: 'teaching', label: 'Teaching Pilates now' },
-  { value: 'training', label: 'In a Pilates teacher training' },
-  { value: 'planning', label: 'Planning to train as a Pilates teacher' },
-  { value: 'movement', label: 'Another movement or fitness professional' },
-  { value: 'other', label: 'Something else' },
+  { value: 'fulltime', label: 'Teaching Pilates full time' },
+  { value: 'parttime', label: 'Teaching Pilates part-time' },
+  { value: 'training', label: 'In teacher training' },
+  { value: 'other', label: 'Other' },
 ]

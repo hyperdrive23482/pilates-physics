@@ -183,6 +183,7 @@ function validateScholarship(body) {
   const email = trimString(body.email)
   const city = trimString(body.city)
   const pathStage = trimString(body.pathStage)
+  const pathStageOther = pathStage === 'other' ? trimString(body.pathStageOther) : ''
   const story = trimString(body.story)
   const teachingImpact = trimString(body.teachingImpact)
   const courses = Array.isArray(body.courses) ? [...new Set(body.courses)] : []
@@ -190,8 +191,14 @@ function validateScholarship(body) {
 
   if (!name) return { error: 'Name is required' }
   if (!email) return { error: 'Email is required' }
-  if (courses.length === 0) return { error: 'Please pick at least one course' }
+  if (courses.length === 0) return { error: 'Please pick a course' }
+  // One course per application, so each code is tied to one considered ask.
+  if (courses.length > 1) return { error: 'Please pick one course per application' }
   if (!pathStage) return { error: 'Please tell me where you are in your Pilates path' }
+  if (pathStage === 'other' && !pathStageOther) {
+    return { error: 'Please tell me a little about where you are in your Pilates path' }
+  }
+  if (pathStageOther.length > 300) return { error: 'Your "Other" answer is too long (max 300 characters)' }
   if (!story) return { error: 'Please tell me about your path so far' }
   if (!teachingImpact) return { error: 'Please tell me what would change in your teaching' }
   if (!acknowledgement) return { error: 'Please confirm the note about codes' }
@@ -214,7 +221,7 @@ function validateScholarship(body) {
     }
   }
 
-  return { payload: { name, email, city, courses, pathStage, story, teachingImpact } }
+  return { payload: { name, email, city, courses, pathStage, pathStageOther, story, teachingImpact } }
 }
 
 // Scholarship applications are stored as well as emailed, so the admin page
@@ -234,6 +241,7 @@ async function storeScholarship(payload, req) {
     city: payload.city || null,
     courses: payload.courses,
     path_stage: payload.pathStage,
+    path_stage_other: payload.pathStageOther || null,
     story: payload.story,
     teaching_impact: payload.teachingImpact,
   })

@@ -26,6 +26,8 @@ create table public.scholarship_applications (
   -- Course keys from src/lib/scholarship.js: 'pp101', 'pp102', 'harw'.
   courses text[] not null,
   path_stage text not null,
+  -- Required when path_stage is 'other'.
+  path_stage_other text,
   story text not null,
   teaching_impact text not null,
   status text not null default 'pending'

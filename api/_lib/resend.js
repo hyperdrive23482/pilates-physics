@@ -383,12 +383,25 @@ export async function sendInquiryEmail({ kind, ...payload }) {
   }
 
   if (kind === 'scholarship') {
-    const { name, email, city, courses, pathStage, story, teachingImpact, previousCount, adminUrl } =
-      payload
+    const {
+      name,
+      email,
+      city,
+      courses,
+      pathStage,
+      pathStageOther,
+      story,
+      teachingImpact,
+      previousCount,
+      adminUrl,
+    } = payload
     const coursesLabel = (courses || [])
       .map((c) => SCHOLARSHIP_COURSES[c]?.label ?? c)
       .join(', ')
-    const stageLabel = PATH_STAGE_LABEL[pathStage] || pathStage
+    const stageLabel =
+      pathStage === 'other' && pathStageOther
+        ? `Other: ${pathStageOther}`
+        : PATH_STAGE_LABEL[pathStage] || pathStage
     const repeatNote = previousCount
       ? `This email has applied ${previousCount} time${previousCount === 1 ? '' : 's'} before.`
       : ''

@@ -155,9 +155,23 @@ const FAQ = [
     q: 'Is this a repair or maintenance course?',
     a: 'No. It is about how the machine works and why, so you can use more of it. You will finish knowing what to look for on your own springs and when to call your manufacturer, but it will not teach you to service equipment.',
   },
+  {
+    scholarship: true,
+    q: 'Is financial assistance available for underrepresented teachers?',
+    a: (
+      <>
+        Yes. Scholarships bring How a Reformer Works to $9 for teachers who have been
+        historically marginalized in Pilates and fitness spaces, and for whom cost
+        is a barrier to education. <Link to="/scholarship">Apply for a scholarship</Link>.
+        It takes about ten minutes, and I read every application personally.
+      </>
+    ),
+  },
 ]
 
-export default function CourseSalesBody({ pricing, heroPricing }) {
+// showScholarship is off on the $39 offer page, which deliberately offers a
+// visitor exactly one option. The public $69 page turns it on.
+export default function CourseSalesBody({ pricing, heroPricing, showScholarship = false }) {
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
       {/* ── § 01 Hero ────────────────────────────────────────────────────── */}
@@ -439,7 +453,7 @@ export default function CourseSalesBody({ pricing, heroPricing }) {
           <div className="kicker">§ 09 · Questions</div>
           <h2 className="workshop-faq__head">Frequently asked questions</h2>
           <div className="course-faq">
-            {FAQ.map((f) => (
+            {FAQ.filter((f) => showScholarship || !f.scholarship).map((f) => (
               <details className="course-faq__item" key={f.q}>
                 <summary>{f.q}</summary>
                 <p>{f.a}</p>

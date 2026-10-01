@@ -42,6 +42,7 @@ export default function HowAReformerWorks() {
     <CourseSalesBody
       heroPricing={<HeroPricing workshop={workshop} />}
       pricing={<PricingBlock workshop={workshop} />}
+      showScholarship
     />
   )
 }

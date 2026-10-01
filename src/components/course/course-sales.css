@@ -141,6 +141,11 @@
   opacity: 0.8;
   max-width: 62ch;
 }
+.course-faq__item p a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 
 /* ── Buy ────────────────────────────────────────────────────────────── */
 .course-buy__list {

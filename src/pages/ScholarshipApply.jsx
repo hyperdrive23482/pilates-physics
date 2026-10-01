@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import ArrowSvg from '../components/ui/ArrowSvg'
+import { useCurrentWorkshop } from '../hooks/useWorkshops'
 import { COURSE_OPTIONS, STAGE_OPTIONS, MIN_CHARS } from '../lib/scholarship'
 import '../styles/ppv2.css'
 import './Mentorship.css'
@@ -19,12 +20,22 @@ function CharCount({ value }) {
   )
 }
 
+function formatCourseDate(iso) {
+  return new Date(iso).toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
+
 export default function ScholarshipApply() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [city, setCity] = useState('')
-  const [courses, setCourses] = useState([])
+  const [course, setCourse] = useState('')
   const [pathStage, setPathStage] = useState('')
+  const [pathStageOther, setPathStageOther] = useState('')
   const [story, setStory] = useState('')
   const [teachingImpact, setTeachingImpact] = useState('')
   const [acknowledgement, setAcknowledgement] = useState(false)
@@ -34,8 +45,20 @@ export default function ScholarshipApply() {
 
   const loading = status === 'loading'
 
-  function toggleCourse(value) {
-    setCourses((prev) => (prev.includes(value) ? prev.filter((x) => x !== value) : [...prev, value]))
+  // The next cohort of each dated course, resolved the same way its sales
+  // page does, so the date here always matches the page the code is used on.
+  const { workshop: next101, loading: loading101 } = useCurrentWorkshop('PP-101')
+  const { workshop: next102, loading: loading102 } = useCurrentWorkshop('PP-102')
+  const nextBySeries = {
+    'PP-101': { workshop: next101, loading: loading101 },
+    'PP-102': { workshop: next102, loading: loading102 },
+  }
+
+  function courseWhen(c) {
+    if (c.onDemand) return 'On demand'
+    const next = nextBySeries[c.seriesPrefix]
+    if (!next || next.loading) return ''
+    return next.workshop?.scheduled_at ? formatCourseDate(next.workshop.scheduled_at) : 'Date TBD'
   }
 
   function fail(message) {
@@ -45,7 +68,7 @@ export default function ScholarshipApply() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (courses.length === 0) return fail('Please pick at least one course.')
+    if (!course) return fail('Please pick a course.')
     if (story.trim().length < MIN_CHARS || teachingImpact.trim().length < MIN_CHARS) {
       return fail(`Please write at least ${MIN_CHARS} characters for each question.`)
     }
@@ -62,8 +85,9 @@ export default function ScholarshipApply() {
           name,
           email,
           city,
-          courses,
+          courses: [course],
           pathStage,
+          pathStageOther: pathStage === 'other' ? pathStageOther : '',
           story,
           teachingImpact,
           acknowledgement,
@@ -84,7 +108,7 @@ export default function ScholarshipApply() {
         <div className="container container--narrow">
           <div className="kicker">§ Scholarships</div>
           <h1 className="mentorship-apply__head">
-            Pilates education, <span className="italic accent">without the gatekeeping.</span>
+            Pilates education, <span className="italic accent">within reach.</span>
           </h1>
 
           <div className="scholarship__intro">
@@ -109,10 +133,7 @@ export default function ScholarshipApply() {
             <ol className="scholarship__steps">
               <li>Apply below. It takes about ten minutes.</li>
               <li>I read every application personally and reply within a week.</li>
-              <li>
-                If approved, you get a code for each course you asked for. Use it at
-                checkout within 30 days.
-              </li>
+              <li>One course per application. Once you have used your code, you are welcome to apply for another.</li>
             </ol>
           </div>
 
@@ -168,18 +189,21 @@ export default function ScholarshipApply() {
                 </div>
 
                 <div className="pp-form__field">
-                  <label className="pp-form__label">Which courses?</label>
-                  <div className="scholarship__courses">
+                  <label className="pp-form__label">Which course?</label>
+                  <div className="scholarship__courses" role="radiogroup">
                     {COURSE_OPTIONS.map((c) => (
                       <label key={c.value} className="mentorship-apply__check">
                         <input
-                          type="checkbox"
-                          checked={courses.includes(c.value)}
-                          onChange={() => toggleCourse(c.value)}
+                          type="radio"
+                          name="course"
+                          value={c.value}
+                          checked={course === c.value}
+                          onChange={() => setCourse(c.value)}
                           disabled={loading}
                         />
                         <span>
                           {c.label} ({c.price})
+                          <span className="scholarship__when">{courseWhen(c)}</span>
                         </span>
                       </label>
                     ))}
@@ -200,6 +224,19 @@ export default function ScholarshipApply() {
                       <option key={o.value} value={o.value}>{o.label}</option>
                     ))}
                   </select>
+                  {pathStage === 'other' && (
+                    <input
+                      type="text"
+                      required
+                      value={pathStageOther}
+                      onChange={(e) => setPathStageOther(e.target.value)}
+                      disabled={loading}
+                      maxLength={300}
+                      placeholder="Tell me where you are"
+                      aria-label="Where you are in your Pilates path"
+                      className="pp-form__input scholarship__other"
+                    />
+                  )}
                 </div>
 
                 <div className="pp-form__field">
@@ -246,7 +283,7 @@ export default function ScholarshipApply() {
                     disabled={loading}
                   />
                   <span>
-                    I understand each code works once, for one course, is just for me,
+                    I understand my code works once, for this course, is just for me,
                     and expires 30 days after it is sent.
                   </span>
                 </label>

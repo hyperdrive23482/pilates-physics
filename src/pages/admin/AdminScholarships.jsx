@@ -83,7 +83,10 @@ function ApplicationDetail({ app, onUpdated }) {
   return (
     <div style={{ padding: '0 1rem 1.25rem' }}>
       <div style={{ fontSize: '0.8rem', color: 'var(--color-ink-muted)' }}>
-        {app.email} · {app.city || 'no city'} · {STAGE_LABEL[app.path_stage] ?? app.path_stage} · applied{' '}
+        {app.email} · {app.city || 'no city'} · {app.path_stage === 'other' && app.path_stage_other
+          ? `Other: ${app.path_stage_other}`
+          : STAGE_LABEL[app.path_stage] ?? app.path_stage}{' '}
+        · applied{' '}
         {formatDate(app.created_at)}
       </div>
 

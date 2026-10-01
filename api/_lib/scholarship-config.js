@@ -29,10 +29,10 @@ export const SCHOLARSHIP_COURSES = {
   },
 }
 
+// 'other' comes with a required free-text description (path_stage_other).
 export const PATH_STAGE_LABEL = {
-  teaching: 'Teaching Pilates now',
-  training: 'In a Pilates teacher training',
-  planning: 'Planning to train as a Pilates teacher',
-  movement: 'Another movement or fitness professional',
-  other: 'Something else',
+  fulltime: 'Teaching Pilates full time',
+  parttime: 'Teaching Pilates part-time',
+  training: 'In teacher training',
+  other: 'Other',
 }
