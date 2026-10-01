@@ -361,3 +361,86 @@ export async function updateSubscriberFields(subscriberId, emailAddress, fields)
   }
   return data
 }
+
+// ---------------------------------------------------------------------------
+// Read-only reporting (api/admin/kit/metrics.js)
+// ---------------------------------------------------------------------------
+
+async function kitGet(path, params = {}) {
+  const qs = new URLSearchParams()
+  for (const [k, v] of Object.entries(params)) {
+    if (v !== undefined && v !== null) qs.set(k, String(v))
+  }
+  const query = qs.toString()
+  const res = await fetch(`${KIT_BASE}${path}${query ? `?${query}` : ''}`, { headers: headers() })
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(`Kit GET ${path} ${res.status}: ${body}`)
+  }
+  return res.json()
+}
+
+// Follows Kit's cursor pagination to the end and returns every row under `key`.
+// Bounded so a pagination bug cannot spin a request until it times out.
+async function kitGetAll(path, key, params = {}) {
+  const rows = []
+  let after = null
+  for (let page = 0; page < 20; page += 1) {
+    const data = await kitGet(path, { per_page: 1000, ...params, after })
+    rows.push(...(data[key] ?? []))
+    const p = data.pagination ?? {}
+    if (!p.has_next_page) break
+    after = p.end_cursor
+  }
+  return rows
+}
+
+// Sent / opened / clicked totals over Kit's rolling 90 days.
+export async function getEmailStats() {
+  const data = await kitGet('/account/email_stats')
+  return data.stats ?? null
+}
+
+// New subscribers, cancellations and the current list size between two dates
+// (YYYY-MM-DD). `subscribers` is the list size at `ending`.
+export async function getGrowthStats({ starting, ending } = {}) {
+  const data = await kitGet('/account/growth_stats', { starting, ending })
+  return data.stats ?? null
+}
+
+// Newest broadcasts first, with stats inline. One call, and unlike
+// GET /broadcasts it does not drag every email body along with it.
+export async function listBroadcastStats({ perPage = 50 } = {}) {
+  const data = await kitGet('/broadcasts/stats', { per_page: perPage })
+  return data.broadcasts ?? []
+}
+
+export async function listSequences({ includeStats = true } = {}) {
+  return kitGetAll('/sequences', 'sequences', includeStats ? { include: 'stats' } : {})
+}
+
+// Each email in order, with recipients / opens / clicks / rates.
+export async function listSequenceEmails(sequenceId) {
+  const data = await kitGet(`/sequences/${sequenceId}/emails`, { include: 'stats', per_page: 1000 })
+  return data.emails ?? data.sequence_emails ?? []
+}
+
+// Everyone who has ever entered the sequence, finished or not, with added_at
+// and custom fields. Kit does not say where anyone is inside it: the
+// sequence's own subscriber_count is the only "still in it" number there is.
+export async function listSequenceSubscribers(sequenceId, { status = 'all' } = {}) {
+  return kitGetAll(`/sequences/${sequenceId}/subscribers`, 'subscribers', { status })
+}
+
+// Every subscriber carrying a tag, across all pages.
+export async function listAllSubscribersByTag(tagName, { status = null } = {}) {
+  const tagId = await resolveTagId(tagName)
+  return kitGetAll(`/tags/${tagId}/subscribers`, 'subscribers', status ? { status } : {})
+}
+
+// Active subscribers carrying a tag, counted without paging through them.
+export async function countSubscribersByTag(tagName) {
+  const tagId = await resolveTagId(tagName)
+  const data = await kitGet(`/tags/${tagId}/subscribers`, { per_page: 1, include_total_count: true })
+  return data.pagination?.total_count ?? null
+}
