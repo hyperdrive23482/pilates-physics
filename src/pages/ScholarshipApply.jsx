@@ -132,7 +132,6 @@ export default function ScholarshipApply() {
 
             <ol className="scholarship__steps">
               <li>Apply below. It takes about ten minutes.</li>
-              <li>I read every application personally and reply within a week.</li>
               <li>One course per application. Once you have used your code, you are welcome to apply for another.</li>
             </ol>
           </div>
@@ -142,8 +141,8 @@ export default function ScholarshipApply() {
               <div className="mentorship-reserve__success">
                 <p className="mentorship-reserve__success-head">§ Received</p>
                 <p className="mentorship-reserve__success-body">
-                  Thank you, your application is in. I read every one personally and
-                  will reply within a week. Check your inbox for a confirmation email.
+                  Thank you, your application is in. Check your inbox for a
+                  confirmation email.
                 </p>
               </div>
             ) : (

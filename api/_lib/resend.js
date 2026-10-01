@@ -543,8 +543,8 @@ const ACK_COPY = {
   scholarship: {
     subject: 'Your scholarship application. Pilates Physics',
     html: `<p>Thank you for applying for a Pilates Physics scholarship. Your application came through.</p>
-       <p>I read every application personally and you will hear back from me within a week. If it is approved, your code comes in that email, along with how to use it at checkout.</p>`,
-    text: `Thank you for applying for a Pilates Physics scholarship. Your application came through.\n\nI read every application personally and you will hear back from me within a week. If it is approved, your code comes in that email, along with how to use it at checkout.`,
+       <p>If it is approved, I will email you your code, along with how to use it at checkout.</p>`,
+    text: `Thank you for applying for a Pilates Physics scholarship. Your application came through.\n\nIf it is approved, I will email you your code, along with how to use it at checkout.`,
   },
   inquiry: {
     subject: 'Thanks for reaching out — Pilates Physics',

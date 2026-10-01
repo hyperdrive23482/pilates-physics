@@ -130,7 +130,6 @@ const FAQ = [
         Yes. Scholarships bring Pilates Physics 101 to $19 for teachers who have been
         historically marginalized in Pilates and fitness spaces, and for whom cost
         is a barrier to education. <Link to="/scholarship">Apply for a scholarship</Link>.
-        It takes about ten minutes, and I read every application personally.
       </>
     ),
   },
