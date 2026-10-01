@@ -35,6 +35,17 @@ const sectionLabel = {
   margin: '1rem 0 0.4rem',
 }
 
+const noteBox = {
+  width: '100%',
+  padding: '0.5rem 0.75rem',
+  background: 'var(--color-bg)',
+  color: 'var(--color-ink)',
+  border: '1px solid var(--color-rule)',
+  fontFamily: 'var(--font-serif)',
+  fontSize: '0.85rem',
+  boxSizing: 'border-box',
+}
+
 const answerBox = {
   whiteSpace: 'pre-wrap',
   fontSize: '0.9rem',
@@ -50,6 +61,10 @@ function ApplicationDetail({ app, onUpdated }) {
   const { request } = useAdminAPI()
   const [courses, setCourses] = useState(app.courses)
   const [notes, setNotes] = useState(app.admin_notes ?? '')
+  const [personalNote, setPersonalNote] = useState(app.approval_note ?? '')
+  const [showPreview, setShowPreview] = useState(false)
+  const [preview, setPreview] = useState(null)
+  const [previewError, setPreviewError] = useState(null)
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState(null)
   const [error, setError] = useState(null)
@@ -76,6 +91,35 @@ function ApplicationDetail({ app, onUpdated }) {
       setBusy(false)
     }
   }
+
+  // While the preview is open, rebuild it shortly after typing stops.
+  useEffect(() => {
+    if (!showPreview) return
+    if (courses.length === 0) {
+      setPreview(null)
+      setPreviewError('Pick at least one course to preview.')
+      return
+    }
+    let cancelled = false
+    const t = setTimeout(async () => {
+      try {
+        const res = await request('/api/admin/scholarships', {
+          method: 'POST',
+          body: { action: 'preview', id: app.id, courses, personalNote },
+        })
+        if (!cancelled) {
+          setPreview(res.preview)
+          setPreviewError(null)
+        }
+      } catch (e) {
+        if (!cancelled) setPreviewError(e.message)
+      }
+    }, 400)
+    return () => {
+      cancelled = true
+      clearTimeout(t)
+    }
+  }, [showPreview, personalNote, courses, app.id, request])
 
   const codes = app.codes ?? []
   const hasLive = codes.some((c) => !c.redeemed_at && new Date(c.expires_at) > new Date())
@@ -137,6 +181,54 @@ function ApplicationDetail({ app, onUpdated }) {
         ))}
       </div>
 
+      <h3 style={sectionLabel}>Personal note for the email</h3>
+      {app.approval_note_sent_at && (
+        <p style={{ fontSize: '0.75rem', color: 'var(--color-ink-muted)', margin: '0 0 0.4rem' }}>
+          {app.approval_note
+            ? `This note went out with the email on ${formatDate(app.approval_note_sent_at)}.`
+            : `The email on ${formatDate(app.approval_note_sent_at)} went out with no personal note.`}
+        </p>
+      )}
+      <textarea
+        value={personalNote}
+        onChange={(e) => setPersonalNote(e.target.value)}
+        rows={4}
+        maxLength={2000}
+        placeholder="Goes right after “Hi name,” in place of the stock opening line. Leave blank to use the stock line. A blank line starts a new paragraph."
+        style={noteBox}
+        disabled={busy}
+      />
+      <button
+        type="button"
+        className="pp-btn"
+        onClick={() => setShowPreview((v) => !v)}
+        style={{ marginTop: '0.4rem' }}
+      >
+        {showPreview ? 'Hide email preview' : 'Preview email'}
+      </button>
+
+      {showPreview && (
+        <div style={{ marginTop: '0.75rem' }}>
+          {previewError && <p style={{ fontSize: '0.8rem', color: '#ff7d7d', margin: '0 0 0.5rem' }}>{previewError}</p>}
+          {preview && (
+            <div style={{ border: '1px solid var(--color-rule)' }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--color-ink-muted)', padding: '0.5rem 0.75rem', borderBottom: '1px solid var(--color-rule)' }}>
+                To: {app.email} · Subject: {preview.subject}
+                <span style={{ display: 'block', fontSize: '0.72rem' }}>
+                  Sample codes shown. The real ones are created when you approve.
+                </span>
+              </div>
+              <iframe
+                title="Approval email preview"
+                srcDoc={`<!doctype html><html><body style="margin:0;padding:1rem 1.25rem;background:#fff;">${preview.html}</body></html>`}
+                sandbox=""
+                style={{ width: '100%', height: '520px', border: 'none', background: '#fff', display: 'block' }}
+              />
+            </div>
+          )}
+        </div>
+      )}
+
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '1rem' }}>
         <button
           type="button"
@@ -145,7 +237,7 @@ function ApplicationDetail({ app, onUpdated }) {
           onClick={() =>
             run(
               'approve',
-              { courses },
+              { courses, personalNote },
               `Create ${courses.length} code${courses.length === 1 ? '' : 's'} and email ${app.email}?`
             )
           }
@@ -153,7 +245,7 @@ function ApplicationDetail({ app, onUpdated }) {
           {app.status === 'approved' ? 'Send codes for selected' : 'Approve and email codes'}
         </button>
         {hasLive && (
-          <button type="button" className="pp-btn" disabled={busy} onClick={() => run('resend', {}, `Re-send live codes to ${app.email}?`)}>
+          <button type="button" className="pp-btn" disabled={busy} onClick={() => run('resend', { personalNote }, `Re-send live codes to ${app.email}?`)}>
             Resend email
           </button>
         )}
@@ -181,16 +273,7 @@ function ApplicationDetail({ app, onUpdated }) {
         onChange={(e) => setNotes(e.target.value)}
         rows={2}
         maxLength={4000}
-        style={{
-          width: '100%',
-          padding: '0.5rem 0.75rem',
-          background: 'var(--color-bg)',
-          color: 'var(--color-ink)',
-          border: '1px solid var(--color-rule)',
-          fontFamily: 'var(--font-serif)',
-          fontSize: '0.85rem',
-          boxSizing: 'border-box',
-        }}
+        style={noteBox}
       />
       <button
         type="button"

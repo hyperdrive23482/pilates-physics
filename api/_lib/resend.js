@@ -442,10 +442,22 @@ export async function sendInquiryEmail({ kind, ...payload }) {
   throw new Error(`Unknown inquiry kind: ${kind}`)
 }
 
-// Sent when Kaleen approves a scholarship in /admin/scholarships. codes is
-// [{ course, code, expires_at }]; siteUrl builds the course links.
-export async function sendScholarshipApproval({ to, name, codes, siteUrl }) {
-  const replyTo = process.env.CONTACT_TO_EMAIL || 'kaleen@pilatesphysics.com'
+// Kaleen's personal note, as paragraphs: a blank line starts a new paragraph,
+// a single line break stays a line break.
+function noteParagraphs(note) {
+  return (note ?? '')
+    .replace(/\r\n/g, '\n')
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean)
+}
+
+// The scholarship approval email, built without sending so the admin page can
+// preview exactly what goes out. codes is [{ course, code, expires_at }];
+// siteUrl builds the course links. personalNote, when given, replaces the
+// stock opening line.
+export function buildScholarshipApprovalEmail({ name, codes, siteUrl, personalNote }) {
+  const note = noteParagraphs(personalNote)
   const expires = new Date(codes[0].expires_at).toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
@@ -473,10 +485,18 @@ export async function sendScholarshipApproval({ to, name, codes, siteUrl }) {
     )
     .join('')
 
+  const openingHtml = note.length
+    ? `${note.map((p) => `<p>${escapeHtml(p).replace(/\n/g, '<br>')}</p>`).join('\n      ')}
+      <p>Your scholarship is approved.</p>`
+    : '<p>Thank you for applying. I loved reading your application, and your scholarship is approved.</p>'
+  const openingText = note.length
+    ? `${note.join('\n\n')}\n\nYour scholarship is approved.`
+    : 'Thank you for applying. I loved reading your application, and your scholarship is approved.'
+
   const html = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1C1A17; line-height: 1.6; max-width: 560px;">
       <p>Hi ${escapeHtml(name)},</p>
-      <p>Thank you for applying. I loved reading your application, and your scholarship is approved.</p>
+      ${openingHtml}
       <p>Here ${plural ? 'are your codes' : 'is your code'}. Open the course page, click to register, and enter the code at checkout under "Add promotion code".</p>
       ${htmlCodes}
       <p>${plural ? 'Each code works once, for its own course' : 'The code works once'}, and ${plural ? 'they expire' : 'it expires'} on ${escapeHtml(expires)}. Please keep ${plural ? 'them' : 'it'} to yourself, since every code is tied to one person's application.</p>
@@ -486,12 +506,19 @@ export async function sendScholarshipApproval({ to, name, codes, siteUrl }) {
   `.trim()
 
   const textCodes = lines.map((l) => `${l.label} for ${l.price}\nCode: ${l.code}\n${l.url}`).join('\n\n')
-  const text = `Hi ${name},\n\nThank you for applying. I loved reading your application, and your scholarship is approved.\n\nHere ${plural ? 'are your codes' : 'is your code'}. Open the course page, click to register, and enter the code at checkout under "Add promotion code".\n\n${textCodes}\n\n${plural ? 'Each code works once, for its own course' : 'The code works once'}, and ${plural ? 'they expire' : 'it expires'} on ${expires}. Please keep ${plural ? 'them' : 'it'} to yourself, since every code is tied to one person's application.\n\nIf anything goes sideways at checkout, reply to this email and I will sort it out.\n\nKaleen`
+  const text = `Hi ${name},\n\n${openingText}\n\nHere ${plural ? 'are your codes' : 'is your code'}. Open the course page, click to register, and enter the code at checkout under "Add promotion code".\n\n${textCodes}\n\n${plural ? 'Each code works once, for its own course' : 'The code works once'}, and ${plural ? 'they expire' : 'it expires'} on ${expires}. Please keep ${plural ? 'them' : 'it'} to yourself, since every code is tied to one person's application.\n\nIf anything goes sideways at checkout, reply to this email and I will sort it out.\n\nKaleen`
 
+  return { subject: 'Your Pilates Physics scholarship', html, text }
+}
+
+// Sent when Kaleen approves a scholarship in /admin/scholarships.
+export async function sendScholarshipApproval({ to, name, codes, siteUrl, personalNote }) {
+  const replyTo = process.env.CONTACT_TO_EMAIL || 'kaleen@pilatesphysics.com'
+  const { subject, html, text } = buildScholarshipApprovalEmail({ name, codes, siteUrl, personalNote })
   const { data, error } = await getResend().emails.send({
     from: FROM,
     to,
-    subject: 'Your Pilates Physics scholarship',
+    subject,
     html,
     text,
     replyTo,

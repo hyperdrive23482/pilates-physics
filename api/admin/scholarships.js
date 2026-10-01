@@ -2,17 +2,34 @@ import { supabaseAdmin } from '../_lib/supabase-admin.js'
 import { requireAdmin } from '../_lib/require-admin.js'
 import { stripe } from '../_lib/stripe.js'
 import { mintScholarshipCode } from '../_lib/scholarship.js'
-import { SCHOLARSHIP_COURSES } from '../_lib/scholarship-config.js'
-import { sendScholarshipApproval } from '../_lib/resend.js'
+import { SCHOLARSHIP_COURSES, CODE_LIFETIME_DAYS } from '../_lib/scholarship-config.js'
+import { sendScholarshipApproval, buildScholarshipApprovalEmail } from '../_lib/resend.js'
 
 // /admin/scholarships. GET returns every application with its codes, plus the
 // metrics block. POST takes { action, id, ... }:
 //   approve  mint a code per course (default: the courses they asked for),
 //            skipping any course that already has a live code, and email them
 //   resend   re-send the approval email with every live, unredeemed code
+//   preview  the approval email as it would go out, with sample codes
+//   (approve, resend and preview take an optional personalNote for the email)
 //   decline  mark declined; no email, so Kaleen can write personally
 //   reopen   back to pending
 //   notes    save admin_notes
+
+const NOTE_MAX = 2000
+
+function cleanNote(note) {
+  return typeof note === 'string' ? note.trim().slice(0, NOTE_MAX) : ''
+}
+
+// A restricted Stripe key missing a permission fails with a long message that
+// hides the fix. Say which permissions minting needs instead.
+function mintErrorMessage(err) {
+  if (err?.type === 'StripePermissionError' || err?.statusCode === 403) {
+    return 'The Stripe API key is missing permissions. In Stripe, edit the restricted key and set Prices to Read, Coupons to Write and Promotion codes to Write.'
+  }
+  return err.message
+}
 
 function isLive(code, now = Date.now()) {
   return !code.redeemed_at && new Date(code.expires_at).getTime() > now
@@ -96,17 +113,53 @@ async function buildMetrics(applications) {
   }
 }
 
-async function emailCodes(application, codes, req) {
-  const siteUrl = `${req.headers['x-forwarded-proto'] ?? 'https'}://${req.headers.host}`
+function siteUrlOf(req) {
+  return `${req.headers['x-forwarded-proto'] ?? 'https'}://${req.headers.host}`
+}
+
+function firstName(application) {
+  return application.name.split(/\s+/)[0] || application.name
+}
+
+// Sends the email, then records the note that went out with it. A failed
+// save is logged rather than thrown, since the email has already gone.
+async function emailCodes(application, codes, req, personalNote) {
   await sendScholarshipApproval({
     to: application.email,
-    name: application.name.split(/\s+/)[0] || application.name,
+    name: firstName(application),
     codes,
-    siteUrl,
+    siteUrl: siteUrlOf(req),
+    personalNote,
+  })
+  const { error } = await supabaseAdmin
+    .from('scholarship_applications')
+    .update({ approval_note: personalNote || null, approval_note_sent_at: new Date().toISOString() })
+    .eq('id', application.id)
+  if (error) console.error('scholarship approval note save failed:', error)
+}
+
+// Sample codes in the same shape as real ones, so the preview matches the
+// sent email apart from the code itself.
+function previewEmail(application, courses, req, personalNote) {
+  const keys = (Array.isArray(courses) && courses.length ? courses : application.courses).filter(
+    (c) => SCHOLARSHIP_COURSES[c]
+  )
+  const expiresAt = new Date(Date.now() + CODE_LIFETIME_DAYS * 24 * 60 * 60 * 1000).toISOString()
+  const codes = keys.map((course) => ({
+    course,
+    code: `SCHOLAR-${SCHOLARSHIP_COURSES[course].codeTag}-XXXXXX`,
+    expires_at: expiresAt,
+  }))
+  if (codes.length === 0) throw Object.assign(new Error('Pick at least one course'), { status: 400 })
+  return buildScholarshipApprovalEmail({
+    name: firstName(application),
+    codes,
+    siteUrl: siteUrlOf(req),
+    personalNote,
   })
 }
 
-async function approve(application, courses, req) {
+async function approve(application, courses, req, personalNote) {
   const requested = Array.isArray(courses) && courses.length ? courses : application.courses
   for (const c of requested) {
     if (!SCHOLARSHIP_COURSES[c]) throw Object.assign(new Error(`Unknown course: ${c}`), { status: 400 })
@@ -121,7 +174,7 @@ async function approve(application, courses, req) {
       minted.push(await mintScholarshipCode(application, course))
     } catch (err) {
       console.error(`scholarship mint failed (${course}):`, err)
-      failures.push(`${SCHOLARSHIP_COURSES[course].label}: ${err.message}`)
+      failures.push(`${SCHOLARSHIP_COURSES[course].label}: ${mintErrorMessage(err)}`)
     }
   }
 
@@ -138,7 +191,7 @@ async function approve(application, courses, req) {
   let emailError = null
   if (minted.length > 0) {
     try {
-      await emailCodes(application, minted, req)
+      await emailCodes(application, minted, req, personalNote)
     } catch (err) {
       console.error('scholarship approval email failed:', err)
       emailError = err.message
@@ -170,17 +223,22 @@ export default async function handler(req, res) {
     }
 
     const { action, id, courses, notes } = req.body ?? {}
+    const personalNote = cleanNote(req.body?.personalNote)
     if (!id) return res.status(400).json({ error: 'id is required' })
     const application = await loadApplication(id)
     if (!application) return res.status(404).json({ error: 'Application not found' })
 
+    if (action === 'preview') {
+      return res.status(200).json({ preview: previewEmail(application, courses, req, personalNote) })
+    }
+
     let result = {}
     if (action === 'approve') {
-      result = await approve(application, courses, req)
+      result = await approve(application, courses, req, personalNote)
     } else if (action === 'resend') {
       const live = (application.codes ?? []).filter((c) => isLive(c))
       if (live.length === 0) return res.status(400).json({ error: 'No live codes to send' })
-      await emailCodes(application, live, req)
+      await emailCodes(application, live, req, personalNote)
     } else if (action === 'decline' || action === 'reopen') {
       const status = action === 'decline' ? 'declined' : 'pending'
       // Declining also switches off any live codes, so a decline after an
