@@ -6,6 +6,7 @@ export default function EntitlementManager({ userRow, workshops, onChange }) {
   const { request } = useAdminAPI()
   const [workshopId, setWorkshopId] = useState('')
   const [expiresAt, setExpiresAt] = useState('')
+  const [scholarship, setScholarship] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState(null)
 
@@ -20,10 +21,12 @@ export default function EntitlementManager({ userRow, workshops, onChange }) {
           user_id: userRow.id,
           webinar_id: workshopId,
           expires_at: expiresAt || null,
+          scholarship,
         },
       })
       setWorkshopId('')
       setExpiresAt('')
+      setScholarship(false)
       onChange?.()
     } catch (err) {
       setError(err.message)
@@ -70,6 +73,7 @@ export default function EntitlementManager({ userRow, workshops, onChange }) {
                 {e.workshop?.title ?? e.webinar_id}
                 <span style={{ color: 'var(--color-ink-muted)', marginLeft: '0.5rem' }}>
                   · {e.source}
+                  {e.scholarship ? ' · scholarship' : ''}
                   {e.expires_at ? ` · expires ${new Date(e.expires_at).toLocaleDateString()}` : ''}
                 </span>
               </span>
@@ -117,6 +121,22 @@ export default function EntitlementManager({ userRow, workshops, onChange }) {
           placeholder="Expires (optional)"
           style={inputStyle}
         />
+        <label
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.3rem',
+            fontSize: '0.8rem',
+            color: 'var(--color-ink-muted)',
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={scholarship}
+            onChange={(e) => setScholarship(e.target.checked)}
+          />
+          Scholarship
+        </label>
         <button
           type="button"
           onClick={grant}

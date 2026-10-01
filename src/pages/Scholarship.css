@@ -1,0 +1,43 @@
+/* /scholarship. Form chrome comes from Mentorship.css (.mentorship-apply__*). */
+
+.ppv2 .scholarship__intro {
+  font-family: var(--pp-font-serif);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0 0 40px;
+  max-width: 62ch;
+}
+.ppv2 .scholarship__intro p { margin: 0 0 24px; }
+
+.ppv2 .scholarship__prices {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  border-top: 1px solid var(--rule);
+}
+.ppv2 .scholarship__prices li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.ppv2 .scholarship__prices strong { color: var(--accent); font-weight: 500; }
+.ppv2 .scholarship__prices s { color: var(--ink-soft); margin-left: 6px; }
+
+.ppv2 .scholarship__steps {
+  margin: 0;
+  padding-left: 1.2em;
+  color: var(--ink-soft);
+}
+.ppv2 .scholarship__steps li { margin-bottom: 6px; }
+
+.ppv2 .scholarship__courses {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ppv2 .scholarship__count { margin-top: 6px; }
+.ppv2 .scholarship__count--ok { color: var(--accent); }

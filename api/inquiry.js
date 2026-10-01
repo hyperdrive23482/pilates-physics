@@ -1,4 +1,6 @@
 import { sendInquiryEmail, sendInquiryAcknowledgement } from './_lib/resend.js'
+import { supabaseAdmin } from './_lib/supabase-admin.js'
+import { SCHOLARSHIP_COURSES, PATH_STAGE_LABEL } from './_lib/scholarship-config.js'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -171,10 +173,81 @@ function validateMentorship(body) {
   }
 }
 
+// The /scholarship form. The two written answers have a floor so the form
+// takes some thought; keep SCHOLARSHIP_MIN_CHARS in step with
+// src/lib/scholarship.js.
+const SCHOLARSHIP_MIN_CHARS = 150
+
+function validateScholarship(body) {
+  const name = trimString(body.name)
+  const email = trimString(body.email)
+  const city = trimString(body.city)
+  const pathStage = trimString(body.pathStage)
+  const story = trimString(body.story)
+  const teachingImpact = trimString(body.teachingImpact)
+  const courses = Array.isArray(body.courses) ? [...new Set(body.courses)] : []
+  const acknowledgement = body.acknowledgement === true
+
+  if (!name) return { error: 'Name is required' }
+  if (!email) return { error: 'Email is required' }
+  if (courses.length === 0) return { error: 'Please pick at least one course' }
+  if (!pathStage) return { error: 'Please tell me where you are in your Pilates path' }
+  if (!story) return { error: 'Please tell me about your path so far' }
+  if (!teachingImpact) return { error: 'Please tell me what would change in your teaching' }
+  if (!acknowledgement) return { error: 'Please confirm the note about codes' }
+  if (name.length > 200) return { error: 'Name is too long' }
+  if (email.length > 320) return { error: 'Email is too long' }
+  if (city.length > 200) return { error: 'City is too long' }
+  if (story.length < SCHOLARSHIP_MIN_CHARS || teachingImpact.length < SCHOLARSHIP_MIN_CHARS) {
+    return { error: `Please write at least ${SCHOLARSHIP_MIN_CHARS} characters for each question` }
+  }
+  if (story.length > 2000 || teachingImpact.length > 2000) {
+    return { error: 'Your answer is too long (max 2000 characters)' }
+  }
+  if (!EMAIL_RE.test(email)) return { error: 'Please enter a valid email address' }
+  if (!Object.prototype.hasOwnProperty.call(PATH_STAGE_LABEL, pathStage)) {
+    return { error: 'Please select a valid option for where you are' }
+  }
+  for (const c of courses) {
+    if (!Object.prototype.hasOwnProperty.call(SCHOLARSHIP_COURSES, c)) {
+      return { error: 'Invalid course option' }
+    }
+  }
+
+  return { payload: { name, email, city, courses, pathStage, story, teachingImpact } }
+}
+
+// Scholarship applications are stored as well as emailed, so the admin page
+// can approve them and count them. Fatal on purpose: an application that is
+// emailed but not stored cannot be approved from the admin page.
+async function storeScholarship(payload, req) {
+  const { count, error: countErr } = await supabaseAdmin
+    .from('scholarship_applications')
+    .select('id', { count: 'exact', head: true })
+    // Case-insensitive exact match: escape ilike's wildcards, since _ is common in emails.
+    .ilike('email', payload.email.replace(/[\\%_]/g, '\\$&'))
+  if (countErr) throw countErr
+
+  const { error } = await supabaseAdmin.from('scholarship_applications').insert({
+    name: payload.name,
+    email: payload.email,
+    city: payload.city || null,
+    courses: payload.courses,
+    path_stage: payload.pathStage,
+    story: payload.story,
+    teaching_impact: payload.teachingImpact,
+  })
+  if (error) throw error
+
+  const origin = `${req.headers['x-forwarded-proto'] ?? 'https'}://${req.headers.host}`
+  return { previousCount: count ?? 0, adminUrl: `${origin}/admin/scholarships` }
+}
+
 const VALIDATORS = {
   inquiry: validateInquiry,
   application: validateApplication,
   mentorship: validateMentorship,
+  scholarship: validateScholarship,
 }
 
 export default async function handler(req, res) {
@@ -199,7 +272,9 @@ export default async function handler(req, res) {
     const result = validate(body)
     if (result.error) return res.status(400).json({ error: result.error })
 
-    await sendInquiryEmail({ kind, ...result.payload })
+    const extra = kind === 'scholarship' ? await storeScholarship(result.payload, req) : {}
+
+    await sendInquiryEmail({ kind, ...result.payload, ...extra })
 
     try {
       await sendInquiryAcknowledgement({

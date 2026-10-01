@@ -1,6 +1,7 @@
 import { Resend } from 'resend'
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { SCHOLARSHIP_COURSES, PATH_STAGE_LABEL } from './scholarship-config.js'
 
 const FROM = 'Pilates Physics <noreply@mail.pilatesphysics.com>'
 
@@ -100,6 +101,7 @@ export async function sendPurchaseNotification({
   amountCents,
   userState,
   sessionId,
+  scholarshipCode,
 }) {
   const to = 'kaleen@pilatesphysics.com'
   const fullName = `${firstName} ${lastName}`.trim() || '(no name)'
@@ -128,16 +130,17 @@ export async function sendPurchaseNotification({
       <p style="margin: 0 0 0.5rem;"><strong>Name:</strong> ${safeName}</p>
       <p style="margin: 0 0 0.5rem;"><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
       <p style="margin: 0 0 0.5rem;"><strong>Customer type:</strong> ${safeState}</p>
+      ${scholarshipCode ? `<p style="margin: 0 0 0.5rem;"><strong>Scholarship:</strong> ${escapeHtml(scholarshipCode)}</p>` : ''}
       <p style="margin: 1.5rem 0 0; font-size: 0.85rem; color: #666;">Stripe session: ${safeSession}</p>
     </div>
   `.trim()
 
-  const text = `New course purchase\n\nCourse: ${workshopTitle || '(unknown course)'}\nAmount: ${amountFormatted}\nName: ${fullName}\nEmail: ${email}\nCustomer type: ${stateLabel}\n\nStripe session: ${sessionId || ''}`
+  const text = `New course purchase\n\nCourse: ${workshopTitle || '(unknown course)'}\nAmount: ${amountFormatted}\nName: ${fullName}\nEmail: ${email}\nCustomer type: ${stateLabel}${scholarshipCode ? `\nScholarship: ${scholarshipCode}` : ''}\n\nStripe session: ${sessionId || ''}`
 
   const { data, error } = await getResend().emails.send({
     from: FROM,
     to,
-    subject: `New purchase: ${workshopTitle || 'course'} — ${fullName}`,
+    subject: `New ${scholarshipCode ? 'scholarship ' : ''}purchase: ${workshopTitle || 'course'} — ${fullName}`,
     html,
     text,
   })
@@ -379,7 +382,109 @@ export async function sendInquiryEmail({ kind, ...payload }) {
     return data
   }
 
+  if (kind === 'scholarship') {
+    const { name, email, city, courses, pathStage, story, teachingImpact, previousCount, adminUrl } =
+      payload
+    const coursesLabel = (courses || [])
+      .map((c) => SCHOLARSHIP_COURSES[c]?.label ?? c)
+      .join(', ')
+    const stageLabel = PATH_STAGE_LABEL[pathStage] || pathStage
+    const repeatNote = previousCount
+      ? `This email has applied ${previousCount} time${previousCount === 1 ? '' : 's'} before.`
+      : ''
+    const safeStory = escapeHtml(story).replace(/\n/g, '<br>')
+    const safeImpact = escapeHtml(teachingImpact).replace(/\n/g, '<br>')
+
+    const html = `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1C1A17; line-height: 1.6;">
+        <p style="margin: 0 0 1rem; font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 0.08em;">New scholarship application from /scholarship</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Name:</strong> ${escapeHtml(name)}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Email:</strong> <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>
+        <p style="margin: 0 0 0.5rem;"><strong>City / region:</strong> ${escapeHtml(city || '(not provided)')}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Courses:</strong> ${escapeHtml(coursesLabel)}</p>
+        <p style="margin: 0 0 0.5rem;"><strong>Where they are:</strong> ${escapeHtml(stageLabel)}</p>
+        ${repeatNote ? `<p style="margin: 0 0 0.5rem; color: #a2462b;"><strong>${escapeHtml(repeatNote)}</strong></p>` : ''}
+        <p style="margin: 1.5rem 0 0.5rem;"><strong>Their path, and what has made access harder:</strong></p>
+        <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeStory}</div>
+        <p style="margin: 1.5rem 0 0.5rem;"><strong>What would change in their teaching:</strong></p>
+        <div style="padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">${safeImpact}</div>
+        <p style="margin: 1.5rem 0 0; font-size: 0.85rem; color: #666;">Approve or decline at <a href="${escapeHtml(adminUrl)}">${escapeHtml(adminUrl)}</a>. Approving sends the codes automatically.</p>
+      </div>
+    `.trim()
+
+    const text = `New scholarship application from /scholarship\n\nName: ${name}\nEmail: ${email}\nCity / region: ${city || '(not provided)'}\nCourses: ${coursesLabel}\nWhere they are: ${stageLabel}\n${repeatNote ? `${repeatNote}\n` : ''}\nTheir path, and what has made access harder:\n${story}\n\nWhat would change in their teaching:\n${teachingImpact}\n\nApprove or decline at ${adminUrl}. Approving sends the codes automatically.`
+
+    const { data, error } = await getResend().emails.send({
+      from: FROM,
+      to,
+      subject: `Scholarship application: ${name}`,
+      html,
+      text,
+      replyTo: email,
+    })
+    if (error) throw new Error(`Resend send failed: ${error.message ?? JSON.stringify(error)}`)
+    return data
+  }
+
   throw new Error(`Unknown inquiry kind: ${kind}`)
+}
+
+// Sent when Kaleen approves a scholarship in /admin/scholarships. codes is
+// [{ course, code, expires_at }]; siteUrl builds the course links.
+export async function sendScholarshipApproval({ to, name, codes, siteUrl }) {
+  const replyTo = process.env.CONTACT_TO_EMAIL || 'kaleen@pilatesphysics.com'
+  const expires = new Date(codes[0].expires_at).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  })
+  const lines = codes.map((c) => {
+    const course = SCHOLARSHIP_COURSES[c.course]
+    return {
+      label: course?.label ?? c.course,
+      price: `$${((course?.targetCents ?? 0) / 100).toFixed(0)} USD`,
+      url: `${siteUrl}${course?.path ?? ''}`,
+      code: c.code,
+    }
+  })
+  const plural = codes.length > 1
+
+  const htmlCodes = lines
+    .map(
+      (l) => `
+      <div style="margin: 0 0 1rem; padding: 1rem; background: #f6f4ef; border-left: 3px solid #a48b5a;">
+        <p style="margin: 0 0 0.25rem;"><strong>${escapeHtml(l.label)}</strong> for ${escapeHtml(l.price)}</p>
+        <p style="margin: 0 0 0.25rem; font-family: ui-monospace, Menlo, monospace; font-size: 1.05rem; letter-spacing: 0.05em;">${escapeHtml(l.code)}</p>
+        <p style="margin: 0;"><a href="${escapeHtml(l.url)}">${escapeHtml(l.url)}</a></p>
+      </div>`
+    )
+    .join('')
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1C1A17; line-height: 1.6; max-width: 560px;">
+      <p>Hi ${escapeHtml(name)},</p>
+      <p>Thank you for applying. I loved reading your application, and your scholarship is approved.</p>
+      <p>Here ${plural ? 'are your codes' : 'is your code'}. Open the course page, click to register, and enter the code at checkout under "Add promotion code".</p>
+      ${htmlCodes}
+      <p>${plural ? 'Each code works once, for its own course' : 'The code works once'}, and ${plural ? 'they expire' : 'it expires'} on ${escapeHtml(expires)}. Please keep ${plural ? 'them' : 'it'} to yourself, since every code is tied to one person's application.</p>
+      <p>If anything goes sideways at checkout, reply to this email and I will sort it out.</p>
+      <p style="margin-top: 1.5rem;">Kaleen</p>
+    </div>
+  `.trim()
+
+  const textCodes = lines.map((l) => `${l.label} for ${l.price}\nCode: ${l.code}\n${l.url}`).join('\n\n')
+  const text = `Hi ${name},\n\nThank you for applying. I loved reading your application, and your scholarship is approved.\n\nHere ${plural ? 'are your codes' : 'is your code'}. Open the course page, click to register, and enter the code at checkout under "Add promotion code".\n\n${textCodes}\n\n${plural ? 'Each code works once, for its own course' : 'The code works once'}, and ${plural ? 'they expire' : 'it expires'} on ${expires}. Please keep ${plural ? 'them' : 'it'} to yourself, since every code is tied to one person's application.\n\nIf anything goes sideways at checkout, reply to this email and I will sort it out.\n\nKaleen`
+
+  const { data, error } = await getResend().emails.send({
+    from: FROM,
+    to,
+    subject: 'Your Pilates Physics scholarship',
+    html,
+    text,
+    replyTo,
+  })
+  if (error) throw new Error(`Resend send failed: ${error.message ?? JSON.stringify(error)}`)
+  return data
 }
 
 const ACK_COPY = {
@@ -394,6 +499,12 @@ const ACK_COPY = {
     html: `<p>Thanks for applying to the 8-week mentorship. Your application came through.</p>
        <p>I read every application personally, in the order they arrive, and you will hear back from me within a week. If it is a fit, your invoice for the payment option you picked comes with the acceptance, and your place is confirmed once it is paid.</p>`,
     text: `Thanks for applying to the 8-week mentorship. Your application came through.\n\nI read every application personally, in the order they arrive, and you will hear back from me within a week. If it is a fit, your invoice for the payment option you picked comes with the acceptance, and your place is confirmed once it is paid.`,
+  },
+  scholarship: {
+    subject: 'Your scholarship application. Pilates Physics',
+    html: `<p>Thank you for applying for a Pilates Physics scholarship. Your application came through.</p>
+       <p>I read every application personally and you will hear back from me within a week. If it is approved, your code comes in that email, along with how to use it at checkout.</p>`,
+    text: `Thank you for applying for a Pilates Physics scholarship. Your application came through.\n\nI read every application personally and you will hear back from me within a week. If it is approved, your code comes in that email, along with how to use it at checkout.`,
   },
   inquiry: {
     subject: 'Thanks for reaching out — Pilates Physics',

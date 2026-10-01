@@ -75,6 +75,7 @@ export default async function handler(req, res) {
         amountCents: session.amount_total,
         userState: result.userState,
         sessionId: session.id,
+        scholarshipCode: result.scholarshipCode,
       })
     } catch (err) {
       console.error('Purchase notification send failed:', err)

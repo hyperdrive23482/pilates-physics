@@ -10,6 +10,7 @@ const links = [
   { to: '/admin/workshops', label: 'Workshops' },
   { to: '/admin/tools', label: 'Tools' },
   { to: '/admin/users', label: 'Users' },
+  { to: '/admin/scholarships', label: 'Scholarships' },
   { to: '/admin/analytics', label: 'Analytics' },
   { to: '/admin/kit', label: 'Kit' },
   { to: '/admin/workshop-feedback', label: 'Feedback' },

@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   if (!admin) return
 
   try {
-    const { email, user_id, webinar_id, expires_at } = req.body ?? {}
+    const { email, user_id, webinar_id, expires_at, scholarship } = req.body ?? {}
     if (!webinar_id) return res.status(400).json({ error: 'webinar_id is required' })
     if (!email && !user_id) return res.status(400).json({ error: 'email or user_id is required' })
 
@@ -39,6 +39,18 @@ export default async function handler(req, res) {
       .select()
       .single()
     if (error) throw error
+
+    // A scholarship given by hand still counts in the scholarship metrics.
+    // Admin-only table, so nothing changes on the student's side.
+    if (scholarship === true) {
+      const { error: schErr } = await supabaseAdmin
+        .from('scholarship_enrollments')
+        .upsert(
+          { user_id: targetUserId, webinar_id, source: 'manual' },
+          { onConflict: 'user_id,webinar_id', ignoreDuplicates: true }
+        )
+      if (schErr) throw schErr
+    }
 
     return res.status(200).json({ entitlement: inserted })
   } catch (err) {

@@ -15,6 +15,7 @@ export default function AdminUsers() {
   const [error, setError] = useState(null)
   const [search, setSearch] = useState('')
   const [expanded, setExpanded] = useState(null)
+  const [scholarshipOnly, setScholarshipOnly] = useState(false)
 
   const refetch = useCallback(async () => {
     setLoading(true)
@@ -34,6 +35,7 @@ export default function AdminUsers() {
   }, [refetch])
 
   const filtered = users.filter((u) => {
+    if (scholarshipOnly && !u.is_scholarship) return false
     if (!search) return true
     const q = search.toLowerCase()
     return (
@@ -59,6 +61,24 @@ export default function AdminUsers() {
           >
             Users
           </h1>
+          <label
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              fontSize: '0.8rem',
+              color: 'var(--color-ink-muted)',
+              marginLeft: 'auto',
+              marginRight: '1rem',
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={scholarshipOnly}
+              onChange={(e) => setScholarshipOnly(e.target.checked)}
+            />
+            Scholarship students only
+          </label>
           <input
             type="search"
             placeholder="Search by name or email…"
@@ -123,6 +143,22 @@ export default function AdminUsers() {
                             }}
                           >
                             Admin
+                          </span>
+                        )}
+                        {u.is_scholarship && (
+                          <span
+                            style={{
+                              marginLeft: '0.5rem',
+                              fontSize: '0.65rem',
+                              padding: '0.15rem 0.4rem',
+                              border: '1px solid var(--color-accent)',
+                              color: 'var(--color-accent)',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.1em',
+                              fontWeight: 600,
+                            }}
+                          >
+                            Scholarship
                           </span>
                         )}
                       </div>

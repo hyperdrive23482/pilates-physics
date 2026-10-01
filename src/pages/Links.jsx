@@ -34,6 +34,10 @@ const LINK_ITEMS = [
     external: true,
   },
   {
+    label: 'Scholarships',
+    href: '/scholarship',
+  },
+  {
     label: 'Pilates Physics Blog',
     href: '/blog',
   },

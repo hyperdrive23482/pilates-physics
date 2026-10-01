@@ -23,10 +23,18 @@ export default async function handler(req, res) {
       .select('id, user_id, webinar_id, source, granted_at, expires_at, workshop:webinars(title, slug)')
     if (entErr) throw entErr
 
+    // Admin-only scholarship label, per course. See 056_scholarships.sql.
+    const { data: scholarships, error: schErr } = await supabaseAdmin
+      .from('scholarship_enrollments')
+      .select('user_id, webinar_id')
+    if (schErr) throw schErr
+    const scholarshipPairs = new Set((scholarships ?? []).map((s) => `${s.user_id}:${s.webinar_id}`))
+    const scholarshipUsers = new Set((scholarships ?? []).map((s) => s.user_id))
+
     const byUser = new Map()
     for (const e of entitlements ?? []) {
       if (!byUser.has(e.user_id)) byUser.set(e.user_id, [])
-      byUser.get(e.user_id).push(e)
+      byUser.get(e.user_id).push({ ...e, scholarship: scholarshipPairs.has(`${e.user_id}:${e.webinar_id}`) })
     }
 
     const users = (data.users ?? []).map((u) => ({
@@ -39,6 +47,7 @@ export default async function handler(req, res) {
       // Already fetched by listUsers(); surfacing it costs nothing and it is
       // the first thing worth knowing in a payment dispute.
       last_sign_in_at: u.last_sign_in_at ?? null,
+      is_scholarship: scholarshipUsers.has(u.id),
       entitlements: byUser.get(u.id) ?? [],
     }))
 

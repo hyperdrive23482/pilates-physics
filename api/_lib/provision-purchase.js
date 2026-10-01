@@ -2,6 +2,7 @@ import crypto from 'node:crypto'
 import { supabaseAdmin } from './supabase-admin.js'
 import { tagSubscriber } from './kit.js'
 import { sendAuthEmail } from './resend.js'
+import { recordScholarshipPurchase } from './scholarship.js'
 
 // listUsers has no email filter, so page through the user list until we find a
 // match. 20 pages of 200 covers 4,000 users, ample at the current scale.
@@ -175,6 +176,20 @@ export async function provisionPurchase(session, { siteUrl, purchasedAt } = {}) 
     if (offerErr) console.error('offer redemption stamp failed:', offerErr)
   }
 
+  // ---- Scholarship label (non-fatal, admin-only) ----
+  //
+  // A scholarship code on the session writes a scholarship_enrollments row,
+  // which only admins can read. Non-fatal for the same reason as the offer
+  // stamp: access is already granted, and a retry here would be a retry of a
+  // purchase that succeeded.
+  let scholarshipCode = null
+  try {
+    const scholarship = await recordScholarshipPurchase(session, { userId, workshopId, email })
+    scholarshipCode = scholarship?.code ?? null
+  } catch (err) {
+    console.error('scholarship recording failed:', err)
+  }
+
   // ---- Login email (non-fatal, sent at most once per session) ----
   // Logged-in buyers already have a browser session, so no link is needed.
   let emailStatus = 'skipped'
@@ -227,5 +242,6 @@ export async function provisionPurchase(session, { siteUrl, purchasedAt } = {}) 
     emailStatus,
     emailError,
     kitError,
+    scholarshipCode,
   }
 }

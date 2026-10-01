@@ -64,6 +64,8 @@ import OfferPage from './pages/OfferPage'
 import LinksPage from './pages/Links'
 import Mentorship from './pages/Mentorship'
 import MentorshipApply from './pages/MentorshipApply'
+import ScholarshipApply from './pages/ScholarshipApply'
+import AdminScholarships from './pages/admin/AdminScholarships'
 
 // Any /workshops/<slug> URL (a Stripe cancel return, say) bounces to that
 // product's branded page when it has one; everything else renders the generic
@@ -164,6 +166,17 @@ export default function App() {
           element={
             <PageWrapper>
               <MentorshipApply />
+            </PageWrapper>
+          }
+        />
+        {/* Scholarship applications post to /api/inquiry (kind: scholarship)
+            and are reviewed at /admin/scholarships. See
+            supabase/migrations/056_scholarships.sql. */}
+        <Route
+          path="/scholarship"
+          element={
+            <PageWrapper>
+              <ScholarshipApply />
             </PageWrapper>
           }
         />
@@ -360,6 +373,14 @@ export default function App() {
           element={
             <AdminGate>
               <AdminTools />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/scholarships"
+          element={
+            <AdminGate>
+              <AdminScholarships />
             </AdminGate>
           }
         />
