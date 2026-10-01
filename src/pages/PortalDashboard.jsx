@@ -67,7 +67,7 @@ export default function PortalDashboard() {
           margin: '0 auto',
         }}
       >
-        <FeedbackBanner user={user} workshops={workshops} />
+        <FeedbackBanner user={user} workshops={workshops} courseSummaries={summaries} />
 
         {/* Welcome */}
         <div style={{ marginBottom: '3rem' }}>

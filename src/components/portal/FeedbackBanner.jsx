@@ -7,11 +7,18 @@ import { supabase } from '../../lib/supabase'
  * Iterates the user's entitled workshops and renders one banner per
  * workshop whose survey is currently open and not yet submitted by
  * this user. Stacks vertically if multiple surveys are eligible.
+ *
+ * Courses only prompt once the user has finished at least half their
+ * modules, so nobody is asked for feedback on something they barely started.
  */
-export default function FeedbackBanner({ user, workshops }) {
+export default function FeedbackBanner({ user, workshops, courseSummaries }) {
   const eligible = (workshops ?? []).filter((w) => {
     const config = w.survey_config
     if (!config?.enabled) return false
+    if (w.kind === 'course') {
+      const s = courseSummaries?.[w.id]
+      if (!s || s.done * 2 < s.total) return false
+    }
     const now = Date.now()
     const opensAt = config.opens_at ? Date.parse(config.opens_at) : null
     const closesAt = config.closes_at ? Date.parse(config.closes_at) : null
