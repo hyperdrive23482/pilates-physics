@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Momentum Carousel Graphics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0e0d0b; --ink: #E3E3E3; --ink-soft: rgba(227,227,227,.65); --rule: rgba(227,227,227,.18); --accent: #f09f26; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 "Source Serif 4", Georgia, serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-weight: 400; margin: 0 0 4px; }
+  p.lede { color: var(--ink-soft); margin: 0 0 20px; }
+  .bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  button { background: var(--accent); color: #1c1a17; border: 1px solid var(--accent); border-radius: 2px; padding: 7px 12px; font: 600 12px "JetBrains Mono", monospace; text-transform: uppercase; letter-spacing: .06em; cursor: pointer; }
+  button.ghost { background: transparent; color: var(--ink); border-color: var(--rule); }
+  figure { margin: 0 0 28px; }
+  canvas { max-width: 100%; height: auto; display: block; border: 1px dashed var(--rule); }
+  .light canvas { background: #f6f3ec; }
+  figcaption { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; font: 12px "JetBrains Mono", monospace; color: var(--ink-soft); }
+  body.export, body.export canvas { background: transparent; border: 0; }
+  body.export main { padding: 0; max-width: none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Momentum carousel graphics</h1>
+  <p class="lede">Standalone graphics on transparent backgrounds, sized for a 1080 px wide slide. Copy lives in momentum-carousel.md. Graphs use the same model as docs/blog-drafts/momentum-graphs.html.</p>
+  <div class="bar"><button id="theme" class="ghost">Show light version</button><button id="all">Download all</button></div>
+  <div id="list"></div>
+</main>
+
+<script>
+const q = new URLSearchParams(location.search);
+const THEMES = {
+  dark: { ink: '#E3E3E3', soft: 'rgba(227,227,227,.62)', faint: 'rgba(227,227,227,.35)', grid: 'rgba(227,227,227,.09)',
+          axis: 'rgba(227,227,227,.4)', accent: '#f09f26', halo: '#0e0d0b', up: 'rgba(240,159,38,.30)', down: 'rgba(120,170,220,.30)' },
+  light: { ink: '#1c1a17', soft: 'rgba(28,26,23,.62)', faint: 'rgba(28,26,23,.35)', grid: 'rgba(28,26,23,.08)',
+           axis: 'rgba(28,26,23,.45)', accent: '#c07c17', halo: 'rgba(0,0,0,0)', up: 'rgba(240,159,38,.28)', down: 'rgba(60,110,170,.22)' },
+};
+let theme = q.get('theme') === 'light' ? 'light' : 'dark';
+let C = THEMES[theme];
+const SERIF = '"Source Serif 4", Georgia, serif';
+const MONO = '"JetBrains Mono", ui-monospace, monospace';
+
+// ---- Model (same as docs/blog-drafts/momentum-graphs.html) ----
+const LBF_PER_IN_PER_KG_RAD2 = 0.0254 * 0.224809;
+const P = (() => {
+  const f0 = 26, f1 = 88, d = 18, mass = 200, tSlow = 6, tFast = 2.43;
+  const mKg = mass / 2.20462;
+  const c = T => mKg * Math.pow(2 * Math.PI / T, 2) * LBF_PER_IN_PER_KG_RAD2;
+  return { f0, f1, d, k: (f1 - f0) / d, cSlow: c(tSlow), cFast: c(tFast) };
+})();
+const spring = x => P.f0 + P.k * x;
+const muscle = (x, c) => spring(x) + c * (P.d / 2 - x);
+const peak = c => Math.max(muscle(0, c), muscle(P.d, c));
+const FAST_PEAK = Math.round(peak(P.cFast));
+
+function mono(ctx, text, x, y, { size = 22, color = C.soft, align = 'left', weight = 400, upper = true, track = 0.12 } = {}) {
+  ctx.font = `${weight} ${size}px ${MONO}`; ctx.letterSpacing = `${size * track}px`;
+  const t = upper ? text.toUpperCase() : text;
+  const w = ctx.measureText(t).width - size * track;
+  ctx.fillStyle = color; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText(t, align === 'right' ? x - w : align === 'center' ? x - w / 2 : x, y);
+  ctx.letterSpacing = '0px';
+}
+
+// ---- Graph ----
+function graph(ctx, w, h, fig) {
+  const c = fig === 'slow' || fig === 'slowgap' ? P.cSlow : fig === 'fast' ? P.cFast : null;
+  const shade = fig === 'slowgap' || fig === 'fast';
+  const L = 78, R = w - 24, T = 78, B = h - 118;
+  const pw = R - L, ph = B - T, path = 2 * P.d, yMax = 100;
+  const X = s => L + (s / path) * pw, Y = f => B - (f / yMax) * ph;
+  const xAt = s => (s <= P.d ? s : path - s);
+
+  const items = [['Spring force', C.ink, 'line']];
+  if (c !== null) items.push(['Muscle force', C.accent, 'line']);
+  if (shade) items.push(['Speeding up', C.up, 'box'], ['Slowing down', C.down, 'box']);
+  ctx.font = `400 23px ${MONO}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+  let lx = 8; const ly = 22;
+  items.forEach(([label, col, type]) => {
+    if (type === 'line') { ctx.strokeStyle = col; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 34, ly); ctx.stroke(); }
+    else { ctx.fillStyle = col; ctx.fillRect(lx, ly - 12, 34, 24); }
+    ctx.fillStyle = C.ink; ctx.fillText(label, lx + 44, ly);
+    lx += 44 + ctx.measureText(label).width + 30;
+  });
+
+  ctx.font = `400 22px ${MONO}`; ctx.lineWidth = 2;
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (let f = 0; f <= yMax; f += 20) {
+    ctx.strokeStyle = C.grid; ctx.beginPath(); ctx.moveTo(L, Y(f)); ctx.lineTo(R, Y(f)); ctx.stroke();
+    ctx.fillStyle = C.soft; ctx.fillText(f, L - 14, Y(f));
+  }
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (let s = 0; s <= path + 1e-9; s += P.d / 3) {
+    ctx.strokeStyle = C.grid; ctx.beginPath(); ctx.moveTo(X(s), T); ctx.lineTo(X(s), B); ctx.stroke();
+    ctx.fillStyle = C.soft; ctx.fillText(Math.round(xAt(s)) + '"', X(s), B + 12);
+  }
+  ctx.strokeStyle = C.axis; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, B); ctx.lineTo(R, B); ctx.stroke();
+  ctx.setLineDash([8, 8]); ctx.beginPath(); ctx.moveTo(X(P.d), T); ctx.lineTo(X(P.d), B); ctx.stroke(); ctx.setLineDash([]);
+
+  ctx.fillStyle = C.ink; ctx.font = `400 26px ${SERIF}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText('Spring stretch', (L + R) / 2, B + 48);
+  ctx.fillStyle = C.soft; ctx.font = `italic 400 23px ${SERIF}`;
+  ctx.fillText('carriage out  →', X(P.d / 2), B + 84);
+  ctx.fillText('←  carriage home', X(P.d * 1.5), B + 84);
+  ctx.save(); ctx.translate(16, (T + B) / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = C.ink; ctx.font = `400 26px ${SERIF}`; ctx.textBaseline = 'middle'; ctx.fillText('Force (lbs)', 0, 0); ctx.restore();
+
+  const N = 400;
+  if (shade) {
+    for (let i = 0; i < N; i++) {
+      const s0 = path * i / N, s1 = path * (i + 1) / N;
+      ctx.fillStyle = ((s0 + s1) / 2) % P.d < P.d / 2 ? C.up : C.down;
+      ctx.beginPath();
+      ctx.moveTo(X(s0), Y(spring(xAt(s0)))); ctx.lineTo(X(s1), Y(spring(xAt(s1))));
+      ctx.lineTo(X(s1), Y(muscle(xAt(s1), c))); ctx.lineTo(X(s0), Y(muscle(xAt(s0), c)));
+      ctx.closePath(); ctx.fill();
+    }
+  }
+  const line = (fn, col, width) => {
+    ctx.strokeStyle = col; ctx.lineWidth = width; ctx.lineJoin = 'round'; ctx.beginPath();
+    for (let i = 0; i <= N; i++) { const s = path * i / N; i ? ctx.lineTo(X(s), Y(fn(xAt(s)))) : ctx.moveTo(X(s), Y(fn(xAt(s)))); }
+    ctx.stroke();
+  };
+  line(spring, C.ink, 5);
+  if (c !== null) line(x => muscle(x, c), C.accent, 6);
+
+  const dot = (s, f, col, text, dx, dy, align = 'left') => {
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(X(s), Y(f), 9, 0, Math.PI * 2); ctx.fill();
+    ctx.font = `600 25px ${MONO}`; ctx.textAlign = align; ctx.textBaseline = 'middle';
+    ctx.strokeStyle = C.halo; ctx.lineWidth = 10; ctx.lineJoin = 'round';
+    text.split('\n').forEach((t, k) => { ctx.strokeText(t, X(s) + dx, Y(f) + dy + k * 32); ctx.fillText(t, X(s) + dx, Y(f) + dy + k * 32); });
+  };
+  dot(0, P.f0, C.ink, P.f0 + ' lbs', 18, 28);
+  dot(P.d, P.f1, C.ink, P.f1 + ' lbs', 18, -26);
+  if (c !== null) {
+    const pk = peak(c);
+    if (muscle(P.d, c) >= muscle(0, c) - 0.01) dot(P.d, pk, C.accent, 'muscle peak ' + Math.round(pk) + ' lbs', 0, 110, 'center');
+    else dot(0, pk, C.accent, 'muscle peak\n' + Math.round(pk) + ' lbs', 18, -68);
+  }
+}
+
+// ---- Other graphics ----
+function equation(ctx, w) {
+  const parts = [['p', 'momentum'], [' = '], ['m', 'mass'], [' × '], ['v', 'velocity']];
+  ctx.font = `italic 400 150px ${SERIF}`;
+  const widths = parts.map(p => ctx.measureText(p[0]).width);
+  let x = (w - widths.reduce((a, b) => a + b, 0)) / 2;
+  parts.forEach((p, i) => {
+    ctx.font = `italic 400 150px ${SERIF}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = p[1] ? C.accent : C.soft; ctx.fillText(p[0], x, 140);
+    if (p[1]) mono(ctx, p[1], x + widths[i] / 2, 206, { size: 22, align: 'center' });
+    x += widths[i];
+  });
+}
+
+function midpoint(ctx, w) {
+  const x0 = 130, x1 = w - 130, ly = 160;
+  const X = v => x0 + (v - P.f0) / (P.f1 - P.f0) * (x1 - x0);
+  ctx.strokeStyle = C.faint; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x0, ly); ctx.lineTo(x1, ly); ctx.stroke();
+  [[P.f0, C.ink, 'springs', 'at home'], [FAST_PEAK, C.accent, 'muscle,', 'fast rep'], [P.f1, C.ink, 'springs', 'full stretch']].forEach(([v, col, a, b]) => {
+    const x = X(v), big = col === C.accent;
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, ly, big ? 16 : 11, 0, Math.PI * 2); ctx.fill();
+    ctx.font = `400 ${big ? 92 : 64}px ${SERIF}`; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(v, x, ly - 40);
+    mono(ctx, a, x, ly + 58, { size: 21, align: 'center', color: big ? C.accent : C.soft });
+    mono(ctx, b, x, ly + 88, { size: 21, align: 'center', color: big ? C.accent : C.soft });
+  });
+}
+
+// Line art of the fast rep for the cover.
+function lineArt(ctx, w, h) {
+  const top = 50, x0 = 10, x1 = w - 10, gh = h - top - 10;
+  const X = s => x0 + s / (2 * P.d) * (x1 - x0), Y = f => top + gh - (f - 15) / 85 * gh;
+  const xAt = s => (s <= P.d ? s : 2 * P.d - s);
+  ctx.fillStyle = C.up;
+  ctx.beginPath(); for (let i = 0; i <= 200; i++) { const s = 2 * P.d * i / 200; i ? ctx.lineTo(X(s), Y(spring(xAt(s)))) : ctx.moveTo(X(s), Y(spring(xAt(s)))); }
+  for (let i = 200; i >= 0; i--) { const s = 2 * P.d * i / 200; ctx.lineTo(X(s), Y(muscle(xAt(s), P.cFast))); }
+  ctx.closePath(); ctx.globalAlpha = .55; ctx.fill(); ctx.globalAlpha = 1;
+  ctx.lineWidth = 5; ctx.strokeStyle = C.faint; ctx.beginPath(); ctx.moveTo(X(0), Y(P.f0)); ctx.lineTo(X(P.d), Y(P.f1)); ctx.lineTo(X(2 * P.d), Y(P.f0)); ctx.stroke();
+  ctx.lineWidth = 6; ctx.strokeStyle = C.accent; ctx.beginPath(); ctx.moveTo(X(0), Y(FAST_PEAK)); ctx.lineTo(X(2 * P.d), Y(FAST_PEAK)); ctx.stroke();
+  mono(ctx, 'springs', X(P.d), Y(P.f1) - 22, { size: 20, align: 'center' });
+  mono(ctx, 'muscle, fast rep', X(2 * P.d), Y(FAST_PEAK) - 20, { size: 20, align: 'right', color: C.accent });
+}
+
+const GRAPHICS = [
+  { id: 'cover-line-art', slide: 1, w: 1000, h: 340, draw: lineArt },
+  { id: 'equation', slide: 3, w: 1000, h: 230, draw: equation },
+  { id: 'fig-01-spring-force', slide: 5, w: 1000, h: 640, draw: (ctx, w, h) => graph(ctx, w, h, 'spring') },
+  { id: 'fig-02-slow-rep', slide: 6, w: 1000, h: 640, draw: (ctx, w, h) => graph(ctx, w, h, 'slow') },
+  { id: 'fig-03-slow-gap', slide: 7, w: 1000, h: 640, draw: (ctx, w, h) => graph(ctx, w, h, 'slowgap') },
+  { id: 'fig-04-fast-rep', slide: 8, w: 1000, h: 640, draw: (ctx, w, h) => graph(ctx, w, h, 'fast') },
+  { id: 'number-line-26-57-88', slide: 9, w: 1000, h: 280, draw: midpoint },
+];
+
+const fileName = g => `${g.id}-${theme}.png`;
+
+function render(cv, g) {
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, g.w, g.h);
+  g.draw(ctx, g.w, g.h);
+}
+
+async function main() {
+  await Promise.all([`400 40px ${SERIF}`, `italic 400 40px ${SERIF}`, `400 20px ${MONO}`, `600 20px ${MONO}`].map(f => document.fonts.load(f)));
+  const list = document.getElementById('list');
+  if (q.has('g')) {
+    document.body.classList.add('export');
+    document.querySelectorAll('h1, .lede, .bar').forEach(el => el.remove());
+    const g = GRAPHICS.find(x => x.id === q.get('g'));
+    const cv = Object.assign(document.createElement('canvas'), { width: g.w, height: g.h });
+    list.appendChild(cv); render(cv, g);
+    return;
+  }
+  const items = GRAPHICS.map(g => {
+    const fig = document.createElement('figure');
+    const cv = Object.assign(document.createElement('canvas'), { width: g.w, height: g.h });
+    const cap = document.createElement('figcaption');
+    const name = document.createElement('span');
+    const btn = Object.assign(document.createElement('button'), { className: 'ghost', textContent: 'PNG' });
+    btn.onclick = () => save(cv, g);
+    cap.append(name, btn); fig.append(cv, cap); list.appendChild(fig);
+    return { g, cv, name };
+  });
+  const paint = () => {
+    C = THEMES[theme];
+    document.body.classList.toggle('light', theme === 'light');
+    items.forEach(({ g, cv, name }) => { render(cv, g); name.textContent = `Slide ${g.slide} · ${fileName(g)}`; });
+  };
+  document.getElementById('theme').onclick = e => {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    e.target.textContent = theme === 'dark' ? 'Show light version' : 'Show dark version';
+    paint();
+  };
+  document.getElementById('all').onclick = async () => {
+    for (const { g, cv } of items) { save(cv, g); await new Promise(r => setTimeout(r, 300)); }
+  };
+  paint();
+}
+function save(cv, g) { const a = document.createElement('a'); a.download = fileName(g); a.href = cv.toDataURL('image/png'); a.click(); }
+main();
+</script>
+</body>
+</html>
