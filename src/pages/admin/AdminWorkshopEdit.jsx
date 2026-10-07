@@ -623,6 +623,19 @@ function enrolleeName(e) {
   return e.email || '(unknown user)'
 }
 
+function formatMoney(cents, currency) {
+  const amount = cents / 100
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency: (currency || 'usd').toUpperCase(),
+      minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
+    }).format(amount)
+  } catch {
+    return `$${amount.toFixed(2)}`
+  }
+}
+
 function EnrolledUsersTab({ workshopId }) {
   const { request } = useAdminAPI()
   const [rows, setRows] = useState([])
@@ -656,10 +669,14 @@ function EnrolledUsersTab({ workshopId }) {
   if (rows.length === 0) {
     return <p style={{ color: 'var(--color-ink-muted)', fontSize: '0.9rem' }}>No one is enrolled yet.</p>
   }
+  const paidRows = rows.filter((e) => e.paid_amount > 0)
+  const totalPaid = paidRows.reduce((sum, e) => sum + e.paid_amount, 0)
+  const freeCheckouts = rows.filter((e) => e.paid_amount === 0).length
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
       <p style={{ margin: '0 0 0.2rem', fontSize: '0.8rem', color: 'var(--color-ink-muted)' }}>
-        {rows.length} enrolled
+        {rows.length} enrolled · {paidRows.length} paid, {formatMoney(totalPaid, paidRows[0]?.paid_currency)} total
+        {freeCheckouts > 0 && ` · ${freeCheckouts} at $0`}
       </p>
       {rows.map((e) => (
         <div
@@ -706,6 +723,17 @@ function EnrolledUsersTab({ workshopId }) {
             >
               {e.source}
             </span>
+            {e.paid_amount != null && (
+              <p style={{ margin: '0.35rem 0 0', fontSize: '0.8rem', color: 'var(--color-ink)' }}>
+                Paid {formatMoney(e.paid_amount, e.paid_currency)}
+                {e.paid_discount > 0 && (
+                  <span style={{ color: 'var(--color-ink-muted)' }}>
+                    {' '}
+                    ({formatMoney(e.paid_discount, e.paid_currency)} promo)
+                  </span>
+                )}
+              </p>
+            )}
             {e.granted_at && (
               <p style={{ margin: '0.35rem 0 0', fontSize: '0.75rem', color: 'var(--color-ink-muted)' }}>
                 Enrolled {new Date(e.granted_at).toLocaleDateString()}

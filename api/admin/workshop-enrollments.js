@@ -40,8 +40,30 @@ export default async function handler(req, res) {
       })
     }
 
+    // What each enrollee paid, from the stored Checkout Session payloads. Only
+    // the amount fields are selected so the full payloads never leave the DB.
+    // A user with more than one completed checkout for this workshop is summed.
+    const { data: events, error: evErr } = await supabaseAdmin
+      .from('stripe_events')
+      .select(
+        'user_id, amount_total:payload->amount_total, amount_discount:payload->total_details->amount_discount, currency:payload->>currency'
+      )
+      .eq('webinar_id', webinar_id)
+      .eq('event_type', 'checkout.session.completed')
+    if (evErr) throw evErr
+
+    const paidByUser = new Map()
+    for (const ev of events ?? []) {
+      if (!ev.user_id || ev.amount_total == null) continue
+      const prev = paidByUser.get(ev.user_id) ?? { amount: 0, discount: 0, currency: ev.currency }
+      prev.amount += Number(ev.amount_total) || 0
+      prev.discount += Number(ev.amount_discount) || 0
+      paidByUser.set(ev.user_id, prev)
+    }
+
     const enrollments = (entitlements ?? []).map((e) => {
       const u = byId.get(e.user_id)
+      const paid = paidByUser.get(e.user_id)
       return {
         id: e.id,
         user_id: e.user_id,
@@ -52,6 +74,11 @@ export default async function handler(req, res) {
         granted_at: e.granted_at,
         expires_at: e.expires_at,
         missing_user: !u,
+        // Amounts in the smallest currency unit (cents); null when there is
+        // no Stripe checkout on record (manual grant, bonus, scholarship comp).
+        paid_amount: paid ? paid.amount : null,
+        paid_discount: paid ? paid.discount : null,
+        paid_currency: paid?.currency ?? null,
       }
     })
 
