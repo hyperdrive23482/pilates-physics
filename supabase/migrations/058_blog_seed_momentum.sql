@@ -92,7 +92,7 @@ If your goal is peak muscle force, slower is better. If your goal is developing 
 
 Speed matters for learning, too. When a movement is new, the nervous system tends to stiffen the joints by contracting opposing muscles at the same time, called co-contraction. As the movement is learned, co-contraction drops and the muscles work more efficiently ([Osu et al., 2002](https://pubmed.ncbi.nlm.nih.gov/12163548/)). That's one more reason to slow down when someone is learning a movement, and to add speed later.
 
-Want to understand what the springs and carriage are doing on every exercise? Start with [Springs 101](/springs-101), or go deeper in [How a Reformer Works](/how-a-reformer-works).
+Want to understand what the springs and carriage are doing on every exercise? Start with [the spring calculator](/spring-calculator), or go deeper in [How a Reformer Works](/how-a-reformer-works).
 
 ---
 

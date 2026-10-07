@@ -109,7 +109,7 @@ Cueing the hamstrings to pull the carriage in works against how the reformer loa
 
 If you want to cue pressing down and drawing the carriage in to warm up the hamstrings along with the glutes and quads, go for it. Just know the hamstrings will never be the prime mover.
 
-Want to understand what the springs and carriage are doing on every exercise? Start with [Springs 101](/springs-101), or go deeper in [How a Reformer Works](/how-a-reformer-works).
+Want to understand what the springs and carriage are doing on every exercise? Start with [the spring calculator](/spring-calculator), or go deeper in [How a Reformer Works](/how-a-reformer-works).
 
 ## References
 
