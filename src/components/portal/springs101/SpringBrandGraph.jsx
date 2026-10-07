@@ -46,7 +46,9 @@ function isDark(hex) {
 // spring is dashed and the "Long" spring stays solid, consistently across
 // brands (BB and BASI list the pair in opposite order, so we key on the label,
 // not position). Any other repeated color falls back to dashing the later one.
+// A spring with an explicit `dash` in springSpecs.json (Gratz, all grey) wins.
 function dashFor(spring, index, springs) {
+  if ('dash' in spring) return spring.dash || undefined
   const sameColor = springs.filter((s) => s.displayColor === spring.displayColor)
   if (sameColor.length < 2) return undefined
   if (/short/i.test(spring.label)) return '7 5'

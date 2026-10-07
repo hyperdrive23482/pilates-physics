@@ -4,8 +4,8 @@ import springSpecs from '../../../data/springSpecs.json'
 // brands, chips are the physical springs in their real colors. Modeled on the
 // conversion grid from the "A Spring Is Not One Weight" blog post.
 
-function Chip({ spring }) {
-  return (
+function Chip({ spring, showLabel }) {
+  const swatch = (
     <span
       title={spring.label}
       style={{
@@ -17,6 +17,14 @@ function Chip({ spring }) {
         border: '1px solid var(--color-rule)',
       }}
     />
+  )
+  if (!showLabel) return swatch
+  // Same-colored springs (Gratz is all grey) need their name to tell apart.
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+      {swatch}
+      <span style={{ fontSize: '0.75rem', color: 'var(--color-ink-muted)' }}>{spring.label}</span>
+    </span>
   )
 }
 
@@ -80,10 +88,13 @@ export default function ConversionChart({ chart }) {
               >
                 {brand.name}
               </div>,
-              ...row.cells.map((cell, ci) => (
+              // `span` rows put every spring in one cell across all columns,
+              // for brands whose springs don't map onto the tiers.
+              ...(row.span ? [row.cells.flat()] : row.cells).map((cell, ci) => (
                 <div
                   key={`${row.brandId}-${ci}`}
                   style={{
+                    gridColumn: row.span ? `span ${cols}` : undefined,
                     padding: '0.75rem 0.6rem',
                     borderBottom: '1px solid var(--color-rule)',
                     display: 'flex',
@@ -98,7 +109,7 @@ export default function ConversionChart({ chart }) {
                   ) : (
                     cell.map((colorKey) => {
                       const spring = brand.springs.find((s) => s.color === colorKey)
-                      return spring ? <Chip key={colorKey} spring={spring} /> : null
+                      return spring ? <Chip key={colorKey} spring={spring} showLabel={row.labels} /> : null
                     })
                   )}
                 </div>

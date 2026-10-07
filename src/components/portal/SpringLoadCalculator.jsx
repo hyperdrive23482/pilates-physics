@@ -400,6 +400,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
         label: `${prefix} ${sel.spring.label}`.trim(),
         color: sel.spring.displayColor,
         strokeColor: sel.spring.displayColor,
+        dash: sel.spring.dash || undefined,
         k: sel.spring.k,
         b: sel.spring.b,
       })
@@ -523,6 +524,7 @@ function SpringForceGraph({ selections, mode, pos, onPointerDown, onPointerMove,
             strokeWidth="2.5"
             fill="none"
             strokeLinecap="round"
+            strokeDasharray={ln.dash}
           />
         )
       })}

@@ -13,13 +13,14 @@ const FAQ_ITEMS = [
       <>
         <p style={{ margin: '0 0 0.75rem' }}>
           Spring data was compiled from publicly available manufacturer
-          specifications with the exception of Gratz, which was a measurement of
-          two new Gratz Reformer springs done by Kaleen.
+          specifications, with one exception: the Elina springs were measured by
+          Kaleen from springs Elina sent her for this project.
         </p>
         <p style={{ margin: 0 }}>
           Reformer brands: Balanced Body, Stott, Align Pilates, Peak Pilates,
-          BASI, and Gratz. Tower and Chair brands: Balanced Body, Merrithew, and
-          BASI.
+          BASI, Gratz, and Elina. Tower brands: Balanced Body, Merrithew, BASI,
+          and Gratz. Chair brands: Balanced Body,
+          Merrithew, BASI, and Gratz.
         </p>
       </>
     ),

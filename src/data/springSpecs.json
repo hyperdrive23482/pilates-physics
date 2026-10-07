@@ -65,7 +65,18 @@
           "name": "Gratz",
           "shortName": "Gratz",
           "springs": [
-            { "color": "standard", "label": "Reformer", "tensionLabel": "", "displayColor": "#B0B0B0", "k": 1.30, "b": 6.3 }
+            { "color": "standard",  "label": "Reformer",           "tensionLabel": "", "displayColor": "#B0B0B0", "dash": null,  "k": 1.28333, "b": 6 },
+            { "color": "long-neck", "label": "Long Neck Reformer", "tensionLabel": "", "displayColor": "#B0B0B0", "dash": "8 5", "k": 1.75000, "b": 7 }
+          ]
+        },
+        {
+          "id": "elina",
+          "name": "Elina",
+          "shortName": "Elina",
+          "springs": [
+            { "color": "yellow", "label": "Yellow", "tensionLabel": "Light",  "displayColor": "#E8C547", "k": 0.43000, "b": 4.53 },
+            { "color": "green",  "label": "Green",  "tensionLabel": "Medium", "displayColor": "#5FA85E", "k": 0.72250, "b": 6.7275 },
+            { "color": "red",    "label": "Red",    "tensionLabel": "Strong", "displayColor": "#C73E3E", "k": 1.45250, "b": 10.75 }
           ]
         }
       ]
@@ -114,6 +125,18 @@
             { "color": "purple-long",  "label": "Purple - Long",  "tensionLabel": "Leg Spring",       "displayColor": "#8E6FB0", "k": 0.54000, "b": 0.5 },
             { "color": "black",        "label": "Black",          "tensionLabel": "Trapeze Spring",   "displayColor": "#3A3833", "k": 5.46000, "b": 4 }
           ]
+        },
+        {
+          "id": "gratz",
+          "name": "Gratz",
+          "shortName": "Gratz",
+          "springs": [
+            { "color": "arm",           "label": "Arm Spring",             "tensionLabel": "", "displayColor": "#B0B0B0", "dash": null,       "k": 0.46667, "b": 3.3 },
+            { "color": "small-arm-chair", "label": "Small Arm Chair Spring", "tensionLabel": "", "displayColor": "#B0B0B0", "dash": "1 5",      "k": 0.31667, "b": 1.5 },
+            { "color": "leg",           "label": "Leg Spring",             "tensionLabel": "", "displayColor": "#B0B0B0", "dash": "10 6",     "k": 0.66667, "b": 5 },
+            { "color": "roll-down",     "label": "Roll Down Spring",       "tensionLabel": "", "displayColor": "#B0B0B0", "dash": "4 5",      "k": 0.63333, "b": 4 },
+            { "color": "push-thru",     "label": "Push-Thru Bar Spring",   "tensionLabel": "", "displayColor": "#B0B0B0", "dash": "12 5 1 5", "k": 1.46667, "b": 6.8 }
+          ]
         }
       ]
     },
@@ -148,6 +171,15 @@
           "springs": [
             { "color": "yellow-short", "label": "Yellow", "tensionLabel": "Light", "displayColor": "#E8C547", "k": 0.43000, "b": 3.3075 },
             { "color": "black",        "label": "Black",  "tensionLabel": "Heavy", "displayColor": "#3A3833", "k": 5.46000, "b": 4 }
+          ]
+        },
+        {
+          "id": "gratz",
+          "name": "Gratz",
+          "shortName": "Gratz",
+          "springs": [
+            { "color": "wunda",    "label": "Wunda Chair",    "tensionLabel": "", "displayColor": "#B0B0B0", "dash": null,  "k": 4.08333, "b": 14 },
+            { "color": "electric", "label": "Electric Chair", "tensionLabel": "", "displayColor": "#B0B0B0", "dash": "8 5", "k": 3.75000, "b": 14 }
           ]
         }
       ]
