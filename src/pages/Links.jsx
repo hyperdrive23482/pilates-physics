@@ -10,10 +10,6 @@ import './Links.css'
 // The spring calculator is the only primary (.btn) button in the stack, so the
 // lead magnet is the one amber thing in it; everything else is a ghost button.
 // Keep it that way — add a second filled button and neither reads as the ask.
-//
-// "Main Website" points at '/' rather than an absolute URL: this page is served
-// from pilatesphysics.com, so '/' is PilatesPhysics.com, and routing it through
-// react-router avoids a full page reload.
 const LINK_ITEMS = [
   {
     label: 'Free Spring Calculator',
@@ -30,16 +26,13 @@ const LINK_ITEMS = [
     external: true,
   },
   {
-    label: 'Scholarships',
-    href: '/scholarship',
-  },
-  {
     label: 'Pilates Physics Blog',
     href: '/blog',
   },
   {
     label: 'Main Website',
-    href: '/',
+    href: 'https://pilatesphysics.com',
+    external: true,
   },
 ]
 
