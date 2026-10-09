@@ -14,6 +14,7 @@ const PAYMENT_PLAN_OPTIONS = new Set(['upfront', 'monthly'])
 const MENTORSHIP_YEARS_OPTIONS = new Set(['<1', '1-2', '3-5', '5+'])
 const MENTORSHIP_PLAN_OPTIONS = new Set(['full', 'two'])
 const MENTORSHIP_EQUIPMENT_OPTIONS = new Set(['Reformer', 'Tower', 'Chair', 'Cadillac', 'Mat only', 'Other'])
+const MENTORSHIP_APPLICATIONS_OPEN = false
 
 function trimString(value) {
   return typeof value === 'string' ? value.trim() : ''
@@ -113,6 +114,9 @@ function validateApplication(body) {
 // The /mentorship/apply form. Payment is invoiced on acceptance, so the form
 // captures who they are, how they teach, and which invoice to send.
 function validateMentorship(body) {
+  // Keep in step with APPLICATIONS_OPEN in src/lib/mentorship.js.
+  if (!MENTORSHIP_APPLICATIONS_OPEN) return { error: 'The application period for the mentorship has closed.' }
+
   const name = trimString(body.name)
   const email = trimString(body.email)
   const city = trimString(body.city)

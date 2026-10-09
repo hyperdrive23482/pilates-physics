@@ -12,6 +12,11 @@ export const PRICE_INSTALLMENT_TOTAL = '$458'
 
 export const APPLY_DEADLINE = 'October 8'
 
+// Closed after the fall 2026 cohort filled. While false, the landing page
+// shows the closed message with no price, /mentorship/apply shows a notice
+// instead of the form, and api/inquiry.js rejects kind: mentorship.
+export const APPLICATIONS_OPEN = false
+
 export const YEARS_OPTIONS = [
   { value: '<1', label: 'Less than 1 year' },
   { value: '1-2', label: '1 to 2 years' },

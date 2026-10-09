@@ -27,7 +27,7 @@
 }
 .ppv2 .mentorship-schedule__row {
   display: grid;
-  grid-template-columns: 88px 128px minmax(0, 1fr);
+  grid-template-columns: 88px minmax(0, 1fr);
   gap: 28px;
   align-items: baseline;
   padding: 22px 0;
@@ -40,13 +40,6 @@
   text-transform: uppercase;
   color: var(--accent);
 }
-.ppv2 .mentorship-schedule__date {
-  font-family: var(--pp-font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
 .ppv2 .mentorship-schedule__title {
   font-family: var(--pp-font-serif);
   font-size: 22px;
@@ -55,21 +48,6 @@
   color: var(--ink);
   margin: 0;
   font-weight: 400;
-}
-/* The week off reads as a note in the list, not a session. */
-.ppv2 .mentorship-schedule__row--off .mentorship-schedule__week { color: var(--ink-faint); }
-.ppv2 .mentorship-schedule__row--off .mentorship-schedule__title {
-  color: var(--ink-soft);
-  font-style: italic;
-  font-size: 18px;
-}
-
-/* ── § Apply card: the second payment option ──────────── */
-.ppv2 .mentorship-reserve__plan {
-  font-size: 15px;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  margin: 0;
 }
 
 /* ── Application page (/mentorship/apply) ─────────────────────────────────── */
@@ -156,7 +134,7 @@
   .ppv2 .mentorship-why__grid .workshop-why__head { margin-bottom: 28px; }
   .ppv2 .mentorship-why__grid .workshop-why__body { margin-top: 0; }
   .ppv2 .mentorship-schedule__row {
-    grid-template-columns: 72px 104px minmax(0, 1fr);
+    grid-template-columns: 72px minmax(0, 1fr);
     gap: 18px;
   }
 }

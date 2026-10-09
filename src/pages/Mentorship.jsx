@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import ArrowSvg from '../components/ui/ArrowSvg'
-import { PRICE_FULL, PRICE_INSTALLMENT, PRICE_INSTALLMENT_TOTAL, APPLY_PATH, APPLY_DEADLINE } from '../lib/mentorship'
 import '../styles/ppv2.css'
 import './Workshop.css'
 import '../components/ui/RegisterCard.css'
@@ -31,24 +30,22 @@ const COVER = [
 ]
 
 const SCHEDULE = [
-  { week: 'Week 1', date: 'Oct 21', title: 'Welcome and a movement session' },
-  { week: 'Week 2', date: 'Oct 28', title: 'Say less, teach more, and your first recording reviewed' },
-  { week: 'Week 3', date: 'Nov 4', title: 'How the equipment delivers load' },
-  { week: 'Week 4', date: 'Nov 11', title: 'How the body changes the load' },
-  { week: 'Week 5', date: 'Nov 18', title: 'Pilates that builds strength' },
-  { week: 'Off', date: 'Nov 25', title: 'No session, Thanksgiving week', off: true },
-  { week: 'Week 6', date: 'Dec 2', title: 'Movement session, then we talk about it' },
-  { week: 'Week 7', date: 'Dec 9', title: 'Office hours' },
-  { week: 'Week 8', date: 'Dec 16', title: 'Your progress, measured' },
+  { week: 'Week 1', title: 'Welcome and a movement session' },
+  { week: 'Week 2', title: 'Say less, teach more, and your first recording reviewed' },
+  { week: 'Week 3', title: 'How the equipment delivers load' },
+  { week: 'Week 4', title: 'How the body changes the load' },
+  { week: 'Week 5', title: 'Pilates that builds strength' },
+  { week: 'Week 6', title: 'Movement session, then we talk about it' },
+  { week: 'Week 7', title: 'Office hours' },
+  { week: 'Week 8', title: 'Your progress, measured' },
 ]
 
 const SPECS = [
-  { k: 'Deadline', v: `Applications close ${APPLY_DEADLINE}` },
-  { k: 'Dates', v: 'October 21 to December 16, 2026' },
-  { k: 'Time', v: 'Wednesdays, 9:00 to 10:30am Pacific (GMT-7 in October, GMT-8 from November 4)' },
+  { k: 'Status', v: 'The application period has closed' },
+  { k: 'Length', v: 'Eight weeks' },
+  { k: 'Sessions', v: 'One 90-minute group session a week, live on Zoom' },
   { k: 'Hours', v: '14 contact hours' },
   { k: 'Format', v: 'Virtual, small group' },
-  { k: 'Price', v: `${PRICE_FULL} one-time, or 2 payments of ${PRICE_INSTALLMENT}` },
 ]
 
 const INCLUDED = [
@@ -56,7 +53,7 @@ const INCLUDED = [
     n: '01',
     label: 'GROUP SESSIONS',
     title: 'Eight live sessions',
-    body: '90 minutes every Wednesday on Zoom with the cohort. Every session is recorded and posted in your portal the same day.',
+    body: '90 minutes every week on Zoom with the cohort. Every session is recorded and posted in your portal the same day.',
   },
   {
     n: '02',
@@ -85,14 +82,14 @@ const FAQ = [
   },
   {
     q: 'I have been teaching more than five years. Can I still join?',
-    a: 'The program is built for the first five years, when the work is turning the script into judgment. If you are past that and still want in, apply and tell me about your teaching. I will be honest about whether it is a fit.',
+    a: 'The program is built for the first five years, when the work is turning the script into judgment. If you are past that and curious, get in touch and tell me about your teaching. I will be honest about whether it is a fit.',
   },
   {
     q: 'What is Remo?',
     a: 'Remo is a notetaking app for Pilates instructors that I built. It records the audio of sessions you teach and turns it into a summary you can share. For this program you get free access, so you can record your teaching and send it to me for review. No strings.',
   },
   {
-    q: 'What if I cannot make a Wednesday?',
+    q: 'What if I miss a session?',
     a: 'Every group session is recorded and posted to your portal. Live attendance is where the feedback happens, so plan to be there for most of them, but one missed week will not set you back.',
   },
   {
@@ -100,12 +97,8 @@ const FAQ = [
     a: 'Two 60-minute virtual sessions, one-on-one with me. You schedule them any time during the eight weeks. A good pattern is one early to set a goal and one late to review your progress.',
   },
   {
-    q: 'How does the application work?',
-    a: `Fill in the form on the application page. It asks about your teaching, your equipment, and what you want from the eight weeks. I read every application personally, in the order they arrive, and reply within a week. Applications close ${APPLY_DEADLINE}.`,
-  },
-  {
-    q: 'How does payment work?',
-    a: `Once you are accepted, I send you a Stripe invoice for the option you chose: ${PRICE_FULL} once, or two payments of ${PRICE_INSTALLMENT} (${PRICE_INSTALLMENT_TOTAL} in total). Your spot is confirmed once the first payment clears.`,
+    q: 'Can I still apply?',
+    a: 'The application period has closed. If you would like to hear about future mentorship opportunities, send me a note through the help page and mention "mentorship."',
   },
   {
     q: 'How much time does it take each week?',
@@ -113,30 +106,22 @@ const FAQ = [
   },
 ]
 
-function ApplyCard() {
+function ClosedCard() {
   return (
     <div className="register-card">
-      <div className="register-card__price-row">
-        <span className="register-card__price">{PRICE_FULL}</span>
-        <span className="register-card__price-unit">one-time</span>
-      </div>
-      <p className="mentorship-reserve__plan">
-        Or two payments of {PRICE_INSTALLMENT}.
-      </p>
-      <h3 className="register-card__title">Apply to join the cohort</h3>
+      <h3 className="register-card__title">The application period has closed</h3>
       <p className="register-card__body">
-        The group is small, so it is by application. Tell me about your
-        teaching and what you want out of the eight weeks. I read every one,
-        and you will hear back within a week. Payment invoice sent once your
-        application is accepted.
+        Thank you to everyone who applied. If you would like to hear about
+        future mentorship opportunities, send me a note and mention
+        "mentorship."
       </p>
-      <Link to={APPLY_PATH} className="btn btn--block">
-        Apply now
+      <Link to="/help" className="btn btn--block">
+        Get in touch
         <ArrowSvg />
       </Link>
       <p className="register-card__meta">
-        Applications close {APPLY_DEADLINE} and are read in the order they
-        arrive. Spots are confirmed once the first payment clears.
+        In the meantime, the workshops and courses are open any time.{' '}
+        <Link to="/education">See all the ways to learn</Link>.
       </p>
     </div>
   )
@@ -160,20 +145,20 @@ export default function Mentorship() {
               The skills that fill a class <span className="italic accent">are not fancy choreography.</span>
             </h1>
             <p className="workshop-hero__lede">
-              Join a small-group mentorship for Pilates teachers in their first five
+              A small-group mentorship for Pilates teachers in their first five
               years. Weekly group sessions, two private sessions with me, and
               feedback on the classes you actually teach.
             </p>
 
             <div className="workshop-hero__cta">
-              <Link to={APPLY_PATH} className="btn btn--lg">
-                Apply now. {PRICE_FULL}
+              <Link to="/education" className="btn btn--lg">
+                Explore other ways to learn
                 <ArrowSvg />
               </Link>
             </div>
             <p className="workshop-hero__meta">
-              <span className="workshop-hero__meta-k">Live</span>
-              October 21 to December 16, 2026 · applications close {APPLY_DEADLINE}
+              <span className="workshop-hero__meta-k">Status</span>
+              The application period has closed
             </p>
           </div>
         </div>
@@ -248,12 +233,8 @@ export default function Mentorship() {
 
           <div className="mentorship-schedule">
             {SCHEDULE.map((s) => (
-              <div
-                className={`mentorship-schedule__row${s.off ? ' mentorship-schedule__row--off' : ''}`}
-                key={s.date}
-              >
+              <div className="mentorship-schedule__row" key={s.week}>
                 <span className="mentorship-schedule__week">{s.week}</span>
-                <span className="mentorship-schedule__date">{s.date}</span>
                 <h3 className="mentorship-schedule__title">{s.title}</h3>
               </div>
             ))}
@@ -280,7 +261,7 @@ export default function Mentorship() {
             </div>
 
             <div id="apply" className="workshop-details__register">
-              <ApplyCard />
+              <ClosedCard />
             </div>
           </div>
         </div>
@@ -381,12 +362,12 @@ export default function Mentorship() {
       {/* ── § 09 Final CTA ───────────────────────────────────────────────── */}
       <section className="workshop-cta section--inset">
         <div className="container container--narrow">
-          <div className="kicker">§ 09 · Applications close {APPLY_DEADLINE}</div>
+          <div className="kicker">§ 09 · The application period has closed</div>
           <h2 className="workshop-cta__head mentorship-cta__head">
             Eight weeks. A small group. <span className="italic accent">Your teaching, reviewed closely.</span>
           </h2>
-          <Link to={APPLY_PATH} className="btn btn--lg">
-            Apply now. {PRICE_FULL}
+          <Link to="/education" className="btn btn--lg">
+            Explore other ways to learn
             <ArrowSvg />
           </Link>
         </div>

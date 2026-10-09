@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import ArrowSvg from '../components/ui/ArrowSvg'
 import {
   MENTORSHIP_PATH,
+  APPLICATIONS_OPEN,
   YEARS_OPTIONS,
   PLAN_OPTIONS,
   EQUIPMENT_OPTIONS,
@@ -99,11 +100,25 @@ export default function MentorshipApply() {
 
           <div className="kicker">§ 01 · Application</div>
           <h1 className="mentorship-apply__head">
-            Apply to join the <span className="italic accent">fall cohort.</span>
+            {APPLICATIONS_OPEN ? (
+              <>Apply to join the <span className="italic accent">fall cohort.</span></>
+            ) : (
+              <>Applications are <span className="italic accent">closed.</span></>
+            )}
           </h1>
 
           <div className="mentorship-apply__panel">
-            {status === 'success' ? (
+            {!APPLICATIONS_OPEN ? (
+              <div className="mentorship-reserve__success">
+                <p className="mentorship-reserve__success-head">§ Closed</p>
+                <p className="mentorship-reserve__success-body">
+                  The application period has closed. If you would like to hear
+                  about future mentorship opportunities, send me a note through
+                  the <Link to="/help">help page</Link> and mention
+                  "mentorship."
+                </p>
+              </div>
+            ) : status === 'success' ? (
               <div className="mentorship-reserve__success">
                 <p className="mentorship-reserve__success-head">§ Received</p>
                 <p className="mentorship-reserve__success-body">

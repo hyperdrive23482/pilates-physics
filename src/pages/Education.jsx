@@ -42,7 +42,7 @@ const PATHS = [
     title: 'Group Mentoring Program',
     sub: 'For teachers in their first five years',
     body: 'Weekly group sessions, two private sessions with Kaleen, and feedback on the classes you actually teach. Teaching craft, strength, and the physics underneath both.',
-    meta: 'Oct 21 to Dec 16 · $399 · By application',
+    meta: 'The application period has closed',
     ctaLabel: 'Learn more',
     to: '/mentorship',
   },
