@@ -8,3 +8,7 @@ dist
 !.claude/skills/
 supabase/.temp/
 .vercel
+
+# Python bytecode (reel-brain skill scripts)
+__pycache__/
+*.pyc
