@@ -1,0 +1,13 @@
+---
+brain_id: af747b99-0719-4429-b188-b5236a99e4c3
+type: transcript
+title: "Standing vs. Seated Weight Comparison"
+is_active: false
+source_url: null
+created_at: 2026-05-12T18:26:59.307193+00:00
+---
+
+# Standing vs. Seated Weight Comparison
+**Topic:** Why standing exercises move the carriage farther than seated (pulley mechanics); body weight and rope angle are negligible factors
+
+All right, it is time to review the answer for this video that I posted yesterday. Pop quiz. Am I moving the same spring weight in the top and the bottom video? And the right answer is false. The spring resistance in the top and the bottom video are different. The basic reason for this is because when I'm standing, the carriage moves twice as far as when I'm sitting on the carriage. And one way you can think about this is the fact that when I'm standing, I'm stationary. But when I'm sitting on the carriage, for every inch I move my arm forward, I move backwards an inch because of the pulley. This is true for anytime you're comparing an exercise where you're standing, which is still, or you're on the carriage and using the rope, right? Because of the pulley. Again, it's all about spring extension. People in the comments gave me two other reasons besides the fact that the carriage travels more for why the weights would be different in those two videos. The first one was body weight, and I've already made a video about that. You can go check it out here. Um, and basically that's not a factor we need to consider in this example. And then the second one was angle angle of the rope. And yes, I do basically perform the movement either seated or like two feet higher standing, but it's not changing it for the reason that you think. Remember, I'm talking about the force the springs are exerting. And I don't want you to confuse that with the angle of the force which did change is working different muscles. What I really care about trig in this equation is does the angle change the overall spring extension. And yes it does. But the effect of that is super super minimal. Just like in my last video about body weight when I talked about friction. A lot of the things we think impact the forces we're feeling on the body are true, but they impact it so small it doesn't really matter. It shouldn't super come into your consideration when you're thinking about programming. I want you to think about the things that have a big impact on the experience of the exercise. Because if you can get those right, you're way more than 80% of the way there, which is great. But if you get the big things wrong, then it can throw off the entire experience.

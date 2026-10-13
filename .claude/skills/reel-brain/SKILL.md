@@ -40,7 +40,7 @@ S=".claude/skills/reel-brain/scripts"
       - Date: use `date` from scan (a typed `YYYY-MM-DD` filename prefix beats the Edits export stamp, which beats the file date).
       - Title: `<Subject> (Reel, YYYY-MM-DD)` or `<Subject> (Carousel, YYYY-MM-DD)`. That exact pattern drives the mirror filename `YYYY-MM-DD_reel_<slug>.md`.
       - Check `docs/brain/INDEX.md`. If the same title already exists for a *different* post, add ` Part 2`. Pushing an identical title updates that entry instead of adding a new one.
-   4. **Write `entry.json`** in the scratchpad: `{"type": "transcript", "title": ..., "content": ..., "source_url": null}`. Leave out `is_active`: new entries default to off, and a re-push won't flip an entry you switched on. Content format:
+   4. **Write `entry.json`** in the scratchpad with the Write tool. Don't use a shell heredoc: quote marks like `5'5"` in the content break it. Its shape: `{"type": "transcript", "title": ..., "content": ..., "source_url": null}`. Leave out `is_active`: new entries default to off, and a re-push won't flip an entry you switched on. Content format:
 
       ```
       **Format:** Reel · **Posted:** 2026-10-13

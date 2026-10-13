@@ -109,7 +109,9 @@ def pull():
             path = path.with_name(f"{path.stem}-{e['id'][:8]}.md")
         used.add(path)
         text = render(e)
-        if not path.exists() or path.read_text(encoding="utf-8") != text:
+        # Compare bytes: read_text() would fold the \r\n in some admin-edited
+        # entries to \n and report every such file as changed on every pull.
+        if not path.exists() or path.read_bytes() != text.encode("utf-8"):
             path.write_text(text, encoding="utf-8", newline="\n")
             written[e["id"]] = path
         e["_path"] = path

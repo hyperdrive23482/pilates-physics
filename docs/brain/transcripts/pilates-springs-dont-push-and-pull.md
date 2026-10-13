@@ -1,0 +1,13 @@
+---
+brain_id: 835e6175-bb91-4a16-8caf-a018e4d9466d
+type: transcript
+title: "Pilates Springs Don't Push AND Pull"
+is_active: false
+source_url: null
+created_at: 2026-05-12T18:26:59.307193+00:00
+---
+
+# Pilates Springs Don't Push AND Pull
+**Topic:** Springs only pull (Hooke's Law); perceived "push" is a matter of body orientation relative to spring force direction; debunks the push-and-pull claim
+
+Since I posted this carousel debunking common Pilates spring claims, I've gotten tons of questions about the claim "Springs push AND pull." To be clear, springs ONLY pull. But there are some situations where it may feel like they're pushing. Here's why. First, springs only pull. They do not push. The further you stretch them, the more they want to pull back to their original shape. They never "push" out to expand their coils. Remember Hooke's Law? This single-direction of resistance is similar to weights. Weights in the gym provide resistance because they act with gravity. They want to go to the lowest place they can be. They never "push" up against gravity. One direction of pull. Springs are not unique in this sense. However, both weights and springs can feel like they require you to push or pull based on your body position compared to the direction of the force. For example, chest expansion may feel like you need to pull against the springs, but footwork may feel like you have to push the springs. This isn't magic, it's just a simple problem of how you are oriented compared to the direction the springs are acting. Second, sometimes springs can provide support to a movement. Take a plank, for example. A medium spring is going to help keep the carriage closed more than a light spring. This may be confused with pushing, but again, it's just a simple body orientation, movement intent problem. And, if you instead put a weight on the reformer instead of a spring, it would ALSO provide support to the same movement. And finally, many people think that the "pulling" of a spring inward is better for eccentric muscle contraction than a weight. But this is a false distinction. Remember, concentric muscle contraction is the muscle contracting and shortening. Eccentric is the muscle contracting while lengthening. In cyclical exercises, there are both phases and they exist whether you have springs or weights attached. In fact, you could argue that springs are "worse" for eliciting both eccentric and concentric muscle contraction because they start off low weight, get higher weight as you stretch, then return to lower weight as you return. Whereas weights will provide the same resistance through the whole movement. But that is a discussion for another time.
