@@ -275,3 +275,36 @@ export function snapshotSeries(rows, range, pick) {
       value: Number(pick(r)) || 0,
     }))
 }
+
+/**
+ * Period bars for a ratio metric (average order value, repeat share): the
+ * numerator and denominator are summed per bucket and divided, so a bar is
+ * the ratio FOR that period rather than an average of daily ratios. `scale`
+ * is 100 for a percentage. Buckets with a zero denominator chart as zero.
+ */
+export function ratioSeries(daily, range, numKey, denKey, scale = 1) {
+  const defs = getBuckets(range, minDate(daily))
+  const num = fillFlow(defs, daily.map((d) => ({ date: d.date, value: d[numKey] ?? 0 })))
+  const den = fillFlow(defs, daily.map((d) => ({ date: d.date, value: d[denKey] ?? 0 })))
+  return num.map((n, i) => ({
+    label: n.label,
+    rangeLabel: n.rangeLabel,
+    value: den[i].value > 0 ? Math.round((n.value / den[i].value) * scale) : 0,
+  }))
+}
+
+/** Daily rows with many keys to the `{date, value}` shape the bucketing wants. */
+export function pickDaily(daily, key) {
+  return (daily ?? []).map((d) => ({ date: d.date, value: Number(d[key]) || 0 }))
+}
+
+/** "Oct 14, 2026" from an ISO timestamp, or a dash. */
+export function formatDateTime(iso) {
+  if (!iso) return NO_VALUE
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+export function formatDays(n) {
+  if (typeof n !== 'number' || !Number.isFinite(n)) return NO_VALUE
+  return `${n} day${n === 1 ? '' : 's'}`
+}

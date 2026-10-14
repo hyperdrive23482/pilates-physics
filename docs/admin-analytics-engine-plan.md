@@ -3,7 +3,7 @@
 Analytics, Funnel and SEO pages for the Pilates Physics admin portal, modeled on the remo super-admin pages (`pilates-session-coach`: `/superadmin/analytics`, `/superadmin/funnel`, `/superadmin/seo`) and adapted to how Pilates Physics actually sells.
 
 **Date:** 2026-10-14
-**Status:** Phase 0 built on branch `admin/analytics`, 2026-10-14, uncommitted and not deployed. See "Phase 0 build notes" at the end for what shipped and the runbook to turn it on. Phases 1 to 3 not started.
+**Status:** Phase 0 committed on branch `admin/analytics`, 2026-10-14, not deployed (Appendix B has the runbook). Phase 1 (the five-tab Analytics page) built 2026-10-14 in worktree `claude/vigorous-bell-48ab65` on top of that branch, uncommitted; see Appendix C. SEO foundations 3a merged into the same branch. Phase 2 and 3b not started.
 **Reference:** remo pages live at `src/pages/admin/{Analytics,FunnelOverview,SeoDashboard}.tsx`, with plan docs `docs/plans/funnel-overview.md` and `docs/plans/seo-dashboard.md` in that repo.
 
 ---
@@ -388,3 +388,45 @@ Built on branch `admin/analytics`. Lint clean, 15 unit tests pass (`npm test`), 
 - The Kit form attribution depends on Kit's embed rendering a `<form>` into our container; if Kit changes the embed to an iframe the hidden fields stop landing. The helper fails silently.
 - `purchases.settled_usd_cents` for a non-USD Adaptive Pricing order comes from the charge's balance transaction and is only correct if the Stripe balance is in USD, which it is for this account.
 - The snapshot cron reads about 15 Kit endpoints once a day; the 120 per minute limit is not a concern.
+
+---
+
+## Appendix C: Phase 1 build notes (2026-10-14)
+
+Built in worktree branch `claude/vigorous-bell-48ab65` on top of `admin/analytics` (19f2ff0). Lint clean, 52 unit tests pass (`npm test`), production build succeeds. Nothing committed, nothing deployed, migration 064 not applied.
+
+### What shipped
+
+| Piece | Files |
+|---|---|
+| Tabbed page, `?tab=` kept in the URL, one shared range select, range remembered per browser | `src/pages/admin/AdminAnalytics.jsx` |
+| One API route per tab, each gated by `requireAdmin`, each returning independently nullable blocks plus an `errors` map | `api/admin/analytics/{revenue,products,learners,audience,engagement}.js` |
+| Pure aggregation helpers, import-free and unit-tested | `api/_lib/analytics/{shared,revenue,products,learners,audience,engagement}.js` and `*.test.js`; `api/_lib/analytics/data-sources.js` reads the health strip |
+| Range-aware engagement functions | migration `064_admin_engagement_functions.sql`: `admin_engagement_items(p_since)` for rankings by distinct people inside a range, `admin_engagement_hourly(p_since, p_tz)` for weekday and hour-of-day bars in Pacific time |
+| Client tab components | `src/components/admin/analytics/tabs/{RevenueTab,ProductsTab,LearnersTab,AudienceTab,EngagementTab}.jsx` |
+| Shared client pieces | `useTabData.js` (per-tab fetch with a `tab|range` cache and stale-while-loading), `TabFrame.jsx`, `primitives.jsx` (section headings, table cells, fraction cell, soft-error line), `DataSources.jsx` (moved from the page, with the Settle button), `BarsCard.jsx`, `LaunchChart.jsx`; `shared.js` gains `ratioSeries`, `pickDaily`, `formatDateTime`, `formatDays` |
+
+### Tab contents
+
+- **Revenue.** Data sources strip at the top. Five clickable KPIs (net revenue, orders, average order, repeat buyer share as "n of m · p%", refunds and disputes) driving the period chart; by product and by pricing tier tables with share of range net; launch picker with daily orders stacked early bird over full price and reference lines at the early bird close and the workshop date; Stripe fees line with net after fees and the settled-versus-presentment footnote. Every amount is charged to the order's purchase day, refunds included, so the tables always add up to the headline.
+- **Products.** One row per workshop or course: paid (with scholarship count), granted, orders and net in range, opened the portal, certificates, NPS (average, responses, classic score), open questions. Expanding a row shows grants by source, reach lines, survey promoter and detractor fractions, and content items ranked by distinct openers out of enrolled, with removed items kept under their recorded label.
+- **Learners.** All time by nature, and the header says so. Per course: completion funnel (enrolled, started, each module, quiz attempted, quiz passed, certificate downloaded) out of enrolled; median days from access to first module and to a passed quiz; quiz attempts, pass rate, first-try pass rate, attempts per passer; questions ranked by miss rate over graded attempts (attempts whose answer count no longer matches the question list are skipped and counted); stalled learners (access over 14 days ago, under half the modules, no pass) with a copy-emails button.
+- **Audience.** Kit subscribers (live from Kit, falling back to the latest snapshot) with a snapshot trend; new accounts in range driving a period chart; leads who bought with the median gap; buyers never leads. New accounts by how they arrived (earliest entitlement); first touch, last touch, campaigns and first landing page from `touch_attribution`, with "No record" counted for accounts that have no row; recent accounts table whose rows expand into `UserActivityPanel`. PostHog geography is Phase 2 and is not read.
+- **Engagement.** Active people (from `count_active_users`), logins, portal views, tool opens, content opens, all events, with a period chart; weekday and hour-of-day bars (sessions or all activity); tools and content ranked by distinct people for the range, falling back to the all-time view when 064 is not applied and labelled as such; buyers who never signed in, split by time since first purchase.
+
+### Behaviour without migrations
+
+Every migration-dependent read is soft. Without 062 the Revenue tab shows the health strip and an explanatory panel; Products loses its order columns. Without 063 Audience shows an explanatory panel (it needs `admin_auth_users_brief`), Engagement loses its series and the never-signed-in split, Products loses its reach columns. Without 064 Engagement rankings fall back to all time and the time-of-day panel explains itself. `api/admin/analytics-summary.js` is untouched and still feeds the Dashboard and Workshops pages.
+
+### Runbook additions
+
+1. `supabase db push` now also applies 064 (two plain SQL functions, no tables).
+2. Nothing new in Vercel. The Audience tab's live Kit count uses the existing `KIT_API_KEY`.
+3. Smoke test on dev: open `/admin/analytics`, flip through the five tabs and the range select, press Settle on the Revenue tab until the ledger shows zero awaiting lookup, expand a Products row and a Recent accounts row.
+
+### Known limits
+
+- Period charts bucket in the browser's local days while the server filters in UTC, so a KPI and its rightmost bar can differ by the orders placed in the overnight gap.
+- Refunds are charged to the purchase day of the order they refund, not the day they were issued.
+- Per-question miss rates assume the question order at grading time matches today's order; a reorder after attempts were graded would mis-attribute misses, which is why only attempts with a matching answer count are graded.
+- Recording watch rate counts a click on a recording content item, not playback.
