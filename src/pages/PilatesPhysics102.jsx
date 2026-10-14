@@ -6,8 +6,15 @@ import WorkshopPrice, { EarlyBirdHeroPrice } from '../components/ui/WorkshopPric
 import { useWorkshopPricing } from '../lib/workshopPricing'
 import { useCurrentWorkshop } from '../hooks/useWorkshops'
 import { isRegistrationOpen, formatWorkshopWhen } from '../lib/workshop'
+import { workshopJsonLd } from '../lib/workshopJsonLd'
+import Head from '../components/Head'
+import JsonLd from '../components/JsonLd'
 import '../styles/ppv2.css'
 import './Workshop.css'
+
+const PAGE_PATH = '/pilates-physics-102'
+const DESCRIPTION =
+  'Same framework, new geometry. Expand the Pilates Physics framework beyond the reformer to two new pieces of equipment that introduce different mechanical applications of force. Live on Zoom, two hours, 2.0 NPCP CECs, recording included.'
 
 const FRAMEWORK = [
   {
@@ -148,6 +155,16 @@ export default function PilatesPhysics102() {
 
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
+      <Head title="Pilates Physics 102 Workshop" description={DESCRIPTION} />
+      <JsonLd
+        data={workshopJsonLd({
+          path: PAGE_PATH,
+          name: 'Pilates Physics 102',
+          description: DESCRIPTION,
+          workshop,
+          cecs: 2,
+        })}
+      />
       {/* ── § 01 Hero ────────────────────────────────────────────────────── */}
       <section className="workshop-hero section-frame">
         <span className="cross tl"></span>

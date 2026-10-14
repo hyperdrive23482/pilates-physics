@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEnrollment } from '../hooks/useEnrollment'
 import { friendlyAuthError } from '../lib/authErrors'
+import { useHead } from '../lib/head'
 
 export default function Signup() {
+  useHead({ title: 'Sign up', noindex: true })
   const { user, signUp } = useEnrollment()
   const navigate = useNavigate()
   const [firstName, setFirstName] = useState('')

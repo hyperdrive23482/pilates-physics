@@ -4,6 +4,7 @@ import ArrowSvg from '../components/ui/ArrowSvg'
 import { useWorkshops } from '../hooks/useWorkshops'
 import '../styles/ppv2.css'
 import './Education.css'
+import Head from '../components/Head'
 
 const PATHS = [
   {
@@ -125,6 +126,10 @@ export default function Education() {
 
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
+      <Head
+        title="Six ways to learn the physics of Pilates"
+        description="Online workshops, a small-group mentorship, and licensed teacher-training modules. Pick the depth that fits where you are right now."
+      />
       {/* ── § 01 Hero ────────────────────────────────────────────────────── */}
       <section className="education-hero section-frame">
         <span className="cross tl"></span>

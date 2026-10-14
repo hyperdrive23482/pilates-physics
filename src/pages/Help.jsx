@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useEnrollment } from '../hooks/useEnrollment'
+import Head from '../components/Head'
 
 export default function Help() {
   const { user } = useEnrollment()
@@ -101,6 +102,10 @@ export default function Help() {
 
   return (
     <div style={sectionStyle}>
+      <Head
+        title="Help"
+        description="Answers to common questions about Pilates Physics workshops, courses and your account. Send a note and Kaleen will reply within a few days."
+      />
       <p
         style={{
           fontSize: '0.7rem',

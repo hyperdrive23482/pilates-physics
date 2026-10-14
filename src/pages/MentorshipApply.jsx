@@ -10,6 +10,7 @@ import {
 } from '../lib/mentorship'
 import '../styles/ppv2.css'
 import './Mentorship.css'
+import Head from '../components/Head'
 
 export default function MentorshipApply() {
   const [name, setName] = useState('')
@@ -92,6 +93,10 @@ export default function MentorshipApply() {
 
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
+      <Head
+        title="Apply to the Pilates Teacher Mentorship"
+        description="Application for the Pilates Physics small-group mentorship: weekly group sessions, two private sessions with Kaleen, and feedback on the classes you actually teach."
+      />
       <section className="section-pad mentorship-apply">
         <div className="container container--narrow">
           <Link to={MENTORSHIP_PATH} className="arrow-link mentorship-apply__back">

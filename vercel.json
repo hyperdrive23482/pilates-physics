@@ -39,10 +39,22 @@
   "headers": [
     {
       "source": "/offer/(.*)",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     }
   ],
   "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap.xml"
+    },
+    {
+      "source": "/((?!api/|sitemap\\.xml$).*)",
+      "destination": "/index.html"
+    }
   ]
 }

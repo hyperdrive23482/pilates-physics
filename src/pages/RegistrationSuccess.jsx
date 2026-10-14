@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowRight, CheckCircle2, Mail } from 'lucide-react'
+import { useHead } from '../lib/head'
 
 const POLL_INTERVAL_MS = 2000
 const POLL_TIMEOUT_MS = 30_000
 
 export default function RegistrationSuccess() {
+  useHead({ title: 'You are registered', noindex: true })
   const { slug } = useParams()
   const [searchParams] = useSearchParams()
   const sessionId = searchParams.get('session_id')

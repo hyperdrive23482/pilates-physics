@@ -5,8 +5,10 @@ import { useEnrollment } from '../hooks/useEnrollment'
 import ExpiredLinkNotice from '../components/ui/ExpiredLinkNotice'
 import TroubleLoggingIn from '../components/ui/TroubleLoggingIn'
 import { friendlyAuthError } from '../lib/authErrors'
+import { useHead } from '../lib/head'
 
 export default function SetPassword() {
+  useHead({ title: 'Set your password', noindex: true })
   const { user, loading, setPassword } = useEnrollment()
   const navigate = useNavigate()
   const [password, setPasswordValue] = useState('')

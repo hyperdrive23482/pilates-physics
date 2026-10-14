@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import '../styles/ppv2.css'
 import './Blog.css'
+import Head from '../components/Head'
 
 export default function Blog() {
   const [posts, setPosts] = useState([])
@@ -30,6 +31,11 @@ export default function Blog() {
 
   return (
     <div className="ppv2 grid-bg">
+      <Head
+        title="Blog: notes on the physics of Pilates"
+        description="Short essays on mechanics, teaching, and the forces in the Pilates environment."
+        image="/images/homepage/blog-hero.jpg"
+      />
       <section className="blog-hero">
         <div className="container">
           <div className="blog-hero__inner">

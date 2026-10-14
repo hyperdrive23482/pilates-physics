@@ -14,8 +14,10 @@ import QuestionForm from '../components/portal/QuestionForm'
 import ToolHost from '../components/portal/ToolHost'
 import CoursePlayer from '../components/portal/course/CoursePlayer'
 import CertificateButton from '../components/portal/CertificateButton'
+import { useHead } from '../lib/head'
 
 export default function WorkshopPortal() {
+  useHead({ title: 'Your portal', noindex: true })
   const { slug } = useParams()
   const navigate = useNavigate()
   const { user, loading: authLoading, signOut } = useEnrollment()

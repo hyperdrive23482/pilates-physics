@@ -5,6 +5,7 @@ import { useWorkshop } from '../hooks/useWorkshops'
 import { supabase } from '../lib/supabase'
 import PortalNav from '../components/portal/PortalNav'
 import DynamicSurveyForm from '../components/survey/DynamicSurveyForm'
+import { useHead } from '../lib/head'
 
 const accentLinkStyle = { color: 'var(--color-accent)' }
 
@@ -87,6 +88,7 @@ function MutedParagraph({ children, style = {} }) {
 }
 
 export default function SurveyPortal() {
+  useHead({ title: 'Survey', noindex: true })
   const { slug } = useParams()
   const { user, loading: authLoading, signOut } = useEnrollment()
   const { workshop, loading: workshopLoading } = useWorkshop(slug)

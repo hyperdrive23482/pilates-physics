@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 import { useEnrollment } from '../hooks/useEnrollment'
 import { friendlyAuthError } from '../lib/authErrors'
 import TroubleLoggingIn from '../components/ui/TroubleLoggingIn'
+import { useHead } from '../lib/head'
 
 export default function ForgotPassword() {
+  useHead({ title: 'Reset your password', noindex: true })
   const { resetPasswordRequest } = useEnrollment()
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState('idle') // idle | loading | success | error
