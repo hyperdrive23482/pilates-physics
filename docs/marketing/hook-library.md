@@ -24,6 +24,33 @@ Your knowledge is probably not the problem. The packaging is.
 
 ---
 
+## Rule one: everything links back to physics
+
+Physics is the brand. Every post, whatever the category, has to trace back to a
+physics reason: load, levers, springs, gravity, momentum, body weight, angles.
+A post with no physics in it could have come from any Pilates account, so it
+does not build the name. If a post idea has no physics angle yet, find it before
+filming, or the idea does not belong on this account.
+
+How to apply it:
+
+- **Every post needs a physics reason, not the word "physics."** Naming the
+  mechanism ("the lever gets longer," "same spring, different body") reads as
+  more expert than saying "physics" does. When the word does appear, it lands
+  best as the payoff after the mechanism, not as a label up front.
+- **The physics is the why, the teaching move is the point.** This rule and the
+  one below work together: physics explains why, judgment shows what you do
+  about it. A post with physics and no teaching move is a textbook. A post with
+  a teaching move and no physics could have come from anyone.
+- **Keep the math gentle.** The physics is the lens, not a lesson. One mechanism
+  per post, in plain words. See "Do not lean on fear of the math" in
+  [voice-and-messaging.md](voice-and-messaging.md).
+
+Brainstorm test: finish the sentence "the physics here is ___." If you cannot,
+keep looking.
+
+---
+
 ## Explain the physics, show the judgment
 
 Educational content makes people smarter. Positioning content makes people
@@ -211,12 +238,14 @@ lines run on. Check every hook against these before it ships.
    spring, an exercise, a body type, a piece of equipment).
 2. Note the Instagram planner category it belongs to, and pick the audience:
    instructors or clients.
-3. Pick one of the five formats. It decides what the body of the reel does.
-4. Try the topic in three or four hooks with different triggers. Keep the one
+3. Name the physics: finish "the physics here is ___." No answer, no post. See
+   [Rule one](#rule-one-everything-links-back-to-physics).
+4. Pick one of the five formats. It decides what the body of the reel does.
+5. Try the topic in three or four hooks with different triggers. Keep the one
    that sounds most like something you would say out loud in class.
-5. Check it against the guardrails above, then run the trust check from
+6. Check it against the guardrails above, then run the trust check from
    [Explain the physics, show the judgment](#explain-the-physics-show-the-judgment).
    If it only explains, add the teaching move.
-6. For a first-person story post, build the rest with
+7. For a first-person story post, build the rest with
    [story-framework.md](story-framework.md). The hook is the loop, and the
    Realization has to pay it off.
