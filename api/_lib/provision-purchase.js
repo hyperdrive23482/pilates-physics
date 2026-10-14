@@ -3,6 +3,7 @@ import { supabaseAdmin } from './supabase-admin.js'
 import { tagSubscriber } from './kit.js'
 import { sendAuthEmail } from './resend.js'
 import { recordScholarshipPurchase } from './scholarship.js'
+import { attributionFromMetadata, recordTouchAttribution } from './attribution.js'
 
 // listUsers has no email filter, so page through the user list until we find a
 // match. 20 pages of 200 covers 4,000 users, ample at the current scale.
@@ -127,6 +128,19 @@ export async function provisionPurchase(session, { siteUrl, purchasedAt } = {}) 
       { onConflict: 'user_id,webinar_id', ignoreDuplicates: true }
     )
   if (entErr) throw entErr
+
+  // ---- First-party attribution (non-fatal, write-once per account) ----
+  //
+  // create-session.js put the buyer's first and last touch on the session as
+  // attr_* metadata. Write-once means a lead who claimed the calculator months
+  // ago keeps that earlier record and this call is a no-op for them, which is
+  // the right answer: the funnel wants where they FIRST came from.
+  await recordTouchAttribution(supabaseAdmin, {
+    userId,
+    email,
+    attribution: attributionFromMetadata(meta),
+    via: 'checkout',
+  })
 
   // ---- Early-registration bonus (non-fatal; apply-bonus-backfill is the safety net) ----
   if (

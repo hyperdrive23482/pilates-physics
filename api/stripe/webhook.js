@@ -3,6 +3,19 @@ import { supabaseAdmin } from '../_lib/supabase-admin.js'
 import { sendPurchaseNotification } from '../_lib/resend.js'
 import { provisionPurchase } from '../_lib/provision-purchase.js'
 import { logActivity } from '../_lib/log-activity.js'
+import { applyDispute, applyRefund, recordPurchase } from '../_lib/purchases.js'
+
+// Ledger-only events. Each amends an existing purchases row and grants or
+// revokes nothing. The Stripe webhook endpoint must be subscribed to these in
+// the dashboard or they never arrive.
+const LEDGER_EVENTS = new Set([
+  'charge.refunded',
+  'charge.dispute.created',
+  'charge.dispute.updated',
+  'charge.dispute.closed',
+  'charge.dispute.funds_withdrawn',
+  'charge.dispute.funds_reinstated',
+])
 
 // Vercel pure Node functions don't have the Next.js bodyParser flag, so we
 // build the raw body from the stream ourselves for signature verification.
@@ -50,6 +63,20 @@ export default async function handler(req, res) {
     .maybeSingle()
   if (existingEvent?.status === 'processed') {
     return res.status(200).json({ received: true, duplicate: true })
+  }
+
+  if (LEDGER_EVENTS.has(event.type)) {
+    const object = event.data.object
+    if (event.type === 'charge.refunded') await applyRefund(object)
+    else await applyDispute(object)
+    await logEvent({
+      event_id: event.id,
+      session_id: null,
+      event_type: event.type,
+      status: 'processed',
+      payload: object,
+    })
+    return res.status(200).json({ received: true })
   }
 
   if (event.type !== 'checkout.session.completed') {
@@ -118,6 +145,15 @@ export default async function handler(req, res) {
       email_status: result.emailStatus,
       email_error: result.emailError,
       payload: session,
+    })
+
+    // The normalized ledger row (migration 062). Non-fatal and idempotent on
+    // the session id, so a retry that reaches here rewrites the same row.
+    await recordPurchase(session, {
+      userId: result.userId,
+      userState: result.userState,
+      sourceEventId: event.id,
+      scholarshipCode: result.scholarshipCode,
     })
 
     return res.status(200).json({ received: true })

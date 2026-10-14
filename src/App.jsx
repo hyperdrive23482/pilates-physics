@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom'
 import PageWrapper from './components/layout/PageWrapper'
+import AnalyticsIdentity from './components/AnalyticsIdentity'
 import { workshopUrl } from './lib/workshop'
+import { initPostHog } from './lib/posthog'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -44,6 +46,8 @@ import AdminWorkshopEdit from './pages/admin/AdminWorkshopEdit'
 import AdminTools from './pages/admin/AdminTools'
 import AdminUsers from './pages/admin/AdminUsers'
 import AdminAnalytics from './pages/admin/AdminAnalytics'
+import AdminFunnel from './pages/admin/AdminFunnel'
+import AdminSeo from './pages/admin/AdminSeo'
 import AdminKit from './pages/admin/AdminKit'
 import AdminWorkshopFeedback from './pages/admin/AdminWorkshopFeedback'
 import AdminAnimations from './pages/admin/AdminAnimations'
@@ -87,9 +91,15 @@ function BrandedWorkshopRedirect() {
 }
 
 export default function App() {
+  // Lazy: the SDK loads after first paint and no-ops without VITE_POSTHOG_KEY.
+  useEffect(() => {
+    initPostHog()
+  }, [])
+
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <AnalyticsIdentity />
       <Routes>
         <Route
           path="/"
@@ -397,6 +407,22 @@ export default function App() {
           element={
             <AdminGate>
               <AdminAnalytics />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/funnel"
+          element={
+            <AdminGate>
+              <AdminFunnel />
+            </AdminGate>
+          }
+        />
+        <Route
+          path="/admin/seo"
+          element={
+            <AdminGate>
+              <AdminSeo />
             </AdminGate>
           }
         />

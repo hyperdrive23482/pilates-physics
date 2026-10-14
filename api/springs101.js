@@ -5,6 +5,7 @@ import { findUserByEmail } from './_lib/provision-purchase.js'
 import { sendAuthEmail } from './_lib/resend.js'
 import { tagSubscriber } from './_lib/kit.js'
 import { logActivity } from './_lib/log-activity.js'
+import { recordTouchAttribution } from './_lib/attribution.js'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -34,7 +35,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { firstName, lastName, email, website } = req.body ?? {}
+    const { firstName, lastName, email, website, attribution } = req.body ?? {}
 
     // Honeypot: bots that fill the hidden field get a silent success.
     if (typeof website === 'string' && website.trim() !== '') {
@@ -118,6 +119,19 @@ export default async function handler(req, res) {
         { onConflict: 'user_id,webinar_id', ignoreDuplicates: true }
       )
     if (entErr) throw entErr
+
+    // ---- First-party attribution (non-fatal, write-once per account) ----
+    //
+    // The browser posts how it first found us (src/lib/attribution.js); the
+    // server re-validates every field and keeps it against the account. This
+    // is usually the earliest moment a person becomes known to us, so the row
+    // it writes is the one the funnel reads for "where did leads come from".
+    await recordTouchAttribution(supabaseAdmin, {
+      userId,
+      email: normalizedEmail,
+      attribution,
+      via: 'lead_claim',
+    })
 
     // ---- Magic link (skipped for logged-in claims; non-fatal to the grant) ----
     let emailSent = false

@@ -12,6 +12,8 @@ const links = [
   { to: '/admin/users', label: 'Users' },
   { to: '/admin/scholarships', label: 'Scholarships' },
   { to: '/admin/analytics', label: 'Analytics' },
+  { to: '/admin/funnel', label: 'Funnel' },
+  { to: '/admin/seo', label: 'SEO' },
   { to: '/admin/kit', label: 'Kit' },
   { to: '/admin/workshop-feedback', label: 'Feedback' },
   { to: '/admin/animations', label: 'Animations' },

@@ -34,6 +34,10 @@
     {
       "path": "/api/cron/mint-offers",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/daily-snapshot",
+      "schedule": "0 6 * * *"
     }
   ],
   "headers": [
@@ -43,6 +47,14 @@
     }
   ],
   "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    {
+      "source": "/ingest/static/:path*",
+      "destination": "https://us-assets.i.posthog.com/static/:path*"
+    },
+    {
+      "source": "/ingest/:path*",
+      "destination": "https://us.i.posthog.com/:path*"
+    },
+    { "source": "/((?!api/|ingest/).*)", "destination": "/index.html" }
   ]
 }

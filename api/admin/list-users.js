@@ -11,11 +11,15 @@ export default async function handler(req, res) {
   if (!admin) return
 
   try {
-    const { data, error } = await supabaseAdmin.auth.admin.listUsers({
-      page: 1,
-      perPage: 1000,
-    })
-    if (error) throw error
+    // listUsers caps at 1000 per page, so page until a short page comes back.
+    const allUsers = []
+    for (let page = 1; page <= 50; page += 1) {
+      const { data: pageData, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 1000 })
+      if (error) throw error
+      allUsers.push(...(pageData.users ?? []))
+      if ((pageData.users ?? []).length < 1000) break
+    }
+    const data = { users: allUsers }
 
     // Pull all entitlements once and group by user to avoid N round-trips.
     const { data: entitlements, error: entErr } = await supabaseAdmin

@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react'
 import { useEnrollment } from './useEnrollment'
 import { supabase } from '../lib/supabase'
+import { readAttribution } from '../lib/attribution'
+import { captureEvent } from '../lib/posthog'
 
 /**
  * Start a Stripe checkout for one product.
@@ -62,6 +64,9 @@ export function useCheckout(slug, { offerToken, expectEarlyBird = false } = {}) 
           : { slug, email, firstName, lastName }
         if (offerToken) body.offerToken = offerToken
         if (expectEarlyBird) body.expectEarlyBird = true
+        // How this browser found us. The server stores it against the buyer
+        // once the purchase lands. See src/lib/attribution.js.
+        body.attribution = readAttribution()
 
         const res = await fetch('/api/checkout/create-session', {
           method: 'POST',
@@ -96,6 +101,13 @@ export function useCheckout(slug, { offerToken, expectEarlyBird = false } = {}) 
         }
 
         const { url } = await res.json()
+        // Client-side marker that joins the anonymous journey to the checkout.
+        // The authoritative record is the server's checkout_start row.
+        captureEvent('checkout_started', {
+          slug,
+          offer: Boolean(offerToken),
+          early_bird: Boolean(expectEarlyBird),
+        })
         window.location.href = url
       } catch (err) {
         setErrorMsg(err.message || 'Something went wrong. Try again.')

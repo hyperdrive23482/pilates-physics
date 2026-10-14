@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import ArrowSvg from '../components/ui/ArrowSvg'
 import { useEnrollment } from '../hooks/useEnrollment'
 import { supabase } from '../lib/supabase'
+import { readAttribution } from '../lib/attribution'
+import { captureEvent } from '../lib/posthog'
 import '../styles/ppv2.css'
 import './SpringCalculatorLanding.css'
 
@@ -54,10 +56,15 @@ export default function SpringCalculatorLanding() {
       const res = await fetch('/api/springs101', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, email, website }),
+        // attribution: how this browser first found us, saved server-side
+        // against the new account. See src/lib/attribution.js.
+        body: JSON.stringify({ firstName, email, website, attribution: readAttribution() }),
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(data.error || 'Something went wrong. Try again.')
+      // Joins the anonymous journey to the outcome in PostHog. The server-side
+      // lead_magnet_claim row in activity_events is the authoritative record.
+      captureEvent('lead_claimed', { user_state: data.userState })
       setResult(data)
       setStatus('success')
     } catch (err) {
@@ -80,10 +87,11 @@ export default function SpringCalculatorLanding() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({}),
+        body: JSON.stringify({ attribution: readAttribution() }),
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(data.error || 'Something went wrong. Try again.')
+      captureEvent('lead_claimed', { user_state: 'logged_in' })
       navigate('/portal/spring-load-calculator')
     } catch (err) {
       setErrorMsg(err.message || 'Something went wrong. Try again.')

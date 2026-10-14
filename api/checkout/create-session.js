@@ -3,6 +3,7 @@ import { supabaseAdmin } from '../_lib/supabase-admin.js'
 import { logActivity } from '../_lib/log-activity.js'
 import { isOfferValid } from '../_lib/offer.js'
 import { isEarlyBirdActive } from '../_lib/early-bird.js'
+import { attributionToMetadata, cleanAttribution } from '../_lib/attribution.js'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -11,8 +12,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { slug, email, firstName, lastName, offerToken, expectEarlyBird } = req.body ?? {}
+    const { slug, email, firstName, lastName, offerToken, expectEarlyBird, attribution } = req.body ?? {}
     if (!slug) return res.status(400).json({ error: 'slug is required' })
+
+    // How this browser found us, validated here and carried on the Checkout
+    // Session so the webhook can store it against whoever actually pays,
+    // without a second round trip or a pre-purchase row for someone who may
+    // never finish. Nothing in it is trusted beyond what cleanAttribution keeps.
+    const touches = cleanAttribution(attribution)
 
     // Resolve logged-in user (optional)
     let user = null
@@ -177,6 +184,8 @@ export default async function handler(req, res) {
         // Which Price this session charged, so a refund or dispute can be
         // matched to the price the buyer was shown.
         pricing,
+        // attr_* keys: first and last touch, see api/_lib/attribution.js.
+        ...attributionToMetadata(touches),
       },
     })
 
@@ -190,7 +199,15 @@ export default async function handler(req, res) {
       source: 'server',
       webinarId: workshop.id,
       webinarSlug: workshop.slug,
-      metadata: { label: session.id, pricing, ...(offer ? { offer_id: offer.id } : {}) },
+      metadata: {
+        label: session.id,
+        pricing,
+        ...(offer ? { offer_id: offer.id } : {}),
+        // Source at the moment of checkout, so the evidence row and the funnel
+        // agree on where a buyer came from even if the webhook never fires.
+        ...(touches.first ? { first_touch: touches.first } : {}),
+        ...(touches.last ? { last_touch: touches.last } : {}),
+      },
     })
 
     return res.status(200).json({ url: session.url })
