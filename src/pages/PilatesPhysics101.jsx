@@ -6,8 +6,16 @@ import WorkshopPrice, { EarlyBirdHeroPrice } from '../components/ui/WorkshopPric
 import { useWorkshopPricing } from '../lib/workshopPricing'
 import { useCurrentWorkshop } from '../hooks/useWorkshops'
 import { isRegistrationOpen, formatWorkshopWhen } from '../lib/workshop'
+import { workshopJsonLd } from '../lib/workshopJsonLd'
+import Head from '../components/Head'
+import JsonLd from '../components/JsonLd'
 import '../styles/ppv2.css'
 import './Workshop.css'
+
+const PAGE_PATH = '/pilates-physics-101'
+const HERO_IMAGE = '/images/homepage/hero-image-4.jpg'
+const DESCRIPTION =
+  'Physics to adapt and scale Pilates. Understanding the forces in the sessions you teach unlocks adaptability for different clients and progression over time. Live on Zoom, two hours, 2.0 NPCP CECs, recording included.'
 
 const FRAMEWORK = [
   {
@@ -223,6 +231,21 @@ export default function PilatesPhysics101() {
 
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
+      <Head
+        title="Pilates Physics 101 Workshop"
+        description={DESCRIPTION}
+        image={HERO_IMAGE}
+      />
+      <JsonLd
+        data={workshopJsonLd({
+          path: PAGE_PATH,
+          name: 'Pilates Physics 101',
+          description: DESCRIPTION,
+          image: HERO_IMAGE,
+          workshop,
+          cecs: 2,
+        })}
+      />
       {/* ── § 01 Hero ────────────────────────────────────────────────────── */}
       <section
         className="workshop-hero section-frame"

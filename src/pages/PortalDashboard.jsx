@@ -8,8 +8,10 @@ import WorkshopCard from '../components/portal/WorkshopCard'
 import CertificateButton from '../components/portal/CertificateButton'
 import FeedbackBanner from '../components/portal/FeedbackBanner'
 import { BookOpen, ArrowRight } from 'lucide-react'
+import { useHead } from '../lib/head'
 
 export default function PortalDashboard() {
+  useHead({ title: 'Your portal', noindex: true })
   const { user, loading: authLoading, signOut } = useEnrollment()
   const navigate = useNavigate()
   const { workshops, loading: workshopsLoading } = useMyWorkshops(user?.id)

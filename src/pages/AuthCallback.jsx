@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { track } from '../lib/track'
 import ExpiredLinkNotice from '../components/ui/ExpiredLinkNotice'
+import { useHead } from '../lib/head'
 
 export default function AuthCallback() {
+  useHead({ title: 'Signing you in', noindex: true })
   const navigate = useNavigate()
   const [status, setStatus] = useState('working') // working | error
 

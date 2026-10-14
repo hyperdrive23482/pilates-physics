@@ -7,6 +7,7 @@ import { fullPriceLabel } from '../components/course/coursePricing'
 import ArrowSvg from '../components/ui/ArrowSvg'
 import '../styles/ppv2.css'
 import './Workshop.css'
+import { useHead } from '../lib/head'
 
 /**
  * /offer/reformer?t=TOKEN
@@ -21,6 +22,7 @@ import './Workshop.css'
  * $69, and if a $39 page is ever indexed then $69 stops reading as real.
  */
 export default function OfferPage() {
+  useHead({ title: 'How a Reformer Works', noindex: true })
   const [params] = useSearchParams()
   const token = params.get('t')
 

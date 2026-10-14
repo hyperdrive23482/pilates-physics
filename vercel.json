@@ -43,7 +43,12 @@
   "headers": [
     {
       "source": "/offer/(.*)",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     }
   ],
   "rewrites": [
@@ -55,6 +60,13 @@
       "source": "/ingest/:path*",
       "destination": "https://us.i.posthog.com/:path*"
     },
-    { "source": "/((?!api/|ingest/).*)", "destination": "/index.html" }
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap.xml"
+    },
+    {
+      "source": "/((?!api/|ingest/|sitemap\.xml$).*)",
+      "destination": "/index.html"
+    }
   ]
 }

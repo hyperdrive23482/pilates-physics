@@ -4,8 +4,46 @@ import { useParams, Link } from 'react-router-dom'
 import { X } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { renderMarkdown } from '../lib/markdown'
+import { useHead, useJsonLd, AUTHOR, ORGANIZATION, SITE_URL } from '../lib/head'
 import '../styles/ppv2.css'
 import './Blog.css'
+
+// Plain-text description for meta tags: the excerpt when the post has one,
+// otherwise the first paragraph of the markdown with its syntax stripped.
+function describe(post) {
+  if (post?.excerpt) return post.excerpt.trim()
+  const firstPara = (post?.body_markdown || '')
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .find((p) => p && !p.startsWith('#') && !p.startsWith('!['))
+  if (!firstPara) return undefined
+  return firstPara
+    .replace(/[*_`>]/g, '')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/\s+/g, ' ')
+    .slice(0, 160)
+}
+
+function blogPostingJsonLd(post, pageUrl) {
+  if (!post) return null
+  const description = describe(post)
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': `${pageUrl}#article`,
+    headline: post.title,
+    description,
+    image: post.featured_image_url || undefined,
+    datePublished: post.published_at || undefined,
+    dateModified: post.updated_at || post.published_at || undefined,
+    author: AUTHOR,
+    publisher: ORGANIZATION,
+    // The Substack mirrors keep their canonical on Substack; mainEntityOfPage
+    // follows the canonical so we never claim those posts.
+    mainEntityOfPage: { '@type': 'WebPage', '@id': post.canonical_url || pageUrl },
+    url: pageUrl,
+  }
+}
 
 export default function BlogPost() {
   const { slug } = useParams()
@@ -13,6 +51,17 @@ export default function BlogPost() {
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [zoom, setZoom] = useState(null)
+
+  const pageUrl = `${SITE_URL}/blog/${slug}`
+  useHead({
+    title: notFound ? 'Post not found' : post?.title || 'Blog',
+    description: describe(post),
+    canonical: post?.canonical_url || pageUrl,
+    image: post?.featured_image_url || '/images/homepage/blog-hero.jpg',
+    type: 'article',
+    noindex: notFound,
+  })
+  useJsonLd(blogPostingJsonLd(post, pageUrl))
 
   // Click-to-enlarge for any image in the rendered markdown body. The body is
   // injected via dangerouslySetInnerHTML, so we delegate the click here rather
@@ -29,7 +78,9 @@ export default function BlogPost() {
       setLoading(true)
       const { data, error } = await supabase
         .from('blog_posts')
-        .select('id, slug, title, body_html, body_markdown, published_at, featured_image_url, featured_image_alt')
+        .select(
+          'id, slug, title, excerpt, body_html, body_markdown, published_at, updated_at, canonical_url, featured_image_url, featured_image_alt',
+        )
         .eq('slug', slug)
         .eq('status', 'published')
         .maybeSingle()

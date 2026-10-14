@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /portal
+Disallow: /admin
+Disallow: /offer
+Disallow: /auth
+Disallow: /api
+
+Sitemap: https://pilatesphysics.com/sitemap.xml

@@ -3,8 +3,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react'
 import { useEnrollment } from '../hooks/useEnrollment'
 import { friendlyAuthError } from '../lib/authErrors'
+import { useHead } from '../lib/head'
 
 export default function Profile() {
+  useHead({ title: 'Your profile', noindex: true })
   const { user, loading, updateProfile } = useEnrollment()
   const navigate = useNavigate()
 

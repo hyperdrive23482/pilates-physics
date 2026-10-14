@@ -4,6 +4,7 @@ import { Eye, EyeOff } from 'lucide-react'
 import { useEnrollment } from '../hooks/useEnrollment'
 import { friendlyAuthError } from '../lib/authErrors'
 import TroubleLoggingIn from '../components/ui/TroubleLoggingIn'
+import { useHead } from '../lib/head'
 
 const RESEND_COOLDOWN = 60
 
@@ -72,6 +73,7 @@ const errorStyle = {
 }
 
 export default function Login() {
+  useHead({ title: 'Log in', noindex: true })
   const { user, signIn, signInWithLink, verifyEmailCode } = useEnrollment()
   const navigate = useNavigate()
 

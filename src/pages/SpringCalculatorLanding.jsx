@@ -7,6 +7,7 @@ import { readAttribution } from '../lib/attribution'
 import { captureEvent } from '../lib/posthog'
 import '../styles/ppv2.css'
 import './SpringCalculatorLanding.css'
+import Head from '../components/Head'
 
 const GET = [
   {
@@ -101,6 +102,10 @@ export default function SpringCalculatorLanding() {
 
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
+      <Head
+        title="Free Spring Load Calculator for Pilates teachers"
+        description="A red spring is not a single weight. The free Spring Load Calculator shows you how Pilates springs really load, so what you see in the body in front of you starts to make sense."
+      />
       {/* ── § 01 Hero ────────────────────────────────────────────────────── */}
       <section className="springs101-hero section-frame">
         <span className="cross tl"></span>

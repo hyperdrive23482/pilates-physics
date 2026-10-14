@@ -1,3 +1,5 @@
+import Head from '../components/Head'
+
 export default function Privacy() {
   const sectionStyle = {
     maxWidth: '720px',
@@ -38,6 +40,10 @@ export default function Privacy() {
 
   return (
     <div style={sectionStyle}>
+      <Head
+        title="Privacy Policy"
+        description="How PWRHS Pilates LLC collects, uses and protects your personal information when you visit pilatesphysics.com or use our services."
+      />
       <p
         style={{
           fontSize: '0.7rem',

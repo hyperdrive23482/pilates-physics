@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
+import { useHead } from '../lib/head'
 
 export default function SubscriptionConfirmed() {
+  useHead({ title: 'Subscription confirmed', noindex: true })
   return (
     <section
       style={{

@@ -1,3 +1,5 @@
+import Head from '../components/Head'
+
 export default function Terms() {
   const sectionStyle = {
     maxWidth: '720px',
@@ -38,6 +40,10 @@ export default function Terms() {
 
   return (
     <div style={sectionStyle}>
+      <Head
+        title="Terms and Conditions"
+        description="The terms that govern use of pilatesphysics.com and its courses, workshops and digital products, operated by PWRHS Pilates LLC."
+      />
       <p
         style={{
           fontSize: '0.7rem',

@@ -4,6 +4,7 @@ import { useWorkshop } from '../hooks/useWorkshops'
 import DynamicSurveyForm from '../components/survey/DynamicSurveyForm'
 import '../styles/ppv2.css'
 import './Survey101.css'
+import { useHead } from '../lib/head'
 
 function Hero({ kicker, title, intro }) {
   return (
@@ -29,6 +30,7 @@ function StateMessage({ kicker, title, children }) {
 }
 
 export default function Survey() {
+  useHead({ title: 'Survey', noindex: true })
   const { slug } = useParams()
   const { workshop, loading } = useWorkshop(slug)
   const [submitted, setSubmitted] = useState(false)
