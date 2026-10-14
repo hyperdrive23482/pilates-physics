@@ -5,6 +5,7 @@ import { workshopUrl } from '../lib/workshop'
 import '../styles/ppv2.css'
 import './About.css'
 import Head from '../components/Head'
+import { PAGE_META } from '../lib/pageMeta'
 
 export default function About() {
   const { workshop: nextWorkshop } = useNextWorkshop()
@@ -22,12 +23,7 @@ export default function About() {
 
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
-      <Head
-        title="About Kaleen Canevari"
-        description="Pilates instructor, mechanical engineer and software founder. Kaleen studied mechanical engineering, designed reformers at Balanced Body, and teaches the physics the best instructors already use."
-        image="/images/about/kaleen-sitting.jpg"
-        type="profile"
-      />
+      <Head {...PAGE_META['/about']} />
       {/* ── § 01 Hero / Bio ──────────────────────────────────────────────── */}
       <section className="section-pad about-hero">
         <div className="container">

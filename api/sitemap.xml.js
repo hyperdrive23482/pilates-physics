@@ -5,8 +5,8 @@ import { buildSitemap } from './_lib/sitemap.js'
 //
 // Static marketing routes come from PUBLIC_ROUTES; blog posts come from the
 // database so a publish shows up on the next crawl without a redeploy.
-// Substack mirrors (canonical_url set) are listed too: the page exists and
-// is linked from /blog, and its canonical tag tells Google who owns it.
+// Substack mirrors (canonical_url set) are listed like any other post: since
+// 2026-10-14 every post's canonical is its own URL here.
 export default async function handler(req, res) {
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     res.setHeader('Allow', 'GET, HEAD')

@@ -26,6 +26,21 @@
     },
     "api/admin/funnel-traffic.js": {
       "maxDuration": 60
+    },
+    "api/render-page.js": {
+      "includeFiles": "dist/app-shell.html"
+    },
+    "api/admin/seo.js": {
+      "maxDuration": 300
+    },
+    "api/cron/seo-audit.js": {
+      "maxDuration": 120
+    },
+    "api/cron/seo-search-sync.js": {
+      "maxDuration": 120
+    },
+    "api/cron/seo-index-inspect.js": {
+      "maxDuration": 300
     }
   },
   "crons": [
@@ -44,9 +59,39 @@
     {
       "path": "/api/cron/daily-snapshot",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/seo-search-sync",
+      "schedule": "30 6 * * *"
+    },
+    {
+      "path": "/api/cron/seo-audit",
+      "schedule": "0 9 * * 1"
+    },
+    {
+      "path": "/api/cron/seo-index-inspect",
+      "schedule": "30 9 * * 1"
     }
   ],
   "headers": [
+    {
+      "source": "/(login|signup|forgot-password|set-password|profile|subscription-confirmed)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/(portal|admin|auth|survey|survey-101)(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
     {
       "source": "/offer/(.*)",
       "headers": [
@@ -71,8 +116,20 @@
       "destination": "/api/sitemap.xml"
     },
     {
+      "source": "/",
+      "destination": "/api/render-page?path=/"
+    },
+    {
+      "source": "/:page(about|spring-calculator|education|how-a-reformer-works|pilates-physics-101|pilates-physics-102|mentorship|scholarship|blog|help|terms|privacy|links)",
+      "destination": "/api/render-page?path=/:page"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/api/render-page?path=/blog/:slug"
+    },
+    {
       "source": "/((?!api/|ingest/|sitemap\\.xml$).*)",
-      "destination": "/index.html"
+      "destination": "/app-shell.html"
     }
   ]
 }

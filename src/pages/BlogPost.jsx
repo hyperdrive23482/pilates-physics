@@ -4,60 +4,45 @@ import { useParams, Link } from 'react-router-dom'
 import { X } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { renderMarkdown } from '../lib/markdown'
-import { useHead, useJsonLd, AUTHOR, ORGANIZATION, SITE_URL } from '../lib/head'
+import { useHead, useJsonLd } from '../lib/head'
+import {
+  BLOG_FALLBACK_IMAGE,
+  blogPostingJsonLd,
+  blogPostUrl,
+  describePost,
+} from '../lib/pageMeta'
 import '../styles/ppv2.css'
 import './Blog.css'
 
-// Plain-text description for meta tags: the excerpt when the post has one,
-// otherwise the first paragraph of the markdown with its syntax stripped.
-function describe(post) {
-  if (post?.excerpt) return post.excerpt.trim()
-  const firstPara = (post?.body_markdown || '')
-    .split(/\n\s*\n/)
-    .map((p) => p.trim())
-    .find((p) => p && !p.startsWith('#') && !p.startsWith('!['))
-  if (!firstPara) return undefined
-  return firstPara
-    .replace(/[*_`>]/g, '')
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-    .replace(/\s+/g, ' ')
-    .slice(0, 160)
-}
-
-function blogPostingJsonLd(post, pageUrl) {
-  if (!post) return null
-  const description = describe(post)
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    '@id': `${pageUrl}#article`,
-    headline: post.title,
-    description,
-    image: post.featured_image_url || undefined,
-    datePublished: post.published_at || undefined,
-    dateModified: post.updated_at || post.published_at || undefined,
-    author: AUTHOR,
-    publisher: ORGANIZATION,
-    // The Substack mirrors keep their canonical on Substack; mainEntityOfPage
-    // follows the canonical so we never claim those posts.
-    mainEntityOfPage: { '@type': 'WebPage', '@id': post.canonical_url || pageUrl },
-    url: pageUrl,
+// api/render-page.js embeds the post it already fetched for the static HTML,
+// so the first render can show it without a second round trip and without
+// flashing "Loading…" over the article the visitor is already reading.
+function readPrerenderedPost(slug) {
+  if (typeof document === 'undefined') return null
+  const el = document.getElementById('pp-prerender')
+  if (!el) return null
+  try {
+    const data = JSON.parse(el.textContent)
+    return data?.post?.slug === slug ? data.post : null
+  } catch {
+    return null
   }
 }
 
 export default function BlogPost() {
   const { slug } = useParams()
-  const [post, setPost] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [prerendered] = useState(() => readPrerenderedPost(slug))
+  const [post, setPost] = useState(prerendered)
+  const [loading, setLoading] = useState(!prerendered)
   const [notFound, setNotFound] = useState(false)
   const [zoom, setZoom] = useState(null)
 
-  const pageUrl = `${SITE_URL}/blog/${slug}`
+  const pageUrl = blogPostUrl(slug)
   useHead({
     title: notFound ? 'Post not found' : post?.title || 'Blog',
-    description: describe(post),
-    canonical: post?.canonical_url || pageUrl,
-    image: post?.featured_image_url || '/images/homepage/blog-hero.jpg',
+    description: describePost(post),
+    canonical: pageUrl,
+    image: post?.featured_image_url || BLOG_FALLBACK_IMAGE,
     type: 'article',
     noindex: notFound,
   })
@@ -73,13 +58,14 @@ export default function BlogPost() {
   }
 
   useEffect(() => {
+    if (prerendered?.slug === slug) return undefined
     let cancelled = false
     async function load() {
       setLoading(true)
       const { data, error } = await supabase
         .from('blog_posts')
         .select(
-          'id, slug, title, excerpt, body_html, body_markdown, published_at, updated_at, canonical_url, featured_image_url, featured_image_alt',
+          'id, slug, title, excerpt, body_html, body_markdown, published_at, updated_at, featured_image_url, featured_image_alt',
         )
         .eq('slug', slug)
         .eq('status', 'published')
@@ -93,7 +79,7 @@ export default function BlogPost() {
     return () => {
       cancelled = true
     }
-  }, [slug])
+  }, [slug, prerendered])
 
   if (loading) {
     return (

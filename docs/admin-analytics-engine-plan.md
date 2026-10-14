@@ -3,7 +3,7 @@
 Analytics, Funnel and SEO pages for the Pilates Physics admin portal, modeled on the remo super-admin pages (`pilates-session-coach`: `/superadmin/analytics`, `/superadmin/funnel`, `/superadmin/seo`) and adapted to how Pilates Physics actually sells.
 
 **Date:** 2026-10-14
-**Status:** Phases 0 and 1 and SEO foundations 3a are on `dev` (403a5e3) with migrations 061 to 064 applied to the dev database and stage.pilatesphysics.com serving the sitemap and robots.txt; the prod deploy, the Vercel PostHog server vars, the Stripe webhook events, the Kit custom fields and Search Console are still manual (Appendices B, C and D). Phase 2 (the Funnel page) built 2026-10-14 in the same checkout, uncommitted; see Appendix D. Phase 3b not started.
+**Status:** Phases 0, 1, 2 and SEO foundations 3a are committed on `dev` (7170b45), migrations 061 to 064 applied to the dev database. Built 2026-10-14 on `dev`, uncommitted: the 3a head injection that had been left out (item 4) and the Phase 3b SEO dashboard with migration 065; see Appendix E. Nothing in this plan is on prod yet; Kaleen chose to finish 3b before the prod deploy.
 **Reference:** remo pages live at `src/pages/admin/{Analytics,FunnelOverview,SeoDashboard}.tsx`, with plan docs `docs/plans/funnel-overview.md` and `docs/plans/seo-dashboard.md` in that repo.
 
 ---
@@ -311,11 +311,11 @@ Each phase gets its own dev deploy, a smoke test against the dev Supabase projec
 ## 9. Decisions needed from Kaleen before Phase 0
 
 1. **PostHog yes or no.** **Decided 2026-10-14: yes**, with localStorage persistence and no session replay. The first-party `page_views` fallback in section 4.1 is not being built.
-2. **Prerendering approach** for 3a. Recommendation: head injection at the edge for `/`, `/blog/:slug` and the product landing pages.
-3. **Substack mirrored posts.** Keep `canonical_url` pointing at Substack (Substack keeps the ranking, we stay a mirror) or drop it and claim them (we take over ranking, risk a duplicate content window). Recommendation: claim them if Substack is no longer actively published to; otherwise keep the canonical.
-4. **Search Console access.** Confirm the property exists and is verified, and that Kaleen can add a service account as a Full user. Without this, the Search tab and index verdicts cannot exist.
+2. **Prerendering approach** for 3a. **Decided 2026-10-14: head injection** (`api/render-page.js`), for every public route and every blog post, with the article body for posts. Appendix E.
+3. **Substack mirrored posts.** **Decided 2026-10-14: claim them.** Every post's canonical and `mainEntityOfPage` is its own URL here; `canonical_url` stays on the rows as a record of where a post first appeared and is no longer read for SEO.
+4. **Search Console access.** **Confirmed 2026-10-14:** the property is verified and Kaleen can add a service account as a Full user. Setup steps in Appendix E.
 5. **Refund semantics.** Confirm refunds and lost disputes should subtract from reported revenue without touching entitlements.
-6. **Narrative model.** `claude-opus-5-5` (best quality, roughly $0.20 per run) or `claude-sonnet-5-5` (about a fifth of that).
+6. **Narrative model.** **Decided 2026-10-14: `claude-opus-5-5`.**
 
 ---
 
@@ -497,3 +497,52 @@ Without `purchases` (062) steps 4 to 6 show a dash and their bodies say the ledg
 - Kit's per-email rates are the sequence's all-time figures; Kit does not expose them per window.
 - `prior_buyers` for step 6 is the count of buyers whose first order was before the window start, from the ledger, so it includes buyers of the $39 course.
 - The product filter lists only products with at least one order in the ledger.
+
+---
+
+## Appendix E: head injection and Phase 3b build notes (2026-10-14)
+
+Built on `dev`, uncommitted. 119 tests, lint and build pass. Not opened in a browser; the recommendations call has not been run against the API; migration 065 is not applied anywhere.
+
+### Head injection (3a item 4)
+
+- `api/render-page.js` serves the built shell with the page's `<title>`, description, canonical, Open Graph, Twitter tags and JSON-LD injected. Blog posts also get the article (title, date, featured image, `body_html`) inside `#root` and a `#pp-prerender` JSON seed, so `BlogPost.jsx` renders the post on first paint without a fetch or a "Loading…" flash. Same HTML for every visitor; no user agent sniffing.
+- Pure logic in `api/_lib/prerender.js` (tested). A failed database read costs only the data it would have added; a confirmed missing post is a real 404 with `noindex`. Any other failure serves the bare shell rather than an error page.
+- Single source of truth: titles, descriptions, images and the JSON-LD builders moved from the pages into `src/lib/pageMeta.js` (React free, imported by both the pages and the server). Site constants moved to `src/lib/seo.js`; `src/lib/head.js` re-exports them. A test fails if a `PUBLIC_ROUTES` entry has no `PAGE_META`, or if `vercel.json` does not send exactly the public routes and `/blog/:slug` to the render function.
+- Vercel serves a static `index.html` for `/` before any rewrite, so the Vite build now writes the shell as `dist/app-shell.html` (plugin in `vite.config.js`) and the SPA catch-all points there. `vercel.json` bundles the shell into the function with `includeFiles`; if that ever fails, the function fetches `/app-shell.html` from its own deployment.
+- Edge cache: `s-maxage=600, stale-while-revalidate=86400`, so a blog edit shows up within ten minutes. 404s cache for 60 s.
+- The Substack decision is applied here: canonical and `mainEntityOfPage` are always the post's own URL.
+- `X-Robots-Tag: noindex` is now a header on the login, signup, password, profile, portal, admin, auth and survey routes, so their noindex no longer depends on JavaScript.
+- Verified against the dev database with the real handler: correct titles, self canonicals (Substack mirrors included), Organization/WebSite, Course and BlogPosting JSON-LD, the 7 kB article body, and a 404 with noindex for an unknown slug. Not verified on a Vercel deployment yet: the `includeFiles` path and the rewrites need the stage check below.
+
+### Phase 3b: what shipped
+
+- Migration `065_seo_dashboard.sql`: `seo_audit_runs`, `seo_audit_findings`, `seo_finding_dismissals`, `seo_search_daily`, `seo_index_status`. RLS on, no policies. No pg_cron; the crons are Vercel crons.
+- Engine in `api/_lib/seo/`: `crawl.js` (robots, sitemap, breadth-first crawl, 80 page cap, redirect chains, og:image HEADs; an HTML answer for robots.txt or sitemap.xml counts as missing), `rules.js` (every remo rule plus Course and Event field checks), `gsc.js` (service account JWT signed with Node `crypto`), `narrative.js` (prompt, schema, cost), `traffic.js` (PostHog), `report.js` (pure shaping), `jobs.js` (database work shared by the route and the crons). `rules.test.js` builds its fixtures with the real head injection, so the audit is pinned to what the site serves.
+- Route `api/admin/seo.js`: GET `overview | findings | pages | search`, POST `dismiss | undismiss | run-audit | run-psi | run-sync | run-inspect | recommend`. `maxDuration` 300; every job runs inline, no polling queue.
+- Crons: `seo-search-sync` daily 06:30 UTC (last 3 days), `seo-audit` Mondays 09:00 UTC, `seo-index-inspect` Mondays 09:30 UTC. Vercel runs crons on production only.
+- Page `/admin/seo`: Audit, Recommendations, Pages and Search tabs (`src/components/admin/seo/*`, ranking in `src/lib/seoFindings.js`, tested).
+
+### Deviations from section 7
+
+- **Three kinds of page, not two.** remo's audit has "prerendered" and "shell". With head injection we have full pages (blog posts), head-only pages (static marketing pages: own head, empty body) and bare shells. Head, social and schema rules run on anything with its own head; structure rules (h1, alt text, links) only where the body is in the HTML. Head-only pages are one `prerender.body_empty` info finding, since Google renders the JavaScript anyway.
+- **"Leads" instead of "signups"** on the Pages tab: the first content page each calculator claimant viewed before the `lead_claimed` event.
+- **PageSpeed is one page per click** from a picker, not "home and newest post" in one call, to stay inside the function limit.
+- **No cron for PageSpeed or the narrative**, as in remo: both cost quota or money.
+- **Structured output, not forced tool use**, for the recommendations: `claude-opus-5-5` rejects a forced `tool_choice`. Effort `high`; server-side refusal fallback on (`fallbacks: "default"`), so a classifier false positive reruns on another model instead of failing the button. Cost is computed at Opus 5.5 list price ($4 / $20 per million tokens), so a fallback run is shown at Opus rates.
+
+### Runbook (dev first, then prod via the prod-deploy skill)
+
+1. Apply `065_seo_dashboard.sql` (`supabase db push` against dev; prod later, in migration order).
+2. Search Console service account: in Google Cloud, create a project (or reuse one), enable the **Google Search Console API**, create a service account and a JSON key for it. In Search Console > Settings > Users and permissions, add the service account's email as a **Full** user on the pilatesphysics.com property.
+3. Vercel env (Production and Preview): `GSC_SERVICE_ACCOUNT_JSON` (paste the whole key file in the dashboard, not the CLI, which can strip quotes) and `GSC_PROPERTY=sc-domain:pilatesphysics.com` (or the URL-prefix form `https://pilatesphysics.com/` if that is how the property was verified). Optional: `PAGESPEED_API_KEY` (without it Google's shared quota applies) and `SEO_SITE_ORIGIN` (defaults to `https://pilatesphysics.com`). `ANTHROPIC_API_KEY` already exists. The PostHog server vars from Appendix D feed the Pages tab and the ranking.
+4. Stage check after deploying `dev`: `curl -s https://stage.pilatesphysics.com/about | grep -E "<title>|canonical"` shows the About title and canonical; `curl -s https://stage.pilatesphysics.com/blog/<slug>` shows the article inside `#root`; the home page title is not the bare "Pilates Physics"; a client-side navigation between pages still updates the tab title. Check the `render-page` logs for "not bundled" (the fallback fetch).
+5. On `/admin/seo`: Run audit (it crawls production, so findings describe prod until prod ships), Backfill 16 months, Check index status, then Write recommendations.
+6. After the prod deploy: submit the sitemap in Search Console, and use URL Inspection > Request indexing on the Substack mirrors so Google re-reads their new canonicals.
+
+### Known limits
+
+- The audit always crawls production. Until prod ships head injection, it reports production's current state (no robots.txt, no sitemap, bare shells).
+- Static pages still have an empty body before JavaScript. Fine for Google; crawlers that do not render see the head only. Rendering a static summary into `#root` is the next step if a page needs to rank on its body text.
+- Crawl findings are about raw HTML only; Lighthouse covers the rendered page.
+- Search Console data lags two to three days, and per-query rows are Google's sample.

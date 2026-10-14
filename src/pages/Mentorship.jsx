@@ -5,6 +5,7 @@ import './Workshop.css'
 import '../components/ui/RegisterCard.css'
 import './Mentorship.css'
 import Head from '../components/Head'
+import { PAGE_META } from '../lib/pageMeta'
 
 // Source of truth for the program: docs/mentorship-program-spec.md. Change
 // the numbers there first, then in src/lib/mentorship.js and here.
@@ -131,11 +132,7 @@ function ClosedCard() {
 export default function Mentorship() {
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
-      <Head
-        title="Pilates Teacher Mentorship"
-        description="A small-group mentorship for Pilates teachers in their first five years. Weekly group sessions, two private sessions with Kaleen, and feedback on the classes you actually teach."
-        image="/images/homepage/hero-image-3.jpg"
-      />
+      <Head {...PAGE_META['/mentorship']} />
       {/* ── § 01 Hero ────────────────────────────────────────────────────── */}
       <section
         className="workshop-hero section-frame"

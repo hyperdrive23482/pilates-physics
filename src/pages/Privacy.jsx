@@ -1,4 +1,5 @@
 import Head from '../components/Head'
+import { PAGE_META } from '../lib/pageMeta'
 
 export default function Privacy() {
   const sectionStyle = {
@@ -40,10 +41,7 @@ export default function Privacy() {
 
   return (
     <div style={sectionStyle}>
-      <Head
-        title="Privacy Policy"
-        description="How PWRHS Pilates LLC collects, uses and protects your personal information when you visit pilatesphysics.com or use our services."
-      />
+      <Head {...PAGE_META['/privacy']} />
       <p
         style={{
           fontSize: '0.7rem',

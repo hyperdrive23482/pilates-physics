@@ -1,4 +1,5 @@
 import Head from '../components/Head'
+import { PAGE_META } from '../lib/pageMeta'
 
 export default function Terms() {
   const sectionStyle = {
@@ -40,10 +41,7 @@ export default function Terms() {
 
   return (
     <div style={sectionStyle}>
-      <Head
-        title="Terms and Conditions"
-        description="The terms that govern use of pilatesphysics.com and its courses, workshops and digital products, operated by PWRHS Pilates LLC."
-      />
+      <Head {...PAGE_META['/terms']} />
       <p
         style={{
           fontSize: '0.7rem',

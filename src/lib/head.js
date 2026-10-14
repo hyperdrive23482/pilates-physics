@@ -8,24 +8,30 @@ import { useEffect } from 'react'
 // the next page starts clean. Elements the shell already owns (the favicon
 // links, viewport) are never touched.
 //
-// Today this runs client side only, so crawlers that do not execute JS see
-// the shell. That is the open prerendering decision in the analytics plan;
-// nothing here changes when it lands, the same values just get injected
-// server side too.
+// Public pages also get the same tags injected server side by
+// api/render-page.js, marked data-head="1" too, so this hook updates them in
+// place and the first client navigation cleans them up like its own.
 
-export const SITE_NAME = 'Pilates Physics'
-export const SITE_URL = 'https://pilatesphysics.com'
-export const DEFAULT_DESCRIPTION =
-  'Physics-based Pilates education from Kaleen Canevari, mechanical engineer and Pilates instructor. Understand the forces in every exercise and personalize every class.'
-export const DEFAULT_IMAGE = `${SITE_URL}/images/homepage/hero-image.jpg`
+import {
+  SITE_NAME,
+  DEFAULT_DESCRIPTION,
+  DEFAULT_IMAGE,
+  absoluteUrl as absolute,
+  canonicalForPath,
+  fullTitle,
+} from './seo.js'
+
+export {
+  SITE_NAME,
+  SITE_URL,
+  DEFAULT_DESCRIPTION,
+  DEFAULT_IMAGE,
+  fullTitle,
+  ORGANIZATION,
+  AUTHOR,
+} from './seo.js'
 
 const MARK = 'data-head'
-
-function absolute(url) {
-  if (!url) return null
-  if (/^https?:\/\//i.test(url)) return url
-  return `${SITE_URL}${url.startsWith('/') ? '' : '/'}${url}`
-}
 
 function upsert(selector, create, attrs) {
   let el = document.head.querySelector(selector)
@@ -74,11 +80,6 @@ function link(rel, href) {
   )
 }
 
-export function fullTitle(title) {
-  if (!title) return SITE_NAME
-  return title.endsWith(SITE_NAME) ? title : `${title} | ${SITE_NAME}`
-}
-
 /**
  * Set the document head for the current page.
  *
@@ -97,7 +98,7 @@ export function useHead({ title, description, canonical, image, type, noindex } 
     const resolvedTitle = fullTitle(title)
     const resolvedDescription = description || DEFAULT_DESCRIPTION
     const path = window.location.pathname
-    const resolvedCanonical = absolute(canonical) || `${SITE_URL}${path === '/' ? '/' : path.replace(/\/$/, '')}`
+    const resolvedCanonical = absolute(canonical) || canonicalForPath(path)
     const resolvedImage = absolute(image) || DEFAULT_IMAGE
 
     document.title = resolvedTitle
@@ -133,6 +134,9 @@ export function useHead({ title, description, canonical, image, type, noindex } 
 export function useJsonLd(data) {
   const json = data ? JSON.stringify(data) : null
   useEffect(() => {
+    // The server injected this page's JSON-LD already; the first client
+    // render takes over so the page never carries two copies.
+    for (const el of document.head.querySelectorAll('script[data-ssr-jsonld]')) el.remove()
     if (!json) return undefined
     const script = document.createElement('script')
     script.type = 'application/ld+json'
@@ -143,20 +147,4 @@ export function useJsonLd(data) {
       if (script.parentNode) script.parentNode.removeChild(script)
     }
   }, [json])
-}
-
-// Shared structured-data fragments.
-export const ORGANIZATION = {
-  '@type': 'Organization',
-  '@id': `${SITE_URL}/#organization`,
-  name: SITE_NAME,
-  url: SITE_URL,
-  logo: `${SITE_URL}/images/logos/yellow-bg-logo.jpg`,
-  founder: { '@type': 'Person', name: 'Kaleen Canevari' },
-}
-
-export const AUTHOR = {
-  '@type': 'Person',
-  name: 'Kaleen Canevari',
-  url: `${SITE_URL}/about`,
 }

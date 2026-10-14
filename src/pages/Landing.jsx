@@ -5,26 +5,9 @@ import { useNextWorkshop } from '../hooks/useWorkshops'
 import { workshopUrl, formatWorkshopWhen } from '../lib/workshop'
 import Head from '../components/Head'
 import JsonLd from '../components/JsonLd'
-import { ORGANIZATION, SITE_NAME, SITE_URL } from '../lib/head'
+import { HOME_JSON_LD, PAGE_META } from '../lib/pageMeta'
 import '../styles/ppv2.css'
 import './Landing.css'
-
-const HOME_DESCRIPTION =
-  'Every body meets the spring differently. See why, get the cues to adjust for it, and build every class around the body in front of you. No math background required.'
-
-const HOME_JSON_LD = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    { ...ORGANIZATION, description: HOME_DESCRIPTION, sameAs: ['https://www.instagram.com/kaleenc_'] },
-    {
-      '@type': 'WebSite',
-      '@id': `${SITE_URL}/#website`,
-      url: SITE_URL,
-      name: SITE_NAME,
-      publisher: { '@id': ORGANIZATION['@id'] },
-    },
-  ],
-}
 
 const SPRINGS_URL = '/spring-calculator'
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000
@@ -136,11 +119,7 @@ export default function Landing() {
 
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
-      <Head
-        title="Physics-based Pilates education for teachers"
-        description={HOME_DESCRIPTION}
-        canonical="/"
-      />
+      <Head {...PAGE_META['/']} />
       <JsonLd data={HOME_JSON_LD} />
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="hero section-frame">

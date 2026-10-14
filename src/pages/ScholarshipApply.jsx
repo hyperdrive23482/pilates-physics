@@ -6,6 +6,7 @@ import '../styles/ppv2.css'
 import './Mentorship.css'
 import './Scholarship.css'
 import Head from '../components/Head'
+import { PAGE_META } from '../lib/pageMeta'
 
 // /scholarship. Posts to /api/inquiry (kind: scholarship), which stores the
 // application and emails Kaleen. Approval and codes happen in
@@ -105,10 +106,7 @@ export default function ScholarshipApply() {
 
   return (
     <div className="ppv2 grid-bg" data-section-style="alt">
-      <Head
-        title="Scholarships"
-        description="Pilates education, within reach. Scholarships for teachers who have been pushed to the edges of this industry and for whom cost has been a barrier to education."
-      />
+      <Head {...PAGE_META['/scholarship']} />
       <section className="section-pad mentorship-apply">
         <div className="container container--narrow">
           <div className="kicker">§ Scholarships</div>

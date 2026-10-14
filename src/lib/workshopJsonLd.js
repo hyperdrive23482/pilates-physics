@@ -1,4 +1,4 @@
-import { ORGANIZATION, SITE_URL } from './head'
+import { ORGANIZATION, SITE_URL } from './seo.js'
 
 // Structured data for the branded live-workshop pages (PP-101, PP-102).
 //

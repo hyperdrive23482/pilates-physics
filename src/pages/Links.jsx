@@ -4,6 +4,7 @@ import NewsletterForm from '../components/ui/NewsletterForm'
 import '../styles/ppv2.css'
 import './Links.css'
 import Head from '../components/Head'
+import { PAGE_META } from '../lib/pageMeta'
 
 // Link-in-bio page for the Pilates Physics social profiles — the destination
 // behind the Instagram bio link.
@@ -40,10 +41,7 @@ const LINK_ITEMS = [
 export default function Links() {
   return (
     <div className="ppv2 grid-bg links-page">
-      <Head
-        title="Links"
-        description="Kaleen Canevari, Pilates instructor and mechanical engineer. Workshops, courses, the free spring calculator and the blog, all in one place."
-      />
+      <Head {...PAGE_META['/links']} />
       <section className="links-panel section-frame">
         <span className="cross tl" />
         <span className="cross tr" />
