@@ -23,7 +23,8 @@ speaks to a real person, grounded in what actual students told us.
    narrative order (mirror, friction, realization, shift, invitation), open
    loops, and the rule that keeps the reader the hero, use
    [story-framework.md](story-framework.md). The raw material it draws on lives
-   in [story-bank.md](story-bank.md). Skip this step for pages.
+   in [story-bank.md](story-bank.md). Skip this step for pages. For the opening
+   line of a reel or carousel, pick from [hook-library.md](hook-library.md).
 6. **Check the voice.** Run the draft against
    [voice-and-messaging.md](voice-and-messaging.md) before you ship it. That file
    is the final word on tone and copy conventions.
@@ -45,6 +46,7 @@ speaks to a real person, grounded in what actual students told us.
 | [customer-language.md](customer-language.md) | Voice-of-customer swipe file: real student quotes by theme |
 | [objections-and-empathy.md](objections-and-empathy.md) | The 12 pushback lines, the 12 empathy lines, the load/adapt/progress premise, the two roles of load, and a written response to every objection |
 | [story-framework.md](story-framework.md) | The five-line narrative order for newsletters and social, open loops, and the rule that keeps the reader the hero. Use it when the piece is first person |
+| [hook-library.md](hook-library.md) | Fill-in-the-blank hooks, five filmable reel formats, and the "explain the physics, show the judgment" rule with a trust check for every post, adapted from three doctor personal-brand carousels plus our own, tagged by the five viewer triggers, with guardrails for what not to borrow |
 | [story-bank.md](story-bank.md) | Raw material for those stories: origin, the moment the physics clicked, teaching mistakes, client turnarounds. Sections 5 through 7 have their first entries |
 | [funnel-strategy-nikki-session.md](funnel-strategy-nikki-session.md) | Raw capture of the strategy call with Nikki: the "springs are not one weight" root belief, the calculator → footwork → nurture → tripwire → workshop funnel, and the plan for the 300 new subscribers. Summary plus full transcript |
 
