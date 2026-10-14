@@ -61,26 +61,64 @@ export const CONTENT_PATHS = [...PUBLIC_ROUTES, '/workshops', ...RETIRED_PATHS]
  *  course sales pages. The post-purchase /success pages are excluded below. */
 export const CONTENT_PREFIXES = ['/blog/', '/workshops/', '/courses/']
 
+/**
+ * PostHog runs at most 3 queries at once per project and answers the fourth
+ * with a 429 ("Queries are a little too busy right now"). The Funnel route
+ * alone asks for 8 in parallel, so the client queues past MAX_CONCURRENT and
+ * retries a 429 with backoff, which also covers a second admin tab or the SEO
+ * page holding slots at the same moment.
+ */
+const MAX_CONCURRENT = 3
+const RETRY_DELAYS_MS = [1000, 2500, 5000]
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 export class PostHogClient {
   constructor(host, projectId, apiKey) {
     this.host = host
     this.projectId = projectId
     this.apiKey = apiKey
+    this.active = 0
+    this.waiting = []
+  }
+
+  async acquire() {
+    if (this.active < MAX_CONCURRENT) {
+      this.active++
+      return
+    }
+    // The releasing query hands its slot straight over, so active stays put.
+    await new Promise((resolve) => this.waiting.push(resolve))
+  }
+
+  release() {
+    const next = this.waiting.shift()
+    if (next) next()
+    else this.active--
   }
 
   /** Runs one HogQL query and returns its rows (arrays of cells). */
   async query(name, sql) {
-    const res = await fetch(`${this.host}/api/projects/${this.projectId}/query/`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${this.apiKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: { kind: 'HogQLQuery', query: sql }, name }),
-    })
-    const body = await res.json().catch(() => ({}))
-    if (!res.ok) {
-      const detail = body?.detail ?? body?.error ?? `HTTP ${res.status}`
-      throw new Error(`PostHog query "${name}" failed: ${detail}`)
+    await this.acquire()
+    try {
+      for (let attempt = 0; ; attempt++) {
+        const res = await fetch(`${this.host}/api/projects/${this.projectId}/query/`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${this.apiKey}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: { kind: 'HogQLQuery', query: sql }, name }),
+        })
+        const body = await res.json().catch(() => ({}))
+        if (res.ok) return body?.results ?? []
+        if (res.status === 429 && attempt < RETRY_DELAYS_MS.length) {
+          const retryAfter = Number(res.headers.get('retry-after'))
+          await sleep(Number.isFinite(retryAfter) && retryAfter > 0 ? Math.min(retryAfter * 1000, 10000) : RETRY_DELAYS_MS[attempt])
+          continue
+        }
+        const detail = body?.detail ?? body?.error ?? `HTTP ${res.status}`
+        throw new Error(`PostHog query "${name}" failed: ${detail}`)
+      }
+    } finally {
+      this.release()
     }
-    return body?.results ?? []
   }
 }
 
