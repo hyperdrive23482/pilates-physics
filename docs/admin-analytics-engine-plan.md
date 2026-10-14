@@ -3,7 +3,7 @@
 Analytics, Funnel and SEO pages for the Pilates Physics admin portal, modeled on the remo super-admin pages (`pilates-session-coach`: `/superadmin/analytics`, `/superadmin/funnel`, `/superadmin/seo`) and adapted to how Pilates Physics actually sells.
 
 **Date:** 2026-10-14
-**Status:** Phase 0 committed on branch `admin/analytics`, 2026-10-14, not deployed (Appendix B has the runbook). Phase 1 (the five-tab Analytics page) built 2026-10-14 in worktree `claude/vigorous-bell-48ab65` on top of that branch, uncommitted; see Appendix C. SEO foundations 3a merged into the same branch. Phase 2 and 3b not started.
+**Status:** Phases 0 and 1 and SEO foundations 3a are on `dev` (403a5e3) with migrations 061 to 064 applied to the dev database and stage.pilatesphysics.com serving the sitemap and robots.txt; the prod deploy, the Vercel PostHog server vars, the Stripe webhook events, the Kit custom fields and Search Console are still manual (Appendices B, C and D). Phase 2 (the Funnel page) built 2026-10-14 in the same checkout, uncommitted; see Appendix D. Phase 3b not started.
 **Reference:** remo pages live at `src/pages/admin/{Analytics,FunnelOverview,SeoDashboard}.tsx`, with plan docs `docs/plans/funnel-overview.md` and `docs/plans/seo-dashboard.md` in that repo.
 
 ---
@@ -430,3 +430,70 @@ Every migration-dependent read is soft. Without 062 the Revenue tab shows the he
 - Refunds are charged to the purchase day of the order they refund, not the day they were issued.
 - Per-question miss rates assume the question order at grading time matches today's order; a reorder after attempts were graded would mis-attribute misses, which is why only attempts with a matching answer count are graded.
 - Recording watch rate counts a click on a recording content item, not playback.
+
+---
+
+## Appendix D: Phase 2 build notes (2026-10-14)
+
+Built in the `admin/analytics` checkout on top of 403a5e3 (which is also `dev`). Lint clean, 79 unit tests pass (`npm test`), production build succeeds. Nothing committed, nothing deployed. No migration.
+
+### What shipped
+
+| Piece | Files |
+|---|---|
+| PostHog HogQL client, env reader, quoting and the content filter | `api/_lib/posthog.js` (+ `posthog.test.js`). `CONTENT_PATHS` is built from `PUBLIC_ROUTES` in `api/_lib/public-routes.js` plus `/workshops` and a `RETIRED_PATHS` list, so routes, sitemap and traffic filter cannot drift. `CONTENT_PREFIXES` covers `/blog/`, `/workshops/`, `/courses/` and drops `/success` pages |
+| Traffic and pre-lead queries | `api/_lib/analytics/funnel-traffic.js` (+ test): `fetchTraffic` (visitors, visits, pageviews, channel, referrer, campaign, country, US state) and `fetchPreLead` (content pages and visits per person before their first `lead_claimed`, top pages, calculator page conversion). Ported from remo's `admin-funnel-traffic/traffic.ts` without the plan split; both take the client as an argument and are tested against a fake |
+| Pure funnel builder | `api/_lib/analytics/funnel.js` (+ test): steps 2 to 6 and the sources tables from purchases, subscriber_offers, user_entitlements, auth users, touch_attribution and three Kit reads |
+| Routes | `api/admin/funnel.js` (our tables and Kit) and `api/admin/funnel-traffic.js` (PostHog). Both `requireAdmin`, both `maxDuration: 60` in `vercel.json` |
+| Kit client | `listSubscribersCreated({ after, before })` added to `api/_lib/kit.js` |
+| Step shaping | `src/lib/funnelSteps.js` (+ test): the six `FunnelStep` prop sets. The test asserts steps 4 to 6 are standalone whatever the data, the port of remo's `FunnelOverview.test.tsx` rule |
+| Page | `src/pages/admin/AdminFunnel.jsx` (range select shared with Analytics and remembered per browser, product filter for steps 5 and 6), `src/components/admin/funnel/{useFunnelData.js,StepDetails.jsx,SourcesSection.jsx}`; `FunnelStep.jsx` from Phase 0 unchanged |
+
+### How each step counts
+
+| # | Step | Headline | Rate or denominator |
+|---|---|---|---|
+| 1 | Web traffic | `uniq(person_id)` of `$pageview` on content paths, `$host` = `POSTHOG_PROD_HOST` | none |
+| 2 | Calculator leads | accounts whose first `lead_magnet` entitlement was granted in the window | % of step 1 |
+| 3 | Entered the offer window | union by email of offers minted (`subscriber_offers.created_at`) and Kit `in-HARW-sequence` `tagged_at` in the window; both numbers and the overlap are shown | % of step 2 |
+| 4 | Bought the $39 course | `purchases` with `pricing = 'offer'` | standalone: "n of m offers that expired in this window were redeemed" (`expires_at` in window) |
+| 5 | Bought a core workshop | `purchases` for `webinar` or `course` kinds at full, early bird or bundle pricing, product filter applied | standalone: "n of m buyers were a lead first", with the median days from claim |
+| 6 | Bought again | buyers whose second or later order fell in the window (product filter on that order) | standalone: "of N buyers who had bought before this window" (all buyers, for all time) |
+
+Scholarship orders are not in the step 5 headline; they are shown beside it. Kit's lead count (subscribers created in the window) is reported next to the claims with the overlap by email, never added.
+
+### Drill-downs
+
+- **Traffic:** visits, pageviews, pages per visit; channel, referrers and campaigns by session entry; country and US state by person. Caveat line about Web Analytics.
+- **Leads:** first touch, last touch, campaigns, first landing page for the window's leads (No record for accounts without a row); "before they claimed" from PostHog: measured versus unseen, median and mean content pages and visits, top pages, and the calculator page's own conversion (people who viewed `/spring-calculator` against people who claimed). The plan's "calculator interactions that never claimed" became this because the landing page has no interactive calculator; the tool is gated.
+- **Entered the offer window:** offers minted, tag count and overlap, median days from claim to mint (measured n of m), nurture per-email sent, opened, clicked, unsubscribed from `kit-metrics.js` (all time, labelled so), unsubscribed during nurture.
+- **Bought the $39 course:** minted, seen, redeemed, forwarded for the window's offers; redeemed on which day of the four (bar chart); by mint week; expired unused who later bought the course at full price; offers live right now.
+- **Bought a core workshop:** by product, by pricing, by what came first (bought the $39 offer first, was a lead first, cold), by first touch; median days from first touch to order (measured n of m); scholarship count; link to the Revenue tab.
+- **Bought again:** median days between orders, share of all buyers who bought twice, previous product then this product.
+- **Sources:** first touch, last touch and campaign tables with leads, $39 buyers and core buyers per bucket, bucketed by `touchSource` from `api/_lib/attribution.js`. Counts only.
+
+### Design decisions and deviations from section 6
+
+- **Two routes, not one.** PostHog can take seconds or be down; `/api/admin/funnel-traffic` carries step 1 and the pre-lead panel so the five database steps never wait on it. The page merges both `errors` maps into one soft-errors line.
+- **Pre-lead journeys use the `lead_claimed` event's own person**, not a join through identify. Every claim made in a browser PostHog could see is measured, not only leads who later signed in from the same browser. Unseen is the database lead count less the measured count.
+- **Step 3 is a union, not a sum.** The cart tag is removed by the Kit automation after `HARW-didnotbuy`, so `tagged_at` history thins; `subscriber_offers` is the durable record and the tag fills in anyone the cron has not minted yet.
+- **Kit reads:** the cart tag list, subscribers created in the window, and the cached `getKitMetrics()` build for the nurture emails. Cold, that is about 25 Kit calls against the 120 per minute limit.
+- **Attribution rows with neither touch** (storage blocked) bucket as No record for campaigns as well as sources.
+
+### Behaviour without each source
+
+Without `purchases` (062) steps 4 to 6 show a dash and their bodies say the ledger is missing; steps 2 and 3 still count. Without `subscriber_offers` step 3 counts the Kit tag alone and step 4 loses its denominator and body. Without `touch_attribution` (061) the source breakdowns and the Sources section explain themselves. Without `KIT_API_KEY` the Kit numbers are dashes with the reason. Without `POSTHOG_API_KEY` and `POSTHOG_PROJECT_ID` step 1 and the pre-lead panel read "PostHog is not configured". Nothing here is ever a 500 for a missing source.
+
+### Runbook additions
+
+1. No migration. Deploy only.
+2. Vercel: `POSTHOG_API_KEY` (personal key, Query: Read), `POSTHOG_PROJECT_ID`, `POSTHOG_API_HOST=https://us.posthog.com`, `POSTHOG_PROD_HOST=pilatesphysics.com`. Leave `POSTHOG_PROD_HOST` at the prod host on stage too: stage then shows prod traffic, which is the useful view.
+3. Smoke test: open `/admin/funnel`, flip the range and the product filter, expand all six steps, confirm the soft-errors line is empty once the PostHog vars are in.
+
+### Known limits
+
+- PostHog keeps a year of events by default, so "All time" for step 1 is really "as far back as PostHog has".
+- Step 1 counts persons across the window; PostHog merges an anonymous person into an identified one on sign-in, so a buyer who first visited anonymously counts once.
+- Kit's per-email rates are the sequence's all-time figures; Kit does not expose them per window.
+- `prior_buyers` for step 6 is the count of buyers whose first order was before the window start, from the ledger, so it includes buyers of the $39 course.
+- The product filter lists only products with at least one order in the ledger.

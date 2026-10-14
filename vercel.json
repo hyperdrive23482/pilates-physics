@@ -20,6 +20,12 @@
     },
     "api/cron/mint-offers.js": {
       "maxDuration": 60
+    },
+    "api/admin/funnel.js": {
+      "maxDuration": 60
+    },
+    "api/admin/funnel-traffic.js": {
+      "maxDuration": 60
     }
   },
   "crons": [

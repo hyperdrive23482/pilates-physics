@@ -438,6 +438,18 @@ export async function listAllSubscribersByTag(tagName, { status = null } = {}) {
   return kitGetAll(`/tags/${tagId}/subscribers`, 'subscribers', status ? { status } : {})
 }
 
+// Subscribers created inside a window, whatever their state, for the Funnel
+// page's lead step (Kit sees everyone who filled a form; our database only
+// sees calculator claims). `after` and `before` are ISO timestamps; either
+// may be null. Bounded by kitGetAll's page cap.
+export async function listSubscribersCreated({ after = null, before = null } = {}) {
+  return kitGetAll('/subscribers', 'subscribers', {
+    status: 'all',
+    created_after: after ?? undefined,
+    created_before: before ?? undefined,
+  })
+}
+
 // Active subscribers carrying a tag, counted without paging through them.
 export async function countSubscribersByTag(tagName) {
   const tagId = await resolveTagId(tagName)

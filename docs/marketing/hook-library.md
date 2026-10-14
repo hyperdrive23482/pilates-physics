@@ -231,6 +231,32 @@ lines run on. Check every hook against these before it ships.
 
 ---
 
+## Caption rules
+
+The full caption rules live in the Rules tab of the Pilates Physics Social
+page. These three are the ones that shape every caption:
+
+- **The first sentence is the hook.** Its only job is to make someone stop
+  scrolling. Under about 125 characters, so it lands before Instagram's "more."
+  A bold specific claim, a belief turned over, or a question they have asked
+  themselves. Not a summary of the post.
+- **One CTA, one of two.**
+  1. **Spring Calculator:** "Comment CALC and I'll send you the link to the
+     Spring Calculator." For posts about spring load, spring settings, or how
+     body weight and position change what the springs feel like.
+  2. **Pilates Physics 101 workshop:** name the workshop and end with "Link in
+     bio." For posts that show physics changing a teaching decision (layers,
+     modifications, cues, choosing settings for a body).
+
+  If neither fits, the post probably needs a stronger physics angle.
+- **Hashtags: 3 to 5. #pilatesphysics goes on every post.** Fill the rest from
+  the base list, plus at most one topic tag for the exercise or equipment. Base
+  list: #pilatesinstructor #pilatesteacher #reformerpilates #pilateseducation
+  #pilatesteachertraining #pilatescontinuingeducation #reformerinstructor
+  #pilatesstudioowner. No other brand tags.
+
+---
+
 ## How to brainstorm with this
 
 1. Start from a real conversation: a question a client or trainee asked, or
