@@ -224,8 +224,8 @@ export default function AuditPanel({ overview, findings, busy, onRunAudit, onRun
                 maxWidth: '100%',
               }}
             >
-              {pages
-                .filter((p) => p.inSitemap)
+              {(pages.some((p) => p.path === '/') ? pages : [{ path: '/' }, ...pages])
+                .filter((p) => p.path === '/' || p.inSitemap)
                 .map((p) => (
                   <option key={p.path} value={p.path}>
                     {p.path}

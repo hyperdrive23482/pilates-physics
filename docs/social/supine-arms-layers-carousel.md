@@ -1,136 +1,172 @@
 <!--
-INSTAGRAM CAROUSEL (draft)
+POSTED 2026-10-14 via Blotato to @kaleenc_: https://www.instagram.com/p/DefF9NoFJtR/
+  Slide order as posted:
+  1.png, 2.png, 3.mp4 (layer 1), 4.mp4 (layer 2), 5.mp4 (layer 3),
+  6.mp4 (layer 4), 6.5.png (how I run it), 7.png (close).
+  Final overlays: layer 1 exclamation mark removed; layer 3 now reads "...The
+  leg in tabletop keeps its short moment arm from the previous layer."; layer 4
+  now reads "Extend both legs so both are on a long moment arm. The load on the
+  core from the legs doubles, and there's no short moment arm leg in table top
+  left to 'help.'" The suggestions below are kept as a record.
+
+INSTAGRAM CAROUSEL
 No source post. Standalone teaching carousel.
-Audience: ICP 1, the instructor teaching mixed-level group classes who has been
-  told to "offer modifications" and never handed a way to choose them.
-8 slides. Slides 2 to 5 are looping videos of one layer each, with a short text
-  overlay. Slides 1, 6, 7 and 8 are text.
+Final assets: C:\Users\kalee\Downloads\layers carousel (1.png, 2.png, 3.mp4 to
+  6.mp4, 7.png, plus the new slide 7 inserted before the close). This file records the copy as built, plus suggested fixes.
+Audience: ICP 1, the instructor teaching mixed-level group classes.
+8 slides. Slides 3 to 6 are looping videos (20 to 32 s each) with a "LAYER n"
+  tag and a text overlay. Slides 1, 2, 7 and 8 are text.
 Built from docs/marketing/hook-library.md:
   Hook: format 3, "You think it's ___, but I'd look at ___."
-  Physics (rule one): the lever. Same springs, same arms. Moving the legs
-    farther from the hip makes them heavier for the core to hold.
-  Judgment: slide 7, how to choose a layer and when to move up.
-Voice: no em dashes, sentence case, no exclamation marks, second person. Heat is
-  aimed at "teaching to the middle" as a habit, never at a teacher.
-
-[CONFIRM] marks every line that assumes something about your layers or your
-  teaching rule. Swap in yours before this ships.
+  Physics (rule one): moment arms. Same springs, same arms. The head and legs
+    move farther from the pivot, so the core has more to hold.
+  Judgment: slide 7, everyone starts on one layer and is invited to advance.
 -->
 
-# Carousel: Teaching in layers, supine arms
+# Carousel: Teaching in layers, supine arms in straps
 
-## Slide 1 (cover)
+## Slide 1 (cover, as built)
 
-**You think mixed-level means teaching to the middle.**
+Mixed level doesn't mean you have to teach to the middle.
 
 I teach in layers, and physics tells me how to build them.
 
-## Slide 2 (video, layer 1)
+## Slide 2 (as built)
 
-Overlay:
+Take supine arms in straps, for example.
 
-> **Layer 1.** Feet down. [CONFIRM]
-> The legs are supported, so the core only has to steady the arms.
+Look at the moment arms you can use to increase load.
 
-## Slide 3 (video, layer 2)
+**Suggested:** define the term once, since every overlay depends on it.
 
-Overlay:
+> Take supine arms in straps, for example.
+>
+> Look at the moment arms you can use to increase load on the core.
+>
+> A moment arm is how far a weight sits from the joint holding it. The farther
+> out, the heavier it is to hold.
 
-> **Layer 2.** Tabletop. [CONFIRM]
-> Now the core holds the legs too. The shins reach out from the hip, so they
-> have leverage.
+## Slide 3 (video, layer 1: head down, legs in tabletop)
 
-## Slide 4 (video, layer 3)
+As built:
 
-Overlay:
+> With head down and legs in table top, the core is most supported. But not
+> fully supported! The legs are in the air, just with a relatively short moment
+> arm.
 
-> **Layer 3.** Legs extended. [CONFIRM]
-> Longer legs, longer lever. The farther the legs reach from the hip, the
-> heavier they are to hold.
+Suggested (removes the exclamation mark, "tabletop" as one word):
 
-## Slide 5 (video, layer 4)
+> Head down, legs in tabletop. The core is most supported here, but not fully.
+> The legs are still in the air, just on a short moment arm.
 
-Overlay:
+## Slide 4 (video, layer 2: add ab curl)
 
-> **Layer 4.** Legs extended, head and chest lifted. [CONFIRM]
-> Now the core holds both ends: the legs and the upper body.
+As built:
 
-## Slide 6
+> Adding an ab curl creates a moment arm from the weight of the head that the
+> core must control.
 
-**Same springs. Same arms. Four different core workouts.**
+Suggested (the curl lifts the shoulders too, not just the head):
 
-Nobody changed a spring. What changed is where the weight of the body sits
-relative to the hip. The farther it reaches, the longer the lever, and the
-harder the core works to hold it still while the arms move.
+> Add an ab curl. Now the weight of the head and shoulders sits on a moment arm
+> the core has to hold.
 
-## Slide 7
+## Slide 5 (video, layer 3: curl, one leg extends)
 
-**How I choose the layer**
+As built:
 
-[CONFIRM: your rule. A placeholder to react to:] Everyone starts on the layer
-where they can keep their ribs and pelvis quiet while the arms move. When the
-arms stop pulling them out of position, they're ready for the next one.
+> A single leg extension increases the moment arm from the leg weight moving
+> away from the core. The leg in table top keeps it's short moment arm,
+> functioning as a supportive counterweight to the extended leg.
 
-## Slide 8 (close)
+Suggested (fixes "its", shorter for a looping video, and avoids the
+counterweight claim unless the bent knee is drawn in past the hip):
 
-**One exercise. One count. Everyone in the room working.**
+> Extend one leg. Its weight moves farther from the hip, so the moment arm gets
+> longer. The tabletop leg keeps its short moment arm, so the core only manages
+> one long lever.
 
-The class stays together because everyone hears the same cue. The layer is what
-makes it theirs.
+If you cue the bent knee in toward the chest, the counterweight version is
+accurate and you can keep it:
 
-Save this for your next mixed-level class.
+> Extend one leg and its moment arm gets longer. The other knee, drawn in toward
+> the chest, acts as a counterweight.
+
+## Slide 6 (video, layer 4: curl, both legs extend)
+
+As built:
+
+> Both legs extending not only doubles the moment arm of the legs, it removes
+> some counterweight from keeping the leg close to chest.
+
+Suggested (the moment arm is a distance and does not double; the load on it
+does):
+
+> Extend both legs. Now both are on the long moment arm, so the load from the
+> legs roughly doubles, and there's no short leg left to help.
+
+## Slide 7 (how I run it, the judgment slide)
+
+I start everyone on the same layer.
+
+Every couple of reps, I invite them to advance if their body is up for it
+today.
+
+## Slide 8 (close, as built)
+
+One base exercise.
+
+Options layered in as the set continues.
+
+Everyone in the room working at their level.
+
+Optional tighter version, since slide 7 now covers the layering:
+
+> One base exercise.
+>
+> Everyone in the room working at their level.
 
 ---
 
 ## Caption
 
-Mixed-level classes don't need four exercises. They need one exercise with
-honest entry points.
+Same springs, same arm movement, but different loads on the core.
 
-Everyone in this sequence is on the same springs, doing the same arms. What
-changes is where the legs and head are. Move the legs farther from the hip and
-they become a longer lever, which means more for the core to hold. That's the
-whole progression, and nobody has to touch a spring.
+In supine arms in straps, each layer retains the basic arm movement and spring
+setting, but moves the head or legs farther from the pivot, so the core has a
+longer moment arm to control.
 
-[CONFIRM: one line on how you choose a layer, from slide 7.]
+When I teach a group class, I try to add layers built on physics into as many
+exercises as I can because it helps make the class feel more personalized by
+offering students multiple loading options.
 
-Save this for your next mixed-level class, and tell me which layer your room
-lives on.
+Understanding how load works in Pilates helps me create logical and intentional
+sequences that keep the class moving and offer the right challenge for each
+individual.
 
-#pilates #pilatesteacher #pilatesinstructor #reformerpilates
-#pilatesteachertraining #pilateseducation #groupclass #pilatesnerd
+Want to understand how load is delivered from the equipment and interacts with
+body position? Join me on November 15th for my live, virtual workshop, Pilates
+Physics 101. Link in bio.
+
+#pilatesinstructor #pilatesphysics #reformerpilates #pilateseducation
+#pilatesteachertraining
+
+(Final, written by Kaleen 2026-10-14. Matches the "Teaching in layers: supine
+arms" post on the Pilates Physics Social page.)
 
 ---
 
-## Design notes
+## Notes
 
-- Dark ground (`--bg #0e0d0b`), cream serif type, one accent only
-  (`--accent #f09f26`). See docs/design-system.md.
-- Cover: one italic accent at most, on "layers."
-- Video overlays: keep them to the layer number plus two short lines, set low in
-  the frame so they don't cover the torso. The bold first line ("Layer 2.
-  Tabletop.") should read in under a second, since the video is looping.
-- Film all four layers from the same camera angle and distance so the only thing
-  that changes between slides is the body position. That's the argument of the
-  carousel, made visually.
-- Slide 6 wants a simple diagram if you have one: the same body in two leg
-  positions, with the horizontal distance from hip to the middle of the legs
-  marked. That's the lever.
-- Slide 1 alt text: "Dark slide reading, you think mixed-level means teaching to
-  the middle. I teach in layers, and physics tells me how to build them."
-
-## Calls to make before this ships
-
-1. **The four layers.** The overlays assume feet down, tabletop, legs extended,
-   then head and chest lifted. If your layers are different, the overlays need to
-   name what actually changes in each one.
-2. **Watch the order if a layer has legs straight up.** Legs pointing straight
-   at the ceiling sit almost directly over the hip, so they have very little
-   lever and are often easier to hold than tabletop. If one of your layers is
-   vertical legs, it belongs before tabletop, not after. (That could also be
-   its own post: "Why legs up is easier than tabletop.")
-3. **Slide 7 is yours.** The placeholder rule is mine, not yours. Replace it
-   with how you actually decide who goes to which layer and when they move up.
-   This is the judgment slide, so it has to be your real call.
-4. **Arm springs.** If you name the setting anywhere, add it to slide 6 ("Same
-   springs: [setting]"). It makes the "nobody changed a spring" point concrete.
+- **Physics check, layer 4.** "Doubles the moment arm" is the one line a
+  physics-literate viewer would flag. Each leg is the same distance out; it is
+  the weight on the long moment arm that doubles.
+- **Physics check, counterweight.** A bent leg only counterbalances the extended
+  one if its weight sits on the other side of the hip, which means the knee is
+  drawn in toward the chest. In a true tabletop (thigh vertical, shin parallel
+  to the floor) the shin is still past the hip, so it adds load, just less.
+- **Overlay length.** Layer 3 runs six lines on a looping video. Three or four
+  is easier to read before the loop restarts.
+- **Next post.** Legs straight up at the ceiling sit almost over the hip, so
+  they carry less load than tabletop. "Why legs up is easier than tabletop" is a
+  ready-made follow-up in the same series.
