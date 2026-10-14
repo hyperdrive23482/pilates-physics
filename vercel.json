@@ -65,7 +65,7 @@
       "destination": "/api/sitemap.xml"
     },
     {
-      "source": "/((?!api/|ingest/|sitemap\.xml$).*)",
+      "source": "/((?!api/|ingest/|sitemap\\.xml$).*)",
       "destination": "/index.html"
     }
   ]
