@@ -148,6 +148,19 @@ export default function Help() {
         session wraps. If it's been more than a week, let us know.
       </p>
 
+      <h3 style={h3Style}>Do Pilates Physics workshops count for NPCP continuing education credits?</h3>
+      <p style={pStyle}>
+        Yes.{' '}
+        <Link to="/pilates-physics-101" style={{ color: 'var(--color-accent)' }}>Pilates Physics 101</Link>{' '}
+        and{' '}
+        <Link to="/pilates-physics-102" style={{ color: 'var(--color-accent)' }}>Pilates Physics 102</Link>{' '}
+        are each approved for 2.0 NPCP CECs, and the{' '}
+        <Link to="/how-a-reformer-works" style={{ color: 'var(--color-accent)' }}>How a Reformer Works</Link>{' '}
+        course is approved for 1.0 NPCP CEC. For a workshop, attend live or watch the recording,
+        then download your certificate from the workshop's portal page. For the course, the
+        certificate is issued when you pass the quiz.
+      </p>
+
       <h3 style={h3Style}>Do you offer mentorship?</h3>
       <p style={pStyle}>
         The application period for the 8-week small-group{' '}

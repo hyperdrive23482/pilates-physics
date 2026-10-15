@@ -9,37 +9,40 @@ import { workshopJsonLd } from './workshopJsonLd.js'
 // route in PUBLIC_ROUTES has no entry. Keep this file free of React and
 // browser globals; the server imports it.
 
+// Lengths matter here: Google shows roughly 30 to 60 characters of a title
+// (" | Pilates Physics" takes 18 of them) and 70 to 160 of a description.
+// api/_lib/seo/rules.js flags anything outside those ranges.
 export const HOME_DESCRIPTION =
-  'Every body meets the spring differently. See why, get the cues to adjust for it, and build every class around the body in front of you. No math background required.'
+  'Every body meets the spring differently. See why, get the cues to adjust for it, and build every class around the body in front of you.'
 
 export const PP101_DESCRIPTION =
-  'Physics to adapt and scale Pilates. Understanding the forces in the sessions you teach unlocks adaptability for different clients and progression over time. Live on Zoom, two hours, 2.0 NPCP CECs, recording included.'
+  'Learn the forces in the classes you teach so you can adapt Pilates to each client and progress them over time. Live on Zoom, 2.0 NPCP CECs, recording included.'
 
 export const PP102_DESCRIPTION =
-  'Same framework, new geometry. Expand the Pilates Physics framework beyond the reformer to two new pieces of equipment that introduce different mechanical applications of force. Live on Zoom, two hours, 2.0 NPCP CECs, recording included.'
+  'Take Pilates Physics beyond the reformer to the chair and cadillac, where force is applied differently. Live on Zoom, 2.0 NPCP CECs, recording included.'
 
 export const REFORMER_DESCRIPTION =
-  'An on-demand course on the mechanisms that make your reformer magical. Eight modules, one hour, one NPCP CEC. Taught by an engineer and Pilates instructor who designed one.'
+  'An on-demand course on the mechanisms that make your reformer work. Eight modules, one hour, one NPCP CEC, taught by an engineer who designed one.'
 
 export const BLOG_FALLBACK_IMAGE = '/images/homepage/blog-hero.jpg'
 
 export const PAGE_META = {
   '/': {
-    title: 'Physics-based Pilates education for teachers',
+    title: 'Physics-based Pilates teacher education',
     description: HOME_DESCRIPTION,
     canonical: '/',
   },
   '/about': {
     title: 'About Kaleen Canevari',
     description:
-      'Pilates instructor, mechanical engineer and software founder. Kaleen studied mechanical engineering, designed reformers at Balanced Body, and teaches the physics the best instructors already use.',
+      'Pilates instructor, mechanical engineer and software founder. Kaleen designed reformers at Balanced Body and teaches the physics good teachers already use.',
     image: '/images/about/kaleen-sitting.jpg',
     type: 'profile',
   },
   '/spring-calculator': {
-    title: 'Free Spring Load Calculator for Pilates teachers',
+    title: 'Free Pilates Spring Load Calculator',
     description:
-      'A red spring is not a single weight. The free Spring Load Calculator shows you how Pilates springs really load, so what you see in the body in front of you starts to make sense.',
+      'A red spring is not a single weight. The free Spring Load Calculator shows how Pilates springs really load, so what you see in the body makes sense.',
   },
   '/education': {
     title: 'Six ways to learn the physics of Pilates',
@@ -52,22 +55,22 @@ export const PAGE_META = {
     image: '/images/homepage/hero-image-5.jpg',
   },
   '/pilates-physics-101': {
-    title: 'Pilates Physics 101 Workshop',
+    title: 'Pilates Physics 101 Workshop (2 CECs)',
     description: PP101_DESCRIPTION,
     image: '/images/homepage/hero-image-4.jpg',
   },
   '/pilates-physics-102': {
-    title: 'Pilates Physics 102 Workshop',
+    title: 'Pilates Physics 102 Workshop (2 CECs)',
     description: PP102_DESCRIPTION,
   },
   '/mentorship': {
     title: 'Pilates Teacher Mentorship',
     description:
-      'A small-group mentorship for Pilates teachers in their first five years. Weekly group sessions, two private sessions with Kaleen, and feedback on the classes you actually teach.',
+      'A small-group mentorship for Pilates teachers in their first five years. Weekly group sessions, private time with Kaleen, and feedback on your classes.',
     image: '/images/homepage/hero-image-3.jpg',
   },
   '/scholarship': {
-    title: 'Scholarships',
+    title: 'Scholarships for Pilates teachers',
     description:
       'Pilates education, within reach. Scholarships for teachers who have been pushed to the edges of this industry and for whom cost has been a barrier to education.',
   },
@@ -78,9 +81,9 @@ export const PAGE_META = {
     image: BLOG_FALLBACK_IMAGE,
   },
   '/help': {
-    title: 'Help',
+    title: 'Help and frequently asked questions',
     description:
-      'Answers to common questions about Pilates Physics workshops, courses and your account. Send a note and Kaleen will reply within a few days.',
+      'Answers to common questions about Pilates Physics workshops, courses, NPCP CECs and your account. Send a note and Kaleen will reply within a few days.',
   },
   '/terms': {
     title: 'Terms and Conditions',
@@ -93,7 +96,7 @@ export const PAGE_META = {
       'How PWRHS Pilates LLC collects, uses and protects your personal information when you visit pilatesphysics.com or use our services.',
   },
   '/links': {
-    title: 'Links',
+    title: 'Links from Kaleen Canevari',
     description:
       'Kaleen Canevari, Pilates instructor and mechanical engineer. Workshops, courses, the free spring calculator and the blog, all in one place.',
   },

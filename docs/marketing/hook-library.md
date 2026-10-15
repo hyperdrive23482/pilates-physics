@@ -204,15 +204,108 @@ Hooks in the same spirit that come straight from our own material.
 
 ---
 
+## The core line
+
+**Same spring, different workout.** Chosen 2026-10-14. It is the one belief
+every post proves again, from a new exercise, a new body, a new dial or a new
+story. Repetition is the point: people should recognize the idea before they
+see the username.
+
+- Use it as the sign-off on spring posts, in bios and in carousel closers.
+- For posts about the footbar, gear, rope length or body position, use the
+  variant **Same setting, different workout.**
+- "Same spring, different body" is still fine as a setup line inside a hook. It
+  is no longer the brand line.
+
+---
+
+## Hills
+
+Points of view Kaleen stands behind, approved 2026-10-14. Each one comes from
+her own writing, not from a template. Repeat them for years, from new angles.
+Sources: **H** = the pinned "Hills I will die on" carousel, **IG** = an Instagram
+caption, **B** = a blog post in [../brain/blog-posts/](../brain/blog-posts/) or
+[../blog-drafts/](../blog-drafts/), **N** = [nurture-v2.md](current-copy/nurture-v2.md),
+**SB** = [story-bank.md](story-bank.md). Heat runs 1 to 3.
+
+**State the claim plainly in the hook. Put the nuance in the caption.** On
+Instagram Kaleen tends to cushion before the point lands ("Of course…", "this
+is a simplified example", "I hesitate to post this"). The blogs say the same
+things without the cushion, and the cushion belongs after the hook, not before
+it.
+
+### Proven on Instagram
+
+1. **"Memorized spring settings are a starting place, not gospel."** (H, B) Heat 2
+2. **"Springs are not magical entities that push and pull. They only pull."** (H) Heat 1
+3. **Body weight does not make the carriage noticeably harder to move**, but it
+   does change exercise difficulty and spring choice. (H) Heat 2
+4. **Cueing extra muscles creates co-contraction, not better work.** "Pull the
+   carriage in with your hamstrings" is the example. (IG, 62k views; B) Heat 3
+5. **"Setup must match intention."** Momentum is not bad. Fast and slow train
+   different things. (IG; B) Heat 2
+
+### Strong in her writing, underused on Instagram
+
+6. **"If you don't feel it, you're doing it wrong" is the most harmful sentence
+   in Pilates.** The enemy belief. (N email 2, SB) Heat 3
+7. **Change the load before you change the cue.** "What a cue cannot do is close
+   a 20 pound load gap." (N emails 3 and 4, B, SB) Heat 2
+8. **Load is treated as background.** "It's just there… unchangeable. And that's
+   just not true." (SB) Heat 2
+9. **If class felt too easy, the instructor owns it, not the student.**
+   Instructor forums "get really snobbish really fast." (B) Heat 3
+10. **Form comes last.** "Resistance and setup matter more than a perfectly placed
+    pinky toe." (B, twice) Heat 3
+11. **Teacher trainings teach choreography, not teaching.** Recurs in five blog
+    posts. Aim it at the model, never at the teacher. (B) Heat 3
+12. **Classical spring weights may reflect what a Manhattan industrial supplier
+    had in 1940, not sacred design.** (B, the myth of the perfect machine) Heat 3
+13. **"Do you know your reformer as well as you think you do?"** (N email 6) Heat 2
+14. **Pilates is not cardio, and heart rate is the wrong measure of it.** (B) Heat 2
+15. **"Pilates has… feeling."** Running has pace, strength training has load and
+    reps, and Pilates clients get no evidence they are progressing. (B) Heat 2
+16. **Group classes reset to zero every week. They should build on each other.**
+    (B) Heat 2
+17. **Real personalization is not remembering a client's birthday.** "The floor is
+    not the ceiling." (B) Heat 2
+18. **Tech that remembers for the teacher connects people. Only tech that replaces
+    the teacher separates them.** "I am going to keep saying so." Also fits the
+    Remo slot. (B, five posts) Heat 3
+
+### Her own scars
+
+19. **The duet.** "For a long time I assumed that he really was weaker." (N
+    emails 1 and 5)
+20. **"For seven years I built, maintained, and repaired Pilates equipment, and
+    yet I still hadn't considered all the load tradeoffs."** (N email 5)
+21. **The bridge that could only clench.** Every cue failed, and adding a spring
+    fixed it. (SB section 5)
+
+### Settle before using
+
+22. **Strength.** "Pilates is not strength training, and that is fine" appears
+    only in a cut list (expo-personalization-OUTLINE.md) and conflicts with
+    "Pilates absolutely builds strength" (B, what makes Pilates so effective).
+    Decide the actual position before it goes in a post.
+
+**Not used, by choice:** the 600-hour certification take, "the colors are not a
+language, they are just paint", "Pilates should be hard", "I didn't like the
+physics of any of them" (about other reformers), and the solidcore or Lagree
+"probably not really Pilates" line.
+
+---
+
 ## What we do not take from the source
 
 The source was written for doctors, where "stop doing this immediately" can be
 about real harm. Ours is not, and our voice rules forbid most of the heat those
 lines run on. Check every hook against these before it ships.
 
-- **Punch up, never across.** "The biggest mistake I see people make" and "the
-  trend I wish people would stop copying" land on a person. Point the heat at a
-  setting, a piece of advice, or equipment marketing instead. That is why hooks 4,
+- **Punch up, or across at a habit, never at a person.** "The biggest mistake I
+  see people make" and "the trend I wish people would stop copying" land on a
+  person. Point the heat at a setting, a cue, a habit, a piece of advice, a
+  training model, or equipment marketing instead. That is why hooks 4,
   10 and 17 are rewritten above. See "punch up, never across" in
   [voice-and-messaging.md](voice-and-messaging.md).
 - **No fear of harm.** Do not imply a spring setting injured someone, or that a
@@ -220,8 +313,10 @@ lines run on. Check every hook against these before it ships.
   first."
 - **No fear of the math.** A hook can promise a surprise. It cannot promise that
   the physics is hard.
-- **Do not imply the training failed them.** "Your training told you ___" is a
-  setup for the reason behind the setting, not a takedown of the training.
+- **Criticize the training model, not the teacher who went through it.** "Teacher
+  trainings teach choreography, not teaching" is a fair hill. "You were trained
+  badly" is not. "Your training told you ___" is a setup for the reason behind
+  the setting, and the training was still the right starting line.
 - **No all caps for emphasis.** The source shouts NEVER, NOT and THIS. We let the
   idea carry it.
 - **No invented quotes or numbers.** Hooks 9 and 14 need a real number of years

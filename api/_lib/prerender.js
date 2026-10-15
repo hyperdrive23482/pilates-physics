@@ -124,6 +124,115 @@ export function renderArticleHtml(post) {
   return parts.join('')
 }
 
+// Static body for the marketing pages that matter most to search and to AI
+// agents that never run JavaScript: the h1 the page renders, a few paragraphs
+// on what it offers, and plain links onward. React renders over it as usual.
+// The classes are the pages' own so the first paint looks close to right.
+// /terms, /privacy and /links are left to the SPA on purpose.
+const STATIC_BODIES = {
+  '/': {
+    h1: 'The same spring setting isn\u2019t the same workout.',
+    paragraphs: [
+      'Every body meets the spring differently. See why, get the cues to adjust for it, and build every class around the body in front of you. No math background required.',
+      'Pilates Physics is physics-based education for Pilates teachers from Kaleen Canevari, a mechanical engineer and Pilates instructor who designed a reformer. The live workshops and on-demand course explain the forces inside every exercise so you can adapt and progress the method for each client, instead of memorizing one setting for everyone.',
+    ],
+    links: [
+      ['/spring-calculator', 'Free Spring Load Calculator'],
+      ['/pilates-physics-101', 'Pilates Physics 101 workshop'],
+      ['/how-a-reformer-works', 'How a Reformer Works course'],
+      ['/blog', 'The blog'],
+      ['/about', 'About Kaleen'],
+    ],
+  },
+  '/spring-calculator': {
+    kicker: '\u00a7 01 \u00b7 Free resource',
+    h1: 'A red spring is not a single weight.',
+    paragraphs: [
+      'You already read the body in front of you: how it moves, where it strains, what your cue changes. But a Pilates spring does not load like a dumbbell, and the resistance your client actually meets shapes everything you watch for. The free Spring Load Calculator shows you how springs really load, so what you see starts to make sense.',
+      'How spring load changes as the carriage moves: a spring\u2019s force grows with how far it is stretched. At the start of a stroke the carriage sits near the stopper and the spring is close to its resting length, so the load is light. As the carriage travels out the spring stretches and the load climbs, and it is heaviest at full extension. A tall client who pushes the carriage further works a heavier red spring than a shorter client on the same setting, which is why the same color is not the same workout.',
+      'Pick a brand, choose a spring color, and drag through the stroke to read the load at any point. Springs from six brands are included, because a red spring on one reformer is not a red spring on another.',
+    ],
+    links: [
+      ['/blog/comparing-springs-across-brands', 'Comparing reformer springs across brands'],
+      ['/blog/balanced-body-duro-springs-measured', 'I measured Balanced Body\u2019s new Duro springs'],
+      ['/pilates-physics-101', 'Pilates Physics 101 workshop'],
+    ],
+  },
+  '/how-a-reformer-works': {
+    kicker: '\u00a7 01 \u00b7 On-demand course',
+    h1: 'You own more machine than you are using.',
+    paragraphs: [
+      'How a Reformer Works is an on-demand course on the mechanisms that make your reformer work, taught by an engineer and Pilates instructor who designed one. Eight modules, about one hour, brand agnostic, and worth one NPCP continuing education credit.',
+      'Adjust the gear bar and two other things quietly move. The course walks through the springs, the carriage and wheels, the footbar and gear bar, the ropes and pulleys, the headrest and shoulder blocks, and how a change to one part of the machine changes the load and geometry of the others. The point is to give you another option to offer when your teaching intent is not landing.',
+      'One payment, lifetime access, nothing expires. Scholarships are available.',
+    ],
+    links: [
+      ['/pilates-physics-101', 'Pilates Physics 101 workshop'],
+      ['/spring-calculator', 'Free Spring Load Calculator'],
+      ['/scholarship', 'Scholarships'],
+    ],
+  },
+  '/pilates-physics-101': {
+    kicker: '\u00a7 01 \u00b7 Pilates Physics 101 Workshop',
+    h1: 'Physics to adapt and scale Pilates.',
+    paragraphs: [
+      'Understanding the forces in the sessions you teach unlocks adaptability for different clients and progression over time. Pilates Physics 101 is a live, two-hour workshop on Zoom with the recording included, approved for 2.0 NPCP continuing education credits.',
+      'The same equipment setup doesn\u2019t work for everyone. If you have memorized baseline equipment settings but are not sure how to adjust for the person in front of you, or if you have figured out what works but do not know why, this workshop is for you. It covers how springs, levers and body position change the load in an exercise, with a feedback loop you can use in your next class.',
+    ],
+    links: [
+      ['/pilates-physics-102', 'Pilates Physics 102: the chair and cadillac'],
+      ['/how-a-reformer-works', 'How a Reformer Works course'],
+      ['/spring-calculator', 'Free Spring Load Calculator'],
+      ['/scholarship', 'Scholarships'],
+    ],
+  },
+  '/pilates-physics-102': {
+    kicker: '\u00a7 01 \u00b7 Pilates Physics 102 Workshop',
+    h1: 'Same framework. New geometry.',
+    paragraphs: [
+      'Expand the Pilates Physics framework beyond the reformer to two new pieces of equipment that introduce different mechanical applications of force: the chair and the cadillac. A live, two-hour workshop on Zoom with the recording included, approved for 2.0 NPCP continuing education credits.',
+      'You can feel the difference between a high hook and a low hook. Now explain it. If you can teach the same exercise on the cadillac with two anchor heights and feel that they are different but cannot fully say why, this workshop is for you. Same on the chair, where a heavy client and a light client work very different loads on the same springs. Built on Pilates Physics 101.',
+    ],
+    links: [
+      ['/pilates-physics-101', 'Pilates Physics 101 workshop'],
+      ['/how-a-reformer-works', 'How a Reformer Works course'],
+      ['/scholarship', 'Scholarships'],
+    ],
+  },
+  '/help': {
+    h1: 'How can we help?',
+    paragraphs: [
+      'Answers to common questions about Pilates Physics workshops, courses and your account. If you do not see what you are looking for, send a note through the form on this page and Kaleen will reply within a few days.',
+      'Do Pilates Physics workshops count for NPCP continuing education credits? Yes. Pilates Physics 101 and Pilates Physics 102 are each approved for 2.0 NPCP CECs, and the How a Reformer Works course is approved for 1.0 NPCP CEC. Attend live or watch the recording, then request your certificate from your portal.',
+      'Purchased workshops, Zoom links and recordings live in your portal. Recordings are posted a few days after each live session. All sales are final.',
+    ],
+    links: [
+      ['/pilates-physics-101', 'Pilates Physics 101'],
+      ['/pilates-physics-102', 'Pilates Physics 102'],
+      ['/how-a-reformer-works', 'How a Reformer Works'],
+      ['/terms', 'Terms and Conditions'],
+    ],
+  },
+}
+
+export function renderStaticHtml(path) {
+  const b = STATIC_BODIES[path]
+  if (!b) return undefined
+  const parts = ['<main class="ppv2 grid-bg"><section class="section-frame"><div class="container container--narrow">']
+  if (b.kicker) parts.push(`<div class="kicker">${escapeHtml(b.kicker)}</div>`)
+  parts.push(`<h1 class="workshop-hero__title">${escapeHtml(b.h1)}</h1>`)
+  for (const p of b.paragraphs) parts.push(`<p class="workshop-hero__lede">${escapeHtml(p)}</p>`)
+  if (b.links?.length) {
+    parts.push('<nav aria-label="Related pages"><ul>')
+    for (const [href, label] of b.links) {
+      parts.push(`<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`)
+    }
+    parts.push('</ul></nav>')
+  }
+  parts.push('</div></section></main>')
+  return parts.join('')
+}
+
 /**
  * Put the tags into the shell. Replaces the shell's own <title>, fills #root
  * when there is a body, and embeds `seed` for the page to read on first
@@ -214,5 +323,5 @@ export async function resolvePage(path, fetchers) {
   if (path === '/how-a-reformer-works') {
     head.jsonLd = reformerCourseJsonLd(await safely(() => fetchers.webinarBySlug('how-a-reformer-works')))
   }
-  return { status: 200, head }
+  return { status: 200, head, bodyHtml: renderStaticHtml(path) }
 }

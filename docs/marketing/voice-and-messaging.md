@@ -60,15 +60,18 @@ respects that you already know your craft.
   something untrue. This applies to sequences and broadcasts alike. Real
   deadlines are the exception: a cart close or a live call has an actual date and
   should say so.
-- **Punch up, never across.** There is plenty worth criticizing, and none of it
-  is another teacher. Fair targets: the certification pipeline that hands out
-  settings without reasons, the industry habit of treating load as fixed,
-  equipment marketing, and confidently wrong claims about spring physics. Not a
-  fair target: the teacher repeating one of those claims. They were handed it,
-  they did not write it. This is what lets the brand have an edge without
-  breaking the Empathy beat, which rests on the training having been the right
-  starting line. When a line has heat in it, check who it lands on before it
-  ships.
+- **Punch up, or across at a habit, never at a person.** There is plenty worth
+  criticizing. Fair targets: the certification pipeline that hands out settings
+  without reasons, training programs that teach choreography instead of
+  teaching, the industry habit of treating load as fixed, equipment marketing,
+  confidently wrong claims about spring physics, and common teaching habits (a
+  cue, a default, a forum attitude). Not a fair target: a named teacher, studio
+  or program, or the teacher repeating one of those claims. They were handed it,
+  they did not write it. Lines aimed at a habit land best with an "I did this
+  too." This is what lets the brand have an edge without breaking the Empathy
+  beat, which rests on the training having been the right starting line. When a
+  line has heat in it, check who it lands on before it ships. The approved
+  points of view are listed under "Hills" in [hook-library.md](hook-library.md).
 
 ## Do
 

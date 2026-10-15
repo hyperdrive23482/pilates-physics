@@ -127,10 +127,10 @@ test('head-only pages get head rules and one info about the empty body', () => {
   assert.ok(!ids(out).includes('head.canonical_mismatch'))
 })
 
-test('the home title is flagged for length', () => {
-  const out = runRules(site([page('/', staticPage('/'))]))
-  const t = out.find((f) => f.ruleId === 'head.title_length')
-  assert.equal(t?.path, '/')
+test('every static page title and description fit the display range', () => {
+  const out = runRules(site(Object.keys(PAGE_META).map((p) => page(p, staticPage(p)))))
+  assert.deepEqual(out.filter((f) => f.ruleId === 'head.title_length').map((f) => f.path), [])
+  assert.deepEqual(out.filter((f) => f.ruleId === 'head.description_length').map((f) => f.path), [])
 })
 
 test('a blog post gets structure and schema rules', () => {

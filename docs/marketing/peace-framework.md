@@ -40,6 +40,12 @@ descriptions, "what is this" openers.
 the close of a CTA section, or as a sign-off. Keep it out of the one-liner, where
 it reads as repetitive.
 
+**The core line (the belief every post repeats):** Same spring, different
+workout. Use "Same setting, different workout" when the post is about a dial
+other than the spring. It is the short, social version of the Problem beat
+("the same setting is not the same workout"). See "The core line" and "Hills"
+in [hook-library.md](hook-library.md).
+
 ---
 
 ## The five beats
