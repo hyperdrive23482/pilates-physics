@@ -1,5 +1,6 @@
 import { supabaseAdmin } from '../_lib/supabase-admin.js'
 import { requireAdmin } from '../_lib/require-admin.js'
+import { tagPpContact } from '../_lib/kit.js'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -16,6 +17,7 @@ export default async function handler(req, res) {
     if (!email && !user_id) return res.status(400).json({ error: 'email or user_id is required' })
 
     let targetUserId = user_id
+    let targetUser = null
     if (!targetUserId) {
       // Resolve user by email via admin API (auth.users not queryable via PostgREST).
       const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 })
@@ -23,6 +25,7 @@ export default async function handler(req, res) {
       const match = (data.users ?? []).find((u) => u.email?.toLowerCase() === email.toLowerCase())
       if (!match) return res.status(404).json({ error: `No user with email ${email}` })
       targetUserId = match.id
+      targetUser = match
     }
 
     const { data: inserted, error } = await supabaseAdmin
@@ -52,7 +55,24 @@ export default async function handler(req, res) {
       if (schErr) throw schErr
     }
 
-    return res.status(200).json({ entitlement: inserted })
+    // Comped users are PP contacts too. Non-fatal: the grant already happened,
+    // so a Kit failure is reported back rather than failing the request.
+    let kitError = null
+    try {
+      if (!targetUser) {
+        const { data, error: userErr } = await supabaseAdmin.auth.admin.getUserById(targetUserId)
+        if (userErr) throw userErr
+        targetUser = data.user
+      }
+      if (targetUser?.email) {
+        await tagPpContact(targetUser.email, targetUser.user_metadata?.first_name)
+      }
+    } catch (err) {
+      kitError = err.message
+      console.error('grant-entitlement Kit pp-emails tagging failed:', err)
+    }
+
+    return res.status(200).json({ entitlement: inserted, kitError })
   } catch (err) {
     console.error('grant-entitlement error:', err)
     return res.status(500).json({ error: err.message ?? 'Internal error' })

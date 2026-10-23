@@ -648,7 +648,7 @@ export default function AdminContentPiece() {
             subtitle={
               piece.status === 'published'
                 ? 'The broadcast already sent. Audience shown for reference only.'
-                : 'Choose which Kit subscribers receive this email. No tags selected = everyone.'
+                : 'Choose which Kit subscribers receive this email. No tags selected = everyone tagged pp-emails.'
             }
           >
             <AudienceSelector

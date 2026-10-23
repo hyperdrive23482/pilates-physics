@@ -1,6 +1,6 @@
 import crypto from 'node:crypto'
 import { supabaseAdmin } from './supabase-admin.js'
-import { tagSubscriber } from './kit.js'
+import { tagPpContact, tagSubscriber } from './kit.js'
 import { sendAuthEmail } from './resend.js'
 import { recordScholarshipPurchase } from './scholarship.js'
 import { attributionFromMetadata, recordTouchAttribution } from './attribution.js'
@@ -234,16 +234,26 @@ export async function provisionPurchase(session, { siteUrl, purchasedAt } = {}) 
     }
   }
 
-  // ---- Kit tag (non-fatal) ----
-  let kitError = null
+  // ---- Kit tags (non-fatal) ----
+  // Two independent calls: the product tag (only if the row has one) and the
+  // pp-emails brand tag (always). Either failure lands in kitError so the
+  // webhook marks the event kit_failed.
+  const kitErrors = []
   if (workshop.kit_tag) {
     try {
       await tagSubscriber(email, firstName, workshop.kit_tag)
     } catch (err) {
-      kitError = err.message
+      kitErrors.push(err.message)
       console.error('Kit tagging failed:', err)
     }
   }
+  try {
+    await tagPpContact(email, firstName)
+  } catch (err) {
+    kitErrors.push(err.message)
+    console.error('Kit pp-emails tagging failed:', err)
+  }
+  const kitError = kitErrors.length ? kitErrors.join(' | ') : null
 
   return {
     email,

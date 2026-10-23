@@ -3,7 +3,7 @@ import { supabaseAdmin } from './_lib/supabase-admin.js'
 import { requireUser } from './_lib/require-user.js'
 import { findUserByEmail } from './_lib/provision-purchase.js'
 import { sendAuthEmail } from './_lib/resend.js'
-import { tagSubscriber } from './_lib/kit.js'
+import { tagPpContact, tagSubscriber } from './_lib/kit.js'
 import { logActivity } from './_lib/log-activity.js'
 import { recordTouchAttribution } from './_lib/attribution.js'
 
@@ -156,7 +156,9 @@ export default async function handler(req, res) {
       }
     }
 
-    // ---- Kit tag (non-fatal) ----
+    // ---- Kit tags (non-fatal) ----
+    // The calculator's own tag and the pp-emails brand tag, applied separately
+    // so one failing never skips the other.
     const calculatorRow = tools.find((t) => t.slug === 'spring-load-calculator')
     if (calculatorRow?.kit_tag) {
       try {
@@ -164,6 +166,11 @@ export default async function handler(req, res) {
       } catch (err) {
         console.error('springs101 Kit tagging failed:', err)
       }
+    }
+    try {
+      await tagPpContact(normalizedEmail, trimmedFirst)
+    } catch (err) {
+      console.error('springs101 Kit pp-emails tagging failed:', err)
     }
 
     // Pre-purchase touchpoint. Often the earliest server-observed contact with

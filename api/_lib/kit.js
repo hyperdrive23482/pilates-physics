@@ -32,6 +32,14 @@ async function upsertSubscriber(email, firstName) {
   return res.json()
 }
 
+// Every Pilates Physics contact carries this tag, whatever else they bought or
+// claimed. The Kit account is shared with a second brand (the hl-* tags), so
+// this is what tells PP subscribers apart. Note the plural: "pp-email" would
+// throw "tag not found".
+export const PP_BRAND_TAG = 'pp-emails'
+// The other brand's equivalent, read only by the drift check in kit-metrics.js.
+export const HL_BRAND_TAG = 'hl-emails'
+
 let allTagsCache = []
 
 // Kit caps /tags at 500 per page and paginates by cursor, so this has to loop.
@@ -82,15 +90,22 @@ export async function listTags() {
 }
 
 // Build the Kit v4 `subscriber_filter` body shape from a tag-id list + match mode.
-// Returns `[]` when no tags (Kit interprets that as "all subscribers"), otherwise
-// a single filter group with `any` or `all` populated per the docs.
-function buildSubscriberFilter(tagIds, tagMatch) {
-  if (!Array.isArray(tagIds) || tagIds.length === 0) return []
+//
+// Every broadcast this site sends is scoped to the pp-emails brand tag. An
+// empty filter means "every subscriber" to Kit, and the account is shared with
+// the hl-* brand, so "no tags picked" must never mean everyone. The brand tag
+// is ANDed in even when tags are picked, so an HL contact who somehow carries
+// a PP tag still never gets a PP email.
+export function buildSubscriberFilter(tagIds, tagMatch, brandTagId) {
+  const brandRule = { type: 'tag', ids: [Number(brandTagId)] }
+  if (!Array.isArray(tagIds) || tagIds.length === 0) {
+    return [{ all: [brandRule], any: null, none: null }]
+  }
   const rule = { type: 'tag', ids: tagIds.map(Number) }
   if (tagMatch === 'all') {
-    return [{ all: [rule], any: null, none: null }]
+    return [{ all: [brandRule, rule], any: null, none: null }]
   }
-  return [{ all: [], any: [rule], none: null }]
+  return [{ all: [brandRule], any: [rule], none: null }]
 }
 
 async function applyTag(tagId, email) {
@@ -167,6 +182,12 @@ export async function tagSubscriber(email, firstName, tagName) {
   await addSubscriberToForm(process.env.KIT_PURCHASE_FORM_ID, email)
 }
 
+// Applied separately from the product tag on purpose, so a missing or broken
+// product tag can never cost someone the brand tag, or the other way round.
+export async function tagPpContact(email, firstName) {
+  await tagSubscriber(email, firstName, PP_BRAND_TAG)
+}
+
 async function loadTemplatesIntoCache() {
   const res = await fetch(`${KIT_BASE}/email_templates`, { headers: headers() })
   if (!res.ok) {
@@ -219,8 +240,8 @@ async function resolveTemplateForBroadcast(templateName) {
 //   4. if none of those resolve, send without a template_id (Kit uses its default)
 //
 // `tagIds` (array of numeric Kit tag IDs) plus `tagMatch` ('any' | 'all')
-// produce a Kit v4 subscriber_filter. Empty/omitted tagIds = send to all
-// active subscribers.
+// produce a Kit v4 subscriber_filter, always scoped to pp-emails. Empty or
+// omitted tagIds = every active pp-emails subscriber, never the whole account.
 //
 // Returns the broadcast object so the caller can persist its id.
 export async function createBroadcast({ subject, previewText, contentHtml, contentText, sendAt, templateName, tagIds, tagMatch }) {
@@ -240,9 +261,8 @@ export async function createBroadcast({ subject, previewText, contentHtml, conte
   if (previewText) body.preview_text = previewText
   if (templateId) body.email_template_id = templateId
   if (sendAt) body.send_at = new Date(sendAt).toISOString()
-  if (tagIds !== undefined) {
-    body.subscriber_filter = buildSubscriberFilter(tagIds, tagMatch)
-  }
+  // Always set on create: leaving it off would let Kit default to everyone.
+  body.subscriber_filter = buildSubscriberFilter(tagIds, tagMatch, await resolveTagId(PP_BRAND_TAG))
 
   const res = await fetch(`${KIT_BASE}/broadcasts`, {
     method: 'POST',
@@ -259,7 +279,7 @@ export async function createBroadcast({ subject, previewText, contentHtml, conte
 
 // Update an existing broadcast in Kit by id. Pass only the fields you want
 // changed. To clear scheduling and revert to draft, pass `sendAt: null`.
-// Pass `tagIds: []` to clear an existing audience filter (revert to all subs).
+// Pass `tagIds: []` to clear the picked tags (reverts to all pp-emails subs).
 export async function updateBroadcast(id, { subject, previewText, contentHtml, contentText, sendAt, templateName, tagIds, tagMatch } = {}) {
   if (!id) throw new Error('updateBroadcast: id is required')
 
@@ -277,7 +297,7 @@ export async function updateBroadcast(id, { subject, previewText, contentHtml, c
     body.send_at = sendAt === null ? null : new Date(sendAt).toISOString()
   }
   if (tagIds !== undefined) {
-    body.subscriber_filter = buildSubscriberFilter(tagIds, tagMatch)
+    body.subscriber_filter = buildSubscriberFilter(tagIds, tagMatch, await resolveTagId(PP_BRAND_TAG))
   }
 
   const res = await fetch(`${KIT_BASE}/broadcasts/${id}`, {
@@ -448,6 +468,12 @@ export async function listSubscribersCreated({ after = null, before = null } = {
     created_after: after ?? undefined,
     created_before: before ?? undefined,
   })
+}
+
+// Every active subscriber in the account, counted without paging.
+export async function countActiveSubscribers() {
+  const data = await kitGet('/subscribers', { per_page: 1, include_total_count: true })
+  return data.pagination?.total_count ?? null
 }
 
 // Active subscribers carrying a tag, counted without paging through them.

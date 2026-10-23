@@ -1,6 +1,6 @@
 import { supabaseAdmin } from '../_lib/supabase-admin.js'
 import { getEmailStats, getGrowthStats } from '../_lib/kit.js'
-import { FUNNEL_TAGS, loadTagCounts } from '../_lib/kit-metrics.js'
+import { FUNNEL_TAGS, loadBrandDrift, loadTagCounts } from '../_lib/kit-metrics.js'
 
 // Vercel Cron: GET /api/cron/daily-snapshot, 06:00 UTC daily.
 //
@@ -27,12 +27,15 @@ async function section(name, errors, fn) {
 
 async function kitSection(today) {
   const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000)
-  const [growth, email] = await Promise.all([
+  const [growth, email, brand] = await Promise.all([
     getGrowthStats({ starting: isoDate(yesterday), ending: isoDate(today) }),
     getEmailStats(),
+    loadBrandDrift(),
   ])
   return {
     subscribers: growth?.subscribers ?? null,
+    // Active subscribers carrying neither brand tag; should stay 0.
+    brand_tag_missing: brand.missing,
     new_1d: growth?.new_subscribers ?? null,
     cancellations_1d: growth ? Math.abs(growth.cancellations ?? 0) : null,
     email_90d: email

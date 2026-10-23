@@ -1,5 +1,8 @@
 import { supabaseAdmin } from './supabase-admin.js'
 import {
+  HL_BRAND_TAG,
+  PP_BRAND_TAG,
+  countActiveSubscribers,
   countSubscribersByTag,
   getEmailStats,
   getGrowthStats,
@@ -204,6 +207,30 @@ export async function loadTagCounts(tags = FUNNEL_TAGS) {
   )
 }
 
+// Brand-tag drift. Every active subscriber should carry exactly one brand tag,
+// pp-emails or hl-emails, so `missing` should sit at 0. Anything above it
+// means some signup path (a site endpoint, or a Kit form without its rule)
+// skipped the tag, and those people fall outside every PP broadcast. Kit can't
+// filter for "has neither tag", so this is the arithmetic stand-in. A
+// subscriber holding both would pull it below 0, which is reported as is.
+export async function loadBrandDrift() {
+  const countOrZero = async (tag) => {
+    try {
+      return await countSubscribersByTag(tag)
+    } catch (err) {
+      if (/tag not found/i.test(err.message)) return 0
+      throw err
+    }
+  }
+  const [active, pp, hl] = await Promise.all([
+    countActiveSubscribers(),
+    countOrZero(PP_BRAND_TAG),
+    countOrZero(HL_BRAND_TAG),
+  ])
+  const missing = active == null || pp == null || hl == null ? null : active - pp - hl
+  return { active, pp_emails: pp, hl_emails: hl, missing }
+}
+
 // The checks that would have caught the dead ?t= links in September 2026.
 function cartHealth(cart, didNotBuy, purchased) {
   if (!cart) return null
@@ -269,17 +296,19 @@ export async function buildMetrics() {
     return { cart, didNotBuy, purchased }
   })
 
-  const [list, broadcasts, sequences, tagCounts, offers] = await Promise.all([
+  const [list, broadcasts, sequences, tagCounts, offers, brand] = await Promise.all([
     section('list', errors, loadList),
     section('broadcasts', errors, loadBroadcasts),
     section('sequences', errors, () => loadSequences(tags?.purchased ?? null)),
     section('tag_counts', errors, loadTagCounts),
     section('offers', errors, loadOffers),
+    section('brand', errors, loadBrandDrift),
   ])
 
   return {
     fetched_at: new Date().toISOString(),
     list,
+    brand,
     broadcasts,
     sequences,
     tag_counts: tagCounts,

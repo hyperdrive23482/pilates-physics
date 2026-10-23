@@ -90,7 +90,8 @@ export default function AdminKit() {
         {data && (
           <>
             <CartHealth health={data.cart_health} error={errors.funnel} />
-            <ListHealth list={data.list} error={errors.list} />
+            <BrandHealth brand={data.brand} error={errors.brand} />
+            <ListHealth list={data.list} brand={data.brand} error={errors.list} />
             {data.sequences?.funnels?.map((f) => (
               <SequenceFunnel key={f.name ?? f.label} funnel={f} />
             ))}
@@ -155,7 +156,37 @@ function CartHealth({ health, error }) {
   )
 }
 
-function ListHealth({ list, error }) {
+// Active subscribers carrying neither pp-emails nor hl-emails. They fall
+// outside every PP broadcast, so anything above 0 is a signup path that
+// skipped the brand tag (a site endpoint, or a Kit form with no rule).
+function BrandHealth({ brand, error }) {
+  if (error) return <SectionError>Brand tag check failed: {error}</SectionError>
+  if (!brand || brand.missing == null || brand.missing === 0) return null
+
+  const text =
+    brand.missing > 0
+      ? `${brand.missing} active subscribers have neither pp-emails nor hl-emails, so no PP broadcast reaches them. Check the Kit form rules and the site's tagging, then tag them in Kit.`
+      : `${-brand.missing} subscribers carry both pp-emails and hl-emails. Check whether they really belong to both lists.`
+
+  return (
+    <p
+      style={{
+        margin: '0 0 3rem',
+        padding: '0.85rem 1rem',
+        fontSize: '0.85rem',
+        lineHeight: 1.5,
+        color: 'var(--color-ink)',
+        background: 'var(--color-surface)',
+        border: '1px solid var(--color-rule)',
+        borderLeft: `3px solid ${brand.missing > 0 ? BAD : WARN}`,
+      }}
+    >
+      {text}
+    </p>
+  )
+}
+
+function ListHealth({ list, brand, error }) {
   return (
     <section style={{ marginBottom: '3rem' }}>
       <SectionHeading>List</SectionHeading>
@@ -169,6 +200,13 @@ function ListHealth({ list, error }) {
             <StatCard label="Unsubscribed, last 30 days" value={list.cancellations_30d ?? 'n/a'} />
             <StatCard label="Open rate, 90 days" value={pct(list.email_90d?.open_rate)} sublabel={`${list.email_90d?.sent ?? 0} emails sent`} />
             <StatCard label="Click rate, 90 days" value={pct(list.email_90d?.click_rate)} />
+            {brand && (
+              <StatCard
+                label="Missing brand tag"
+                value={brand.missing ?? 'n/a'}
+                sublabel={`${brand.pp_emails ?? 0} pp-emails, ${brand.hl_emails ?? 0} hl-emails`}
+              />
+            )}
           </CardGrid>
         )
       )}
