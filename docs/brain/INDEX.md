@@ -5,10 +5,11 @@ Local mirror of `brain_entries` in the prod Supabase project, written by
 files by hand: edit in /admin/content/brain, then pull. "On" entries are
 injected into the content drafting prompt.
 
-## Transcripts (29)
+## Transcripts (30)
 
 | On | Title | Added |
 |---|---|---|
+|  | [Adjustments That Change Spring Tension (Carousel, 2026-10-22)](transcripts/2026-10-22_carousel_adjustments-that-change-spring-tension.md) | 2026-10-24 |
 |  | [Joint Torque in Teaser (Reel, 2026-10-13)](transcripts/2026-10-13_reel_joint-torque-in-teaser.md) | 2026-10-13 |
 |  | [Momentum and Spring Resistance (Reel, 2026-10-13)](transcripts/2026-10-13_reel_momentum-and-spring-resistance.md) | 2026-10-13 |
 |  | [Energy Mapping in Footwork (Reel, 2026-10-13)](transcripts/2026-10-13_reel_energy-mapping-in-footwork.md) | 2026-10-13 |
@@ -20,7 +21,7 @@ injected into the content drafting prompt.
 |  | [Load in a Bridge](transcripts/load-in-a-bridge.md) | 2026-05-12 |
 |  | [Physics and Teaching a Bridge](transcripts/physics-and-teaching-a-bridge.md) | 2026-05-12 |
 |  | [Bridge Press Out](transcripts/bridge-press-out.md) | 2026-05-12 |
-|  | [Hooke's Law Basics](transcripts/hookes-law-basics.md) | 2026-05-12 |
+|  | [Physics of a Plank on a Reformer](transcripts/physics-of-a-plank-on-a-reformer.md) | 2026-05-12 |
 |  | [Pilates Springs Series — Part 1: Original Reaction Video](transcripts/pilates-springs-series-part-1-original-reaction-video.md) | 2026-05-12 |
 |  | [Pilates Springs Series — Part 2: Footwork Weight Differences by Position](transcripts/pilates-springs-series-part-2-footwork-weight-differences-by-position.md) | 2026-05-12 |
 |  | [Pilates Springs Series — Part 3: How Gear Bar Position Changes Maximum Load](transcripts/pilates-springs-series-part-3-how-gear-bar-position-changes-maximum-load.md) | 2026-05-12 |
@@ -35,7 +36,7 @@ injected into the content drafting prompt.
 |  | [Pulley Height](transcripts/pulley-height.md) | 2026-05-12 |
 |  | [Reformer Springs Across Contemporary Brands](transcripts/reformer-springs-across-contemporary-brands.md) | 2026-05-12 |
 |  | [Footbar vs Gearbar Adjustment for Footwork](transcripts/footbar-vs-gearbar-adjustment-for-footwork.md) | 2026-05-12 |
-|  | [Physics of a Plank on a Reformer](transcripts/physics-of-a-plank-on-a-reformer.md) | 2026-05-12 |
+|  | [Hooke's Law Basics](transcripts/hookes-law-basics.md) | 2026-05-12 |
 |  | [Gratz vs Balanced Body Reformer Springs](transcripts/gratz-vs-balanced-body-reformer-springs.md) | 2026-05-12 |
 |  | [Pilates Springs Don't Push AND Pull](transcripts/pilates-springs-dont-push-and-pull.md) | 2026-05-12 |
 

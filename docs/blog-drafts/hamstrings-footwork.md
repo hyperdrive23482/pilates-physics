@@ -1,98 +1,101 @@
-# Do the hamstrings pull the carriage in during footwork?
+---
+slug: hamstrings-footwork-carriage-return
+title: "Do the hamstrings pull the carriage in?"
+excerpt: "It's a common footwork cue, and the physics says otherwise. Follow the energy between muscles, springs and wheels to see what really brings the carriage home."
+---
 
-*The physics of energy on the reformer*
+# Do the hamstrings pull the carriage in?
 
-## Two laws you've heard named, and never explained
+*Basic physics explains the answer*
 
-In Pilates-land I've heard people mention Newton's Laws and the Law of Conservation of Energy, but never in any more detail than the names. Even to me, a trained engineer, that isn't helpful.
+There is a fundamental misunderstanding across Pilates about how the body and the reformer interact to create movement.
 
-So here are the basic definitions.
+The comments on my [Instagram post](https://www.instagram.com/p/DeKhQpCgX9M/) about why the hamstrings don't pull the carriage in during footwork got a little controversial, so I want to go deeper here.
 
-**Newton's first law:** an object in motion stays in motion unless an outside force acts on it.
+I've heard instructors reference Newton's laws and the Law of Conservation of Energy in Pilates-land, but never in any more detail than the names. Even to me, a trained engineer, that isn't helpful.
 
-**The Law of Conservation of Energy:** energy is never created or destroyed in a system. The total energy at the start of an action equals the total energy at the end. It only changes form.
+Here are the basic definitions:
 
-Great, definitions. But what do they mean for your teaching?
+**Newton's first law** says an object in motion stays in motion unless acted on by an outside force.
 
-## Newton's first law on the reformer
+**The Law of Conservation of Energy** says no energy is gained or lost in a system. The amount of energy at the start of an action equals the amount at the end.
 
-If you start something moving, like a carriage, it won't stop unless something stops it. On the reformer, that something is friction and spring force. So of course the carriage doesn't roll forever. In our everyday world there is almost always an outside force slowing a moving object down. (In space there often isn't, which is why a spacecraft can coast for years with its engines off.)
+Definitions! Hey! But what do they mean for me and my teaching?
 
-It works backwards too. If something stops, there are forces stopping it. Your job is to ask which ones.
+## Newton's first law and conservation of energy on the reformer
 
-Honestly, I don't think Newton's first law does much for Pilates teachers beyond that. Energy is where it gets useful.
+Here's what I think.
 
-## Conservation of energy on the reformer
+**Newton's first law says** that if you start something moving, like a carriage, it won't stop unless something makes it stop. In our case, the things that make it stop are [friction](/blog/does-friction-make-reformer-exercises-harder) and spring force (on the way out). So of course the carriage won't keep moving forever. In our physical world, there's almost always an external force that causes a moving object to slow and stop. In space, there often isn't. A rocket ship can coast for years with its engines off.
 
-Creating movement takes energy. On the reformer, your muscles, the springs and the carriage wheels are constantly trading energy back and forth. Count all of it, including what friction turns into heat, and the total at the start of a rep equals the total at the end. That trading is what creates the movement.
+Looking at it another way, if something stops, we can assume there are forces stopping it. Then we can ask: what are those forces?
 
-In footwork, on the push out, your muscles give energy and the springs and wheels (friction) take it in. On the way back in, the springs give energy and your muscles and the wheels take it in.
+**The Law of Conservation of Energy says** that energy doesn't appear out of nowhere or disappear. It only changes form. On the reformer, our muscles, the springs and the carriage wheels are constantly trading energy. Muscles turn chemical energy into movement, the springs store it as tension, and friction in the wheels turns some of it into heat. Count all of it, and the total energy at the beginning of a rep is the same as at the end. That trading of energy is what creates movement.
 
-Notice the pattern: **concentric contractions give energy to the system, and eccentric contractions absorb it.**
+In footwork, on the push out, the muscles give off energy and the wheels (friction) and springs absorb it. On the way in, the springs give off energy and the muscles and wheels (friction) absorb it.
 
-That one idea is surprisingly powerful.
+You might notice a pattern: **concentric muscle contractions give off energy, and eccentric muscle contractions absorb it.**
 
-## Energy transfer and a footwork myth
+Pretty cool!
 
-So far this is still pretty abstract. Here's where it gets practical. We often hear cues in Pilates to engage more muscles than a movement actually needs. But if you engage more muscles, they're either giving or absorbing energy, right? So where does that extra energy come from, and where does it go?
+## The footwork myth: hamstrings on the carriage return
 
-A common example: in footwork, the hamstrings should pull the carriage back in.
+On their own, these laws can still feel pretty esoteric. To me, the practical application is the idea we hear in Pilates that we should engage more muscles than a movement requires. If we're engaging more muscles, those muscles are either giving off or absorbing energy, right? So where does that extra energy come from?
 
-The physics doesn't support it. Yes, you can feel your hamstrings more if you focus on them and squeeze. But they don't take over the movement. What you've created is a co-contraction.
+One example of Pilates lore is that in footwork, the hamstrings should engage on the carriage return to pull it in.
 
-Dr. Gabriele Wulf's research on attentional focus shows exactly this. When people focus on their own muscles (an internal focus), muscle activity goes up for the same task, the opposing muscles co-contract more, and force and accuracy get worse than when they focus on the effect of the movement (an external focus) [1, 2, 3]. Co-contraction is a legitimate strategy, but it isn't how you produce maximum force, and it doesn't build efficient motor control over the long term [4].
+Let's look at the energy transfer for the explanation.
 
-Let's use energy transfer to see why.
+### Which muscles move the knee and hip in footwork
 
-### Define the movers
+First, let's get clear on the major joints we care about here: the knee and the hip.
 
-First, the two joints we care about here: the knee and the hip.
+- **Knee flexors:** the hamstrings. **Knee extensors:** the quads.
+- **Hip flexors:** the psoas and rectus femoris (the one quad that crosses the hip). **Hip extensors:** the glutes, with some hamstring involvement.
 
-- **Knee flexors:** hamstrings. **Knee extensors:** quads.
-- **Hip flexors:** psoas and rectus femoris (the one quad that crosses the hip). **Hip extensors:** glutes, with help from the hamstrings.
+On the way out, we're extending the hips and knees. On the way in, we're flexing them.
 
-On the way out, the hips and knees extend. On the way in, they flex.
+This is where I think most people get the idea that the hamstrings should be active on the carriage return.
 
-I think this is where the hamstring idea comes from. The knee is flexing on the return, and the hamstrings flex the knee.
+But this highlights a common misconception: that we can consider the equipment and the human body independently of each other.
 
-But remember, a muscle creates a joint action with a *concentric* contraction, which means it's giving energy to make that movement happen.
+We cannot.
 
-When a joint moves while absorbing energy, the muscle on the *opposite* side is controlling it eccentrically. So when the knees flex on the return and the body is absorbing the springs' energy, it's the quads, the same muscles that pushed the carriage out, now working eccentrically.
+Muscles create movement with concentric contractions. That means they're giving off energy to create that movement.
 
-Put the joint actions together with the springs and the wheels into one energy system, and it becomes clear that the hamstrings aren't contributing much energy to footwork.
+If a joint moves while absorbing energy, the muscles controlling it are contracting eccentrically.
 
-### Breaking it down
+So if the knees are flexing while absorbing energy from the springs, the same muscles that pushed the carriage out (the quads and glutes) are still working, just eccentrically.
+
+When you combine these joint movements into one energy system with the springs and the friction from the carriage wheels, it's clear that the hamstrings aren't contributing much energy in footwork. They are not the prime movers, and they shouldn't be.
+
+### Energy transfer in footwork: push out vs. return
 
 |  | Push out | Return |
 | :---- | :---- | :---- |
 | Joint action | Knees extend, hips extend | Knees flex, hips flex |
-| Energy flows | Muscles to springs + wheels (friction) | Springs to muscles + wheels (friction) |
+| Energy transfer direction | Muscles to springs + wheels (friction) | Springs to muscles + wheels (friction) |
 | Muscle contraction | Concentric | Eccentric |
 | Therefore | Quads and glutes working | Quads and glutes working |
 
-## What this means
+## What this means for cueing footwork
 
-Our bodies respond naturally to external forces. In Pilates, we often try to change how they respond. Sometimes that means shifting focus between agonist muscles, which are all moving energy in the same direction. But too often we encourage the *antagonist* muscles to work, and that adds a different energy component to the system.
+Our bodies naturally respond to external forces. In Pilates, we often try to correct how they respond. Sometimes that means shifting focus from one agonist muscle to another. But that shift doesn't change the general direction of the energy transfer.
 
-Take the footwork return. If you ask the hamstrings to do the work, that work has to be concentric, because the knee is flexing. But the springs are already doing that job. A concentric hamstring contraction can't *absorb* energy. It gives energy. And if the hamstrings are giving energy, something has to absorb it. The springs can't, because they're releasing energy at this point. The wheels can't absorb much more friction than they already are. So the most likely answer is that the quads and glutes work *harder* eccentrically to absorb it.
+Other times, Pilates instructors encourage the antagonist muscles to work, which introduces a different energy component to the system.
 
-So yes, you can ask the hamstrings to contract on the carriage return. But it's a co-contraction. They are never the prime movers of the carriage in this direction. Energetically, they can't be.
+For example, if the carriage is returning during footwork and we ask the hamstrings to do work, it has to be concentric, because the knee is flexing. The problem is that the springs are already doing this work. A concentric hamstring contraction cannot *absorb* energy. It gives off energy. So if the hamstrings are giving off energy, something has to absorb it, and that something is usually a stronger eccentric contraction of the quads and glutes. The springs can't absorb energy at this point (they're giving it off), and the wheels (friction) can't absorb *more* energy than they already are.
 
-**The one exception: they out-pull the springs.** For the hamstrings to become the prime mover, they'd have to pull harder than the springs are already pulling. That means drawing the carriage home *faster* than the springs alone would send it, which is not what anyone means by this cue.
+To me, this means that yes, we can ask the hamstrings to contract on the carriage return, but it creates a stronger co-contraction. They are never the prime movers of the carriage in this direction. It's energetically impossible.
 
-**A note on pressing down.** You can feel more hamstring and glute on the return if you press *down* into the footbar. But that's a different exercise, heading into bridge territory. You can only press down so far before your hips lift off the carriage.
+### When the hamstrings *can* do the work
+
+The hamstrings can become prime movers if they pull harder than the springs. That only happens if the spring tension drops drastically ([a single light spring](/blog/comparing-springs-across-brands) or no springs at all) or the [carriage moves faster](/blog/reformer-momentum-slow-vs-fast) than the springs alone would send it. Light springs aren't typical footwork, which uses [heavy springs](/blog/how-much-does-a-red-spring-weigh). And speed only applies to part of the stroke. You still need to slow the carriage down before it hits the stopper, which brings us back to the original point: the quads and glutes absorb that energy eccentrically.
+
+So yes, clients can feel their hamstrings. They just aren't the prime movers, so we shouldn't cue them as if they were.
 
 ## Your takeaway
 
-Cueing the hamstrings to pull the carriage in works against how the reformer loads the body. It's confusing for the client, and it implies the quads and glutes shouldn't be working on the return. Because of how energy moves through the system, they *have* to.
+Cueing the hamstrings to pull the carriage back in runs counter to how the reformer loads the body. It's confusing for the client, and it implies that the quads and glutes shouldn't do any work. Because of energy transfer, in this scenario the quads *have* to work.
 
-If you want to cue pressing down and drawing the carriage in to warm up the hamstrings along with the glutes and quads, go for it. Just know the hamstrings will never be the prime mover.
-
-Want to understand what the springs and carriage are doing on every exercise? Start with [Springs 101](/springs-101), or go deeper in [How a Reformer Works](/how-a-reformer-works).
-
-## References
-
-1. Vance, J., Wulf, G., Töllner, T., McNevin, N., & Mercer, J. (2004). EMG activity as a function of the performer's focus of attention. *Journal of Motor Behavior, 36*(4), 450–459.
-2. Lohse, K. R., Sherwood, D. E., & Healy, A. F. (2011). Neuromuscular effects of shifting the focus of attention in a simple force production task. *Journal of Motor Behavior, 43*(2), 173–184.
-3. Wulf, G. (2013). Attentional focus and motor learning: A review of 15 years. *International Review of Sport and Exercise Psychology, 6*(1), 77–104.
-4. Wulf, G., & Lewthwaite, R. (2016). Optimizing performance through intrinsic motivation and attention for learning: The OPTIMAL theory of motor learning. *Psychonomic Bulletin & Review, 23*(5), 1382–1414.
+Want to understand what the springs and carriage are doing on every exercise? Start with the free [spring load calculator](/spring-calculator), or go deeper in [How a Reformer Works](/how-a-reformer-works).
