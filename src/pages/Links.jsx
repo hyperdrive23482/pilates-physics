@@ -23,8 +23,13 @@ const LINK_ITEMS = [
     href: '/education',
   },
   {
-    label: 'Remo: Pilates Intelligence Platform',
+    label: 'Remo: Pilates Instructor Notetaking App',
     href: 'https://www.RemoPilates.com',
+    external: true,
+  },
+  {
+    label: "Hooke's Log: Equipment Maintenance Log",
+    href: 'https://hookeslog.com',
     external: true,
   },
   {
