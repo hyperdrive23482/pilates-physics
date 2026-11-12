@@ -480,7 +480,7 @@
     <div class="notes-title">Notes</div>
     <ul>
       <li>Leg modeled as one straight rigid segment from hip to ankle. Thigh and total leg length are estimated from height using standard body-segment ratios (thigh is about 0.245 of height, total leg about 0.49 of height).</li>
-      <li>Leg weight is taken as 32% of body weight (both legs together). Center of mass sits 43% of the way down the leg from the hip.</li>
+      <li>Leg weight is taken as 37% of body weight (both legs together, from women's segment data). Center of mass sits 43% of the way down the leg from the hip.</li>
       <li>Rope tension equals the full Balanced Body spring force at the computed stretch, using F = k&middot;stretch + b per spring.</li>
       <li>Spring stretch is the carriage's travel, not the foot's. The student rides the carriage, and the rope (foot over the pulley to the carriage) holds a fixed length, so lowering the legs drags the carriage toward the pulley. Because the hip travels with it, the spring sees much less motion than the foot does.</li>
       <li>Schematic is a side view: a fixed pulley on the right, the sliding carriage with the hip on it to the left, and the springs anchored at the far left. CW torque rotates the leg toward flexion, CCW toward extension. Net is the imbalance the hip muscles must counteract.</li>
@@ -508,7 +508,8 @@
   const SHANK_FRAC      = 0.246;  // shank length (knee to ankle) = SHANK_FRAC * height
   // total leg L (hip to ankle) = (THIGH_FRAC + SHANK_FRAC) * height ≈ 0.49 * height
   const COM_FRAC        = 0.43;   // leg COM distance from hip = COM_FRAC * L
-  const LEG_WEIGHT_FRAC = 0.32;   // leg weight = LEG_WEIGHT_FRAC * body weight (BOTH legs)
+  const LEG_WEIGHT_FRAC = 0.3686; // leg weight = LEG_WEIGHT_FRAC * body weight (BOTH legs)
+                                  // women: 2 x (thigh 11.75% + shank 5.35% + foot 1.33%), bionumbers Table 4 (N = 100)
 
   //  --- FIXED REFORMER GEOMETRY (inches) ---
   //  The pulley sits at the world origin (0,0); +x points toward the pulley/riser, +y up.

@@ -70,7 +70,11 @@ respects that you already know your craft.
   they did not write it. Lines aimed at a habit land best with an "I did this
   too." This is what lets the brand have an edge without breaking the Empathy
   beat, which rests on the training having been the right starting line. When a
-  line has heat in it, check who it lands on before it ships. The approved
+  line has heat in it, check who it lands on before it ships. Watch the format
+  as well as the words: reaction formats ("my face when someone says...",
+  "icks", "POV: an instructor...") aim at the person even when every myth in
+  them is fair game. The Nov 10, 2026 "My face when" carousel is the example
+  to avoid; "my face when I realized..." would have aimed it at the habit. The approved
   points of view are listed under "Hills" in [hook-library.md](hook-library.md).
 
 ## Do
