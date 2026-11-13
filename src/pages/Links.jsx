@@ -33,6 +33,10 @@ const LINK_ITEMS = [
     external: true,
   },
   {
+    label: 'How I Talk About Pilates and Physics',
+    href: '/how-i-talk-about-physics',
+  },
+  {
     label: 'Pilates Physics Blog',
     href: '/blog',
   },

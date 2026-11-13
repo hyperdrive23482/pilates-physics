@@ -199,6 +199,20 @@ const STATIC_BODIES = {
       ['/scholarship', 'Scholarships'],
     ],
   },
+  '/how-i-talk-about-physics': {
+    h1: 'How I talk about Pilates and physics',
+    paragraphs: [
+      'Every post I make involves choices about what not to say. A 60-second reel can’t hold a semester of physics, and it shouldn’t try. Before I simplify anything, I ask what core concept I want to communicate, then leave out everything that doesn’t help explain it. That means not every nuance will be covered.',
+      'My audience is Pilates instructors, so I use the language they use in a studio. That means colloquial terms like spring weight instead of spring resistance, and lb rather than lbf or lbm.',
+      'I look at single moments in time. Movement is rarely one point in time, but a snapshot of one moment teaches a concept to build from. Most examples assume average client dimensions, and real clients vary, so the point is not a number for every person but numbers with controlled differences that show a concept you can apply to anyone.',
+      'Unless I say otherwise, I ignore friction in the wheels and rails, treat springs as perfectly linear, round numbers, use Balanced Body as the reference equipment and leave out the math. When a simplification changes the answer, I say so. The conclusions are never simplified, and when someone catches an error that changes one, I check it, thank them and post the correction.',
+    ],
+    links: [
+      ['/spring-calculator', 'Free Spring Load Calculator'],
+      ['/blog', 'The blog'],
+      ['/about', 'About Kaleen'],
+    ],
+  },
   '/help': {
     h1: 'How can we help?',
     paragraphs: [

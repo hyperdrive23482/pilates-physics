@@ -11,6 +11,7 @@ export const SITE_URL = 'https://pilatesphysics.com'
 export const PUBLIC_ROUTES = [
   '/',
   '/about',
+  '/how-i-talk-about-physics',
   '/spring-calculator',
   '/education',
   '/how-a-reformer-works',

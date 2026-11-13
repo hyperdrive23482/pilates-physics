@@ -37,6 +37,7 @@ const RENDER_SOURCES = ['api/render-page.js', 'api/_lib/prerender.js', 'vercel.j
 const ROUTE_SOURCES = {
   '/': ['src/pages/Landing.jsx'],
   '/about': ['src/pages/About.jsx'],
+  '/how-i-talk-about-physics': ['src/pages/HowITalkAboutPhysics.jsx'],
   '/spring-calculator': ['src/pages/SpringCalculatorLanding.jsx'],
   '/education': ['src/pages/Education.jsx'],
   '/how-a-reformer-works': ['src/pages/HowAReformerWorks.jsx', 'src/components/course/CourseSalesBody.jsx'],

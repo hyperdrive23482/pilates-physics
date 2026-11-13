@@ -120,7 +120,7 @@
       "destination": "/api/render-page?path=/"
     },
     {
-      "source": "/:page(about|spring-calculator|education|how-a-reformer-works|pilates-physics-101|pilates-physics-102|mentorship|scholarship|blog|help|terms|privacy|links)",
+      "source": "/:page(about|spring-calculator|education|how-a-reformer-works|pilates-physics-101|pilates-physics-102|mentorship|scholarship|blog|help|terms|privacy|links|how-i-talk-about-physics)",
       "destination": "/api/render-page?path=/:page"
     },
     {

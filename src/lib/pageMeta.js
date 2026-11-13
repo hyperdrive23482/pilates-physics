@@ -95,6 +95,11 @@ export const PAGE_META = {
     description:
       'How PWRHS Pilates LLC collects, uses and protects your personal information when you visit pilatesphysics.com or use our services.',
   },
+  '/how-i-talk-about-physics': {
+    title: 'How I Talk About Pilates and Physics',
+    description:
+      'How Kaleen Canevari simplifies physics for Pilates instructors: why she says spring weight, what her posts leave out, and how she handles corrections.',
+  },
   '/links': {
     title: 'Links from Kaleen Canevari',
     description:

@@ -19,6 +19,7 @@ function RedirectWithSlug({ to }) {
 }
 import Landing from './pages/Landing'
 import About from './pages/About'
+import HowITalkAboutPhysics from './pages/HowITalkAboutPhysics'
 import Education from './pages/Education'
 import SpringCalculatorLanding from './pages/SpringCalculatorLanding'
 import PilatesPhysics101 from './pages/PilatesPhysics101'
@@ -114,6 +115,14 @@ export default function App() {
           element={
             <PageWrapper>
               <About />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/how-i-talk-about-physics"
+          element={
+            <PageWrapper>
+              <HowITalkAboutPhysics />
             </PageWrapper>
           }
         />

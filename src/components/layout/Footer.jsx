@@ -115,6 +115,7 @@ export default function Footer() {
             <Link to="/education" style={colLinkStyle}>Education</Link>
             <Link to="/blog" style={colLinkStyle}>Blog</Link>
             <Link to="/spring-calculator" style={colLinkStyle}>Spring Calculator</Link>
+            <Link to="/how-i-talk-about-physics" style={colLinkStyle}>How I Talk About Physics</Link>
           </div>
 
           <div className="pp-footer-col">

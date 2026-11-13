@@ -1,0 +1,43 @@
+/* How I talk about Pilates and physics, v2 design system.
+ * Shared primitives in src/styles/ppv2.css. This file holds talk-specific layouts.
+ * The page is deliberately flat: headings and paragraphs only.
+ */
+
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
+.ppv2 .talk-hero__head {
+  font-size: clamp(48px, 6vw, 96px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  margin: 0 0 32px;
+  font-weight: 400;
+  max-width: 16ch;
+}
+/* Hero intro reads a step larger than the section paragraphs. */
+.ppv2 .talk-hero .talk-prose p { font-size: 20px; }
+
+/* ── Sections: heading stacked above its paragraphs ──────────────────────── */
+.ppv2 .talk-section__head {
+  font-size: clamp(32px, 3.2vw, 44px);
+  line-height: 1.12;
+  letter-spacing: -0.012em;
+  margin: 0 0 28px;
+  font-weight: 400;
+  max-width: 30ch;
+  text-wrap: balance;
+}
+
+/* ── Paragraphs ───────────────────────────────────────────────────────────── */
+.ppv2 .talk-prose p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink);
+  margin: 0 0 20px;
+  max-width: 82ch;
+}
+.ppv2 .talk-prose p:last-child { margin-bottom: 0; }
+.ppv2 .talk-prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ppv2 .talk-prose a:hover { color: var(--accent-warm); }
