@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import '../styles/ppv2.css'
 import './HowITalkAboutPhysics.css'
 import Head from '../components/Head'
@@ -16,66 +15,51 @@ const SECTIONS = [
   {
     head: (
       <>
-        The information I share is simplified for clarity of concept
+        Every post starts with one concept, and I cut what doesn't serve it
       </>
     ),
     body: [
       'Before I simplify anything, I ask: what is the core concept I want to communicate?',
-      "Then, I leave out everything that doesn't help explain the concept. Trying to explain a practical takeaway into a 3 minute social media post or even a blog post is something I'm constantly working on.  But that inherently means that not every nuance will be covered.",
+      "Then, I leave out as much as I can that doesn't help explain the concept to my target audience.Trying to explain a practical takeaway into a 3 minute social media post or even a blog post is hard, and something I'm constantly working on.  But that inherently means that not every nuance will be covered.",
     ],
   },
   {
     head: (
       <>
-        A note to engineers and scientists about terms, simplifications, and nuance
+        I use the words instructors use, unless those words teach the wrong thing
       </>
     ),
     body: [
       'My audience is Pilates instructors. I try to use language that resonates with them.',
       "That means colloquial terms like spring weight instead of spring resistance will be used because that's what people say in a studio, and I don't think that's a nit I want to pick. I won't use lbf or lbm, I'll use lb, for the same reason.",
+      "Precision matters when the words change what someone understands. “Spring weight” and “lb” don't change anyone's picture of what's happening, so I don't fuss over them. But if the words used teach the wrong mechanics, it's worth fixing, because the client walks away believing something that isn't true. For example, the idea that everyone should be using the same spring settings all the time, or that you should be using your hamstrings to pull the carriage back in during footwork.",
+      "Imagery is different. “Imagine your shoulder blades are wings” doesn't make anyone think they have wings. The image helps a body find a movement, and it isn't pretending to explain anything. So the question I ask is: is this an image, or an explanation? Images get to be poetic. Explanations need to be right.",
     ],
   },
   {
     head: (
       <>
-        What I usually leave out of a post, and why
+        I stop explaining before the caveats outgrow the concept
       </>
     ),
     body: [
+      "I want to go deep enough to be practical, but not so deep I'm having a discussion that isn't useful to the professional Pilates instructor. The human body is wildly complex, and science as a whole simultaneously knows so much and also hardly anything. I don't want to get caught up in concepts that a PhD candidate would spend a couple of years studying, and that means that I have to be okay with stopping my explanations before the list of caveats, nuances, and exceptions gets to be longer than the explanation of the concept itself.",
+      'Just about all of my posts and examples have assumptions. I try to list them, but sometimes they are incomplete. There are always caveats, too.',
       "Unless I say otherwise, I'm ignoring friction in the wheels and rails. It's real, it's small, and it rarely changes a setup decision. I'm also treating springs as perfectly linear. Real springs are close, but not perfect.",
       "I round. “About 37 pounds” is more useful in a studio than 36.8. And I use Balanced Body as the reference, because it's the most common equipment and so our shared starting point. Your brand's numbers will be different. The principles won't.",
-      "I leave out the math. It's there. I did it. You don't need it to teach better.",
-      "When a simplification does change the answer, I'll tell you.",
+      "If you want to poke holes in my application, you'll be able to. There are always exceptions, minutiae that can slightly change things. Most of them won't change what you do with the client in front of you. I'm trying to illustrate a concept that helps you see your client and the loading scenario in a useful way.",
     ],
   },
   {
-    head: <>Why I look at single moments in time</>,
+    head: <>One moment in time can teach a concept you can build on</>,
     body: [
       'I look at moments in time, which can be counterintuitive for many folks who teach movement. Hardly ever are we looking at just one point in time. But the snapshot of that point in time has something to teach us. A concept to build from.',
-      "Pilates physics won't explain everything exactly. I'm not trying to do a dissertation. But basic physics can be used to explain basic Pilates scenarios to create a more logical decision-making framework and understanding of the client experience in Pilates. Sometimes I can make animations to explain changes over time and space.",
     ],
   },
   {
-    head: <>The assumptions and caveats behind my examples</>,
+    head: <>Comparing two bodies teaches more than measuring one</>,
     body: [
-      'Just about all of my posts and examples have assumptions. I try to list them, but sometimes they are incomplete. There are always caveats, too.',
       "I typically pick “average” client dimensions for examples, and in reality our clients have a wide variety of proportions and weight distribution that mean my example is not a universal experience. The point is not to calculate a number for every single person. It's to calculate some numbers with controlled differences to communicate a concept you can apply to anyone.",
-      "If you want to poke holes in my application, you'll be able to. There are always exceptions, minutiae that can slightly change things. I'm not writing a dissertation and I'm not trying to do math while teaching. I'm trying to illustrate a concept that helps you see your client and the loading scenario in a useful way.",
-    ],
-  },
-  {
-    head: (
-      <>
-        What stays in, even in a short post
-      </>
-    ),
-    body: [
-      <>
-        The conclusions. If I say a taller client on the same springs feels a different load, or
-        that adding a spring doesn't make everything harder, that's a claim I stand behind and can
-        show the math for. You can check a lot of it yourself in the{' '}
-        <Link to="/spring-calculator">spring calculator</Link>.
-      </>,
     ],
   },
 ]
@@ -121,24 +105,18 @@ export default function HowITalkAboutPhysics() {
         <div className="container">
           <div>
             <h2 className="talk-section__head">
-              What happens when I get something wrong
+              I won't always get it right, and I want to hear when I don't
             </h2>
             <div className="talk-prose">
               <p>
-                I will. I'm bringing an engineering lens to Pilates, and nobody's mapped all of
-                this out before. Some of what I share is a first draft.
-              </p>
-              <p>
-                When someone catches an error that changes a conclusion, I'll check it, thank
-                them, and post the correction. That's how engineering works: build, test, learn,
-                update.
-              </p>
-              <p>
-                Got a question about something I said, or think I got something wrong?{' '}
+                It's not uncommon that I'm working through the math as I create a post for the
+                first time. I try very hard to examine a concept from many angles, check my math,
+                and stay within the realm of practical reality. But I won't always get it right. I
+                welcome questions, discussions, and directional checks.{' '}
                 <a href="https://ig.me/m/kaleenc_" target="_blank" rel="noopener noreferrer">
                   Send me a DM on Instagram
                 </a>{' '}
-                or <a href="mailto:hello@pilatesphysics.com">email me</a>. Let's chat.
+                or <a href="mailto:hello@pilatesphysics.com">email me</a>.
               </p>
             </div>
           </div>
