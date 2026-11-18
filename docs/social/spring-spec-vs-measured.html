@@ -68,40 +68,47 @@ function mono(ctx, text, x, y, { size = 22, color = C.soft, align = 'left', weig
 
 // ---- Graph ----
 function graph(ctx, w, h) {
-  const L = 78, R = w - 130, T = 78, B = h - 96;
-  const xMin = 3, xMax = 9, yMax = 30;
+  // One set of axes; each tick shows imperial with metric underneath.
+  const L = 204, R = w - 24, T = 130, B = h - 196, GAP = 26; // GAP = space between axis line and tick labels
+  const KG_PER_LB = 0.45359237, CM_PER_IN = 2.54;
+  const xMin = 4, xMax = 8, yMax = 30;
   const X = v => L + (v - xMin) / (xMax - xMin) * (R - L), Y = f => B - (f / yMax) * (B - T);
 
   // Legend
-  ctx.font = `400 23px ${MONO}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
-  let lx = 8; const ly = 22;
-  [['Measured', []], ['Spec (Claude)', [12, 9]]].forEach(([label, dash]) => {
-    ctx.strokeStyle = C.ink; ctx.lineWidth = 5; ctx.setLineDash(dash); ctx.lineCap = 'butt';
-    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 44, ly); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = C.ink; ctx.fillText(label, lx + 56, ly);
-    lx += 56 + ctx.measureText(label).width + 34;
+  ctx.font = `400 30px ${MONO}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+  // Right-aligned to the plot's right edge
+  const LEGEND = [['Measured', []], ['Spec', [14, 10]]];
+  const legendW = LEGEND.reduce((sum, [label]) => sum + 72 + ctx.measureText(label).width, 0) + 44 * (LEGEND.length - 1);
+  let lx = R - legendW; const ly = 24;
+  LEGEND.forEach(([label, dash]) => {
+    ctx.strokeStyle = C.ink; ctx.lineWidth = 6; ctx.setLineDash(dash); ctx.lineCap = 'butt';
+    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 58, ly); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = C.ink; ctx.fillText(label, lx + 72, ly);
+    lx += 72 + ctx.measureText(label).width + 44;
   });
 
   // Grid + ticks
   ctx.font = `400 22px ${MONO}`; ctx.lineWidth = 2;
   ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-  for (let f = 0; f <= yMax; f += 5) {
+  // Few ticks, big type: easier to read on a phone.
+  for (let f = 0; f <= yMax; f += 10) {
     ctx.strokeStyle = C.grid; ctx.beginPath(); ctx.moveTo(L, Y(f)); ctx.lineTo(R, Y(f)); ctx.stroke();
-    ctx.fillStyle = C.soft; ctx.fillText(f, L - 14, Y(f));
+    ctx.font = `400 28px ${MONO}`; ctx.fillStyle = C.ink; ctx.fillText(f + ' lbs', L - GAP, Y(f) - 14);
+    ctx.font = `400 22px ${MONO}`; ctx.fillStyle = C.soft; ctx.fillText((f * KG_PER_LB).toFixed(1) + ' kg', L - GAP, Y(f) + 16);
   }
   ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  XS.forEach(x => {
+  [4, 6, 8].forEach(x => {
     ctx.strokeStyle = C.grid; ctx.beginPath(); ctx.moveTo(X(x), T); ctx.lineTo(X(x), B); ctx.stroke();
-    ctx.fillStyle = C.soft; ctx.fillText(x + '"', X(x), B + 12);
+    ctx.font = `400 28px ${MONO}`; ctx.fillStyle = C.ink; ctx.fillText(x + '"', X(x), B + GAP);
+    ctx.font = `400 22px ${MONO}`; ctx.fillStyle = C.soft; ctx.fillText((x * CM_PER_IN).toFixed(1) + ' cm', X(x), B + GAP + 34);
   });
   ctx.strokeStyle = C.axis; ctx.lineWidth = 2.5;
   ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, B); ctx.lineTo(R, B); ctx.stroke();
-
   // Axis titles
-  ctx.fillStyle = C.ink; ctx.font = `400 26px ${SERIF}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  ctx.fillText('Spring stretch', (L + R) / 2, B + 52);
-  ctx.save(); ctx.translate(16, (T + B) / 2); ctx.rotate(-Math.PI / 2);
-  ctx.textBaseline = 'middle'; ctx.fillText('Force (lbs)', 0, 0); ctx.restore();
+  ctx.fillStyle = C.ink; ctx.font = `400 42px ${SERIF}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText('Spring stretch', (L + R) / 2, B + GAP + 104);
+  ctx.save(); ctx.translate(24, (T + B) / 2); ctx.rotate(-Math.PI / 2);
+  ctx.textBaseline = 'middle'; ctx.fillText('Force', 0, 0); ctx.restore();
 
   // Lines: spec dashed first, measured solid on top
   ['spec', 'measured'].forEach(kind => {
@@ -111,21 +118,7 @@ function graph(ctx, w, h) {
       ctx.setLineDash(kind === 'spec' ? [14, 11] : []);
       ctx.beginPath(); ctx.moveTo(X(XS[0]), Y(p[0])); ctx.lineTo(X(XS[1]), Y(p[1])); ctx.stroke();
       ctx.setLineDash([]);
-      p.forEach((f, i) => {
-        ctx.beginPath(); ctx.arc(X(XS[i]), Y(f), kind === 'measured' ? 9 : 7, 0, Math.PI * 2);
-        if (kind === 'measured') { ctx.fillStyle = col; ctx.fill(); }
-        else { ctx.fillStyle = C.halo; ctx.fill(); ctx.lineWidth = 3.5; ctx.strokeStyle = col; ctx.stroke(); }
-      });
     });
-  });
-
-  // Spring names at the end of each measured line
-  ctx.font = `600 26px ${SERIF}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-  ctx.lineJoin = 'round';
-  SPRINGS.forEach(s => {
-    const x = X(XS[1]) + 22, y = Y(s.measured[1]);
-    ctx.strokeStyle = C.halo; ctx.lineWidth = 8; ctx.strokeText(s.name, x, y);
-    ctx.fillStyle = C[s.key]; ctx.fillText(s.name, x, y);
   });
 }
 
@@ -151,12 +144,19 @@ function table(ctx, w, h) {
 }
 
 const GRAPHICS = [
-  { id: 'fig-01-spec-vs-measured', w: 1000, h: 640, draw: graph },
+  { id: 'fig-01-spec-vs-measured', w: 1000, h: 780, draw: graph },
   { id: 'fig-02-percent-difference', w: 1000, h: 470, draw: table },
 ];
 
 const fileName = g => `${g.id}.png`;
-function render(cv, g) { const ctx = cv.getContext('2d'); ctx.fillStyle = C.bg; ctx.fillRect(0, 0, g.w, g.h); g.draw(ctx, g.w, g.h); }
+const PAD = 80; // breathing room on every side for screen grabs
+function render(cv, g) {
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, cv.width, cv.height);
+  ctx.translate(PAD, PAD);
+  g.draw(ctx, g.w, g.h);
+}
 
 async function main() {
   try { await Promise.all([`400 40px ${SERIF}`, `600 40px ${SERIF}`, `400 20px ${MONO}`, `600 20px ${MONO}`].map(f => document.fonts.load(f))); } catch (e) {}
@@ -165,13 +165,13 @@ async function main() {
     document.body.classList.add('export');
     document.querySelectorAll('h1, .lede, .bar').forEach(el => el.remove());
     const g = GRAPHICS.find(x => x.id === q.get('g'));
-    const cv = Object.assign(document.createElement('canvas'), { width: g.w, height: g.h });
+    const cv = Object.assign(document.createElement('canvas'), { width: g.w + 2 * PAD, height: g.h + 2 * PAD });
     list.appendChild(cv); render(cv, g);
     return;
   }
   const items = GRAPHICS.map(g => {
     const fig = document.createElement('figure');
-    const cv = Object.assign(document.createElement('canvas'), { width: g.w, height: g.h });
+    const cv = Object.assign(document.createElement('canvas'), { width: g.w + 2 * PAD, height: g.h + 2 * PAD });
     const cap = document.createElement('figcaption');
     const name = document.createElement('span');
     const btn = Object.assign(document.createElement('button'), { className: 'ghost', textContent: 'PNG' });

@@ -20,7 +20,14 @@ const SECTIONS = [
     ),
     body: [
       'Before I simplify anything, I ask: what is the core concept I want to communicate?',
-      "Then, I leave out as much as I can that doesn't help explain the concept to my target audience.Trying to explain a practical takeaway into a 3 minute social media post or even a blog post is hard, and something I'm constantly working on.  But that inherently means that not every nuance will be covered.",
+      "Then, I leave out as much as I can that doesn't help explain the concept to my target audience. Trying to explain a practical takeaway into a 3 minute social media post or even a blog post is hard, and something I'm constantly working on.  But that inherently means that not every nuance will be covered.",
+    ],
+  },
+  {
+    head: <>Numbers help explain a concept, but you don't need to do math while teaching</>,
+    body: [
+      'I use math and numbers to give context to the concepts I want to explain, because numbers are easier to picture. Saying two clients feel a different load in footwork is abstract. A 20 pound difference between them is something you can almost feel.',
+      "But just because I use math doesn't mean I expect you to do it, especially while teaching. I don't do math while I'm teaching either. The numbers sit underneath the explanation. They help an important concept click, so you can make better teaching decisions in the moment.",
     ],
   },
   {

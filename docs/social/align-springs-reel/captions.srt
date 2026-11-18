@@ -1,0 +1,76 @@
+1
+00:00:00,000 --> 00:00:06,000
+Today we're going to measure a set of brand new reformer springs sent to me by the lovely folks over at Align.
+
+2
+00:00:06,000 --> 00:00:13,000
+We're comparing the measured values, which we're going to get here, to the specs that are online. Let's get started.
+
+3
+00:00:13,000 --> 00:00:22,860
+So a little bit about this setup. I have a luggage scale, an industrial one here, and I have some posts over here.
+
+4
+00:00:22,860 --> 00:00:28,860
+And I'm aiming for a 4 inch increment. So the first thing we need to do is make sure that when there's no tension
+
+5
+00:00:28,860 --> 00:00:35,900
+on the scale that the end of the spring lines up with zero. So right here at the end of that
+
+6
+00:00:36,780 --> 00:00:43,980
+yellow tape. Now I can see it's at zero. I'm going to stretch the spring so that it's hooked up to
+
+7
+00:00:43,980 --> 00:00:53,570
+four inches and I can see that the readout is 3.9. So I'll write down 3.9. Then I can take it off
+
+8
+00:00:53,570 --> 00:01:18,310
+and do the next one. So check this out. The solid lines are the values that I
+
+9
+00:01:18,310 --> 00:01:23,530
+measured, the dotted lines are the spec from a line's website, and all four
+
+10
+00:01:23,530 --> 00:01:28,690
+springs are quite close. I mean this is like basically what I would expect from
+
+11
+00:01:28,690 --> 00:01:34,870
+any spring that is brand new sent to me. You can see that yellow, blue, and red
+
+12
+00:01:34,870 --> 00:01:40,730
+are very very close. The slopes are very very similar and maybe it's just like a pound or two
+
+13
+00:01:40,730 --> 00:01:47,870
+difference. We see a little bit more difference in the green both in the actual value in pounds
+
+14
+00:01:47,870 --> 00:01:53,250
+and then the slope of the line is a little bit different but it is so small and I do expect some
+
+15
+00:01:53,250 --> 00:01:58,790
+scaling of the tolerance as you go from light springs to heavy springs. So overall super
+
+16
+00:01:58,790 --> 00:02:04,330
+impressed with how these performed and if you want to see more actual spring data comment calculator
+
+17
+00:02:04,330 --> 00:02:07,870
+and I'll DM you a link to my free spring calculator
+
+18
+00:02:07,870 --> 00:02:11,030
+that has seven major brands of reformers
+
+19
+00:02:11,030 --> 00:02:13,190
+and some chairs in Cadillac Springs too.
+
