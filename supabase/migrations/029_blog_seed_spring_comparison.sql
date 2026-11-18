@@ -91,7 +91,7 @@ So what happens when you put the matching tier from every brand on one graph? Th
 ![Cross-brand comparison of the two heaviest tiers of springs](IMG_COMPARE_HEAVY_XH)
 *The two heaviest tiers. This is where "equivalent" falls apart.*
 
-Watch the extra-heavy graph on the right. Every spring on it is the heaviest its brand makes. At the start of the stroke, Peak's red is the heaviest of the group at about 17 pounds. By full extension, both Align and Merrithew have passed it, and only Balanced Body's green sits lower. Align's strong green does the opposite: it starts down in the pack near 10 pounds and finishes around 83, more than 20 pounds clear of Peak.
+Watch the extra-heavy graph on the right. Every spring on it is the heaviest its brand makes. At the start of the stroke, Peak's red is the heaviest of the group at about 17 pounds. By full extension, both Align and Merrithew have passed it, and only Balanced Body's green sits lower. Align's strong green does the opposite: it starts down in the pack near 9 pounds and finishes around 69, about 10 pounds clear of Peak.
 
 That is the thesis in one picture. You cannot rank two springs with a single number, because the ranking itself changes depending on how far the carriage has traveled. The spring that feels heaviest at the start of a movement can be the lightest at the end.
 
@@ -102,7 +102,7 @@ People always want the cheat sheet. "What is a Balanced Body red on a Merrithew?
 ![A color grid mapping each brand's springs into extra light, light, medium, and heavy columns](IMG_CONVERSION)
 *A starting point, not a law of physics. Equivalence holds at one moment in the stretch and drifts everywhere else.*
 
-Use it. It is genuinely helpful for getting in the ballpark when you switch equipment. But know what it is. This chart files four springs under "heavy": Balanced Body green, Align green, Peak red, and Merrithew black. We just watched those four range from about 52 to 83 pounds at full stretch and trade places along the way. They share a column. They are not the same spring.
+Use it. It is genuinely helpful for getting in the ballpark when you switch equipment. But know what it is. This chart files four springs under "heavy": Balanced Body green, Align green, Peak red, and Merrithew black. We just watched those four range from about 52 to 69 pounds at full stretch and trade places along the way. They share a column. They are not the same spring.
 
 A conversion chart picks one point in the stretch and says "these match there." Because every spring has its own starting tension and its own rate, springs that match in the middle will not match at the ends. The chart is a translator, not a guarantee. It gets you close. It does not make two springs equal.
 

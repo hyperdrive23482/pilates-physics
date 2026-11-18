@@ -33,10 +33,10 @@
           "name": "Align Pilates",
           "shortName": "Align",
           "springs": [
-            { "color": "yellow", "label": "Yellow", "tensionLabel": "25%",  "displayColor": "#E8C547", "k": 0.46203, "b": 1 },
-            { "color": "blue",   "label": "Blue",   "tensionLabel": "50%",  "displayColor": "#3E7BC7", "k": 0.90712, "b": 4 },
-            { "color": "red",    "label": "Red",    "tensionLabel": "100%", "displayColor": "#C73E3E", "k": 1.21415, "b": 6 },
-            { "color": "green",  "label": "Green",  "tensionLabel": "125%", "displayColor": "#5FA85E", "k": 2.03055, "b": 10 }
+            { "color": "yellow", "label": "Yellow", "tensionLabel": "Extra Light", "displayColor": "#E8C547", "k": 0.40000, "b": 1.4 },
+            { "color": "blue",   "label": "Blue",   "tensionLabel": "Light",       "displayColor": "#3E7BC7", "k": 0.75000, "b": 4.7 },
+            { "color": "red",    "label": "Red",    "tensionLabel": "Medium",      "displayColor": "#C73E3E", "k": 1.10000, "b": 6.2 },
+            { "color": "green",  "label": "Green",  "tensionLabel": "Strong",      "displayColor": "#5FA85E", "k": 1.67500, "b": 9.1 }
           ]
         },
         {

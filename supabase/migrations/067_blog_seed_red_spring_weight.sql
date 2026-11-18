@@ -94,7 +94,7 @@ This is where it gets fun. Seven reformer brands are in the calculator, and six 
 |---|---|---|---|---|
 | Balanced Body | Second-heaviest of four weights | 8 lb | 18 lb | 26 lb |
 | Merrithew (listed as Stott in the calculator) | Second-heaviest of four weights | 7 lb | 19 lb | 29 lb |
-| Align Pilates | Second-heaviest of four weights | 6 lb | 18 lb | 28 lb |
+| Align Pilates | Second-heaviest of four weights | 6 lb | 17 lb | 26 lb |
 | BASI | Heaviest of three | 7 lb | 19 lb | 28 lb |
 | Peak Pilates | Heaviest of four | 17 lb | 29 lb | 38 lb |
 | Elina | Heaviest of three | 11 lb | 25 lb | 37 lb |
@@ -103,7 +103,7 @@ Red means second-heaviest for Balanced Body, Merrithew and Align. It means heavi
 
 The color simply tells you where a spring sits in its own brand's lineup.
 
-Now look at the 10 inch column. Balanced Body, Merrithew, Align and BASI all land at 18 or 19 pounds there. Four different brands, basically the same spring in the middle of the stroke. That's why a conversion chart can put them in the same column. It's also why a conversion chart is only a starting point, because they start at different preloads and climb at different rates. Springs that match in the middle drift apart at both ends. I graphed all of that in [my cross-brand spring comparison](/blog/comparing-springs-across-brands) if you want to see the lines cross.
+Now look at the 10 inch column. Balanced Body, Merrithew, Align and BASI all land at 17 to 19 pounds there. Four different brands, basically the same spring in the middle of the stroke. That's why a conversion chart can put them in the same column. It's also why a conversion chart is only a starting point, because they start at different preloads and climb at different rates. Springs that match in the middle drift apart at both ends. I graphed all of that in [my cross-brand spring comparison](/blog/comparing-springs-across-brands) if you want to see the lines cross.
 
 And then there's Peak. A Peak red pulls 17 pounds before the carriage moves. That's more than double the Balanced Body red at rest! It stays the heaviest red through the whole stroke, too. If you're used to one red on a Balanced Body reformer and someone hands you one red on a Peak reformer, you're on a noticeably heavier spring from the very first inch.
 

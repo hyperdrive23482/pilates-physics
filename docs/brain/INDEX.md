@@ -5,10 +5,11 @@ Local mirror of `brain_entries` in the prod Supabase project, written by
 files by hand: edit in /admin/content/brain, then pull. "On" entries are
 injected into the content drafting prompt.
 
-## Transcripts (35)
+## Transcripts (36)
 
 | On | Title | Added |
 |---|---|---|
+|  | [Hip Torque in Feet in Straps (Carousel, 2026-11-12)](transcripts/2026-11-12_carousel_hip-torque-in-feet-in-straps.md) | 2026-11-14 |
 |  | [My Face When Spring Myths (Carousel, 2026-11-10)](transcripts/2026-11-10_carousel_my-face-when-spring-myths.md) | 2026-11-12 |
 |  | [Advice to New Pilates Instructors (Reel, 2026-11-08)](transcripts/2026-11-08_reel_advice-to-new-pilates-instructors.md) | 2026-11-10 |
 |  | [Hamstrings Carriage Crash Experiment (Reel, 2026-11-03)](transcripts/2026-11-03_reel_hamstrings-carriage-crash-experiment.md) | 2026-11-04 |
@@ -21,12 +22,12 @@ injected into the content drafting prompt.
 |  | [Tall vs. Short Footwork: Max Resistance Quiz Answer](transcripts/tall-vs-short-footwork-max-resistance-quiz-answer.md) | 2026-07-30 |
 | on | [Friction on reformer carriage wheels](transcripts/friction-on-reformer-carriage-wheels.md) | 2026-05-13 |
 |  | [Pilates Springs Don't Push AND Pull](transcripts/pilates-springs-dont-push-and-pull.md) | 2026-05-12 |
-|  | [Intro to chair physics](transcripts/intro-to-chair-physics.md) | 2026-05-12 |
+|  | [About Me](transcripts/about-me.md) | 2026-05-12 |
 |  | [Body weight on a Pilates chair (Step Up Front)](transcripts/body-weight-on-a-pilates-chair-step-up-front.md) | 2026-05-12 |
 |  | [Load in a Bridge](transcripts/load-in-a-bridge.md) | 2026-05-12 |
 |  | [Physics and Teaching a Bridge](transcripts/physics-and-teaching-a-bridge.md) | 2026-05-12 |
 |  | [Bridge Press Out](transcripts/bridge-press-out.md) | 2026-05-12 |
-|  | [About Me](transcripts/about-me.md) | 2026-05-12 |
+|  | [Intro to chair physics](transcripts/intro-to-chair-physics.md) | 2026-05-12 |
 |  | [Pilates Springs Series — Part 1: Original Reaction Video](transcripts/pilates-springs-series-part-1-original-reaction-video.md) | 2026-05-12 |
 |  | [Pilates Springs Series — Part 2: Footwork Weight Differences by Position](transcripts/pilates-springs-series-part-2-footwork-weight-differences-by-position.md) | 2026-05-12 |
 |  | [Pilates Springs Series — Part 3: How Gear Bar Position Changes Maximum Load](transcripts/pilates-springs-series-part-3-how-gear-bar-position-changes-maximum-load.md) | 2026-05-12 |
