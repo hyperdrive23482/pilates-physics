@@ -1,0 +1,190 @@
+/* Kaleen Hub design system: components
+   Requires tokens.css. Every class is prefixed hub- so it can sit beside Tailwind or other CSS. */
+
+/* ---------- Page ---------- */
+
+.hub-page {
+  margin: 0;
+  background-color: var(--hub-bg);
+  background-image:
+    linear-gradient(var(--hub-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hub-grid) 1px, transparent 1px);
+  background-size: var(--hub-grid-size) var(--hub-grid-size);
+  color: var(--hub-ink);
+  font-family: var(--hub-font-body);
+  font-size: var(--hub-body-size);
+  line-height: 1.65;
+  padding: 0 var(--hub-gutter) 48px;
+}
+
+.hub-page a { color: var(--hub-ink); }
+.hub-page a:hover { color: var(--hub-accent); }
+.hub-page :focus-visible { outline: 2px solid var(--hub-accent); outline-offset: 2px; }
+
+.hub-container { max-width: var(--hub-max-width); margin: 0 auto; }
+
+.hub-section { padding-bottom: var(--hub-space-9); }
+
+.hub-vh {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ---------- Type ---------- */
+
+.hub-h1, .hub-h2, .hub-h3, .hub-title {
+  margin: 0;
+  font-family: var(--hub-font-head);
+  font-weight: 700;
+}
+.hub-h1 { font-size: var(--hub-h1-size); line-height: 0.98; letter-spacing: -0.045em; }
+.hub-h2 { font-size: var(--hub-h2-size); line-height: 1.12; letter-spacing: -0.03em; }
+.hub-h3 { font-size: var(--hub-h3-size); line-height: 1.2; letter-spacing: -0.03em; }
+.hub-title { font-size: var(--hub-title-size); font-weight: 600; line-height: 1.2; letter-spacing: -0.025em; }
+
+.hub-lede { margin: 0; font-size: var(--hub-lede-size); line-height: 1.55; color: var(--hub-muted); max-width: 460px; }
+.hub-body { margin: 0; font-size: var(--hub-body-size); line-height: 1.65; color: var(--hub-muted); max-width: 680px; }
+.hub-small { margin: 0; font-size: var(--hub-small-size); line-height: 1.5; color: var(--hub-muted); }
+
+/* Mono voices: kicker (blue, above headings), label (grey, inside panels), mono link */
+.hub-kicker, .hub-label, .hub-mono {
+  font-family: var(--hub-font-mono);
+}
+.hub-kicker { font-size: var(--hub-mono-size); letter-spacing: 0.08em; text-transform: uppercase; color: var(--hub-accent); }
+.hub-label { font-size: var(--hub-label-size); letter-spacing: 0.1em; text-transform: uppercase; color: var(--hub-label); }
+.hub-mono { font-size: var(--hub-mono-size); letter-spacing: 0.04em; }
+.hub-mono-link { font-family: var(--hub-font-mono); font-size: var(--hub-mono-size); display: inline-block; padding: 12px 0; }
+
+/* ---------- Header and footer ---------- */
+
+.hub-header {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 8px 24px; padding: 18px 0; border-bottom: var(--hub-border);
+}
+.hub-wordmark {
+  font-family: var(--hub-font-mono); font-weight: 500; font-size: 14px;
+  letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; padding: 12px 0;
+}
+.hub-nav {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 28px;
+  font-family: var(--hub-font-mono); font-size: var(--hub-mono-size); letter-spacing: 0.04em;
+}
+.hub-nav a { text-decoration: none; padding: 12px 0; }
+
+.hub-footer {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 8px 32px; padding-top: 24px;
+  font-family: var(--hub-font-mono); font-size: var(--hub-caption-size); letter-spacing: 0.04em;
+  color: var(--hub-muted);
+}
+.hub-footer nav { display: flex; flex-wrap: wrap; gap: 4px 24px; }
+.hub-footer a { padding: 12px 0; }
+
+/* Numbered section heading: "01 Writing" over a navy rule */
+.hub-section-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  margin: 0; padding-bottom: 14px; border-bottom: var(--hub-border);
+  font-family: var(--hub-font-mono); font-weight: 500; font-size: 14px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+
+/* ---------- Buttons and forms ---------- */
+
+.hub-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: var(--hub-control-height); box-sizing: border-box; padding: 0 24px;
+  border: var(--hub-border); border-radius: var(--hub-radius);
+  background: var(--hub-ink); color: var(--hub-on-ink);
+  font-family: var(--hub-font-mono); font-size: 14px; letter-spacing: 0.04em;
+  text-decoration: none; cursor: pointer;
+}
+.hub-page a.hub-btn, .hub-page a.hub-btn:hover { color: var(--hub-on-ink); }
+.hub-btn:hover { background: var(--hub-accent); border-color: var(--hub-accent); }
+
+.hub-btn--outline { background: var(--hub-panel); color: var(--hub-ink); }
+.hub-page a.hub-btn--outline { color: var(--hub-ink); }
+.hub-btn--outline:hover { background: var(--hub-panel); border-color: var(--hub-accent); color: var(--hub-accent); }
+.hub-btn--small { height: auto; padding: 11px 18px; font-size: var(--hub-mono-size); }
+
+.hub-input {
+  flex: 1 1 220px; min-width: 0;
+  height: var(--hub-control-height); box-sizing: border-box; padding: 0 16px;
+  border: var(--hub-border); border-radius: var(--hub-radius);
+  background: var(--hub-panel); color: var(--hub-ink);
+  font-family: var(--hub-font-mono); font-size: 14px;
+}
+.hub-input::placeholder { color: var(--hub-muted); opacity: 1; }
+
+/* Input and button sit flush, no gap */
+.hub-form { display: flex; flex-wrap: wrap; gap: 0; max-width: 480px; }
+
+/* ---------- Panels and figures ---------- */
+
+.hub-panel { border: var(--hub-border); border-radius: var(--hub-radius); background: var(--hub-panel); }
+
+.hub-figure { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.hub-figure__frame { border: var(--hub-border); background: var(--hub-panel); padding: 10px; }
+.hub-figure__frame--chart { padding: 20px; }
+.hub-figure__frame img, .hub-figure__frame svg { display: block; width: 100%; }
+.hub-figure__frame img { object-fit: cover; }
+.hub-figcaption {
+  display: flex; flex-wrap: wrap; gap: 4px 16px;
+  font-family: var(--hub-font-mono); font-size: var(--hub-caption-size); letter-spacing: 0.04em;
+  color: var(--hub-muted);
+}
+.hub-figcaption__num { color: var(--hub-accent); }
+
+/* Spec strip: label over value, in a single white panel */
+.hub-spec-strip {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  border: var(--hub-border); background: var(--hub-panel);
+}
+.hub-spec { display: flex; flex-direction: column; gap: 6px; padding: 20px 24px; border-bottom: 1px solid var(--hub-rule-faint); }
+.hub-spec__value { font-size: 17px; font-weight: 600; }
+
+/* ---------- Writing rows ---------- */
+
+.hub-post-row {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 32px;
+  padding: 24px 0; border-bottom: 1px solid var(--hub-rule); text-decoration: none;
+}
+.hub-post-row__topic {
+  flex: none; width: 130px;
+  font-family: var(--hub-font-mono); font-size: var(--hub-caption-size);
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--hub-accent);
+}
+.hub-post-row__text { flex: 1 1 320px; display: flex; flex-direction: column; gap: 6px; }
+.hub-post-row__arrow { font-family: var(--hub-font-mono); font-size: 18px; }
+.hub-page a.hub-post-row:hover { color: var(--hub-ink); }
+.hub-post-row:hover .hub-title, .hub-post-row:hover .hub-post-row__arrow { color: var(--hub-accent); }
+
+/* ---------- Project cards ---------- */
+
+.hub-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.hub-card {
+  display: flex; flex-direction: column; gap: 12px; padding: 28px;
+  border: var(--hub-border); background: var(--hub-panel); text-decoration: none;
+}
+.hub-card__id { font-family: var(--hub-font-mono); font-size: var(--hub-caption-size); letter-spacing: 0.1em; color: var(--hub-label); }
+.hub-card__desc { flex-grow: 1; font-size: var(--hub-small-size); line-height: 1.55; color: var(--hub-muted); }
+.hub-card__link { font-family: var(--hub-font-mono); font-size: var(--hub-mono-size); color: var(--hub-accent); padding-top: 8px; }
+.hub-page a.hub-card:hover { color: var(--hub-ink); border-color: var(--hub-accent); }
+
+/* ---------- Navy band (the one inverted block per page) ---------- */
+
+.hub-band {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 28px 48px;
+  padding: 56px 48px; background: var(--hub-ink); color: var(--hub-on-ink);
+}
+.hub-band > * { flex: 1 1 320px; }
+.hub-band .hub-body { color: var(--hub-on-ink-muted); max-width: 440px; }
+.hub-band .hub-form { max-width: none; }
+.hub-band .hub-input { height: 52px; background: var(--hub-ink); color: var(--hub-on-ink); border-color: var(--hub-on-ink); }
+.hub-band .hub-input::placeholder { color: var(--hub-on-ink-muted); }
+.hub-band .hub-btn { height: 52px; background: var(--hub-on-ink); color: var(--hub-ink); border-color: var(--hub-on-ink); }
+.hub-band .hub-btn:hover { background: var(--hub-on-ink-muted); border-color: var(--hub-on-ink-muted); }
+.hub-band :focus-visible { outline-color: var(--hub-on-ink); }
+
+@media (max-width: 600px) {
+  .hub-band { padding: 40px 24px; }
+}

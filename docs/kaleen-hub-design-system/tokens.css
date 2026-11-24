@@ -1,0 +1,56 @@
+/* Kaleen Hub design system: tokens
+   Source of truth for kaleencanevari.com ("spec sheet" direction).
+   Load fonts first (see README), then this file, then hub.css. */
+
+:root {
+  /* Color */
+  --hub-bg: #F5F4EF;                     /* graph paper ground */
+  --hub-grid: rgba(20, 33, 61, 0.06);    /* grid line, same weight everywhere */
+  --hub-ink: #14213D;                    /* navy: text, borders, primary button */
+  --hub-muted: #3B4660;                  /* body copy, captions */
+  --hub-label: #5A6480;                  /* small uppercase labels on panels */
+  --hub-accent: #1D4ED8;                 /* technical blue: kickers, links, chart line */
+  --hub-panel: #FFFFFF;                  /* cards, inputs, photo frames */
+  --hub-rule: #C3C7D2;                   /* row dividers on the ground */
+  --hub-rule-faint: #D5D8E0;             /* dividers and chart gridlines inside panels */
+  --hub-on-ink: #FFFFFF;                 /* text on navy */
+  --hub-on-ink-muted: #C5CBDA;           /* secondary text on navy */
+
+  /* Type families */
+  --hub-font-head: 'Space Grotesk', system-ui, sans-serif;
+  --hub-font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --hub-font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Type scale */
+  --hub-h1-size: clamp(46px, 6.6vw, 82px);
+  --hub-h2-size: clamp(28px, 3.4vw, 38px);
+  --hub-h3-size: 26px;
+  --hub-title-size: 24px;                /* post titles in rows */
+  --hub-lede-size: 19px;
+  --hub-body-size: 16px;
+  --hub-small-size: 15px;
+  --hub-mono-size: 13px;                 /* nav, kickers, links */
+  --hub-caption-size: 12px;
+  --hub-label-size: 11px;
+
+  /* Line and shape */
+  --hub-border: 1.5px solid var(--hub-ink);
+  --hub-radius: 0;                       /* square corners, always */
+  --hub-grid-size: 24px;
+
+  /* Space (multiples of 4; sections sit on 56 to 72) */
+  --hub-space-1: 4px;
+  --hub-space-2: 8px;
+  --hub-space-3: 12px;
+  --hub-space-4: 16px;
+  --hub-space-5: 24px;
+  --hub-space-6: 28px;
+  --hub-space-7: 40px;
+  --hub-space-8: 56px;
+  --hub-space-9: 72px;
+
+  /* Layout */
+  --hub-max-width: 1152px;
+  --hub-gutter: 16px;
+  --hub-control-height: 50px;
+}
