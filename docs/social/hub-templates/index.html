@@ -1,0 +1,401 @@
+<title>Hub Social Templates</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* Layout: a spec sheet of artboards. Reel covers 9:16, carousel slides 4:5, each drawn on a 540px base unit (--u) so they scale to any card width.
+   Single deliberate light look: the hub system is a light graph-paper ground. Colors are set explicitly so it reads the same on any host theme. */
+:root {
+  --bg: #F5F4EF;
+  --grid: rgba(20, 33, 61, 0.06);
+  --ink: #14213D;
+  --muted: #3B4660;
+  --label: #5A6480;
+  --accent: #1D4ED8;
+  --panel: #FFFFFF;
+  --rule: #C3C7D2;
+  --rule-faint: #D5D8E0;
+  --on-ink-muted: #C5CBDA;
+  --head: 'Space Grotesk', system-ui, sans-serif;
+  --body: 'IBM Plex Sans', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; color: var(--ink); font: 400 16px/1.65 var(--body);
+  background-color: var(--bg);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.wrap {
+  max-width: 1152px; margin: 0 auto; padding-block: 40px 96px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 24px;
+  padding-bottom: 14px; border-bottom: 1.5px solid var(--ink); font: 500 14px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.top span:last-child { font-weight: 400; color: var(--muted); letter-spacing: .04em; text-transform: none; font-size: 13px; }
+.kicker { font: 400 13px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 48px 0 12px; }
+h1 { font: 700 clamp(40px, 6vw, 72px)/0.98 var(--head); letter-spacing: -0.045em; margin: 0 0 20px; text-wrap: balance; }
+.lede { font-size: 19px; line-height: 1.55; color: var(--muted); max-width: 640px; margin: 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; margin-top: 28px; font: 400 13px var(--mono); letter-spacing: .04em; }
+.controls label { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; }
+.controls input { width: 18px; height: 18px; accent-color: var(--ink); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin: 72px 0 28px;
+  padding-bottom: 14px; border-bottom: 1.5px solid var(--ink); font: 500 14px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.section-head small { font: 400 12px var(--mono); letter-spacing: .04em; text-transform: none; color: var(--muted); }
+
+.gallery { display: grid; gap: 40px 28px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
+.gallery.slides { grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+.item { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.meta { display: flex; flex-direction: column; gap: 4px; }
+.meta .id { font: 400 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.meta h3 { font: 700 22px/1.2 var(--head); letter-spacing: -0.03em; margin: 0; }
+.meta p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
+.meta p b { font: 400 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--label); margin-right: 6px; }
+
+.chip { align-self: flex-start; font: 400 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; padding: 4px 8px; border: 1.5px solid var(--ink); }
+.chip.on { background: var(--ink); color: #fff; }
+.item.parked .board { opacity: .45; }
+/* ---------- Artboards ---------- */
+.board {
+  container-type: inline-size; position: relative; width: 100%; max-width: 100%; overflow: hidden;
+  border: 1.5px solid var(--ink); background-color: var(--bg);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+}
+.board.reel { aspect-ratio: 9 / 16; }
+.board.slide { aspect-ratio: 4 / 5; }
+.board > .c { position: absolute; inset: 0; --u: calc(100cqw / 540); }
+.board { background-size: 4.444cqw 4.444cqw; }
+
+/* Profile grid crop overlay: reels show 3:4 on the grid (y 12.5% to 87.5%) */
+.crop::before, .crop::after { content: ""; position: absolute; left: 0; right: 0; height: 12.5%; background: rgba(20,33,61,.55); z-index: 5; pointer-events: none; }
+.crop::before { top: 0; } .crop::after { bottom: 0; }
+body:not(.show-crop) .crop::before, body:not(.show-crop) .crop::after { display: none; }
+
+/* shared pieces inside boards, sized in --u (1 unit = 1px at 540 wide) */
+.k { font: 400 calc(15 * var(--u))/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.h { font-family: var(--head); font-weight: 700; letter-spacing: -0.045em; line-height: .98; margin: 0; color: var(--ink); text-wrap: balance; }
+.frame { background: var(--panel); border: calc(1.5 * var(--u)) solid var(--ink); padding: calc(10 * var(--u)); }
+.frame img { display: block; width: 100%; object-fit: cover; }
+.cap { font: 400 calc(13 * var(--u))/1.4 var(--mono); letter-spacing: .04em; color: var(--muted); }
+.cap b { font-weight: 400; color: var(--accent); margin-right: calc(8 * var(--u)); }
+.foot { position: absolute; left: calc(40 * var(--u)); right: calc(40 * var(--u)); bottom: calc(32 * var(--u));
+  display: flex; justify-content: space-between; align-items: baseline; padding-top: calc(12 * var(--u));
+  border-top: calc(1.5 * var(--u)) solid var(--ink); font: 500 calc(12 * var(--u)) var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.foot span:last-child { font-weight: 400; color: var(--muted); letter-spacing: .04em; }
+.pad { position: absolute; inset: calc(56 * var(--u)) calc(40 * var(--u)) calc(90 * var(--u)); display: flex; flex-direction: column; }
+.body-l { font: 400 calc(24 * var(--u))/1.45 var(--body); color: var(--ink); margin: 0; }
+.body-m { font: 400 calc(19 * var(--u))/1.5 var(--body); color: var(--muted); margin: 0; }
+.spec { display: grid; grid-template-columns: 1fr 1fr; background: var(--panel); border: calc(1.5 * var(--u)) solid var(--ink); }
+.spec div { padding: calc(14 * var(--u)) calc(16 * var(--u)); display: flex; flex-direction: column; gap: calc(6 * var(--u)); }
+.spec div:nth-child(odd) { border-right: 1px solid var(--rule-faint); }
+.spec div:nth-child(-n+2) { border-bottom: 1px solid var(--rule-faint); }
+.spec .l { font: 400 calc(11 * var(--u)) var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--label); }
+.spec .v { font: 600 calc(19 * var(--u))/1.2 var(--body); color: var(--ink); }
+.band { background: var(--ink); color: #fff; }
+svg text { font-family: var(--mono); }
+
+/* R1 framed figure */
+.r1 { padding: calc(174 * var(--u)) calc(40 * var(--u)) 0; display: flex; flex-direction: column; gap: calc(24 * var(--u)); }
+.r1 .h { font-size: calc(64 * var(--u)); }
+.r1 img { height: calc(440 * var(--u)); object-position: 50% 30%; }
+
+/* R2 title block (from floor title) */
+.r2 img.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.r2 .block { position: absolute; left: calc(24 * var(--u)); right: calc(24 * var(--u)); bottom: calc(136 * var(--u));
+  background: var(--panel); border: calc(1.5 * var(--u)) solid var(--ink); padding: calc(22 * var(--u)) calc(24 * var(--u)) calc(26 * var(--u));
+  display: flex; flex-direction: column; gap: calc(12 * var(--u)); }
+.r2 .h { font-size: calc(54 * var(--u)); }
+
+/* R3 callout tags (from stacked labels) */
+.r3 img.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.r3 .tags { position: absolute; left: calc(24 * var(--u)); bottom: calc(150 * var(--u)); display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+.r3 .tag { background: var(--panel); border: calc(1.5 * var(--u)) solid var(--ink); margin-top: calc(-1.5 * var(--u));
+  padding: calc(10 * var(--u)) calc(16 * var(--u)); font: 700 calc(40 * var(--u))/1.05 var(--head); letter-spacing: -0.035em; }
+.r3 .tag.k { font: 400 calc(14 * var(--u))/1 var(--mono); letter-spacing: .08em; padding: calc(10 * var(--u)) calc(14 * var(--u)); }
+
+/* R4 spec sheet (from Align data reel) */
+.r4 { padding: calc(150 * var(--u)) calc(40 * var(--u)) 0; display: flex; flex-direction: column; gap: calc(20 * var(--u)); }
+.r4 .h { font-size: calc(52 * var(--u)); }
+.r4 img { height: calc(330 * var(--u)); object-position: 50% 30%; }
+
+/* R5 navy band */
+.r5 img.bg { position: absolute; left: 0; right: 0; top: 0; height: 62%; width: 100%; object-fit: cover; object-position: 50% 25%; }
+.r5 .band { position: absolute; left: 0; right: 0; top: 62%; bottom: 0; padding: calc(36 * var(--u)) calc(40 * var(--u)); display: flex; flex-direction: column; gap: calc(14 * var(--u)); }
+.r5 .band .k { color: var(--on-ink-muted); }
+.r5 .band .h { color: #fff; font-size: calc(56 * var(--u)); }
+
+/* R6 chart cover */
+.r6 { padding: calc(160 * var(--u)) calc(40 * var(--u)) 0; display: flex; flex-direction: column; gap: calc(22 * var(--u)); }
+.r6 .h { font-size: calc(58 * var(--u)); }
+.r6 .frame { padding: calc(20 * var(--u)); }
+
+/* Carousel slides */
+.s1 .h { font-size: calc(68 * var(--u)); margin-top: auto; }
+.s1 .k { margin-bottom: calc(18 * var(--u)); }
+.s1 .sub { margin-top: calc(22 * var(--u)); }
+.s2 .pad { justify-content: center; gap: calc(24 * var(--u)); }
+.s2 .h { font-size: calc(40 * var(--u)); letter-spacing: -0.035em; line-height: 1.08; }
+.rows { display: flex; flex-direction: column; }
+.rows div { display: flex; gap: calc(20 * var(--u)); align-items: baseline; padding: calc(18 * var(--u)) 0; border-bottom: 1px solid var(--rule); }
+.rows div:first-child { border-top: calc(1.5 * var(--u)) solid var(--ink); }
+.rows .n { flex: none; width: calc(70 * var(--u)); font: 400 calc(12 * var(--u)) var(--mono); letter-spacing: .1em; color: var(--accent); }
+.rows .t { font: 600 calc(24 * var(--u))/1.25 var(--head); letter-spacing: -0.025em; }
+.s3 .pad { justify-content: center; gap: calc(26 * var(--u)); }
+.s3 .h { font-size: calc(44 * var(--u)); }
+.s4 .pad { justify-content: center; gap: calc(14 * var(--u)); }
+.s4 .h { font-size: calc(34 * var(--u)); letter-spacing: -0.03em; margin-bottom: calc(6 * var(--u)); }
+.s4 .frame { padding: calc(20 * var(--u)); }
+.s5 .pad { justify-content: center; gap: calc(18 * var(--u)); }
+.s5 .h { font-size: calc(34 * var(--u)); letter-spacing: -0.03em; }
+.s5 .result { font: 700 calc(30 * var(--u))/1.15 var(--head); letter-spacing: -0.03em; margin-top: calc(8 * var(--u)); }
+.s5 .result em { font-style: normal; color: var(--accent); }
+.s6 .pad { justify-content: center; align-items: stretch; gap: calc(18 * var(--u)); }
+.eq { display: grid; grid-template-columns: repeat(5, auto); justify-content: space-between; align-items: end; row-gap: calc(10 * var(--u)); }
+.eq .sym { font: 700 calc(104 * var(--u))/1 var(--head); letter-spacing: -0.04em; text-align: center; }
+.eq .op { font: 500 calc(64 * var(--u))/1.3 var(--head); color: var(--label); text-align: center; }
+.eq .lab { font: 400 calc(12 * var(--u)) var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); text-align: center; }
+.s6 .rule { border-top: calc(1.5 * var(--u)) solid var(--ink); padding-top: calc(16 * var(--u)); }
+.s7 .pad { gap: calc(22 * var(--u)); justify-content: center; bottom: calc(260 * var(--u)); }
+.s7 .h { font-size: calc(48 * var(--u)); }
+.s7 .band { position: absolute; left: 0; right: 0; bottom: 0; height: calc(200 * var(--u)); padding: calc(36 * var(--u)) calc(40 * var(--u));
+  display: flex; flex-direction: column; justify-content: center; gap: calc(12 * var(--u)); }
+.s7 .band .k { color: var(--on-ink-muted); }
+.s7 .band .cta { font: 700 calc(34 * var(--u))/1.1 var(--head); letter-spacing: -0.03em; color: #fff; }
+.s7 .band .cta span { display: inline-block; border: calc(1.5 * var(--u)) solid #fff; padding: 0 calc(10 * var(--u)); font-family: var(--mono); font-weight: 500; letter-spacing: .04em; font-size: calc(28 * var(--u)); }
+
+.decisions { display: grid; gap: 0; grid-template-columns: 1fr; border-top: 1.5px solid var(--ink); }
+.decisions div { display: flex; flex-wrap: wrap; gap: 6px 32px; padding: 22px 0; border-bottom: 1px solid var(--rule); }
+.decisions .n { flex: none; width: 130px; font: 400 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); padding-top: 4px; }
+.decisions .t { flex: 1 1 320px; min-width: 0; }
+.decisions h4 { font: 600 22px/1.25 var(--head); letter-spacing: -0.025em; margin: 0 0 6px; }
+.decisions p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.55; }
+footer { margin-top: 72px; padding-top: 20px; border-top: 1.5px solid var(--ink); font: 400 12px var(--mono); letter-spacing: .04em; color: var(--muted); }
+</style>
+
+<div class="wrap">
+  <div class="top"><span>Kaleen Canevari / Social</span><span>Templates v1, decided Nov 24 2026</span></div>
+
+  <p class="kicker">Reels / Carousels / Kaleen Hub system</p>
+  <h1>Social templates, spec sheet edition</h1>
+  <p class="lede">Each template is a past @kaleenc_ format rebuilt in the Kaleen Hub design system: graph paper, navy ink, one technical blue, square corners. Sample copy comes from real posts. Reel covers alternate R-01 and R-02. The other cover options are parked. Every carousel slide type below is in use.</p>
+  <div class="controls">
+    <label for="crop"><input type="checkbox" id="crop"> Show the profile grid crop on reel covers (3:4)</label>
+  </div>
+
+  <h2 class="section-head"><span>01 Reel covers</span><small>9:16, 1080 x 1920</small></h2>
+  <div class="gallery">
+
+    <div class="item">
+      <div class="board reel crop"><div class="c r1">
+        <p class="h">Can you be<br>too precise?</p>
+        <div class="frame"><img src="frame.jpg" alt="Kaleen talking to camera"></div>
+      </div></div>
+      <div class="meta"><span class="chip on">In rotation</span><span class="id">R-01 / Framed figure</span><h3>Framed figure</h3>
+        <p><b>From</b>New. The current sub-optimization cover.</p>
+        <p><b>Use for</b>Talking-head reels with a question hook.</p></div>
+    </div>
+
+    <div class="item">
+      <div class="board reel crop"><div class="c r2">
+        <img class="bg" src="frame.jpg" alt="">
+        <div class="block"><span class="k">Engineering / Pilates</span><p class="h">Perfect engine. Slower car.</p></div>
+      </div></div>
+      <div class="meta"><span class="chip on">In rotation</span><span class="id">R-02 / Title block</span><h3>Title block</h3>
+        <p><b>From</b>Floor title. Full-bleed photo kept; the dark fade becomes a white panel, since the system has no gradients.</p>
+        <p><b>Use for</b>Demo reels where the photo carries the scene.</p></div>
+    </div>
+
+    <div class="item parked">
+      <div class="board reel crop"><div class="c r3">
+        <img class="bg" src="frame.jpg" alt="">
+        <div class="tags">
+          <span class="tag k">Footwork / 20 min</span>
+          <span class="tag">Perfect alignment.</span>
+          <span class="tag">Worse session.</span>
+        </div>
+      </div></div>
+      <div class="meta"><span class="chip">Parked</span><span class="id">R-03 / Callout tags</span><h3>Callout tags</h3>
+        <p><b>From</b>Long Stretch stacked labels, squared off and outlined like instrument tags instead of rounded black pills.</p>
+        <p><b>Use for</b>Short punchy hooks, two lines.</p></div>
+    </div>
+
+    <div class="item parked">
+      <div class="board reel crop"><div class="c r4">
+        <p class="h">Do new springs match the spec sheet?</p>
+        <div class="frame"><img src="frame.jpg" alt=""></div>
+        <div class="spec">
+          <div><span class="l">Springs</span><span class="v">4 new Align</span></div>
+          <div><span class="l">Stretch</span><span class="v">4 in, 8 in</span></div>
+          <div><span class="l">Tool</span><span class="v">Luggage scale</span></div>
+          <div><span class="l">Result</span><span class="v">Within 1 lb</span></div>
+        </div>
+      </div></div>
+      <div class="meta"><span class="chip">Parked</span><span class="id">R-04 / Spec sheet</span><h3>Spec sheet</h3>
+        <p><b>From</b>The Align springs measured-vs-spec reel. Adds a strip of label/value pairs from the experiment.</p>
+        <p><b>Use for</b>Experiments and measurements.</p></div>
+    </div>
+
+    <div class="item parked">
+      <div class="board reel crop"><div class="c r5">
+        <img class="bg" src="frame.jpg" alt="">
+        <div class="band"><span class="k">Engineering / Pilates</span><p class="h">Can you be too precise?</p></div>
+      </div></div>
+      <div class="meta"><span class="chip">Parked</span><span class="id">R-05 / Navy band</span><h3>Navy band</h3>
+        <p><b>From</b>Floor title, inverted. The one navy block the system allows per page.</p>
+        <p><b>Use for</b>Promos and series openers that need to stand out on the grid.</p></div>
+    </div>
+
+    <div class="item parked">
+      <div class="board reel crop"><div class="c r6">
+        <span class="k">Measured / Spec</span>
+        <p class="h">Green ran heaviest.</p>
+        <div class="frame">
+          <svg viewBox="0 0 420 300" role="img" aria-label="Spring force against stretch, measured above spec">
+            <g stroke="#D5D8E0" stroke-width="1"><line x1="50" y1="60" x2="400" y2="60"/><line x1="50" y1="120" x2="400" y2="120"/><line x1="50" y1="180" x2="400" y2="180"/></g>
+            <path d="M50 20 V240 H400" fill="none" stroke="#14213D" stroke-width="1.5"/>
+            <polyline points="50,240 225,150 400,62" fill="none" stroke="#14213D" stroke-width="1.5" stroke-dasharray="5 5"/>
+            <polyline points="50,240 225,140 400,40" fill="none" stroke="#1D4ED8" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="225" cy="140" r="6" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="2.5"/>
+            <circle cx="400" cy="40" r="6" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="2.5"/>
+            <text x="212" y="128" font-size="17" fill="#1D4ED8" text-anchor="end">+1.0 lb</text>
+            <text x="386" y="34" font-size="17" fill="#1D4ED8" text-anchor="end">+2.3 lb</text>
+            <text x="318" y="132" font-size="16" fill="#3B4660">spec</text>
+            <text x="44" y="262" font-size="16" fill="#3B4660">0 in</text>
+            <text x="208" y="262" font-size="16" fill="#3B4660">4 in</text>
+            <text x="368" y="262" font-size="16" fill="#3B4660">8 in</text>
+            <text x="225" y="292" font-size="14" fill="#5A6480" text-anchor="middle" letter-spacing="1.2">STRETCH</text>
+          </svg>
+        </div>
+        <p class="cap"><b>Fig. 1</b>Green spring, measured vs. spec.</p>
+      </div></div>
+      <div class="meta"><span class="chip">Parked</span><span class="id">R-06 / Chart cover</span><h3>Chart cover</h3>
+        <p><b>From</b>The momentum and spec-vs-measured graphs. Parked: a chart cover now uses R-01, with the chart in the frame.</p>
+        <p><b>Use for</b>Reels where the graph is the punchline.</p></div>
+    </div>
+  </div>
+
+  <h2 class="section-head"><span>02 Carousel slides</span><small>4:5, 1080 x 1350</small></h2>
+  <div class="gallery slides">
+
+    <div class="item">
+      <div class="board slide"><div class="c s1"><div class="pad">
+        <span class="k" style="margin-top:auto">Same springs / Different load</span>
+        <p class="h" style="margin-top:0">Every cue I used failed.</p>
+        <p class="body-m sub">Then I added a spring.</p>
+      </div><div class="foot"><span>@kaleenc_</span><span>01 / 16</span></div></div></div>
+      <div class="meta"><span class="id">C-01 / Hook</span><h3>Hook</h3>
+        <p><b>From</b>Same Springs slide 1, centered mono text. Now a left-aligned Space Grotesk headline with a blue kicker.</p></div>
+    </div>
+
+    <div class="item">
+      <div class="board slide"><div class="c s2"><div class="pad">
+        <p class="h">For one of my clients, the only way up was to grip.</p>
+        <p class="body-m">Everything above the pelvis moved as a block. But they were on the same springs as everyone else.</p>
+      </div><div class="foot"><span>@kaleenc_</span><span>03 / 16</span></div></div></div>
+      <div class="meta"><span class="id">C-02 / Story</span><h3>Story</h3>
+        <p><b>From</b>Same Springs slides 2 to 3. Headline line on top, supporting line below in Plex Sans.</p></div>
+    </div>
+
+    <div class="item">
+      <div class="board slide"><div class="c s3"><div class="pad">
+        <div class="rows">
+          <div><span class="n">CUE 01</span><span class="t">“Rock your pelvis.”</span></div>
+          <div><span class="n">CUE 02</span><span class="t">“Peel your back up one bone at a time.”</span></div>
+          <div><span class="n">CUE 03</span><span class="t">“Move your spine like a wave.”</span></div>
+        </div>
+        <p class="h">Nothing landed.</p>
+      </div><div class="foot"><span>@kaleenc_</span><span>04 / 16</span></div></div></div>
+      <div class="meta"><span class="id">C-03 / List</span><h3>List</h3>
+        <p><b>From</b>The italic cue slide. Each item gets a numbered row, like the hub's writing list.</p></div>
+    </div>
+
+    <div class="item">
+      <div class="board slide"><div class="c s4"><div class="pad">
+        <p class="h">Torque = force × distance</p>
+        <div class="frame">
+          <svg viewBox="0 0 420 240" role="img" aria-label="Leg as a lever: force at the leg's center of mass, perpendicular distance to the hip joint">
+            <line x1="60" y1="190" x2="370" y2="50" stroke="#14213D" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="60" cy="190" r="8" fill="#FFFFFF" stroke="#14213D" stroke-width="2.5"/>
+            <circle cx="215" cy="120" r="7" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="2.5"/>
+            <line x1="215" y1="128" x2="215" y2="186" stroke="#1D4ED8" stroke-width="3"/>
+            <path d="M207 178 L215 192 L223 178 Z" fill="#1D4ED8"/>
+            <line x1="60" y1="214" x2="215" y2="214" stroke="#14213D" stroke-width="1.5" stroke-dasharray="5 5"/>
+            <line x1="60" y1="206" x2="60" y2="222" stroke="#14213D" stroke-width="1.5"/>
+            <line x1="215" y1="206" x2="215" y2="222" stroke="#14213D" stroke-width="1.5"/>
+            <text x="44" y="176" font-size="14" fill="#3B4660" text-anchor="end">hip</text>
+            <text x="200" y="104" font-size="14" fill="#3B4660" text-anchor="end">leg center of mass</text>
+            <text x="228" y="168" font-size="14" fill="#1D4ED8">force</text>
+            <text x="137" y="236" font-size="14" fill="#3B4660" text-anchor="middle">distance</text>
+          </svg>
+        </div>
+        <p class="cap"><b>Fig. 2</b>How much force, in what direction, how far from the joint.</p>
+      </div><div class="foot"><span>@kaleenc_</span><span>09 / 16</span></div></div></div>
+      <div class="meta"><span class="id">C-04 / Figure</span><h3>Figure</h3>
+        <p><b>From</b>The torque diagram slide. Diagram goes in a white frame with a Fig. caption.</p></div>
+    </div>
+
+    <div class="item">
+      <div class="board slide"><div class="c s5"><div class="pad">
+        <span class="k">Teaser on the mat / 5'5" person</span>
+        <p class="h">Same exercise, two bodies.</p>
+        <div class="spec">
+          <div><span class="l">130 lb body</span><span class="v">227 lb-in</span></div>
+          <div><span class="l">Metric</span><span class="v">26 Nm</span></div>
+          <div><span class="l">250 lb body</span><span class="v">436 lb-in</span></div>
+          <div><span class="l">Metric</span><span class="v">49 Nm</span></div>
+        </div>
+        <p class="result"><em>92% more</em> load at the hip from the weight of the legs.</p>
+      </div><div class="foot"><span>@kaleenc_</span><span>11 / 16</span></div></div></div>
+      <div class="meta"><span class="id">C-05 / Data</span><h3>Data</h3>
+        <p><b>From</b>The Teaser numbers slide. Numbers move into a spec strip, with the takeaway underneath.</p></div>
+    </div>
+
+    <div class="item">
+      <div class="board slide"><div class="c s6"><div class="pad">
+        <span class="k">Momentum</span>
+        <div class="eq">
+          <span class="sym">p</span><span class="op">=</span><span class="sym">m</span><span class="op">×</span><span class="sym">v</span>
+          <span class="lab">Momentum</span><span></span><span class="lab">Mass</span><span></span><span class="lab">Velocity</span>
+        </div>
+        <p class="body-m rule">A fast rep carries the carriage past where the springs alone would stop it.</p>
+      </div><div class="foot"><span>@kaleenc_</span><span>05 / 12</span></div></div></div>
+      <div class="meta"><span class="id">C-06 / Equation</span><h3>Equation</h3>
+        <p><b>From</b>The momentum carousel's p = m × v slide, in navy instead of amber on black.</p></div>
+    </div>
+
+    <div class="item">
+      <div class="board slide"><div class="c s7"><div class="pad">
+        <p class="h">The same spring setting is not the same workout for everyone.</p>
+      </div>
+      <div class="band"><span class="k">Program with Purpose / Starts Dec 7</span><p class="cta">Comment <span>PURPOSE</span></p></div></div></div>
+      <div class="meta"><span class="id">C-07 / Close + CTA</span><h3>Close + CTA</h3>
+        <p><b>From</b>Same Springs closing slide, plus the caption CTA moved onto the slide in a navy band.</p></div>
+    </div>
+  </div>
+
+  <h2 class="section-head"><span>03 Decided</span><small>Nov 24 2026</small></h2>
+  <div class="decisions">
+    <div><span class="n">D-01 / Covers</span><div class="t"><h4>Reel covers alternate R-01 and R-02.</h4>
+      <p>A reel with a chart or diagram uses R-01 with the graphic in the frame instead of the photo.</p></div></div>
+    <div><span class="n">D-02 / Footer</span><div class="t"><h4>Footers say @kaleenc_.</h4>
+      <p>No Pilates Physics wordmark on slides.</p></div></div>
+    <div><span class="n">D-03 / Emphasis</span><div class="t"><h4>No italic words.</h4>
+      <p>The amber italic word is retired. Blue stays for small labels, thin lines and data highlights.</p></div></div>
+    <div><span class="n">D-04 / CTA</span><div class="t"><h4>The CTA lives on the last slide.</h4>
+      <p>Every carousel ends on the Close + CTA slide with the navy band.</p></div></div>
+    <div><span class="n">D-05 / Numbers</span><div class="t"><h4>Slide numbers stay.</h4>
+      <p>Every slide shows its position, as in 03 / 07.</p></div></div>
+  </div>
+
+  <footer>Built on docs/kaleen-hub-design-system tokens. Render real posts with docs/social/hub-templates/render.py (see README.md there). Sample copy from the sub-optimization reel, Align springs reel, Same Springs and Momentum carousels.</footer>
+</div>
+
+<script>
+  const crop = document.getElementById('crop');
+  crop.addEventListener('change', () => document.body.classList.toggle('show-crop', crop.checked));
+</script>

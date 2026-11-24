@@ -1,0 +1,96 @@
+{
+ "kind": "carousel",
+ "handle": "@kaleenc_",
+ "slides": [
+  {
+   "type": "hook",
+   "kicker": "Same springs / Different load",
+   "title": "Every cue I used failed.",
+   "sub": "Then I added a spring."
+  },
+  {
+   "type": "story",
+   "title": "For one of my clients, the only way up was to grip.",
+   "body": "Everything above the pelvis moved as a block. But they were on the same springs as everyone else."
+  },
+  {
+   "type": "list",
+   "items": [
+    [
+     "Cue 01",
+     "“Rock your pelvis.”"
+    ],
+    [
+     "Cue 02",
+     "“Peel your back up one bone at a time.”"
+    ],
+    [
+     "Cue 03",
+     "“Move your spine like a wave.”"
+    ]
+   ],
+   "title": "Nothing landed."
+  },
+  {
+   "type": "figure",
+   "title": "Torque = force × distance",
+   "svg": "<svg viewBox=\"0 0 420 240\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"60\" y1=\"190\" x2=\"370\" y2=\"50\" stroke=\"#14213D\" stroke-width=\"3\" stroke-linecap=\"round\"/><circle cx=\"60\" cy=\"190\" r=\"8\" fill=\"#FFFFFF\" stroke=\"#14213D\" stroke-width=\"2.5\"/><circle cx=\"215\" cy=\"120\" r=\"7\" fill=\"#FFFFFF\" stroke=\"#1D4ED8\" stroke-width=\"2.5\"/><line x1=\"215\" y1=\"128\" x2=\"215\" y2=\"186\" stroke=\"#1D4ED8\" stroke-width=\"3\"/><path d=\"M207 178 L215 192 L223 178 Z\" fill=\"#1D4ED8\"/><line x1=\"60\" y1=\"214\" x2=\"215\" y2=\"214\" stroke=\"#14213D\" stroke-width=\"1.5\" stroke-dasharray=\"5 5\"/><line x1=\"60\" y1=\"206\" x2=\"60\" y2=\"222\" stroke=\"#14213D\" stroke-width=\"1.5\"/><line x1=\"215\" y1=\"206\" x2=\"215\" y2=\"222\" stroke=\"#14213D\" stroke-width=\"1.5\"/><g font-family=\"IBM Plex Mono, monospace\" font-size=\"14\"><text x=\"44\" y=\"176\" fill=\"#3B4660\" text-anchor=\"end\">hip</text><text x=\"200\" y=\"104\" fill=\"#3B4660\" text-anchor=\"end\">leg center of mass</text><text x=\"228\" y=\"168\" fill=\"#1D4ED8\">force</text><text x=\"137\" y=\"236\" fill=\"#3B4660\" text-anchor=\"middle\">distance</text></g></svg>",
+   "fig": 2,
+   "caption": "How much force, in what direction, how far from the joint."
+  },
+  {
+   "type": "data",
+   "kicker": "Teaser on the mat / 5'5\" person",
+   "title": "Same exercise, two bodies.",
+   "specs": [
+    [
+     "130 lb body",
+     "227 lb-in"
+    ],
+    [
+     "Metric",
+     "26 Nm"
+    ],
+    [
+     "250 lb body",
+     "436 lb-in"
+    ],
+    [
+     "Metric",
+     "49 Nm"
+    ]
+   ],
+   "result": "[[92% more]] load at the hip from the weight of the legs."
+  },
+  {
+   "type": "equation",
+   "kicker": "Momentum",
+   "terms": [
+    [
+     "p",
+     "Momentum"
+    ],
+    [
+     "m",
+     "Mass"
+    ],
+    [
+     "v",
+     "Velocity"
+    ]
+   ],
+   "ops": [
+    "=",
+    "×"
+   ],
+   "body": "A fast rep carries the carriage past where the springs alone would stop it."
+  },
+  {
+   "type": "close",
+   "title": "The same spring setting is not the same workout for everyone.",
+   "kicker": "Program with Purpose / Starts Dec 7",
+   "cta": "Comment",
+   "keyword": "PURPOSE"
+  }
+ ]
+}

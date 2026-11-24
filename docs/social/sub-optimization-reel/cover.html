@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sub-optimization cover</title>
+<!-- Reel cover in the Kaleen Hub "spec sheet" system (docs/kaleen-hub-design-system).
+     Laid out at 540x960; render at 2x for 1080x1920:
+     chrome --headless --force-device-scale-factor=2 --window-size=540,960 --screenshot=cover.png cover.html
+     Everything that matters sits inside the 3:4 grid crop (y 120 to 840 at this scale). -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@700&display=swap">
+<link rel="stylesheet" href="../../kaleen-hub-design-system/tokens.css">
+<style>
+  html, body { margin: 0; }
+  body {
+    width: 540px; height: 960px; overflow: hidden; box-sizing: border-box;
+    background-color: var(--hub-bg);
+    background-image:
+      linear-gradient(var(--hub-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--hub-grid) 1px, transparent 1px);
+    background-size: var(--hub-grid-size) var(--hub-grid-size);
+    color: var(--hub-ink);
+    padding: 174px 40px 0;
+  }
+  h1 {
+    font: 700 64px/0.98 var(--hub-font-head); letter-spacing: -0.045em;
+    margin: 0 0 24px;
+  }
+  .figure { background: var(--hub-panel); border: var(--hub-border); padding: 10px; }
+  .figure img { display: block; width: 100%; height: 440px; object-fit: cover; object-position: 50% 30%; }
+</style>
+</head>
+<body>
+  <h1>Can you be<br>too precise?</h1>
+  <div class="figure"><img src="frame.jpg" alt=""></div>
+</body>
+</html>

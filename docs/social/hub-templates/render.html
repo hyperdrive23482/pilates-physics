@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hub social renderer</title>
+<!-- One artboard per render. render.py swaps the SPEC block, then Chrome screenshots it
+     at 540 wide x2 = 1080 px. Reel 540x960 (1080x1920), slide 540x675 (1080x1350).
+     Rules (2026-11-24): reel covers alternate R-01 framed / R-02 title block; no italic words;
+     footer handle @kaleenc_; slide numbers on every slide; CTA lives on the last slide. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+:root {
+  --bg: #F5F4EF; --grid: rgba(20,33,61,0.06); --ink: #14213D; --muted: #3B4660; --label: #5A6480;
+  --accent: #1D4ED8; --panel: #FFFFFF; --rule: #C3C7D2; --rule-faint: #D5D8E0; --on-ink-muted: #C5CBDA;
+  --head: 'Space Grotesk', system-ui, sans-serif; --body: 'IBM Plex Sans', system-ui, sans-serif; --mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+.board { position: relative; width: 540px; overflow: hidden; color: var(--ink);
+  background-color: var(--bg); background-size: 24px 24px;
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); }
+.reel { height: 960px; } .slide { height: 675px; }
+.k { font: 400 15px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.h { font-family: var(--head); font-weight: 700; letter-spacing: -0.045em; line-height: .98; margin: 0; text-wrap: balance; }
+.frame { background: var(--panel); border: 1.5px solid var(--ink); padding: 10px; }
+.frame img { display: block; width: 100%; object-fit: cover; }
+.frame.chart { padding: 20px; } .frame svg { display: block; width: 100%; height: auto; }
+.cap { font: 400 13px/1.4 var(--mono); letter-spacing: .04em; color: var(--muted); margin: 0; }
+.cap b { font-weight: 400; color: var(--accent); margin-right: 8px; }
+.body-m { font: 400 19px/1.5 var(--body); color: var(--muted); margin: 0; }
+.spec { display: grid; grid-template-columns: 1fr 1fr; background: var(--panel); border: 1.5px solid var(--ink); }
+.spec div { padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid var(--rule-faint); }
+.spec div:nth-child(odd) { border-right: 1px solid var(--rule-faint); }
+.spec div:nth-last-child(-n+2):nth-child(odd), .spec div:last-child { border-bottom: 0; }
+.spec .l { font: 400 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--label); }
+.spec .v { font: 600 19px/1.2 var(--body); }
+.hl { color: var(--accent); }
+
+/* R-01 framed figure */
+.r1 { padding: 174px 40px 0; display: flex; flex-direction: column; gap: 24px; }
+.r1 .h { font-size: 64px; }
+.r1 img { height: 440px; }
+/* R-02 title block */
+.r2 img.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.r2 .block { position: absolute; left: 24px; right: 24px; bottom: 136px; background: var(--panel); border: 1.5px solid var(--ink);
+  padding: 22px 24px 26px; display: flex; flex-direction: column; gap: 12px; }
+.r2 .h { font-size: 54px; }
+
+/* carousel */
+.pad { position: absolute; inset: 56px 40px 90px; display: flex; flex-direction: column; justify-content: center; gap: 22px; }
+.foot { position: absolute; left: 40px; right: 40px; bottom: 32px; display: flex; justify-content: space-between; align-items: baseline;
+  padding-top: 12px; border-top: 1.5px solid var(--ink); font: 500 12px var(--mono); letter-spacing: .06em; }
+.foot span:last-child { font-weight: 400; color: var(--muted); letter-spacing: .04em; }
+.t-hook .pad { justify-content: flex-end; gap: 0; } .t-hook .k { margin-bottom: 18px; } .t-hook .h { font-size: 68px; } .t-hook .body-m { margin-top: 22px; }
+.t-story .h { font-size: 40px; letter-spacing: -0.035em; line-height: 1.08; }
+.t-list .h { font-size: 44px; }
+.rows { display: flex; flex-direction: column; }
+.rows div { display: flex; gap: 20px; align-items: baseline; padding: 18px 0; border-bottom: 1px solid var(--rule); }
+.rows div:first-child { border-top: 1.5px solid var(--ink); }
+.rows .n { flex: none; width: 70px; font: 400 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.rows .t { font: 600 24px/1.25 var(--head); letter-spacing: -0.025em; }
+.t-figure .pad { gap: 14px; } .t-figure .h { font-size: 34px; letter-spacing: -0.03em; margin-bottom: 6px; }
+.t-figure .frame img { max-height: 380px; }
+.t-data .pad { gap: 18px; } .t-data .h { font-size: 34px; letter-spacing: -0.03em; }
+.t-data .result { font: 700 30px/1.15 var(--head); letter-spacing: -0.03em; margin: 8px 0 0; }
+.eq { display: grid; justify-content: space-between; align-items: end; row-gap: 10px; }
+.eq .sym { font: 700 104px/1 var(--head); letter-spacing: -0.04em; text-align: center; }
+.eq .op { font: 500 64px/1.3 var(--head); color: var(--label); text-align: center; }
+.eq .lab { font: 400 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); text-align: center; }
+.t-equation .body-m { border-top: 1.5px solid var(--ink); padding-top: 16px; }
+.t-close .pad { bottom: 260px; } .t-close .h { font-size: 48px; }
+.t-close .band { position: absolute; left: 0; right: 0; bottom: 0; height: 200px; padding: 0 40px 52px; background: var(--ink);
+  display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+.t-close .band .k { color: var(--on-ink-muted); }
+.t-close .cta { font: 700 34px/1.1 var(--head); letter-spacing: -0.03em; color: #fff; margin: 0; }
+.t-close .cta span { display: inline-block; border: 1.5px solid #fff; padding: 0 10px; font: 500 28px var(--mono); letter-spacing: .04em; }
+.t-close .foot { border-top-color: #fff; color: #fff; z-index: 1; } .t-close .foot span:last-child { color: var(--on-ink-muted); }
+</style>
+</head>
+<body>
+<div id="out"></div>
+<script id="spec" type="application/json">/*SPEC*/{"kind":"reel","style":"r1","hook":"Can you be|too precise?","image":"frame.jpg"}</script>
+<script>
+const S = JSON.parse(document.getElementById('spec').textContent.replace('/*SPEC*/', ''));
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// "|" is a line break; [[word]] marks a blue highlight (data slides). No italics anywhere.
+const txt = s => esc(s).replace(/\|/g, '<br>').replace(/\[\[(.+?)\]\]/g, '<span class="hl">$1</span>');
+const pos = S.focus || '50% 30%';
+let html = '';
+if (S.kind === 'reel') {
+  if (S.style === 'r2') {
+    html = `<div class="board reel r2"><img class="bg" src="${esc(S.image)}" style="object-position:${pos}" alt="">
+      <div class="block">${S.kicker ? `<span class="k">${txt(S.kicker)}</span>` : ''}<p class="h">${txt(S.hook)}</p></div></div>`;
+  } else {
+    // R-01 frames a photo, or a graphic: pass "svg" (inline markup) or "image" with "graphic": true
+    // for a chart PNG. Graphics get chart padding and keep their own aspect ratio.
+    const graphic = S.svg || S.graphic;
+    const fig = S.svg ? S.svg
+      : `<img src="${esc(S.image)}" style="${graphic ? 'height:auto;max-height:440px;object-fit:contain' : `object-position:${pos}`}" alt="">`;
+    html = `<div class="board reel r1"><p class="h">${txt(S.hook)}</p>
+      <div class="frame ${graphic ? 'chart' : ''}">${fig}</div></div>`;
+  }
+} else {
+  const d = S.slide, n = String(S.index).padStart(2, '0'), tot = String(S.total).padStart(2, '0');
+  const k = d.kicker ? `<span class="k">${txt(d.kicker)}</span>` : '';
+  let inner = '', extra = '';
+  switch (d.type) {
+    case 'hook': inner = `${k}<p class="h">${txt(d.title)}</p>${d.sub ? `<p class="body-m">${txt(d.sub)}</p>` : ''}`; break;
+    case 'story': inner = `${k}<p class="h">${txt(d.title)}</p>${d.body ? `<p class="body-m">${txt(d.body)}</p>` : ''}`; break;
+    case 'list': inner = `${k}<div class="rows">${d.items.map(([a, b]) => `<div><span class="n">${txt(a)}</span><span class="t">${txt(b)}</span></div>`).join('')}</div>${d.title ? `<p class="h">${txt(d.title)}</p>` : ''}`; break;
+    case 'figure': inner = `${k}<p class="h">${txt(d.title)}</p><div class="frame ${d.svg ? 'chart' : ''}">${d.svg || `<img src="${esc(d.image)}" style="object-position:${d.focus || '50% 50%'}" alt="">`}</div>${d.caption ? `<p class="cap"><b>Fig. ${esc(d.fig || 1)}</b>${txt(d.caption)}</p>` : ''}`; break;
+    case 'data': inner = `${k}<p class="h">${txt(d.title)}</p><div class="spec">${d.specs.map(([l, v]) => `<div><span class="l">${txt(l)}</span><span class="v">${txt(v)}</span></div>`).join('')}</div>${d.result ? `<p class="result">${txt(d.result)}</p>` : ''}`; break;
+    case 'equation': {
+      const cells = [], labs = [];
+      d.terms.forEach(([sym, lab], i) => { if (i) { cells.push(`<span class="op">${esc(d.ops[i - 1])}</span>`); labs.push('<span></span>'); } cells.push(`<span class="sym">${esc(sym)}</span>`); labs.push(`<span class="lab">${txt(lab)}</span>`); });
+      inner = `${k}<div class="eq" style="grid-template-columns:repeat(${cells.length},auto)">${cells.join('')}${labs.join('')}</div>${d.body ? `<p class="body-m">${txt(d.body)}</p>` : ''}`; break;
+    }
+    case 'close': inner = `<p class="h">${txt(d.title)}</p>${d.body ? `<p class="body-m">${txt(d.body)}</p>` : ''}`;
+      extra = `<div class="band">${k}<p class="cta">${txt(d.cta || 'Comment')} <span>${esc(d.keyword)}</span></p></div>`; break;
+  }
+  html = `<div class="board slide t-${d.type}"><div class="pad">${inner}</div>${extra}<div class="foot"><span>${esc(S.handle || '@kaleenc_')}</span><span>${n} / ${tot}</span></div></div>`;
+}
+document.getElementById('out').innerHTML = html;
+</script>
+</body>
+</html>
