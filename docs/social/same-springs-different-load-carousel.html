@@ -1,0 +1,519 @@
+<title>Same Springs Carousel</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  /* Page chrome. The slides themselves match the Nov 12 hip torque carousel. */
+  :root { --bg: #ecebe6; --panel: #f7f5f0; --ink: #1c1a17; --ink-soft: rgba(28,26,23,.65); --rule: rgba(28,26,23,.22);
+          --accent: #f09f26; --accent-ink: #1c1a17; --field: #ffffff; --ok: #2b8a52; --warn: #b5452c; --slide-bg: #f5f1e9; color-scheme: light; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #161513; --panel: #1f1d1a; --ink: #ecebe6; --ink-soft: rgba(236,235,230,.65); --rule: rgba(236,235,230,.2);
+            --field: #262420; --ok: #5cc98a; --warn: #ef6a5e; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --bg: #161513; --panel: #1f1d1a; --ink: #ecebe6; --ink-soft: rgba(236,235,230,.65); --rule: rgba(236,235,230,.2);
+          --field: #262420; --ok: #5cc98a; --warn: #ef6a5e; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 "JetBrains Mono", ui-monospace, monospace; }
+  main { max-width: 1180px; margin: 0 auto; padding-block: 24px 80px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  h1 { font-weight: 400; font-size: 22px; margin: 0 0 6px; }
+  p.lede { color: var(--ink-soft); margin: 0 0 16px; max-width: 72ch; font-size: 13px; }
+  .bar { position: sticky; top: 0; z-index: 2; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding: 10px 0; margin-bottom: 16px; background: var(--bg); border-bottom: 1px solid var(--rule); }
+  .status { font-size: 12px; color: var(--ink-soft); margin-left: auto; }
+  .status.ok { color: var(--ok); } .status.warn { color: var(--warn); }
+  button { background: var(--accent); color: var(--accent-ink); border: 1px solid var(--accent); border-radius: 0; padding: 7px 12px; font: 600 12px "JetBrains Mono", monospace; text-transform: uppercase; letter-spacing: .06em; cursor: pointer; }
+  button.ghost { background: transparent; color: var(--ink); border-color: var(--rule); }
+  button:disabled { opacity: .5; cursor: default; }
+  button:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .slide { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 20px; padding: 18px; margin-bottom: 18px; background: var(--panel); border: 1px solid var(--rule); }
+  @media (max-width: 760px) { .slide { grid-template-columns: 1fr; } }
+  canvas { width: 100%; height: auto; display: block; border: 1px solid var(--rule); background: var(--slide-bg); }
+  .head { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 12px; color: var(--ink-soft); }
+  .fields { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); margin-bottom: 4px; }
+  textarea { width: 100%; resize: vertical; min-height: 44px; padding: 8px 10px; font: 15px/1.45 "JetBrains Mono", monospace; color: var(--ink); background: var(--field); border: 1px solid var(--rule); border-radius: 0; }
+  .note { font-size: 12px; color: var(--ink-soft); margin: 0; }
+  body.export { background: var(--slide-bg); }
+  body.export main { padding: 0; max-width: none; }
+  body.export canvas { border: 0; width: auto; }
+</style>
+
+<main>
+  <h1>Same springs, different load</h1>
+  <p class="lede">Edit the words beside each slide and it redraws as you type. Wrap a word in *asterisks* for italic. Edits save to this page automatically. When you're done, tell Claude "pull my edits" to update the repo and the Social post.</p>
+  <div class="bar">
+    <button id="zip" disabled>Download all (zip)</button>
+    <span id="status" class="status">Loading…</span>
+  </div>
+  <div id="list"></div>
+</main>
+
+<script type="application/json" id="baked">
+{
+"s01": {
+"a": "Every cue I used failed.",
+"b": "Then I added a spring."
+},
+"s02": {
+"a": "I was teaching a group class bridge on the reformer.",
+"b": "My intent was to focus on articulation: rolling up one spinal segment at a time."
+},
+"s03": {
+"a": "For one of my clients, the only way up for them was to *grip*.",
+"b": "Everything above the pelvis moved as a block.",
+"c": "But they were on the same springs as everyone else."
+},
+"s04": {
+"a": "*“Rock your pelvis.”*",
+"b": "*“Peel your back up one bone at a time.”*",
+"c": "*“Move your spine like a wave.”*",
+"d": "Nothing landed."
+},
+"s05": {
+"a": "So I added a spring.",
+"b": "The articulation showed up almost immediately.",
+"c": ""
+},
+"s06": {
+"a": "More spring made it easier to achieve the intent.",
+"b": "That shouldn't be possible if the same setting were the same exercise for everyone."
+},
+"s07": {
+"a": "Here's why.",
+"b": "The external load at a joint comes from two places:",
+"c": "the *springs*, and the *body itself*."
+},
+"s08": {
+"a": "Since joints rotate, external loads apply *torque* to a joint.",
+"b": "",
+"c": "And the exact torque is different for everyone because our bodies are all unique sizes."
+},
+"s09": {
+"caption": "How much force the load applies, in what direction, a perpendicular distance from the joint.",
+"com": "Leg center of mass",
+"distance": "Distance",
+"force": "Force",
+"joint": "Joint",
+"title": "Torque = force × distance"
+},
+"s10": {
+"a": "",
+"b": "Let's apply some realistic numbers to help explain the impact different variables have on the load someone feels.",
+"c": "(You don't need to do math *while* teaching, though.)"
+},
+"s11": {
+"line": "92% more load at the hip from the weight of the legs.",
+"r1kg": "59 kg",
+"r1lb": "130 lbs",
+"r1nm": "26 Nm",
+"r1t": "227 lb-in",
+"r2kg": "113 kg",
+"r2lb": "250 lbs",
+"r2nm": "49 Nm",
+"r2t": "436 lb-in",
+"sub": "",
+"subtitle": "5'5\" (165 cm) person",
+"title": "Teaser on the Mat"
+},
+"s12": {
+"neg": "Negative: legs win.",
+"negSub": "Hold the legs *up*.",
+"pos": "Positive: springs win.",
+"posSub": "Press the legs *down*.",
+"r1kg": "68 kg",
+"r1lb": "150 lbs",
+"r1nm": "+10 Nm",
+"r1t": "+89 lb-in",
+"r2kg": "136 kg",
+"r2lb": "300 lbs",
+"r2nm": "-29 Nm",
+"r2t": "-260 lb-in",
+"springs": "red + blue springs, legs at 30°",
+"subtitle": "5'9\" (175 cm) person",
+"title": "Feet in Straps"
+},
+"s13": {
+"a": "Same springs.\nSame movement.",
+"b": "*Opposite jobs* for\nthe muscles."
+},
+"s14": {
+"a": "That's what happened in my class during bridge.",
+"b": "The room's setting was more load than one of my \nstudents could find the movement under."
+},
+"s15": {
+"a": "Before you change the cue *again*, check the load.",
+"b": "Know your intent.",
+"c": "Ask what they feel.",
+"d": "Then adjust the settings that matter."
+},
+"s16": {
+"a": "The same spring setting",
+"b": "is not the same workout for everyone."
+}
+}
+</script>
+
+<script>
+const q = new URLSearchParams(location.search);
+// Sampled from the Nov 12 hip torque slides: #f5f1e9 ground, #ddd9d2 grid every 40 px,
+// centered JetBrains Mono, #737373 secondary text, #f09f26 accent, stacked logo.
+const C = { bg: '#f5f1e9', grid: '#ddd9d2', ink: '#1c1a17', soft: '#737373', faint: '#a19d97', accent: '#f09f26' };
+const MONO = '"JetBrains Mono", ui-monospace, monospace';
+const W = 1080, H = 1350, CX = W / 2;
+const BAKED = JSON.parse(document.getElementById('baked').textContent);
+
+// ---------- drawing ----------
+function background(ctx) {
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = C.grid;
+  for (let x = 39; x < W; x += 40) ctx.fillRect(x, 0, 1, H);
+  for (let y = 0; y < H; y += 40) ctx.fillRect(0, y, W, 1);
+}
+function logo(ctx) {
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.font = `400 48px ${MONO}`;
+  ctx.fillStyle = C.ink; ctx.fillText('PILATES', CX, 1229);
+  const w = ctx.measureText('PILATES').width;
+  ctx.fillRect(CX - w / 2, 1237, w, 2);
+  ctx.fillStyle = C.accent; ctx.fillText('PHYSICS', CX, 1281);
+}
+function tokens(text) {
+  const out = [];
+  String(text).split(/(\*[^*]+\*)/).forEach(part => {
+    if (!part) return;
+    const em = part.startsWith('*') && part.endsWith('*') && part.length > 1;
+    (em ? part.slice(1, -1) : part).split(/(\s+)/).forEach(w => { if (w) out.push({ w, em }); });
+  });
+  return out;
+}
+const fontFor = (size, em) => `${em ? 'italic ' : ''}400 ${size}px ${MONO}`;
+// A line's runs split into words (runs between spaces), and back.
+function toWords(runs) {
+  const words = []; let cur = [];
+  runs.forEach(r => { if (/^\s+$/.test(r.w)) { if (cur.length) words.push(cur); cur = []; } else cur.push(r); });
+  if (cur.length) words.push(cur);
+  return words;
+}
+function fromWords(ctx, words, size) {
+  ctx.font = fontFor(size, false);
+  const sp = { w: ' ', em: false, tw: ctx.measureText(' ').width };
+  const runs = [];
+  words.forEach((wd, i) => { if (i) runs.push(sp); runs.push(...wd); });
+  return { runs, w: runs.reduce((s, r) => s + r.tw, 0) };
+}
+// No one-word last lines: while a paragraph ends on a single word, pull the last
+// word of the line above down to join it, as long as the line above keeps two
+// words and the new last line still fits.
+function balance(ctx, lines, size, maxW) {
+  while (lines.length >= 2) {
+    const last = toWords(lines[lines.length - 1].runs), prev = toWords(lines[lines.length - 2].runs);
+    if (last.length >= 2 || prev.length < 3) break;
+    const moved = fromWords(ctx, [prev[prev.length - 1], ...last], size);
+    if (moved.w > maxW) break;
+    lines[lines.length - 2] = fromWords(ctx, prev.slice(0, -1), size);
+    lines[lines.length - 1] = moved;
+  }
+  return lines;
+}
+function wrap(ctx, text, size, maxW) {
+  const out = [];
+  String(text).split('\n').forEach(para => {
+    const paraStart = out.length;
+    let line = [], lw = 0;
+    tokens(para).forEach(t => {
+      ctx.font = fontFor(size, t.em);
+      const tw = ctx.measureText(t.w).width, space = /^\s+$/.test(t.w);
+      const wordStart = !line.length || /^\s+$/.test(line[line.length - 1].w);
+      if (!space && wordStart && lw + tw > maxW && line.length) {
+        while (line.length && /^\s+$/.test(line[line.length - 1].w)) lw -= line.pop().tw;
+        out.push({ runs: line, w: lw }); line = []; lw = 0;
+      }
+      if (space && !line.length) return;
+      line.push({ ...t, tw }); lw += tw;
+    });
+    while (line.length && /^\s+$/.test(line[line.length - 1].w)) lw -= line.pop().tw;
+    if (line.length) out.push({ runs: line, w: lw });
+    const para_lines = balance(ctx, out.splice(paraStart), size, maxW);
+    out.push(...para_lines);
+  });
+  return out;
+}
+// blocks: { text, size (52), color, lead, gap (px above), maxW }. Empty blocks are skipped.
+// valign 'top' pins the stack to `top` (so title blocks line up across slides); default centers it.
+function stack(ctx, blocks, { top = 80, bottom = 1140, valign = 'center' } = {}) {
+  const laid = blocks.filter(b => String(b.text || '').trim()).map(b => {
+    const size = b.size || 52, lead = b.lead || Math.round(size * 1.78);
+    const lines = wrap(ctx, b.text, size, b.maxW || 700);
+    return { ...b, size, lead, lines, h: lines.length * lead };
+  });
+  const total = laid.reduce((sum, b, i) => sum + b.h + (i ? (b.gap ?? 56) : 0), 0);
+  let y = valign === 'top' ? top : top + Math.max(0, (bottom - top - total) / 2);
+  laid.forEach((b, i) => {
+    if (i) y += b.gap ?? 56;
+    b.lines.forEach((ln, k) => {
+      let x = CX - ln.w / 2;
+      const base = y + k * b.lead + b.lead / 2 + b.size * 0.36;
+      ln.runs.forEach(r => {
+        ctx.font = fontFor(b.size, r.em); ctx.fillStyle = b.color || C.ink;
+        ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillText(r.w, x, base); x += r.tw;
+      });
+    });
+    y += b.h;
+  });
+}
+function label(ctx, text, x, y, { color = C.faint, size = 20, align = 'left' } = {}) {
+  ctx.font = `400 ${size}px ${MONO}`; ctx.letterSpacing = '1px'; ctx.fillStyle = color;
+  ctx.textAlign = align; ctx.textBaseline = 'alphabetic'; ctx.fillText(String(text).toUpperCase(), x, y); ctx.letterSpacing = '0px';
+}
+function arrow(ctx, x1, y1, x2, y2, color, width = 3, head = 18) {
+  const a = Math.atan2(y2 - y1, x2 - x1);
+  ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+  ctx.moveTo(x2, y2); ctx.lineTo(x2 - Math.cos(a - 0.45) * head, y2 - Math.sin(a - 0.45) * head);
+  ctx.moveTo(x2, y2); ctx.lineTo(x2 - Math.cos(a + 0.45) * head, y2 - Math.sin(a + 0.45) * head);
+  ctx.stroke();
+}
+function numbers(ctx, rows, top) {
+  const lx = 478, rx = 573;
+  rows.forEach((r, i) => {
+    const y = top + i * 186;
+    ctx.textBaseline = 'alphabetic';
+    ctx.font = `400 44px ${MONO}`; ctx.fillStyle = C.ink;
+    ctx.textAlign = 'right'; ctx.fillText(r.lb || '', lx, y);
+    ctx.textAlign = 'left'; ctx.fillText(r.t || '', rx, y);
+    ctx.font = `400 32px ${MONO}`; ctx.fillStyle = C.soft;
+    ctx.textAlign = 'right'; ctx.fillText(r.kg || '', lx, y + 62);
+    ctx.textAlign = 'left'; ctx.fillText(r.nm || '', rx, y + 62);
+  });
+}
+
+const SEC = { size: 40, color: C.soft, lead: 71 };
+// Each slide: fields (key + editor label) and a draw(ctx, f) using those fields.
+const SLIDES = [
+  { id: 's01', fields: [['a', 'Line 1'], ['b', 'Line 2']],
+    draw: (ctx, f) => stack(ctx, [{ text: f.a, size: 56, maxW: 1000 }, { text: f.b, size: 56, gap: 24, maxW: 1000 }]) },
+  { id: 's02', fields: [['a', 'Main'], ['b', 'Grey line']],
+    draw: (ctx, f) => stack(ctx, [{ text: f.a }, { text: f.b, ...SEC }]) },
+  { id: 's03', fields: [['a', 'Main'], ['b', 'Main, second'], ['c', 'Grey line']],
+    draw: (ctx, f) => stack(ctx, [{ text: f.a }, { text: f.b, gap: 40 }, { text: f.c, ...SEC }]) },
+  { id: 's04', fields: [['a', 'Quote 1'], ['b', 'Quote 2'], ['c', 'Quote 3'], ['d', 'Main']],
+    draw: (ctx, f) => stack(ctx, [{ text: f.a, size: 44, color: C.soft, lead: 78 }, { text: f.b, size: 44, color: C.soft, lead: 78, gap: 0 },
+      { text: f.c, size: 44, color: C.soft, lead: 78, gap: 0, maxW: 900 }, { text: f.d, size: 60, gap: 70 }]) },
+  { id: 's05', fields: [['a', 'Main'], ['b', 'Main, second'], ['c', 'Grey line']],
+    draw: (ctx, f) => stack(ctx, [{ text: f.a }, { text: f.b, gap: 40 }, { text: f.c, ...SEC }]) },
+  { id: 's06', fields: [['a', 'Main (large)'], ['b', 'Grey line']],
+    draw: (ctx, f) => stack(ctx, [{ text: f.a, size: 60 }, { text: f.b, ...SEC }]) },
+  { id: 's07', fields: [['a', 'Main'], ['b', 'Main, second'], ['c', 'Main, third']],
+    draw: (ctx, f) => stack(ctx, [{ text: f.a }, { text: f.b, gap: 0 }, { text: f.c, gap: 56 }]) },
+  { id: 's08', fields: [['a', 'Main'], ['b', 'Main, second'], ['c', 'Grey line']],
+    draw: (ctx, f) => stack(ctx, [{ text: f.a }, { text: f.b, gap: 40 }, { text: f.c, ...SEC }]) },
+  { id: 's09', fields: [['title', 'Title'], ['caption', 'Grey caption'], ['joint', 'Label: joint'], ['com', 'Label: center of mass'], ['force', 'Label: force'], ['distance', 'Label: distance']],
+    draw: (ctx, f) => {
+      stack(ctx, [{ text: f.title, maxW: 940 }], { top: 160, bottom: 340 });
+      const hx = 300, hy = 760, len = 560, ang = 38 * Math.PI / 180;
+      const ex = hx + Math.cos(ang) * len, ey = hy - Math.sin(ang) * len;
+      const mx = hx + Math.cos(ang) * len * 0.43, my = hy - Math.sin(ang) * len * 0.43;
+      ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(ex, ey); ctx.stroke();
+      ctx.fillStyle = C.bg; ctx.beginPath(); ctx.arc(hx, hy, 11, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(hx, hy, 3.5, 0, Math.PI * 2); ctx.fill();
+      label(ctx, f.joint || '', hx, hy + 52, { align: 'center' });
+      arrow(ctx, mx, my, mx, hy + 40, C.accent, 3, 18);
+      ctx.fillStyle = C.accent; ctx.beginPath(); ctx.arc(mx, my, 6, 0, Math.PI * 2); ctx.fill();
+      label(ctx, f.force || '', mx + 22, (my + hy) / 2 + 30, { color: C.accent });
+      label(ctx, f.com || '', mx - 24, my - 18, { align: 'right' });
+      const dy = hy + 100;
+      ctx.setLineDash([8, 8]); ctx.strokeStyle = C.faint; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(hx, hy + 70); ctx.lineTo(hx, dy + 12); ctx.moveTo(mx, hy + 48); ctx.lineTo(mx, dy + 12); ctx.stroke(); ctx.setLineDash([]);
+      arrow(ctx, hx + 2, dy, mx - 2, dy, C.faint, 2, 12); arrow(ctx, mx - 2, dy, hx + 2, dy, C.faint, 2, 12);
+      label(ctx, f.distance || '', (hx + mx) / 2, dy + 42, { align: 'center' });
+      stack(ctx, [{ text: f.caption, size: 34, color: C.soft, lead: 58, maxW: 860 }], { top: 920, bottom: 1060 });
+    } },
+  { id: 's10', fields: [['a', 'Main'], ['b', 'Main, second'], ['c', 'Grey line']],
+    draw: (ctx, f) => stack(ctx, [{ text: f.a }, { text: f.b, gap: 40 }, { text: f.c, ...SEC }]) },
+  { id: 's11', fields: [['title', 'Title'], ['subtitle', 'Grey subtitle'], ['r1lb', 'Row 1 weight'], ['r1kg', 'Row 1 kg'], ['r1t', 'Row 1 torque'], ['r1nm', 'Row 1 Nm'],
+      ['r2lb', 'Row 2 weight'], ['r2kg', 'Row 2 kg'], ['r2t', 'Row 2 torque'], ['r2nm', 'Row 2 Nm'], ['line', 'Main line'], ['sub', 'Grey line']],
+    draw: (ctx, f) => {
+      // Same title block, table position and lower text area as Feet in Straps.
+      stack(ctx, [{ text: f.title, maxW: 940 }, { text: f.subtitle, ...SEC, gap: 0, maxW: 940 }], { top: 150, valign: 'top' });
+      numbers(ctx, [{ lb: f.r1lb, kg: f.r1kg, t: f.r1t, nm: f.r1nm }, { lb: f.r2lb, kg: f.r2kg, t: f.r2t, nm: f.r2nm }], 500);
+      stack(ctx, [{ text: f.line, size: 44, lead: 78 }, { text: f.sub, size: 36, color: C.soft, lead: 64, gap: 16, maxW: 640 }], { top: 820, bottom: 1110 });
+    } },
+  { id: 's12', fields: [['title', 'Title'], ['subtitle', 'Grey subtitle'], ['springs', 'Grey subtitle, second'], ['r1lb', 'Row 1 weight'], ['r1kg', 'Row 1 kg'], ['r1t', 'Row 1 torque'], ['r1nm', 'Row 1 Nm'],
+      ['r2lb', 'Row 2 weight'], ['r2kg', 'Row 2 kg'], ['r2t', 'Row 2 torque'], ['r2nm', 'Row 2 Nm'],
+      ['pos', 'Positive line'], ['posSub', 'Positive, grey'], ['neg', 'Negative line'], ['negSub', 'Negative, grey']],
+    draw: (ctx, f) => {
+      stack(ctx, [{ text: f.title, maxW: 940 }, { text: f.subtitle, ...SEC, gap: 0, maxW: 940 },
+        { text: f.springs, ...SEC, gap: 0, maxW: 940 }], { top: 150, valign: 'top' });
+      numbers(ctx, [{ lb: f.r1lb, kg: f.r1kg, t: f.r1t, nm: f.r1nm }, { lb: f.r2lb, kg: f.r2kg, t: f.r2t, nm: f.r2nm }], 500);
+      stack(ctx, [{ text: f.pos, size: 40, lead: 64, maxW: 900 }, { text: f.posSub, size: 40, color: C.soft, lead: 64, gap: 0, maxW: 900 },
+        { text: f.neg, size: 40, lead: 64, gap: 36, maxW: 900 }, { text: f.negSub, size: 40, color: C.soft, lead: 64, gap: 0, maxW: 900 }], { top: 820, bottom: 1110 });
+    } },
+  { id: 's13', fields: [['a', 'Main'], ['b', 'Main, second']],
+    draw: (ctx, f) => stack(ctx, [{ text: f.a }, { text: f.b, gap: 70 }]) },
+  { id: 's14', fields: [['a', 'Main'], ['b', 'Grey line']],
+    draw: (ctx, f) => stack(ctx, [{ text: f.a }, { text: f.b, ...SEC }]) },
+  { id: 's15', fields: [['a', 'Main'], ['b', 'Step 1'], ['c', 'Step 2'], ['d', 'Step 3']],
+    draw: (ctx, f) => stack(ctx, [{ text: f.a }, { text: f.b, size: 40, lead: 71, gap: 70 }, { text: f.c, size: 40, lead: 71, gap: 0 },
+      { text: f.d, size: 40, lead: 71, gap: 0, maxW: 760 }]) },
+  { id: 's16', fields: [['a', 'Line 1'], ['b', 'Line 2']],
+    draw: (ctx, f) => stack(ctx, [{ text: f.a, size: 60, maxW: 940 }, { text: f.b, size: 60, gap: 0, maxW: 940 }]) },
+];
+
+// Current text per slide. Starts from the copy baked into this file; the page's
+// database overrides it once it answers.
+const state = {};
+SLIDES.forEach(s => { state[s.id] = { ...(BAKED[s.id] || {}) }; });
+const num = s => s.id.slice(1);
+const fileName = s => `slide-${num(s)}.png`;
+
+function render(cv, s) {
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  background(ctx); s.draw(ctx, state[s.id]); logo(ctx);
+}
+
+// ---------- status ----------
+const statusEl = document.getElementById('status');
+function setStatus(text, kind = '') { statusEl.textContent = text; statusEl.className = 'status' + (kind ? ' ' + kind : ''); }
+
+// ---------- saving: one write at a time per slide, after a pause in typing ----------
+let db = null;
+const timers = {}, writing = {}, dirty = {};
+function scheduleSave(id) {
+  if (!db) return;
+  dirty[id] = true;
+  clearTimeout(timers[id]);
+  timers[id] = setTimeout(() => flush(id), 700);
+  setStatus('Saving…');
+}
+async function flush(id) {
+  if (writing[id] || !dirty[id]) return;
+  writing[id] = true; dirty[id] = false;
+  try {
+    await db.collection('slides').doc(id).set({ fields: { ...state[id] } });
+    if (!Object.values(dirty).some(Boolean)) setStatus('All edits saved', 'ok');
+  } catch (e) {
+    setStatus(e && e.code === 'permission_denied' ? 'View only: edits are not saved' : 'Could not save. Your text is still here.', 'warn');
+  } finally {
+    writing[id] = false;
+    if (dirty[id]) flush(id);
+  }
+}
+
+// ---------- zip (stored, no compression) for one download ----------
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(b) { let c = 0xffffffff; for (let i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; }
+function makeZip(files) {
+  const enc = new TextEncoder(), parts = [], central = []; let offset = 0;
+  files.forEach(({ name, bytes }) => {
+    const nb = enc.encode(name), crc = crc32(bytes), size = bytes.length;
+    const h = new DataView(new ArrayBuffer(30));
+    h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint32(14, crc, true);
+    h.setUint32(18, size, true); h.setUint32(22, size, true); h.setUint16(26, nb.length, true);
+    parts.push(new Uint8Array(h.buffer), nb, bytes);
+    const c = new DataView(new ArrayBuffer(46));
+    c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint32(16, crc, true);
+    c.setUint32(20, size, true); c.setUint32(24, size, true); c.setUint16(28, nb.length, true); c.setUint32(42, offset, true);
+    central.push(new Uint8Array(c.buffer), nb);
+    offset += 30 + nb.length + size;
+  });
+  const cSize = central.reduce((s, p) => s + p.length, 0);
+  const e = new DataView(new ArrayBuffer(22));
+  e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true);
+  e.setUint32(12, cSize, true); e.setUint32(16, offset, true);
+  return new Blob([...parts, ...central, new Uint8Array(e.buffer)], { type: 'application/zip' });
+}
+const pngBytes = cv => new Promise(res => cv.toBlob(b => b.arrayBuffer().then(a => res(new Uint8Array(a))), 'image/png'));
+
+// ---------- page ----------
+// Outside the artifact viewer (the repo copy opened locally) there is no claude.use.
+const use = name => (window.claude && typeof window.claude.use === 'function') ? window.claude.use(name) : Promise.resolve(null);
+
+async function main() {
+  try { await Promise.all([`400 40px ${MONO}`, `italic 400 40px ${MONO}`].map(f => document.fonts.load(f))); } catch (e) {}
+  const list = document.getElementById('list');
+
+  // ?g=sNN: render one bare slide (used to export PNGs from the repo copy).
+  if (q.has('g')) {
+    document.body.classList.add('export');
+    document.querySelectorAll('h1, .lede, .bar').forEach(el => el.remove());
+    const s = SLIDES.find(x => x.id === q.get('g') || 'slide-' + num(x) === q.get('g'));
+    const cv = Object.assign(document.createElement('canvas'), { width: W, height: H });
+    list.appendChild(cv); render(cv, s);
+    return;
+  }
+
+  const views = {};
+  SLIDES.forEach(s => {
+    const card = document.createElement('section'); card.className = 'slide';
+    const left = document.createElement('div');
+    const cv = Object.assign(document.createElement('canvas'), { width: W, height: H });
+    const head = document.createElement('div'); head.className = 'head';
+    const name = document.createElement('span'); name.textContent = 'Slide ' + num(s);
+    const btn = Object.assign(document.createElement('button'), { className: 'ghost', textContent: 'PNG', disabled: true });
+    head.append(name, btn); left.append(cv, head);
+    const fields = document.createElement('div'); fields.className = 'fields';
+    const inputs = {};
+    s.fields.forEach(([key, lab]) => {
+      const wrapEl = document.createElement('div');
+      const id = `${s.id}-${key}`;
+      const l = document.createElement('label'); l.htmlFor = id; l.textContent = lab;
+      const ta = document.createElement('textarea'); ta.id = id; ta.rows = 2; ta.value = state[s.id][key] ?? '';
+      ta.addEventListener('input', () => { state[s.id][key] = ta.value; render(cv, s); scheduleSave(s.id); });
+      wrapEl.append(l, ta); fields.append(wrapEl); inputs[key] = ta;
+    });
+    card.append(left, fields); list.append(card);
+    views[s.id] = { s, cv, inputs, btn };
+    render(cv, s);
+  });
+
+  // Fonts can finish after first paint; redraw once they're in.
+  document.fonts.ready.then(() => Object.values(views).forEach(v => render(v.cv, v.s)));
+
+  const downloads = await use('downloads');
+  if (downloads) {
+    const zipBtn = document.getElementById('zip'); zipBtn.disabled = false;
+    zipBtn.onclick = async () => {
+      zipBtn.disabled = true;
+      try {
+        const files = [];
+        for (const v of Object.values(views)) files.push({ name: fileName(v.s), bytes: await pngBytes(v.cv) });
+        await downloads.save({ filename: 'same-springs-different-load-carousel.zip', data: makeZip(files) });
+      } catch (e) { if (e && e.code && e.code !== 'declined') setStatus('Download did not start (' + e.code + ')', 'warn'); }
+      zipBtn.disabled = false;
+    };
+    Object.values(views).forEach(v => {
+      v.btn.disabled = false;
+      v.btn.onclick = async () => {
+        try { await downloads.save({ filename: fileName(v.s), data: await new Promise(r => v.cv.toBlob(r, 'image/png')) }); }
+        catch (e) { if (e && e.code && e.code !== 'declined') setStatus('Download did not start (' + e.code + ')', 'warn'); }
+      };
+    });
+  } else {
+    document.getElementById('zip').title = 'Downloads are not available in this view';
+  }
+
+  db = await use('db');
+  if (!db) { setStatus('Offline copy: edits show here but are not saved', 'warn'); return; }
+  setStatus('Connecting…');
+  const timeout = setTimeout(() => setStatus("Can't reach saved edits yet. You can keep editing.", 'warn'), 10000);
+  db.collection('slides').onSnapshot(snap => {
+    if (!snap.metadata.fromCache) clearTimeout(timeout);
+    snap.docs.forEach(d => {
+      const v = views[d.id]; const body = d.data();
+      if (!v || !body || typeof body.fields !== 'object' || !body.fields) return;
+      if (dirty[d.id] || writing[d.id]) return; // this view has newer local text
+      let changed = false;
+      for (const [key] of v.s.fields) {
+        const val = body.fields[key];
+        if (typeof val !== 'string' || val === state[d.id][key]) continue;
+        state[d.id][key] = val; changed = true;
+        if (document.activeElement !== v.inputs[key]) v.inputs[key].value = val;
+      }
+      if (changed) render(v.cv, v.s);
+    });
+    if (!snap.metadata.fromCache && !Object.values(dirty).some(Boolean)) setStatus('All edits saved', 'ok');
+  }, () => { clearTimeout(timeout); setStatus("Saved edits can't be loaded right now. You can keep editing.", 'warn'); });
+}
+main();
+</script>

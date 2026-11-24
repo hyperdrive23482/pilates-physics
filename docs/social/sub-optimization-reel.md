@@ -42,23 +42,21 @@ Don't get me wrong, precision has its place. I'm not saying we shouldn't be
 precise in Pilates. But it has to fit into the bigger picture of what we're
 trying to achieve with our clients.
 
-## Caption
+## Caption (scheduled, Kaleen's edit 2026-11-24)
 
-Can you coach a movement perfectly and still make the whole session worse?
+Can coaching a movement perfectly make the whole session worse?
 
 In engineering there's a name for this: sub-optimization. You make one part of a system as good as it can be, and the whole system gets worse.
 
-Picture a race team that pours everything into the engine. Most powerful one on the circuit. But the frame wasn't built for that much power, and the tires can't get it to the asphalt. They wear out in half the laps. Perfect engine, slower car.
+Picture a race team that pours everything into the engine. Most powerful one on the circuit. But the frame wasn't built for that much power, and the tires can't get it to the asphalt. Perfect engine, slower car.
 
-I see this in Pilates all the time, and I've done it myself. Footwork is my favorite example. I can spend 20 minutes on foot, knee, hip and pelvis alignment. Meanwhile my client is holding their breath, and the springs are too light to load their legs enough to matter. That's 20 minutes I didn't spend on the rest of the body.
+I see this in Pilates all the time, and I've done it myself. Footwork is my favorite example. I can spend 20 minutes on foot, knee, hip and pelvis alignment. Meanwhile my client is holding their breath, and the springs are too light to load their legs enough to matter. That's 10 minutes (or more!) too much of one exercise.
 
-Perfect alignment in footwork. Worse session overall.
+Maybe I got them perfect alignment in footwork. But it became a worse session overall.
 
 Precision has its place. But it has to serve the bigger goal: what my client leaves with at the end of the hour, and at the end of six weeks.
 
-So here's a question for after your next session: which part did I perfect, and did the whole session get better because of it?
-
-Program with Purpose is six weeks of looking back at the sessions you already teach, to check whether they add up to what you intended. Comment PURPOSE and I'll DM you the details.
+This is one of the reflections @remopilates helps me with.  If you'd like to reflect on your sessions with real data, join me for Program with Purpose.  It's a six week guided program where we'll look back at the sessions you already teach together and check whether they add up to what you intended. Comment PURPOSE and I'll DM you the details.
 
 #pilatesphysics #pilatesinstructor #pilatesteacher #reformerpilates
 

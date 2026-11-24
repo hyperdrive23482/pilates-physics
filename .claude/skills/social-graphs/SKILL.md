@@ -126,6 +126,25 @@ Add a small mono formula note at the bottom if the numbers are derived.
 5. **Iterate in small edits** and republish after each one. When she settles
    a new preference, add it to this skill.
 
+## Full carousel slides
+
+When she wants whole carousel slides, not a graphic to drop into one, match
+the house carousel format (Drive: `BRAIN - Reels and Carousels/done/
+2026-11-12_carousel_hip-torque-in-feet-in-straps`), not the graph look above.
+Reference implementation: `docs/social/same-springs-different-load-carousel.html`.
+
+- 1080x1350, no padding. Ground `#f5f1e9` with a 1 px `#ddd9d2` grid every
+  40 px.
+- All text JetBrains Mono, centered: main lines about 52 px ink with roughly
+  1.78 line height, secondary lines about 40 px `#737373`. Emphasis is italic,
+  not color.
+- Stacked logo at the bottom center on every slide: "PILATES" in ink with a
+  rule under it, "PHYSICS" in `#f09f26`. No slide numbers or handle.
+- Diagrams are thin ink lines with `#f09f26` force arrows and small grey
+  uppercase mono labels. Number slides use the two-column layout (weight right
+  aligned, torque left aligned, metric in grey underneath).
+- She rejected the serif, numbered, @handle version (2026-11-23).
+
 ## Presentation slides
 
 For a 16:9 slide, set the graphic's size to about `w: 1600, h: 900` (still
