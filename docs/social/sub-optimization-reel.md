@@ -42,11 +42,11 @@ Don't get me wrong, precision has its place. I'm not saying we shouldn't be
 precise in Pilates. But it has to fit into the bigger picture of what we're
 trying to achieve with our clients.
 
-## Caption (scheduled, Kaleen's edit 2026-11-24)
+## Caption (scheduled, Kaleen's edit 2026-11-24, definition fix 2026-11-25)
 
 Can coaching a movement perfectly make the whole session worse?
 
-In engineering there's a name for this: sub-optimization. You make one part of a system as good as it can be, and the whole system gets worse.
+In engineering there's a name for this: sub-optimization. You optimize one part of a system on its own terms, and the whole system ends up worse than it could be.
 
 Picture a race team that pours everything into the engine. Most powerful one on the circuit. But the frame wasn't built for that much power, and the tires can't get it to the asphalt. Perfect engine, slower car.
 
